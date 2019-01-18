@@ -1,0 +1,2 @@
+# rdcli
+redis-cli replacement.
