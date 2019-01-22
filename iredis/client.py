@@ -22,6 +22,7 @@ from .utils import compose_command_syntax
 from .renders import render_error, render_bulk_string_decode, render_subscribe
 from .completers import LatestUsedFirstWordCompleter
 from .exceptions import NotRedisCommand
+from .warning import confirm_dangerous_command
 
 logger = logging.getLogger(__name__)
 CLIENT_COMMANDS = ["HELP"]
@@ -232,6 +233,16 @@ class Client:
         try:
             command_name = ""
             command_name, args = split_command_args(redis_command, all_commands)
+            # Confirm for dangerous command
+            if config.warning:
+                confirm = confirm_dangerous_command(command_name.upper())
+                if confirm is False:
+                    # TODO raw
+                    yield FormattedText([("class:warning", "Canceled!")])
+                    return
+                if confirm is True:
+                    yield FormattedText([("class:warning", "You Call!!")])
+
             # if raw_command is not supposed to send to server
             if command_name.upper() in CLIENT_COMMANDS:
                 redis_resp = self.client_execute_command(command_name, *args)

@@ -47,6 +47,8 @@ class Config:
         self.version = "Unknown"
         self.no_version_reason = None
 
+        self.warning = True
+
     def __setter__(self, name, value):
         # for every time start a transaction
         # clear the queued commands first
