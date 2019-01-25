@@ -231,20 +231,21 @@ class Client:
             )
         logger.info(f"[Prepare command] Redis: {redis_command}, Shell: {shell_command}")
         try:
-            command_name = ""
             command_name, args = split_command_args(redis_command, all_commands)
+            input_command_upper = command_name.upper()
             # Confirm for dangerous command
             if config.warning:
-                confirm = confirm_dangerous_command(command_name.upper())
+                confirm = confirm_dangerous_command(input_command_upper)
+                # if we can prompt to user, it's always a tty
+                # so we always yield FormattedText here.
                 if confirm is False:
-                    # TODO raw
                     yield FormattedText([("class:warning", "Canceled!")])
                     return
                 if confirm is True:
-                    yield FormattedText([("class:warning", "You Call!!")])
+                    yield FormattedText([("class:warning", "Your Call!!")])
 
             # if raw_command is not supposed to send to server
-            if command_name.upper() in CLIENT_COMMANDS:
+            if input_command_upper in CLIENT_COMMANDS:
                 redis_resp = self.client_execute_command(command_name, *args)
                 yield redis_resp
                 return
@@ -268,13 +269,13 @@ class Client:
             yield self.render_response(redis_resp, completer, command_name)
 
             # FIXME generator response do not support pipeline
-            if command_name.upper() == "MONITOR":
+            if input_command_upper == "MONITOR":
                 # TODO special render for monitor
                 try:
                     yield from self.monitor()
                 except KeyboardInterrupt:
                     pass
-            elif command_name.upper() in [
+            elif input_command_upper in [
                 "SUBSCRIBE",
                 "PSUBSCRIBE",
             ]:  # enter subscribe mode

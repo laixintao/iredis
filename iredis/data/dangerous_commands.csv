@@ -1,15 +1,15 @@
 Command,Reason
-FLUSHDB,
-FLUSHALL,
-KEYS,
-PEXPIRE,
-DEL,
-CONFIG,
-SHUTDOWN,
-BGREWRITEAOF,
-BGSAVE,
-SAVE,
-SPOP,
-SREM,
-RENAME,
-DEBUG,
+FLUSHDB,"It's a dangerous command"
+FLUSHALL,"It's a dangerous command"
+KEYS,"KEYS is dangerous, use SCAN instead"
+PEXPIRE,"It's a dangerous command"
+DEL,"It's a dangerous command"
+CONFIG,"It's a dangerous command"
+SHUTDOWN,"It's a dangerous command"
+BGREWRITEAOF,"It's a dangerous command"
+BGSAVE,"It's a dangerous command"
+SAVE,"It's a dangerous command"
+SPOP,"It's a dangerous command"
+SREM,"It's a dangerous command"
+RENAME,"It's a dangerous command"
+DEBUG,"It's a dangerous command"

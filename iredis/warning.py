@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import sys
 import click
+from .commands_csv_loader import dangerous_commands
 
 
 class ConfirmBoolParamType(click.ParamType):
@@ -27,8 +28,12 @@ BOOLEAN_TYPE = ConfirmBoolParamType()
 
 
 def is_dangerous(command):
-
-    return True, "KEYS may ruin performance when it is executed against large databases. Consider using SCAN instead"
+    """
+    :return : return True, reason str if command is dangerous;
+        return False, None otherwise.
+    """
+    reason = dangerous_commands.get(command)
+    return reason is not None, reason
 
 
 def prompt(*args, **kwargs):
@@ -39,7 +44,7 @@ def prompt(*args, **kwargs):
         return False
 
 
-def confirm_dangerous_command(command):
+def confirm_dangerous_command(upper_command):
     """Check if the query is destructive and prompts the user to confirm.
 
     Returns:
@@ -48,7 +53,7 @@ def confirm_dangerous_command(command):
     * False if the query is destructive and the user doesn't want to proceed.
 
     """
-    dangerous, reason = is_dangerous(command)
+    dangerous, reason = is_dangerous(upper_command)
     prompt_text = f"{reason}.\n" "Do you want to proceed? (y/n)"
     if dangerous and sys.stdin.isatty():
         return prompt(prompt_text, type=BOOLEAN_TYPE)

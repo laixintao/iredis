@@ -38,6 +38,24 @@ def load_command():
     return command2callback, command2syntax
 
 
+def load_dangerous():
+    """
+    Load dangerous commands from csv file.
+    """
+    first_line = True
+    dangerous_file_path = project_data / "dangerous_commands.csv"
+    dangerous_command = {}
+    with open(dangerous_file_path) as dangerous_file:
+        csvreader = csv.reader(dangerous_file)
+        for line in csvreader:
+            if first_line:
+                first_line = False
+                continue
+            command, reason = line
+            dangerous_command[command] = reason
+    return dangerous_command
+
+
 timer("[Loader] Start loading commands file...")
 command2callback, command2syntax = load_command()
 # all redis command strings, in UPPER case
@@ -47,3 +65,4 @@ all_commands = sorted(
 )
 commands_summary = load_command_summary()
 timer("[Loader] Finished loading commands.")
+dangerous_commands = load_dangerous()
