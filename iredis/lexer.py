@@ -38,6 +38,8 @@ def get_lexer_mapping():
         "start": SimpleLexer("class:integer"),
         "float": SimpleLexer("class:integer"),
         "end": SimpleLexer("class:integer"),
+        "sstart": SimpleLexer("class:integer"),
+        "send": SimpleLexer("class:integer"),
         "delta": SimpleLexer("class:integer"),
         "offset": SimpleLexer("class:integer"),
         "count": SimpleLexer("class:integer"),
