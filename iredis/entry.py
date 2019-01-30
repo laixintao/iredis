@@ -4,6 +4,7 @@ import logging
 import sys
 import time
 from pathlib import Path
+import platform
 
 import click
 from prompt_toolkit import PromptSession
@@ -27,7 +28,7 @@ HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
 
 
 def greetings():
-    iredis_version = f"iredis  {__version__}"
+    iredis_version = f"iredis  {__version__} (Python {platform.python_version()})"
     if config.no_version_reason:
         reason = f"({config.no_version_reason})"
     else:
