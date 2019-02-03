@@ -70,12 +70,6 @@ VALID_SLOT = r"\d+"  # TODO add range? max value:16384
 VALID_NODE = r"\d+"
 NUM = r"\d+"
 NNUM = r"-?\+?\(?\[?(\d+|inf)"  # number cloud be negative
-SNUM = """(    # stream id, DO NOT use r"" here, or the \+ will be two string
-(\d+)       |# Incomplete id
-(\d+-\d+)   |# full id
-(-|\+)
-)
-"""
 _FLOAT = r"-?(\d|\.|e)+"
 LEXNUM = fr"(\[\w+)|(\(\w+)|(\+)|(-)"
 
@@ -125,9 +119,18 @@ TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
 ANY = r"(?P<any>.*)"  # TODO deleted
 START = fr"(?P<start>{NNUM})"
 END = fr"(?P<end>{NNUM})"
-# for stream
+# for stream ids, special ids include:  -, +, $, > and *
+# please see:
+# https://redis.io/topics/streams-intro#special-ids-in-the-streams-api
+SNUM = """(    # stream id, DO NOT use r"" here, or the \+ will be two string
+(\d+)       |# Incomplete id
+(\d+-\d+)   |# full id
+(-|\+|\$|>|\*)
+)
+"""
 SSTART = fr"(?P<sstart>{SNUM})"
 SEND = fr"(?P<send>{SNUM})"
+
 DELTA = fr"(?P<delta>{NNUM})"
 OFFSET = fr"(?P<offset>{NUM})"  # string offset, can't be negative
 MIN = fr"(?P<min>{NNUM})"
