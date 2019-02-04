@@ -6,6 +6,8 @@ def test_xrange(judge_command):
     # $ is not a valide id for XRANGE
     judge_command("XRANGE somestream $ +", None)
     judge_command("XRANGE somestream - $", None)
+    judge_command("XRANGE somestream + 100", None)
+    judge_command("XRANGE somestream 100 -", None)
     judge_command(
         "XRANGE somestream  1526985054069 1526985055069",
         {

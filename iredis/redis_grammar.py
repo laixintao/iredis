@@ -119,17 +119,17 @@ TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
 ANY = r"(?P<any>.*)"  # TODO deleted
 START = fr"(?P<start>{NNUM})"
 END = fr"(?P<end>{NNUM})"
+
 # for stream ids, special ids include:  -, +, $, > and *
 # please see:
 # https://redis.io/topics/streams-intro#special-ids-in-the-streams-api
-SNUM = """(    # stream id, DO NOT use r"" here, or the \+ will be two string
+# stream id, DO NOT use r"" here, or the \+ will be two string
+STREAMID = """
 (\d+)       |# Incomplete id
-(\d+-\d+)   |# full id
-(-|\+|\$|>|\*)
-)
+(\d+-\d+)    # full id
 """
-SSTART = fr"(?P<sstart>{SNUM})"
-SEND = fr"(?P<send>{SNUM})"
+S_START_ID = fr"(?P<sstart>{STREAMID}|-)"
+SEND = f"(?P<send>{STREAMID}|\+)"
 
 DELTA = fr"(?P<delta>{NNUM})"
 OFFSET = fr"(?P<offset>{NUM})"  # string offset, can't be negative
@@ -329,7 +329,7 @@ NEW_GRAMMAR = {
     "command_scriptdebug": fr"\s* (?P<command>xxin) \s+ {SCRIPTDEBUG} \s*",
     "command_shutdown": fr"\s* (?P<command>xxin) \s+ {SHUTDOWN} \s*",
     "command_key_start_end_countx": fr"""\s* (?P<command>xxin) \s+ {KEY}
-        \s+ {SSTART}
+        \s+ {S_START_ID}
         \s+ {SEND}
         (\s+ {COUNT_CONST} \s+ {COUNT})?
         \s*""",
