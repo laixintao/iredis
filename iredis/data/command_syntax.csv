@@ -188,7 +188,7 @@ stream,XACK,command_pass,
 stream,XADD,command_pass,
 stream,XCLAIM,command_pass,
 stream,XDEL,command_pass,
-stream,XGROUP,command_pass,
+stream,XGROUP,command_xgroup,render_string_or_int
 stream,XINFO,command_pass,
 stream,XLEN,command_pass,
 stream,XPENDING,command_pass,

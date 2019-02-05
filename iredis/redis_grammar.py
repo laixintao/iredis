@@ -50,6 +50,10 @@ CONST = {
     "order": "ASC DESC",
     "pubsubcmd": "CHANNELS NUMSUB NUMPAT",
     "scriptdebug": "YES NO SYNC",
+    "stream_create": "CREATE",
+    "stream_setid": "SETID",
+    "stream_destroy": "DESTROY",
+    "stream_delconsumer" :"DELCONSUMER",
 }
 
 
@@ -89,6 +93,8 @@ MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 COUNT = fr"(?P<count>{NNUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 CHANNEL = fr"(?P<channel>{VALID_TOKEN})"
+GROUP = fr"(?P<group>{VALID_TOKEN})"
+CONSUMER = fr"(?P<consumer>{VALID_TOKEN})"
 BIT = r"(?P<bit>0|1)"
 FLOAT = fr"(?P<float>{_FLOAT})"
 LONGITUDE = fr"(?P<longitude>{_FLOAT})"
@@ -129,7 +135,8 @@ STREAMID = """
 (\d+-\d+)    # full id
 """
 S_START_ID = fr"(?P<sstart>{STREAMID}|-)"
-SEND = f"(?P<send>{STREAMID}|\+)"
+S_END_ID = f"(?P<send>{STREAMID}|\+)"
+S_LATEST_ID = f"(?P<s_latest_id>{STREAMID}|\$)"
 
 DELTA = fr"(?P<delta>{NNUM})"
 OFFSET = fr"(?P<offset>{NUM})"  # string offset, can't be negative
@@ -186,6 +193,10 @@ CONST_STORE = fr"(?P<const_store>{c('const_store')})"
 CONST_STOREDIST = fr"(?P<const_storedist>{c('const_storedist')})"
 PUBSUBCMD = fr"(?P<pubsubcmd>{c('pubsubcmd')})"
 SCRIPTDEBUG = fr"(?P<scriptdebug>{c('scriptdebug')})"
+STREAM_CREATE = fr"(?P<stream_create>{c('stream_create')})"
+STREAM_SETID = fr"(?P<stream_setid>{c('stream_setid')})"
+STREAM_DESTROY = fr"(?P<stream_destroy>{c('stream_destroy')})"
+STREAM_DELCONSUMER = fr"(?P<stream_delconsumer>{c('stream_delconsumer')})"
 
 # TODO test lexer & completer for multi spaces in command
 # FIXME invalid command like "aaa bbb ccc"
@@ -330,8 +341,14 @@ NEW_GRAMMAR = {
     "command_shutdown": fr"\s* (?P<command>xxin) \s+ {SHUTDOWN} \s*",
     "command_key_start_end_countx": fr"""\s* (?P<command>xxin) \s+ {KEY}
         \s+ {S_START_ID}
-        \s+ {SEND}
+        \s+ {S_END_ID}
         (\s+ {COUNT_CONST} \s+ {COUNT})?
+        \s*""",
+    "command_xgroup": fr"""\s* (?P<command>xxin)
+        (\s+ {STREAM_CREATE} \s+ {KEY} \s+ {GROUP} \s+ {S_LATEST_ID})?
+        (\s+ {STREAM_SETID} \s+ {KEY} \s+ {GROUP} \s+ {S_LATEST_ID})?
+        (\s+ {STREAM_DESTROY} \s+ {KEY} \s+ {GROUP})?
+        (\s+ {STREAM_DELCONSUMER} \s+ {KEY} \s+ {GROUP} \s+ {CONSUMER})?
         \s*""",
 }
 
