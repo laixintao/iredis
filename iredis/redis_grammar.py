@@ -53,7 +53,7 @@ CONST = {
     "stream_create": "CREATE",
     "stream_setid": "SETID",
     "stream_destroy": "DESTROY",
-    "stream_delconsumer" :"DELCONSUMER",
+    "stream_delconsumer": "DELCONSUMER",
 }
 
 
@@ -134,8 +134,8 @@ STREAMID = """
 (\d+)       |# Incomplete id
 (\d+-\d+)    # full id
 """
-S_START_ID = fr"(?P<sstart>{STREAMID}|-)"
-S_END_ID = f"(?P<send>{STREAMID}|\+)"
+S_START_ID = fr"(?P<s_start_id>{STREAMID}|-)"
+S_END_ID = f"(?P<s_end_id>{STREAMID}|\+)"
 S_LATEST_ID = f"(?P<s_latest_id>{STREAMID}|\$)"
 
 DELTA = fr"(?P<delta>{NNUM})"

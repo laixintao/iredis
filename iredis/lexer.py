@@ -38,8 +38,11 @@ def get_lexer_mapping():
         "start": SimpleLexer("class:integer"),
         "float": SimpleLexer("class:integer"),
         "end": SimpleLexer("class:integer"),
-        "sstart": SimpleLexer("class:integer"),
-        "send": SimpleLexer("class:integer"),
+        # stream id
+        "s_start_id": SimpleLexer("class:integer"),
+        "s_end_id": SimpleLexer("class:integer"),
+        "s_latest_id": SimpleLexer("class:integer"),
+
         "delta": SimpleLexer("class:integer"),
         "offset": SimpleLexer("class:integer"),
         "count": SimpleLexer("class:integer"),
