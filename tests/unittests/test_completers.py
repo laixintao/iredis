@@ -4,7 +4,7 @@ from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 
 from iredis.completers import LatestUsedFirstWordCompleter
 from iredis.redis_grammar import command_grammar
-from iredis.completers import get_completer_mapping
+from iredis.completers import get_completer_mapping, IRedisCompleter
 
 
 def test_LUF_completer_touch():
@@ -60,3 +60,14 @@ def test_newbie_mode_complete_with_meta_dict():
             ]
         ),
     ]
+
+
+def test_group_completer():
+    fake_document = MagicMock()
+    previous_commands = ["xgroup create abc world 123", "xgroup setid abc hello 123"]
+    fake_document.text = fake_document.text_before_cursor = "XGROUP DESTROY key "
+    completer = IRedisCompleter()
+    for command in previous_commands:
+        completer.update_completer_for_input(command)
+    completions = list(completer.get_completions(fake_document, None))
+    assert [completion.text for completion in completions] == ["hello", "world"]
