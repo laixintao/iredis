@@ -58,6 +58,7 @@ def get_completer_mapping():
     key_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     member_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     field_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+    group_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
 
     completer_mapping.update(
         {
@@ -72,6 +73,8 @@ def get_completer_mapping():
             # hash fields
             "field": field_completer,
             "fields": field_completer,
+            # stream groups
+            "group": group_completer,
         }
     )
     # patch command completer with hint
@@ -109,6 +112,10 @@ class IRedisCompleter(Completer):
     @property
     def field_completer(self) -> LatestUsedFirstWordCompleter:
         return self.completer_mapping["field"]
+
+    @property
+    def group_completer(self) -> LatestUsedFirstWordCompleter:
+        return self.completer_mapping["group"]
 
     def get_completer(self, input_text):
         try:
