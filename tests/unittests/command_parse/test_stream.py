@@ -1,20 +1,14 @@
 def test_xrange(judge_command):
     judge_command(
         "XRANGE somestream - +",
-        {"command": "XRANGE", "key": "somestream", "s_start_id": "-", "s_end_id": "+"},
+        {"command": "XRANGE", "key": "somestream", "stream_id": ["-", "+"]},
     )
-    # $ is not a valide id for XRANGE
-    judge_command("XRANGE somestream $ +", None)
-    judge_command("XRANGE somestream - $", None)
-    judge_command("XRANGE somestream + 100", None)
-    judge_command("XRANGE somestream 100 -", None)
     judge_command(
         "XRANGE somestream  1526985054069 1526985055069",
         {
             "command": "XRANGE",
             "key": "somestream",
-            "s_start_id": "1526985054069",
-            "s_end_id": "1526985055069",
+            "stream_id": ["1526985054069", "1526985055069"],
         },
     )
     judge_command(
@@ -22,8 +16,7 @@ def test_xrange(judge_command):
         {
             "command": "XRANGE",
             "key": "somestream",
-            "s_start_id": "1526985054069",
-            "s_end_id": "1526985055069-10",
+            "stream_id": ["1526985054069", "1526985055069-10"],
         },
     )
     judge_command(
@@ -31,8 +24,7 @@ def test_xrange(judge_command):
         {
             "command": "XRANGE",
             "key": "somestream",
-            "s_start_id": "1526985054069",
-            "s_end_id": "1526985055069-10",
+            "stream_id": ["1526985054069", "1526985055069-10"],
             "count_const": "count",
             "count": "10",
         },
@@ -47,7 +39,7 @@ def test_xgroup_create(judge_command):
             "stream_create": "CREATE",
             "key": "mykey",
             "group": "mygroup",
-            "s_latest_id": "123",
+            "stream_id": "123",
         },
     )
     judge_command(
@@ -57,13 +49,9 @@ def test_xgroup_create(judge_command):
             "stream_create": "CREATE",
             "key": "mykey",
             "group": "mygroup",
-            "s_latest_id": "$",
+            "stream_id": "$",
         },
     )
-    # invalid id
-    judge_command("XGROUP CREATE mykey mygroup +", None)
-    judge_command("XGROUP CREATE mykey mygroup -", None)
-    judge_command("XGROUP CREATE mykey mygroup >", None)
     # short of a parameter
     judge_command("XGROUP CREATE mykey mygroup", None)
     judge_command("XGROUP CREATE mykey", None)
@@ -77,7 +65,7 @@ def test_xgroup_setid(judge_command):
             "stream_setid": "SETID",
             "key": "mykey",
             "group": "mygroup",
-            "s_latest_id": "123",
+            "stream_id": "123",
         },
     )
     judge_command(
@@ -87,7 +75,7 @@ def test_xgroup_setid(judge_command):
             "stream_setid": "SETID",
             "key": "mykey",
             "group": "mygroup",
-            "s_latest_id": "$",
+            "stream_id": "$",
         },
     )
     # two subcommand together shouldn't match
@@ -139,19 +127,10 @@ def test_xgroup_stream(judge_command):
             "command": "XACK",
             "key": "mystream",
             "group": "group1",
-            "stream_ids": "123123",
+            "stream_id": "123123",
         },
     )
     judge_command(
         "XACK mystream group1 123123 111",
-        {
-            "command": "XACK",
-            "key": "mystream",
-            "group": "group1",
-            "stream_ids": "123123 111",
-        },
+        {"command": "XACK", "key": "mystream", "group": "group1", "stream_id": "111"},
     )
-    judge_command("XACK mystream group1 $", None)
-    judge_command("XACK mystream group1 -", None)
-    judge_command("XACK mystream group1 +", None)
-    judge_command("XACK mystream group1 >", None)
