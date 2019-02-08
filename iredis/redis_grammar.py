@@ -131,14 +131,7 @@ END = fr"(?P<end>{NNUM})"
 # https://redis.io/topics/streams-intro#special-ids-in-the-streams-api
 # stream id, DO NOT use r"" here, or the \+ will be two string
 # NOTE: if miss the outer (), multi IDS won't work.
-STREAMID = """(
-.+
-)
-"""
-STREAM_IDS = fr"(?P<stream_ids>{STREAMID}(\s+{STREAMID})*)"
-S_START_ID = fr"(?P<s_start_id>{STREAMID}|-)"
-S_END_ID = f"(?P<s_end_id>{STREAMID}|\+)"
-S_LATEST_ID = f"(?P<s_latest_id>{STREAMID}|\$)"
+STREAM_ID = fr"(?P<stream_id>{VALID_TOKEN})"
 
 DELTA = fr"(?P<delta>{NNUM})"
 OFFSET = fr"(?P<offset>{NUM})"  # string offset, can't be negative
@@ -342,20 +335,20 @@ NEW_GRAMMAR = {
     "command_scriptdebug": fr"\s* (?P<command>xxin) \s+ {SCRIPTDEBUG} \s*",
     "command_shutdown": fr"\s* (?P<command>xxin) \s+ {SHUTDOWN} \s*",
     "command_key_start_end_countx": fr"""\s* (?P<command>xxin) \s+ {KEY}
-        \s+ {S_START_ID}
-        \s+ {S_END_ID}
+        \s+ {STREAM_ID}
+        \s+ {STREAM_ID}
         (\s+ {COUNT_CONST} \s+ {COUNT})?
         \s*""",
     "command_xgroup": fr"""\s* (?P<command>xxin)
         (
-            (\s+ {STREAM_CREATE} \s+ {KEY} \s+ {GROUP} \s+ {S_LATEST_ID})|
-            (\s+ {STREAM_SETID} \s+ {KEY} \s+ {GROUP} \s+ {S_LATEST_ID})|
+            (\s+ {STREAM_CREATE} \s+ {KEY} \s+ {GROUP} \s+ {STREAM_ID})|
+            (\s+ {STREAM_SETID} \s+ {KEY} \s+ {GROUP} \s+ {STREAM_ID})|
             (\s+ {STREAM_DESTROY} \s+ {KEY} \s+ {GROUP})|
             (\s+ {STREAM_DELCONSUMER} \s+ {KEY} \s+ {GROUP} \s+ {CONSUMER})
         )
         \s*""",
     "command_key_group_ids": fr"""\s* (?P<command>xxin)
-        \s+ {KEY} \s+ {GROUP} \s+ {STREAM_IDS} \s*""",
+        \s+ {KEY} \s+ {GROUP} (\s+ {STREAM_ID})+ \s*""",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"

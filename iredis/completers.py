@@ -112,7 +112,7 @@ def get_completer_mapping():
             # stream groups
             "group": group_completer,
             # stream id
-            "stream_ids": timestamp_completer,
+            "stream_id": timestamp_completer,
         }
     )
     # patch command completer with hint
