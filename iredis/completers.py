@@ -57,29 +57,62 @@ class TimestampCompleter(Completer):
         -> 1577851200.
     """
 
+    when_lower_than = {
+        "year": 20,
+        "month": 12,
+        "day": 31,
+        "hour": 24,
+        "minute": 1000,
+        "second": 1000_000,
+    }
+
     # FIXME __init__ with timezone
     def _completion_humanize_time(self, document: Document) -> Iterable[Completion]:
         text = document.text
         if not text.isnumeric():
             return
-        yield Completion("123")
+        current = int(text)
+        now = pendulum.now()
+        for unit, minium in self.when_lower_than.items():
+            if current <= minium:
+                dt = now.subtract(**{f"{unit}s": current})
+                meta = f"{text} {unit}{'s' if current >= 1.0 else ''} ago ({dt.format('YYYY-MM-DD HH:mm:ss')})"
+                yield Completion(
+                    str(dt.int_timestamp * 1000),
+                    start_position=-len(document.text_before_cursor),
+                    display_meta=meta,
+                )
 
     def _completion_formatted_time(self, document: Document) -> Iterable[Completion]:
         text = document.text
-        logger.debug(f"[Timestamp Completer] text={text}")
         try:
             dt = pendulum.parse(text)
         except Exception:
             return
-        yield Completion(str(dt))
+        yield Completion(
+            str(dt.int_timestamp * 1000),
+            start_position=-len(document.text_before_cursor),
+            display_meta=str(dt),
+        )
 
     def get_completions(
         self, document: Document, complete_event: CompleteEvent
     ) -> Iterable[Completion]:
-        logger.debug("[Timestamp Completer] run...")
-        yield from self._completion_humanize_time(document)
-        logger.debug("[Timestamp Completer] run format time...")
-        yield from self._completion_formatted_time(document)
+        completions = list(self._completion_humanize_time(document)) + list(
+            self._completion_formatted_time(document)
+        )
+
+        distinct_completions = []
+
+        for completion in completions:
+            for exist in distinct_completions:
+                if exist.text == completion.text:
+                    break
+            distinct_completions.append(completion)
+        logger.debug(f"Completions: {distinct_completions}")
+
+        for completion in sorted(distinct_completions, key=lambda a: a.text):
+            yield completion
 
 
 def get_completer_mapping():
