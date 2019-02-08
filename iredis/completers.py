@@ -104,16 +104,8 @@ class TimestampCompleter(Completer):
             self._completion_formatted_time(document)
         )
 
-        distinct_completions = []
-
-        for completion in completions:
-            for exist in distinct_completions:
-                if exist.text == completion.text:
-                    break
-            distinct_completions.append(completion)
-
         # here we yield bigger timestamp first.
-        for completion in sorted(distinct_completions, key=lambda a: a.text):
+        for completion in sorted(completions, key=lambda a: a.text):
             yield completion
 
 
