@@ -51,22 +51,24 @@ class LatestUsedFirstWordCompleter(FuzzyWordCompleter):
 class TimestampCompleter(Completer):
     """
     Completer for timestamp based on input.
+
     Features:
     * Auto complete humanize time, like 3 -> 3 minutes ago, 3 hours ago.
     * Auto guess datetime, complete by its timestamp. 2020-01-01 12:00
         -> 1577851200.
+
+    The timezone is read from system.
     """
 
     when_lower_than = {
         "year": 20,
         "month": 12,
         "day": 31,
-        "hour": 24,
+        "hour": 100,
         "minute": 1000,
         "second": 1000_000,
     }
 
-    # FIXME __init__ with timezone
     def _completion_humanize_time(self, document: Document) -> Iterable[Completion]:
         text = document.text
         if not text.isnumeric():
@@ -76,7 +78,7 @@ class TimestampCompleter(Completer):
         for unit, minium in self.when_lower_than.items():
             if current <= minium:
                 dt = now.subtract(**{f"{unit}s": current})
-                meta = f"{text} {unit}{'s' if current >= 1.0 else ''} ago ({dt.format('YYYY-MM-DD HH:mm:ss')})"
+                meta = f"{text} {unit}{'s' if current > 1 else ''} ago ({dt.format('YYYY-MM-DD HH:mm:ss')})"
                 yield Completion(
                     str(dt.int_timestamp * 1000),
                     start_position=-len(document.text_before_cursor),
@@ -109,8 +111,8 @@ class TimestampCompleter(Completer):
                 if exist.text == completion.text:
                     break
             distinct_completions.append(completion)
-        logger.debug(f"Completions: {distinct_completions}")
 
+        # here we yield bigger timestamp first.
         for completion in sorted(distinct_completions, key=lambda a: a.text):
             yield completion
 
