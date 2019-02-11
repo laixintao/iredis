@@ -70,11 +70,8 @@ class Client:
             config.no_version_reason = "--no-info flag activated"
 
     def get_server_info(self):
-        self.connection.send_command("INFO")
         # safe to decode Redis's INFO response
-        resp = self.connection.read_response()
-        info_resp = utils.ensure_str(resp, decode="utf-8")
-
+        info_resp = nativestr(self.execute("INFO"))
         version = re.findall(r"^redis_version:([\d\.]+)\r\n", info_resp, re.MULTILINE)[
             0
         ]
@@ -91,7 +88,7 @@ class Client:
         if command == "HELP":
             return self.do_help(*args)
 
-    def execute_command_and_read_response(self, command_name, *args, **options):
+    def execute(self, command_name, *args, **options):
         """Execute a command and return a parsed response
         Here we retry once for ConnectionError.
         """
@@ -167,8 +164,7 @@ class Client:
 
     def unsubscribing(self):
         "unsubscribe from all channels"
-        self.connection.send_command("UNSUBSCRIBE")
-        response = self.connection.read_response()
+        response = self.execute("UNSUBSCRIBE")
         yield OutputRender.render_subscribe(response)
 
     def split_command_and_pipeline(self, rawinput, completer: IRedisCompleter):
@@ -228,7 +224,7 @@ class Client:
                 yield redis_resp
                 return
             self.pre_hook(raw_command, command_name, args, completer)
-            redis_resp = self.execute_command_and_read_response(command_name, *args)
+            redis_resp = self.execute(command_name, *args)
             # if shell, do not render, just run in shell pipe and show the
             # subcommand's stdout/stderr
             if shell_command:
@@ -271,9 +267,7 @@ class Client:
         # SELECT db on AUTH
         if command_name.upper() == "AUTH":
             if self.db:
-                select_result = self.execute_command_and_read_response(
-                    "SELECT", self.db
-                )
+                select_result = self.execute("SELECT", self.db)
                 if nativestr(select_result) != "OK":
                     raise ConnectionError("Invalid Database")
             # When the connection is TimeoutError or ConnectionError, reconnect the connection will use it
@@ -380,3 +374,34 @@ class Client:
         ]
 
         return FormattedText(summary + rendered_detail)
+
+    def do_peek(self, key):
+        """
+        PEEK command implementation.
+
+        It's a generator, will run different redis commands based on the key's
+        type, yields FormattedText once a command reached result.
+
+        Redis current supported types:
+            string, list, set, zset, hash and stream.
+        """
+
+        def _string(key):
+            pass
+
+        def _list(key):
+            pass
+
+        def _set(key):
+            pass
+
+        def _zset(key):
+            pass
+
+        def _hash(key):
+            pass
+
+        def _stream(key):
+            pass
+
+        # self.connection.send_command
