@@ -389,8 +389,21 @@ class Client:
         """
 
         def _string(key):
+            llen = self.execute("strlen", key)
+            yield FormattedText(
+                [
+                    ("class:dockey", "strlen: "),
+                    ("", str(llen)),
+                ]
+            )
+
             value = self.execute("GET", key)
-            yield renders.OutputRender.render_bulk_string(value)
+            yield FormattedText(
+                [
+                    ("class:dockey", "value: "),
+                    ("", renders.OutputRender.render_bulk_string(value)),
+                ]
+            )
 
         def _list(key):
             pass
@@ -410,8 +423,13 @@ class Client:
         def _none(key):
             yield f"Key {key} doesn't exist."
 
-        resp = nativestr(self.execute("TYPE", key))
-        yield resp
+        resp = nativestr(self.execute("type", key))
+        # FIXME raw write_result parse FormattedText
+        yield FormattedText([("class:dockey", "type: "), ("", resp)])
+
+        ttl = str(self.execute("ttl", key))
+        yield FormattedText([("class:dockey", "ttl: "), ("", ttl)])
+
         yield from {
             "string": _string,
             "list": _list,
