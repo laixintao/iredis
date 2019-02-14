@@ -389,13 +389,8 @@ class Client:
         """
 
         def _string(key):
-            llen = self.execute("strlen", key)
-            yield FormattedText(
-                [
-                    ("class:dockey", "strlen: "),
-                    ("", str(llen)),
-                ]
-            )
+            strlen = self.execute("strlen", key)
+            yield FormattedText([("class:dockey", "strlen: "), ("", str(strlen))])
 
             value = self.execute("GET", key)
             yield FormattedText(
@@ -406,7 +401,16 @@ class Client:
             )
 
         def _list(key):
-            pass
+            llen = self.execute("llen", key)
+            yield FormattedText([("class:dockey", "llen: "), ("", str(llen))])
+            if llen <= 20:
+                contents = self.execute(f"LRANGE {key} 0 -1")
+            else:
+                first_10 = self.execute(f"LRANGE {key} 0 9")
+                last_10 = self.execute(f"LRANGE {key} -10 -1")
+                contents = first_10 + [f"{llen-20} elements was omitted ..."] + last_10
+            yield FormattedText([("class:dockey", "elements: ")])
+            yield renders.OutputRender.render_list(contents)
 
         def _set(key):
             pass
@@ -431,7 +435,9 @@ class Client:
         yield FormattedText([("class:dockey", "object encoding: "), ("", encoding)])
 
         memory_usage = str(self.execute("memory usage", key))
-        yield FormattedText([("class:dockey", "memory usage(bytes): "), ("", memory_usage)])
+        yield FormattedText(
+            [("class:dockey", "memory usage(bytes): "), ("", memory_usage)]
+        )
 
         ttl = str(self.execute("ttl", key))
         yield FormattedText([("class:dockey", "ttl: "), ("", ttl)])
