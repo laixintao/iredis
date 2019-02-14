@@ -413,7 +413,20 @@ class Client:
             yield renders.OutputRender.render_list(contents)
 
         def _set(key):
-            pass
+            cardinality = self.execute("scard", key)
+            yield FormattedText(
+                [("class:dockey", "cardinality: "), ("", str(cardinality))]
+            )
+            if cardinality <= 20:
+                contents = self.execute("smembers", key)
+                yield FormattedText([("class:dockey", "members: ")])
+                yield renders.OutputRender.render_list(contents)
+            else:
+                _, contents = self.execute(f"sscan {key} 0 count 20")
+                first_n = len(contents)
+                yield FormattedText([("class:dockey", f"members (first {first_n}): ")])
+                yield renders.OutputRender.render_members(contents)
+                # TODO update completers
 
         def _zset(key):
             pass
