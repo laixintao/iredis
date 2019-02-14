@@ -429,7 +429,20 @@ class Client:
                 # TODO update completers
 
         def _zset(key):
-            pass
+            count = self.execute(f"zcount {key} -inf +inf")
+            yield FormattedText([("class:dockey", "zcount: "), ("", str(count))])
+            if count <= 20:
+                contents = self.execute(f"zrange {key} 0 -1 withscores")
+                yield FormattedText([("class:dockey", "members: ")])
+                yield renders.OutputRender.render_members(contents)
+            else:
+                _, contents = self.execute(f"zscan {key} 0 count 20")
+                first_n = len(contents) // 2
+                yield FormattedText([("class:dockey", f"members (first {first_n}): ")])
+                config.withscores = True
+                output = renders.OutputRender.render_members(contents)
+                config.withscores = False
+                yield output
 
         def _hash(key):
             pass
