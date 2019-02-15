@@ -2,6 +2,7 @@ import pytest
 import redis
 from unittest.mock import MagicMock
 
+from prompt_toolkit.formatted_text import FormattedText
 
 from iredis.client import Client
 from iredis.completers import IRedisCompleter
@@ -206,3 +207,22 @@ def test_can_not_connect_on_startup(capfd):
     Client("localhost", "16111", 15)
     out, err = capfd.readouterr()
     assert "connecting to localhost:16111." in err
+
+
+def test_peek_non_exist(iredis_client, clean_redis):
+    peek_result = list(iredis_client.do_peek("non-exist-key"))
+    assert peek_result == [FormattedText([("class:dockey", "type: "), ("", "none")])]
+
+
+def test_peek_string(iredis_client, clean_redis):
+    clean_redis.set("foo", "bar")
+    peek_result = list(iredis_client.do_peek("foo"))
+
+    assert peek_result == [
+        FormattedText([("class:dockey", "type: "), ("", "string")]),
+        FormattedText([("class:dockey", "object encoding: "), ("", "embstr")]),
+        FormattedText([("class:dockey", "memory usage(bytes): "), ("", "50")]),
+        FormattedText([("class:dockey", "ttl: "), ("", "-1")]),
+        FormattedText([("class:dockey", "strlen: "), ("", "3")]),
+        FormattedText([("class:dockey", "value: "), ("", b"bar")]),
+    ]
