@@ -457,7 +457,9 @@ class Client:
             yield renders.OutputRender.render_hash_pairs(contents)
 
         def _stream(key):
-            pass
+            xinfo = self.execute("xinfo stream", key)
+            yield FormattedText([("class:dockey", "XINFO: ")])
+            yield renders.OutputRender.render_list(xinfo)
 
         def _none(key):
             yield f"Key {key} doesn't exist."
@@ -465,6 +467,9 @@ class Client:
         resp = nativestr(self.execute("type", key))
         # FIXME raw write_result parse FormattedText
         yield FormattedText([("class:dockey", "type: "), ("", resp)])
+
+        if resp == "none":
+            return
 
         encoding = nativestr(self.execute("object encoding", key))
         yield FormattedText([("class:dockey", "object encoding: "), ("", encoding)])
