@@ -445,7 +445,16 @@ class Client:
                 yield output
 
         def _hash(key):
-            pass
+            hlen = self.execute(f"hlen {key}")
+            yield FormattedText([("class:dockey", "hlen: "), ("", str(hlen))])
+            if hlen <= 20:
+                contents = self.execute(f"hgetall {key}")
+                yield FormattedText([("class:dockey", "fields: ")])
+            else:
+                contents = self.execute(f"hscan {key} 0 count 20")
+                first_n = len(contents) // 2
+                yield FormattedText([("class:dockey", f"fields (first {first_n}): ")])
+            yield renders.OutputRender.render_hash_pairs(contents)
 
         def _stream(key):
             pass
