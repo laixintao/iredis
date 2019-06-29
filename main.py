@@ -2,6 +2,7 @@
 import os
 import logging
 from pathlib import Path
+from redis_connection import Connection
 
 import click
 from prompt_toolkit import PromptSession
@@ -23,13 +24,15 @@ if not os.path.exists(HISTORY_FILE):
     f.close()
 session = PromptSession(history=FileHistory(HISTORY_FILE))
 
-
+c = Connection()
 
 
 def repl():
     while True:
         input_text = session.prompt()
         logger.info(f"input: {input_text}")
+        c.send_command(input_text)
+        print(c.read_response())
 
 
 @click.command()
