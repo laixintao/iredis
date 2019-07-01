@@ -11,7 +11,7 @@ from prompt_toolkit.history import FileHistory
 logging.basicConfig(
     filename="rdcli.log",
     filemode="a",
-    format="%(levelname)s %(message)s",
+    format="%(levelname)5s %(message)s",
     level="DEBUG",
 )
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ class Client:
         self._redis_client = redis.StrictRedis(host, port, db)
 
     def __str__(self):
-        return f"{self.host}:{self.port}/{self.db}> "
+        return f"{self.host}:{self.port}[{self.db}]> "
 
     def send_command(self, command):
         return self._redis_client.execute_command(command)
@@ -35,11 +35,14 @@ class Client:
 
 def repl(client, session):
     while True:
+        logger.debug("REPL waiting for command...")
         command = session.prompt(str(client))
+        logger.info(f"Command: {command}")
 
         # blank input
         if not command:
             continue
+        
         try:
             answer = client.send_command(command)
 
@@ -70,4 +73,8 @@ def rdcli(h, p, n):
 
 
 if __name__ == "__main__":
-    rdcli()
+
+    try:
+        rdcli()
+    except click.exceptions.Abort as e:
+        logger.warn(e)
