@@ -35,9 +35,11 @@ class Client:
     def send_command(self, command):
         return self._redis_client.execute_command(command)
 
+
 def print_answer(answers):
     for line in answers:
         print(line)
+
 
 def repl(client, session):
     while True:
@@ -73,14 +75,14 @@ def repl(client, session):
 @click.option("-h", help="Server hostname", default="127.0.0.1")
 @click.option("-p", help="Server port", default="6379")
 @click.option("-n", help="Database number.", default="0")
-def iredis_entry(ctx, h, p, n):
+def gather_args(ctx, h, p, n):
     logger.info(f"iredis start, host={h}, port={p}, db={n}.")
     return ctx
 
 
-if __name__ == "__main__":
+def main():
     # invoke in non-standalone mode to gather args
-    ctx = iredis_entry.main(standalone_mode=False)
+    ctx = gather_args.main(standalone_mode=False)
 
     # Create history file if not exists.
     if not os.path.exists(HISTORY_FILE):
