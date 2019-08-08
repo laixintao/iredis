@@ -1,5 +1,12 @@
-# rdcli
+# iRedis
 redis-cli replacement.
+
+## Install
+
+```
+pip install iredis
+```
+```
 
 ## Features
 
