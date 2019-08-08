@@ -1,11 +1,18 @@
 # iRedis
-redis-cli replacement.
+
+A Terminal Client for Redis with AutoCompletion and Syntax Highlighting.
 
 ## Install
 
 ```
 pip install iredis
 ```
+```
+
+## Usage
+
+```
+$ iredis -h
 ```
 
 ## Features
