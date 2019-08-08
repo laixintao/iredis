@@ -7,7 +7,6 @@ A Terminal Client for Redis with AutoCompletion and Syntax Highlighting.
 ```
 pip install iredis
 ```
-```
 
 ## Usage
 
