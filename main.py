@@ -25,7 +25,9 @@ class Client:
         self.host = h
         self.port = p
         self.db = n
-        self._redis_client = redis.StrictRedis(self.host, self.port, self.db)
+        self._redis_client = redis.StrictRedis(
+            self.host, self.port, self.db, decode_responses=True
+        )
 
     def __str__(self):
         return f"{self.host}:{self.port}[{self.db}]> "
@@ -33,6 +35,9 @@ class Client:
     def send_command(self, command):
         return self._redis_client.execute_command(command)
 
+def print_answer(answers):
+    for line in answers:
+        print(line)
 
 def repl(client, session):
     while True:
@@ -53,13 +58,13 @@ def repl(client, session):
 
         try:
             answer = client.send_command(command)
-
         # Error with previous command or exception
         except Exception as e:
             print("(error)", str(e))
+
         # Fine with answer
         else:
-            print(answer)
+            print_answer(answer)
 
 
 # command line entry here...
