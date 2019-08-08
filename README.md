@@ -2,6 +2,8 @@
 
 A Terminal Client for Redis with AutoCompletion and Syntax Highlighting.
 
+This project is under development, any comments are welcome.
+
 ## Install
 
 ```
