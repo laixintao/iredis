@@ -10,14 +10,14 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 
 logging.basicConfig(
-    filename="rdcli.log",
+    filename="iredis.log",
     filemode="a",
     format="%(levelname)5s %(message)s",
     level="DEBUG",
 )
 logger = logging.getLogger(__name__)
 
-HISTORY_FILE = Path(os.path.expanduser("~")) / ".rdcli_history"
+HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
 
 
 class Client:
@@ -73,14 +73,14 @@ def repl(client, session):
 @click.option("-h", help="Server hostname", default="127.0.0.1")
 @click.option("-p", help="Server port", default="6379")
 @click.option("-n", help="Database number.", default="0")
-def rdcli_entry(ctx, h, p, n):
-    logger.info(f"rdcli start, host={h}, port={p}, db={n}.")
+def iredis_entry(ctx, h, p, n):
+    logger.info(f"iredis start, host={h}, port={p}, db={n}.")
     return ctx
 
 
 if __name__ == "__main__":
     # invoke in non-standalone mode to gather args
-    ctx = rdcli_entry.main(standalone_mode=False)
+    ctx = iredis_entry.main(standalone_mode=False)
 
     # Create history file if not exists.
     if not os.path.exists(HISTORY_FILE):
