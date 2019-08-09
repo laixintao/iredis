@@ -70,6 +70,8 @@ def gather_args(ctx, h, p, n):
 def main():
     # invoke in non-standalone mode to gather args
     ctx = gather_args.main(standalone_mode=False)
+    if not ctx:  # called help
+        return
 
     # Create history file if not exists.
     if not os.path.exists(HISTORY_FILE):
