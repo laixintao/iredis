@@ -10,6 +10,7 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 
 from .client import Client
+from .renders import render_dict
 
 logging.basicConfig(
     filename="iredis.log",
@@ -24,8 +25,7 @@ HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
 
 
 def print_answer(answers):
-    for line in answers:
-        print(line)
+    render_dict(answers)
 
 
 def repl(client, session):
