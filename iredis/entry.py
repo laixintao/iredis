@@ -33,7 +33,9 @@ class Client:
         return f"{self.host}:{self.port}[{self.db}]> "
 
     def send_command(self, command):
-        return self._redis_client.execute_command(command)
+        redis_commands = command.split(" ")
+        logger.debug(f"[Redis split comamnd] {redis_commands}")
+        return self._redis_client.execute_command(*redis_commands)
 
 
 def print_answer(answers):
