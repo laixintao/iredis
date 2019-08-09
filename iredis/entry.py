@@ -9,6 +9,8 @@ import click
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 
+from .client import Client
+
 logging.basicConfig(
     filename="iredis.log",
     filemode="a",
@@ -19,23 +21,6 @@ logger = logging.getLogger(__name__)
 
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
 
-
-class Client:
-    def __init__(self, h, p, n):
-        self.host = h
-        self.port = p
-        self.db = n
-        self._redis_client = redis.StrictRedis(
-            self.host, self.port, self.db, decode_responses=True
-        )
-
-    def __str__(self):
-        return f"{self.host}:{self.port}[{self.db}]> "
-
-    def send_command(self, command):
-        redis_commands = command.split(" ")
-        logger.debug(f"[Redis split comamnd] {redis_commands}")
-        return self._redis_client.execute_command(*redis_commands)
 
 
 def print_answer(answers):
