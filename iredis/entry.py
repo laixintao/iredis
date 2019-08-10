@@ -11,9 +11,9 @@ from prompt_toolkit.history import FileHistory
 from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.styles import Style
 from prompt_toolkit.lexers import PygmentsLexer
-from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.contrib.regular_languages.compiler import compile
+from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
 from prompt_toolkit.lexers import SimpleLexer
 from prompt_toolkit.styles import Style
@@ -21,6 +21,7 @@ from prompt_toolkit.styles import Style
 from .client import Client
 from .renders import render_dict
 from .redis_lexer import RedisLexer
+from .redis_commands import REDIS_COMMANDS
 
 
 logging.basicConfig(
@@ -43,34 +44,39 @@ STYLE = Style.from_dict(
 
 
 def create_grammar():
-    return compile(
-        r"""
-        (\s*  (?P<command_key>(HGETALL|GET))   \s+   (?P<key>[0-9.]+)   \s*) |
-        (\s*  (?P<command_key_value>(SET|KSET))   \s+   (?P<key>[0-9.]+)   \s+   (?P<value>[0-9.]+)   \s*) 
-    """
-    )
+    return compile(REDIS_COMMANDS)
 
-example_style = Style.from_dict({
-    'operator':       '#33aa33 bold',
-    'number':         '#ff0000 bold',
 
-    'trailing-input': 'bg:#662222 #ffffff',
-})
+example_style = Style.from_dict(
+    {
+        "operator": "#33aa33 bold",
+        "number": "#ff0000 bold",
+        "trailing-input": "bg:#662222 #ffffff",
+    }
+)
 
 g = create_grammar()
 
-lexer = GrammarLexer(g, lexers={
-    'command_key_value': SimpleLexer('class:pygments.keyword'),
-    'command_key': SimpleLexer('class:pygments.keyword'),
-    'key': SimpleLexer('class:operator'),
-    'value': SimpleLexer('class:number'),
-})
+lexer = GrammarLexer(
+    g,
+    lexers={
+        "command_key_value": SimpleLexer("class:pygments.keyword"),
+        "command_key": SimpleLexer("class:pygments.keyword"),
+        "key": SimpleLexer("class:operator"),
+        "value": SimpleLexer("class:number"),
+    },
+)
 
+# TODO verify
 # Can all grammer have only 1 token, and completer based on lexer?
-completer = GrammarCompleter(g, {
-    'command_key_value': WordCompleter(["HGETALL", "GET", "MGET"]),
-    'command_key': WordCompleter(["AGET", "AZZ", "AOK"]),
-})
+completer = GrammarCompleter(
+    g,
+    {
+        "command_key_value": WordCompleter(["SET", "GETSET"]),
+        "command_key": WordCompleter(["HGETALL", "GET"]),
+    },
+)
+
 
 def repl(client, session):
     while True:
@@ -80,7 +86,7 @@ def repl(client, session):
                 "{hostname}> ".format(hostname=str(client)),
                 style=example_style,
                 lexer=lexer,
-                completer=completer
+                completer=completer,
             )
         except KeyboardInterrupt:
             logger.warning("KeyboardInterrupt!")
