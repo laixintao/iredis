@@ -1,3 +1,4 @@
+import re
 from pygments import lexer, token
 
 

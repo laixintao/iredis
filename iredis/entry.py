@@ -10,9 +10,17 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.styles import Style
+from prompt_toolkit.lexers import PygmentsLexer
+from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
+from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.contrib.regular_languages.compiler import compile
+from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
+from prompt_toolkit.lexers import SimpleLexer
+from prompt_toolkit.styles import Style
 
 from .client import Client
 from .renders import render_dict
+from .redis_lexer import RedisLexer
 
 
 logging.basicConfig(
@@ -34,12 +42,45 @@ STYLE = Style.from_dict(
 )
 
 
+def create_grammar():
+    return compile(
+        r"""
+        (\s*  (?P<command_key>(HGETALL|GET))   \s+   (?P<key>[0-9.]+)   \s*) |
+        (\s*  (?P<command_key_value>(SET|KSET))   \s+   (?P<key>[0-9.]+)   \s+   (?P<value>[0-9.]+)   \s*) 
+    """
+    )
+
+example_style = Style.from_dict({
+    'operator':       '#33aa33 bold',
+    'number':         '#ff0000 bold',
+
+    'trailing-input': 'bg:#662222 #ffffff',
+})
+
+g = create_grammar()
+
+lexer = GrammarLexer(g, lexers={
+    'command_key_value': SimpleLexer('class:pygments.keyword'),
+    'command_key': SimpleLexer('class:pygments.keyword'),
+    'key': SimpleLexer('class:operator'),
+    'value': SimpleLexer('class:number'),
+})
+
+# Can all grammer have only 1 token, and completer based on lexer?
+completer = GrammarCompleter(g, {
+    'command_key_value': WordCompleter(["HGETALL", "GET", "MGET"]),
+    'command_key': WordCompleter(["AGET", "AZZ", "AOK"]),
+})
+
 def repl(client, session):
     while True:
         logger.debug("REPL waiting for command...")
         try:
             command = session.prompt(
-                "{hostname}> ".format(hostname=str(client)), style=STYLE
+                "{hostname}> ".format(hostname=str(client)),
+                style=example_style,
+                lexer=lexer,
+                completer=completer
             )
         except KeyboardInterrupt:
             logger.warning("KeyboardInterrupt!")
