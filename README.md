@@ -22,6 +22,10 @@ $ iredis -h
 
 - <kbd>Ctrl</kbd> + <kbd>C</kbd> to clear cureent line, won't exit redis-cli. Use <kbd>Ctrl</kbd> + <kbd>D</kbd>  
 - Say "Goodbye!" to you when you exit!
+- <kbd>Ctrl</kbd> + <kbd>R</kbd> to open **reverse-i-search** to search through command history.
+
+## Planned Features
+
 - Zsh style history
 
 ## Related Projects
