@@ -8,9 +8,12 @@ import redis
 import click
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
+from prompt_toolkit.shortcuts import prompt
+from prompt_toolkit.styles import Style
 
 from .client import Client
 from .renders import render_dict
+
 
 logging.basicConfig(
     filename="iredis.log",
@@ -21,13 +24,23 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
+STYLE = Style.from_dict(
+    {
+        # User input (default text).
+        "": "",
+        # Prompt.
+        "hostname": "",
+    }
+)
 
 
 def repl(client, session):
     while True:
         logger.debug("REPL waiting for command...")
         try:
-            command = session.prompt(str(client))
+            command = session.prompt(
+                "{hostname}> ".format(hostname=str(client)), style=STYLE
+            )
         except KeyboardInterrupt:
             logger.warning("KeyboardInterrupt!")
             continue
