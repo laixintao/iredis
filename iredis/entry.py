@@ -23,11 +23,6 @@ logger = logging.getLogger(__name__)
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
 
 
-
-def print_answer(answers):
-    render_dict(answers)
-
-
 def repl(client, session):
     while True:
         logger.debug("REPL waiting for command...")
@@ -53,7 +48,7 @@ def repl(client, session):
 
         # Fine with answer
         else:
-            print_answer(answer)
+            print(answer)
 
 
 # command line entry here...
