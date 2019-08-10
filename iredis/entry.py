@@ -3,6 +3,7 @@ import os
 import sys
 import logging
 from pathlib import Path
+import time
 
 import redis
 import click
@@ -41,6 +42,7 @@ STYLE = Style.from_dict(
         "hostname": "",
     }
 )
+start_time = time.time()
 
 
 def create_grammar():
@@ -56,11 +58,13 @@ example_style = Style.from_dict(
 )
 
 g = create_grammar()
+logger.debug(f"[timer] Grammer created: {time.time() - start_time} from start.")
 
 lexer = GrammarLexer(
     g,
     lexers={
         "command_key_value": SimpleLexer("class:pygments.keyword"),
+        "command_key_fields": SimpleLexer("class:pygments.keyword"),
         "command_key": SimpleLexer("class:pygments.keyword"),
         "key": SimpleLexer("class:operator"),
         "value": SimpleLexer("class:number"),
@@ -73,12 +77,14 @@ completer = GrammarCompleter(
     g,
     {
         "command_key_value": WordCompleter(["SET", "GETSET"]),
+        "command_key_fields": WordCompleter(["HDEL"]),
         "command_key": WordCompleter(["HGETALL", "GET"]),
     },
 )
 
 
 def repl(client, session):
+    logger.debug(f"[timer] First REPL: {time.time() - start_time} from start.")
     while True:
         logger.debug("REPL waiting for command...")
         try:
