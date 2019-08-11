@@ -29,7 +29,7 @@ $ iredis -h
 There is a full Redis command list in [commands.csv](commands.csv) file, downloaded by:
 
 ```
-python script/download_redis_commands.py > commands.csv
+python scripts/download_redis_commands.py > commands.csv
 ```
 
 ## Planned Features
