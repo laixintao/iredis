@@ -25,12 +25,13 @@ eprint("Download finished!")
 eprint("Start prase page...")
 html = etree.HTML(page)
 commands = html.xpath("//div[@class='container']/ul/li")
+stdout_writer.writerow(["Group", "Command", "Args", "Summary", "Redis.io link"])
 for command in commands:
     group = command.attrib['data-group']
     command_name = command.xpath("./a/span[@class='command']/text()")[0].strip()
     command_args = command.xpath("./a/span[@class='command']/span[@class='args']/text()")[0].strip()
     command_summary = command.xpath("./a/span[@class='summary']/text()")[0].strip()
-    command_link = command.xpath("./a/@href")[0].strip()
+    command_link = "https://redis.io" + command.xpath("./a/@href")[0].strip()
     stdout_writer.writerow([
         group,
         command_name,
