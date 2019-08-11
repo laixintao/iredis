@@ -3,14 +3,27 @@ import os
 import sys
 import logging
 from pathlib import Path
+import time
 
 import redis
 import click
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
+from prompt_toolkit.shortcuts import prompt
+from prompt_toolkit.styles import Style
+from prompt_toolkit.lexers import PygmentsLexer
+from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.contrib.regular_languages.compiler import compile
+from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
+from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
+from prompt_toolkit.lexers import SimpleLexer
+from prompt_toolkit.styles import Style
 
 from .client import Client
 from .renders import render_dict
+from .redis_lexer import RedisLexer
+from .redis_commands import REDIS_COMMANDS
+
 
 logging.basicConfig(
     filename="iredis.log",
@@ -21,13 +34,66 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
+STYLE = Style.from_dict(
+    {
+        # User input (default text).
+        "": "",
+        # Prompt.
+        "hostname": "",
+    }
+)
+start_time = time.time()
+
+
+def create_grammar():
+    return compile(REDIS_COMMANDS)
+
+
+example_style = Style.from_dict(
+    {
+        "operator": "#33aa33 bold",
+        "number": "#ff0000 bold",
+        "trailing-input": "bg:#662222 #ffffff",
+    }
+)
+
+g = create_grammar()
+logger.debug(f"[timer] Grammer created: {time.time() - start_time} from start.")
+
+lexer = GrammarLexer(
+    g,
+    lexers={
+        "command_key_value": SimpleLexer("class:pygments.keyword"),
+        "command_key_fields": SimpleLexer("class:pygments.keyword"),
+        "command_key": SimpleLexer("class:pygments.keyword"),
+        "key": SimpleLexer("class:operator"),
+        "value": SimpleLexer("class:number"),
+    },
+)
+
+# TODO verify
+# Can all grammer have only 1 token, and completer based on lexer?
+completer = GrammarCompleter(
+    g,
+    {
+        "command_key_value": WordCompleter(["SET", "GETSET", "HAAA"]),
+        "command_key_fields": WordCompleter(["HDEL"]),
+        "command_key": WordCompleter(["HGETALL", "GET"]),
+    },
+)
 
 
 def repl(client, session):
+    logger.debug(f"[timer] First REPL: {time.time() - start_time} from start.")
     while True:
         logger.debug("REPL waiting for command...")
         try:
-            command = session.prompt(str(client))
+            command = session.prompt(
+                "{hostname}> ".format(hostname=str(client)),
+                style=example_style,
+                lexer=lexer,
+                completer=completer,
+            )
         except KeyboardInterrupt:
             logger.warning("KeyboardInterrupt!")
             continue

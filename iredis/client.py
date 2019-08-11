@@ -28,7 +28,7 @@ class Client:
         self.answer_callbacks = CaseInsensitiveDict(self.__class__.ANSWER_CALLBACKS)
 
     def __str__(self):
-        return f"{self.host}:{self.port}[{self.db}]> "
+        return f"{self.host}:{self.port}[{self.db}]"
 
     def send_command(self, command):
         redis_commands = command.split(" ")
