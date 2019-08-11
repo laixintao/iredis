@@ -1,0 +1,227 @@
+string,APPEND,key value,Append a value to a key,/commands/append
+connection,AUTH,password,Authenticate to the server,/commands/auth
+server,BGREWRITEAOF,,Asynchronously rewrite the append-only file,/commands/bgrewriteaof
+server,BGSAVE,,Asynchronously save the dataset to disk,/commands/bgsave
+string,BITCOUNT,key [start end],Count set bits in a string,/commands/bitcount
+string,BITFIELD,key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL],Perform arbitrary bitfield integer operations on strings,/commands/bitfield
+string,BITOP,operation destkey key [key ...],Perform bitwise operations between strings,/commands/bitop
+string,BITPOS,key bit [start] [end],Find first bit set or clear in a string,/commands/bitpos
+list,BLPOP,key [key ...] timeout,"Remove and get the first element in a list, or block until one is available",/commands/blpop
+list,BRPOP,key [key ...] timeout,"Remove and get the last element in a list, or block until one is available",/commands/brpop
+list,BRPOPLPUSH,source destination timeout,"Pop a value from a list, push it to another list and return it; or block until one is available",/commands/brpoplpush
+sorted_set,BZPOPMIN,key [key ...] timeout,"Remove and return the member with the lowest score from one or more sorted sets, or block until one is available",/commands/bzpopmin
+sorted_set,BZPOPMAX,key [key ...] timeout,"Remove and return the member with the highest score from one or more sorted sets, or block until one is available",/commands/bzpopmax
+server,CLIENT ID,,Returns the client ID for the current connection,/commands/client-id
+server,CLIENT KILL,[ip:port] [ID client-id] [TYPE normal|master|slave|pubsub] [ADDR ip:port] [SKIPME yes/no],Kill the connection of a client,/commands/client-kill
+server,CLIENT LIST,[TYPE normal|master|replica|pubsub],Get the list of client connections,/commands/client-list
+server,CLIENT GETNAME,,Get the current connection name,/commands/client-getname
+server,CLIENT PAUSE,timeout,Stop processing commands from clients for some time,/commands/client-pause
+server,CLIENT REPLY,ON|OFF|SKIP,Instruct the server whether to reply to commands,/commands/client-reply
+server,CLIENT SETNAME,connection-name,Set the current connection name,/commands/client-setname
+server,CLIENT UNBLOCK,client-id [TIMEOUT|ERROR],Unblock a client blocked in a blocking command from a different connection,/commands/client-unblock
+cluster,CLUSTER ADDSLOTS,slot [slot ...],Assign new hash slots to receiving node,/commands/cluster-addslots
+cluster,CLUSTER COUNT-FAILURE-REPORTS,node-id,Return the number of failure reports active for a given node,/commands/cluster-count-failure-reports
+cluster,CLUSTER COUNTKEYSINSLOT,slot,Return the number of local keys in the specified hash slot,/commands/cluster-countkeysinslot
+cluster,CLUSTER DELSLOTS,slot [slot ...],Set hash slots as unbound in receiving node,/commands/cluster-delslots
+cluster,CLUSTER FAILOVER,[FORCE|TAKEOVER],Forces a replica to perform a manual failover of its master.,/commands/cluster-failover
+cluster,CLUSTER FORGET,node-id,Remove a node from the nodes table,/commands/cluster-forget
+cluster,CLUSTER GETKEYSINSLOT,slot count,Return local key names in the specified hash slot,/commands/cluster-getkeysinslot
+cluster,CLUSTER INFO,,Provides info about Redis Cluster node state,/commands/cluster-info
+cluster,CLUSTER KEYSLOT,key,Returns the hash slot of the specified key,/commands/cluster-keyslot
+cluster,CLUSTER MEET,ip port,Force a node cluster to handshake with another node,/commands/cluster-meet
+cluster,CLUSTER NODES,,Get Cluster config for the node,/commands/cluster-nodes
+cluster,CLUSTER REPLICATE,node-id,Reconfigure a node as a replica of the specified master node,/commands/cluster-replicate
+cluster,CLUSTER RESET,[HARD|SOFT],Reset a Redis Cluster node,/commands/cluster-reset
+cluster,CLUSTER SAVECONFIG,,Forces the node to save cluster state on disk,/commands/cluster-saveconfig
+cluster,CLUSTER SET-CONFIG-EPOCH,config-epoch,Set the configuration epoch in a new node,/commands/cluster-set-config-epoch
+cluster,CLUSTER SETSLOT,slot IMPORTING|MIGRATING|STABLE|NODE [node-id],Bind a hash slot to a specific node,/commands/cluster-setslot
+cluster,CLUSTER SLAVES,node-id,List replica nodes of the specified master node,/commands/cluster-slaves
+cluster,CLUSTER REPLICAS,node-id,List replica nodes of the specified master node,/commands/cluster-replicas
+cluster,CLUSTER SLOTS,,Get array of Cluster slot to node mappings,/commands/cluster-slots
+server,COMMAND,,Get array of Redis command details,/commands/command
+server,COMMAND COUNT,,Get total number of Redis commands,/commands/command-count
+server,COMMAND GETKEYS,,Extract keys given a full Redis command,/commands/command-getkeys
+server,COMMAND INFO,command-name [command-name ...],Get array of specific Redis command details,/commands/command-info
+server,CONFIG GET,parameter,Get the value of a configuration parameter,/commands/config-get
+server,CONFIG REWRITE,,Rewrite the configuration file with the in memory configuration,/commands/config-rewrite
+server,CONFIG SET,parameter value,Set a configuration parameter to the given value,/commands/config-set
+server,CONFIG RESETSTAT,,Reset the stats returned by INFO,/commands/config-resetstat
+server,DBSIZE,,Return the number of keys in the selected database,/commands/dbsize
+server,DEBUG OBJECT,key,Get debugging information about a key,/commands/debug-object
+server,DEBUG SEGFAULT,,Make the server crash,/commands/debug-segfault
+string,DECR,key,Decrement the integer value of a key by one,/commands/decr
+string,DECRBY,key decrement,Decrement the integer value of a key by the given number,/commands/decrby
+generic,DEL,key [key ...],Delete a key,/commands/del
+transactions,DISCARD,,Discard all commands issued after MULTI,/commands/discard
+generic,DUMP,key,Return a serialized version of the value stored at the specified key.,/commands/dump
+connection,ECHO,message,Echo the given string,/commands/echo
+scripting,EVAL,script numkeys key [key ...] arg [arg ...],Execute a Lua script server side,/commands/eval
+scripting,EVALSHA,sha1 numkeys key [key ...] arg [arg ...],Execute a Lua script server side,/commands/evalsha
+transactions,EXEC,,Execute all commands issued after MULTI,/commands/exec
+generic,EXISTS,key [key ...],Determine if a key exists,/commands/exists
+generic,EXPIRE,key seconds,Set a key's time to live in seconds,/commands/expire
+generic,EXPIREAT,key timestamp,Set the expiration for a key as a UNIX timestamp,/commands/expireat
+server,FLUSHALL,[ASYNC],Remove all keys from all databases,/commands/flushall
+server,FLUSHDB,[ASYNC],Remove all keys from the current database,/commands/flushdb
+geo,GEOADD,key longitude latitude member [longitude latitude member ...],Add one or more geospatial items in the geospatial index represented using a sorted set,/commands/geoadd
+geo,GEOHASH,key member [member ...],Returns members of a geospatial index as standard geohash strings,/commands/geohash
+geo,GEOPOS,key member [member ...],Returns longitude and latitude of members of a geospatial index,/commands/geopos
+geo,GEODIST,key member1 member2 [unit],Returns the distance between two members of a geospatial index,/commands/geodist
+geo,GEORADIUS,key longitude latitude radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key],Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point,/commands/georadius
+geo,GEORADIUSBYMEMBER,key member radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key],Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a member,/commands/georadiusbymember
+string,GET,key,Get the value of a key,/commands/get
+string,GETBIT,key offset,Returns the bit value at offset in the string value stored at key,/commands/getbit
+string,GETRANGE,key start end,Get a substring of the string stored at a key,/commands/getrange
+string,GETSET,key value,Set the string value of a key and return its old value,/commands/getset
+hash,HDEL,key field [field ...],Delete one or more hash fields,/commands/hdel
+hash,HEXISTS,key field,Determine if a hash field exists,/commands/hexists
+hash,HGET,key field,Get the value of a hash field,/commands/hget
+hash,HGETALL,key,Get all the fields and values in a hash,/commands/hgetall
+hash,HINCRBY,key field increment,Increment the integer value of a hash field by the given number,/commands/hincrby
+hash,HINCRBYFLOAT,key field increment,Increment the float value of a hash field by the given amount,/commands/hincrbyfloat
+hash,HKEYS,key,Get all the fields in a hash,/commands/hkeys
+hash,HLEN,key,Get the number of fields in a hash,/commands/hlen
+hash,HMGET,key field [field ...],Get the values of all the given hash fields,/commands/hmget
+hash,HMSET,key field value [field value ...],Set multiple hash fields to multiple values,/commands/hmset
+hash,HSET,key field value,Set the string value of a hash field,/commands/hset
+hash,HSETNX,key field value,"Set the value of a hash field, only if the field does not exist",/commands/hsetnx
+hash,HSTRLEN,key field,Get the length of the value of a hash field,/commands/hstrlen
+hash,HVALS,key,Get all the values in a hash,/commands/hvals
+string,INCR,key,Increment the integer value of a key by one,/commands/incr
+string,INCRBY,key increment,Increment the integer value of a key by the given amount,/commands/incrby
+string,INCRBYFLOAT,key increment,Increment the float value of a key by the given amount,/commands/incrbyfloat
+server,INFO,[section],Get information and statistics about the server,/commands/info
+generic,KEYS,pattern,Find all keys matching the given pattern,/commands/keys
+server,LASTSAVE,,Get the UNIX time stamp of the last successful save to disk,/commands/lastsave
+list,LINDEX,key index,Get an element from a list by its index,/commands/lindex
+list,LINSERT,key BEFORE|AFTER pivot value,Insert an element before or after another element in a list,/commands/linsert
+list,LLEN,key,Get the length of a list,/commands/llen
+list,LPOP,key,Remove and get the first element in a list,/commands/lpop
+list,LPUSH,key value [value ...],Prepend one or multiple values to a list,/commands/lpush
+list,LPUSHX,key value,"Prepend a value to a list, only if the list exists",/commands/lpushx
+list,LRANGE,key start stop,Get a range of elements from a list,/commands/lrange
+list,LREM,key count value,Remove elements from a list,/commands/lrem
+list,LSET,key index value,Set the value of an element in a list by its index,/commands/lset
+list,LTRIM,key start stop,Trim a list to the specified range,/commands/ltrim
+server,MEMORY DOCTOR,,Outputs memory problems report,/commands/memory-doctor
+server,MEMORY HELP,,Show helpful text about the different subcommands,/commands/memory-help
+server,MEMORY MALLOC-STATS,,Show allocator internal stats,/commands/memory-malloc-stats
+server,MEMORY PURGE,,Ask the allocator to release memory,/commands/memory-purge
+server,MEMORY STATS,,Show memory usage details,/commands/memory-stats
+server,MEMORY USAGE,key [SAMPLES count],Estimate the memory usage of a key,/commands/memory-usage
+string,MGET,key [key ...],Get the values of all the given keys,/commands/mget
+generic,MIGRATE,"host port key|"""" destination-db timeout [COPY] [REPLACE] [KEYS key [key ...]]",Atomically transfer a key from a Redis instance to another one.,/commands/migrate
+server,MONITOR,,Listen for all requests received by the server in real time,/commands/monitor
+generic,MOVE,key db,Move a key to another database,/commands/move
+string,MSET,key value [key value ...],Set multiple keys to multiple values,/commands/mset
+string,MSETNX,key value [key value ...],"Set multiple keys to multiple values, only if none of the keys exist",/commands/msetnx
+transactions,MULTI,,Mark the start of a transaction block,/commands/multi
+generic,OBJECT,subcommand [arguments [arguments ...]],Inspect the internals of Redis objects,/commands/object
+generic,PERSIST,key,Remove the expiration from a key,/commands/persist
+generic,PEXPIRE,key milliseconds,Set a key's time to live in milliseconds,/commands/pexpire
+generic,PEXPIREAT,key milliseconds-timestamp,Set the expiration for a key as a UNIX timestamp specified in milliseconds,/commands/pexpireat
+hyperloglog,PFADD,key element [element ...],Adds the specified elements to the specified HyperLogLog.,/commands/pfadd
+hyperloglog,PFCOUNT,key [key ...],Return the approximated cardinality of the set(s) observed by the HyperLogLog at key(s).,/commands/pfcount
+hyperloglog,PFMERGE,destkey sourcekey [sourcekey ...],Merge N different HyperLogLogs into a single one.,/commands/pfmerge
+connection,PING,[message],Ping the server,/commands/ping
+string,PSETEX,key milliseconds value,Set the value and expiration in milliseconds of a key,/commands/psetex
+pubsub,PSUBSCRIBE,pattern [pattern ...],Listen for messages published to channels matching the given patterns,/commands/psubscribe
+pubsub,PUBSUB,subcommand [argument [argument ...]],Inspect the state of the Pub/Sub subsystem,/commands/pubsub
+generic,PTTL,key,Get the time to live for a key in milliseconds,/commands/pttl
+pubsub,PUBLISH,channel message,Post a message to a channel,/commands/publish
+pubsub,PUNSUBSCRIBE,[pattern [pattern ...]],Stop listening for messages posted to channels matching the given patterns,/commands/punsubscribe
+connection,QUIT,,Close the connection,/commands/quit
+generic,RANDOMKEY,,Return a random key from the keyspace,/commands/randomkey
+cluster,READONLY,,Enables read queries for a connection to a cluster replica node,/commands/readonly
+cluster,READWRITE,,Disables read queries for a connection to a cluster replica node,/commands/readwrite
+generic,RENAME,key newkey,Rename a key,/commands/rename
+generic,RENAMENX,key newkey,"Rename a key, only if the new key does not exist",/commands/renamenx
+generic,RESTORE,key ttl serialized-value [REPLACE] [ABSTTL] [IDLETIME seconds] [FREQ frequency],"Create a key using the provided serialized value, previously obtained using DUMP.",/commands/restore
+server,ROLE,,Return the role of the instance in the context of replication,/commands/role
+list,RPOP,key,Remove and get the last element in a list,/commands/rpop
+list,RPOPLPUSH,source destination,"Remove the last element in a list, prepend it to another list and return it",/commands/rpoplpush
+list,RPUSH,key value [value ...],Append one or multiple values to a list,/commands/rpush
+list,RPUSHX,key value,"Append a value to a list, only if the list exists",/commands/rpushx
+set,SADD,key member [member ...],Add one or more members to a set,/commands/sadd
+server,SAVE,,Synchronously save the dataset to disk,/commands/save
+set,SCARD,key,Get the number of members in a set,/commands/scard
+scripting,SCRIPT DEBUG,YES|SYNC|NO,Set the debug mode for executed scripts.,/commands/script-debug
+scripting,SCRIPT EXISTS,sha1 [sha1 ...],Check existence of scripts in the script cache.,/commands/script-exists
+scripting,SCRIPT FLUSH,,Remove all the scripts from the script cache.,/commands/script-flush
+scripting,SCRIPT KILL,,Kill the script currently in execution.,/commands/script-kill
+scripting,SCRIPT LOAD,script,Load the specified Lua script into the script cache.,/commands/script-load
+set,SDIFF,key [key ...],Subtract multiple sets,/commands/sdiff
+set,SDIFFSTORE,destination key [key ...],Subtract multiple sets and store the resulting set in a key,/commands/sdiffstore
+connection,SELECT,index,Change the selected database for the current connection,/commands/select
+string,SET,key value [expiration EX seconds|PX milliseconds] [NX|XX],Set the string value of a key,/commands/set
+string,SETBIT,key offset value,Sets or clears the bit at offset in the string value stored at key,/commands/setbit
+string,SETEX,key seconds value,Set the value and expiration of a key,/commands/setex
+string,SETNX,key value,"Set the value of a key, only if the key does not exist",/commands/setnx
+string,SETRANGE,key offset value,Overwrite part of a string at key starting at the specified offset,/commands/setrange
+server,SHUTDOWN,[NOSAVE|SAVE],Synchronously save the dataset to disk and then shut down the server,/commands/shutdown
+set,SINTER,key [key ...],Intersect multiple sets,/commands/sinter
+set,SINTERSTORE,destination key [key ...],Intersect multiple sets and store the resulting set in a key,/commands/sinterstore
+set,SISMEMBER,key member,Determine if a given value is a member of a set,/commands/sismember
+server,SLAVEOF,host port,"Make the server a replica of another instance, or promote it as master. Deprecated starting with Redis 5. Use REPLICAOF instead.",/commands/slaveof
+server,REPLICAOF,host port,"Make the server a replica of another instance, or promote it as master.",/commands/replicaof
+server,SLOWLOG,subcommand [argument],Manages the Redis slow queries log,/commands/slowlog
+set,SMEMBERS,key,Get all the members in a set,/commands/smembers
+set,SMOVE,source destination member,Move a member from one set to another,/commands/smove
+generic,SORT,key [BY pattern] [LIMIT offset count] [GET pattern [GET pattern ...]] [ASC|DESC] [ALPHA] [STORE destination],"Sort the elements in a list, set or sorted set",/commands/sort
+set,SPOP,key [count],Remove and return one or multiple random members from a set,/commands/spop
+set,SRANDMEMBER,key [count],Get one or multiple random members from a set,/commands/srandmember
+set,SREM,key member [member ...],Remove one or more members from a set,/commands/srem
+string,STRLEN,key,Get the length of the value stored in a key,/commands/strlen
+pubsub,SUBSCRIBE,channel [channel ...],Listen for messages published to the given channels,/commands/subscribe
+set,SUNION,key [key ...],Add multiple sets,/commands/sunion
+set,SUNIONSTORE,destination key [key ...],Add multiple sets and store the resulting set in a key,/commands/sunionstore
+connection,SWAPDB,index index,Swaps two Redis databases,/commands/swapdb
+server,SYNC,,Internal command used for replication,/commands/sync
+server,TIME,,Return the current server time,/commands/time
+generic,TOUCH,key [key ...],Alters the last access time of a key(s). Returns the number of existing keys specified.,/commands/touch
+generic,TTL,key,Get the time to live for a key,/commands/ttl
+generic,TYPE,key,Determine the type stored at key,/commands/type
+pubsub,UNSUBSCRIBE,[channel [channel ...]],Stop listening for messages posted to the given channels,/commands/unsubscribe
+generic,UNLINK,key [key ...],"Delete a key asynchronously in another thread. Otherwise it is just as DEL, but non blocking.",/commands/unlink
+transactions,UNWATCH,,Forget about all watched keys,/commands/unwatch
+generic,WAIT,numreplicas timeout,Wait for the synchronous replication of all the write commands sent in the context of the current connection,/commands/wait
+transactions,WATCH,key [key ...],Watch the given keys to determine execution of the MULTI/EXEC block,/commands/watch
+sorted_set,ZADD,key [NX|XX] [CH] [INCR] score member [score member ...],"Add one or more members to a sorted set, or update its score if it already exists",/commands/zadd
+sorted_set,ZCARD,key,Get the number of members in a sorted set,/commands/zcard
+sorted_set,ZCOUNT,key min max,Count the members in a sorted set with scores within the given values,/commands/zcount
+sorted_set,ZINCRBY,key increment member,Increment the score of a member in a sorted set,/commands/zincrby
+sorted_set,ZINTERSTORE,destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX],Intersect multiple sorted sets and store the resulting sorted set in a new key,/commands/zinterstore
+sorted_set,ZLEXCOUNT,key min max,Count the number of members in a sorted set between a given lexicographical range,/commands/zlexcount
+sorted_set,ZPOPMAX,key [count],Remove and return members with the highest scores in a sorted set,/commands/zpopmax
+sorted_set,ZPOPMIN,key [count],Remove and return members with the lowest scores in a sorted set,/commands/zpopmin
+sorted_set,ZRANGE,key start stop [WITHSCORES],"Return a range of members in a sorted set, by index",/commands/zrange
+sorted_set,ZRANGEBYLEX,key min max [LIMIT offset count],"Return a range of members in a sorted set, by lexicographical range",/commands/zrangebylex
+sorted_set,ZREVRANGEBYLEX,key max min [LIMIT offset count],"Return a range of members in a sorted set, by lexicographical range, ordered from higher to lower strings.",/commands/zrevrangebylex
+sorted_set,ZRANGEBYSCORE,key min max [WITHSCORES] [LIMIT offset count],"Return a range of members in a sorted set, by score",/commands/zrangebyscore
+sorted_set,ZRANK,key member,Determine the index of a member in a sorted set,/commands/zrank
+sorted_set,ZREM,key member [member ...],Remove one or more members from a sorted set,/commands/zrem
+sorted_set,ZREMRANGEBYLEX,key min max,Remove all members in a sorted set between the given lexicographical range,/commands/zremrangebylex
+sorted_set,ZREMRANGEBYRANK,key start stop,Remove all members in a sorted set within the given indexes,/commands/zremrangebyrank
+sorted_set,ZREMRANGEBYSCORE,key min max,Remove all members in a sorted set within the given scores,/commands/zremrangebyscore
+sorted_set,ZREVRANGE,key start stop [WITHSCORES],"Return a range of members in a sorted set, by index, with scores ordered from high to low",/commands/zrevrange
+sorted_set,ZREVRANGEBYSCORE,key max min [WITHSCORES] [LIMIT offset count],"Return a range of members in a sorted set, by score, with scores ordered from high to low",/commands/zrevrangebyscore
+sorted_set,ZREVRANK,key member,"Determine the index of a member in a sorted set, with scores ordered from high to low",/commands/zrevrank
+sorted_set,ZSCORE,key member,Get the score associated with the given member in a sorted set,/commands/zscore
+sorted_set,ZUNIONSTORE,destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX],Add multiple sorted sets and store the resulting sorted set in a new key,/commands/zunionstore
+generic,SCAN,cursor [MATCH pattern] [COUNT count] [TYPE type],Incrementally iterate the keys space,/commands/scan
+set,SSCAN,key cursor [MATCH pattern] [COUNT count],Incrementally iterate Set elements,/commands/sscan
+hash,HSCAN,key cursor [MATCH pattern] [COUNT count],Incrementally iterate hash fields and associated values,/commands/hscan
+sorted_set,ZSCAN,key cursor [MATCH pattern] [COUNT count],Incrementally iterate sorted sets elements and associated scores,/commands/zscan
+stream,XINFO,[CONSUMERS key groupname] [GROUPS key] [STREAM key] [HELP],Get information on streams and consumer groups,/commands/xinfo
+stream,XADD,key ID field string [field string ...],Appends a new entry to a stream,/commands/xadd
+stream,XTRIM,key MAXLEN [~] count,Trims the stream to (approximately if '~' is passed) a certain size,/commands/xtrim
+stream,XDEL,key ID [ID ...],"Removes the specified entries from the stream. Returns the number of items actually deleted, that may be different from the number of IDs passed in case certain IDs do not exist.",/commands/xdel
+stream,XRANGE,key start end [COUNT count],"Return a range of elements in a stream, with IDs matching the specified IDs interval",/commands/xrange
+stream,XREVRANGE,key end start [COUNT count],"Return a range of elements in a stream, with IDs matching the specified IDs interval, in reverse order (from greater to smaller IDs) compared to XRANGE",/commands/xrevrange
+stream,XLEN,key,Return the number of entires in a stream,/commands/xlen
+stream,XREAD,[COUNT count] [BLOCK milliseconds] STREAMS key [key ...] ID [ID ...],"Return never seen elements in multiple streams, with IDs greater than the ones reported by the caller for each stream. Can block.",/commands/xread
+stream,XGROUP,[CREATE key groupname id-or-$] [SETID key groupname id-or-$] [DESTROY key groupname] [DELCONSUMER key groupname consumername],"Create, destroy, and manage consumer groups.",/commands/xgroup
+stream,XREADGROUP,GROUP group consumer [COUNT count] [BLOCK milliseconds] [NOACK] STREAMS key [key ...] ID [ID ...],"Return new entries from a stream using a consumer group, or access the history of the pending entries for a given consumer. Can block.",/commands/xreadgroup
+stream,XACK,key group ID [ID ...],"Marks a pending message as correctly processed, effectively removing it from the pending entries list of the consumer group. Return value of the command is the number of messages successfully acknowledged, that is, the IDs we were actually able to resolve in the PEL.",/commands/xack
+stream,XCLAIM,key group consumer min-idle-time ID [ID ...] [IDLE ms] [TIME ms-unix-time] [RETRYCOUNT count] [FORCE] [JUSTID],"Changes (or acquires) ownership of a message in a consumer group, as if the message was delivered to the specified consumer.",/commands/xclaim
+stream,XPENDING,key group [start end count] [consumer],"Return information and entries from a stream consumer group pending entries list, that are messages fetched but never acknowledged.",/commands/xpending
