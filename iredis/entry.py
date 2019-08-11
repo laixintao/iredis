@@ -76,7 +76,7 @@ lexer = GrammarLexer(
 completer = GrammarCompleter(
     g,
     {
-        "command_key_value": WordCompleter(["SET", "GETSET"]),
+        "command_key_value": WordCompleter(["SET", "GETSET", "HAAA"]),
         "command_key_fields": WordCompleter(["HDEL"]),
         "command_key": WordCompleter(["HGETALL", "GET"]),
     },
