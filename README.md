@@ -4,7 +4,13 @@
 
 A Terminal Client for Redis with AutoCompletion and Syntax Highlighting.
 
-This project is under development, any comments are welcome.
+**This project is under development, any comments are welcome.**
+
+## Features
+
+- <kbd>Ctrl</kbd> + <kbd>C</kbd> to clear cureent line, won't exit redis-cli. Use <kbd>Ctrl</kbd> + <kbd>D</kbd>  
+- Say "Goodbye!" to you when you exit!
+- <kbd>Ctrl</kbd> + <kbd>R</kbd> to open **reverse-i-search** to search through command history.
 
 ## Install
 
@@ -18,11 +24,13 @@ pip install iredis
 $ iredis -h
 ```
 
-## Features
+## Development
 
-- <kbd>Ctrl</kbd> + <kbd>C</kbd> to clear cureent line, won't exit redis-cli. Use <kbd>Ctrl</kbd> + <kbd>D</kbd>  
-- Say "Goodbye!" to you when you exit!
-- <kbd>Ctrl</kbd> + <kbd>R</kbd> to open **reverse-i-search** to search through command history.
+There is a full Redis command list in [commands.csv](commands.csv) file, downloaded by:
+
+```
+python script/download_redis_commands.py > commands.csv
+```
 
 ## Planned Features
 
