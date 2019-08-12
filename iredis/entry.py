@@ -54,29 +54,23 @@ example_style = Style.from_dict(
 g = create_grammar()
 logger.debug(f"[timer] Grammer created: {time.time() - start_time} from start.")
 
-lexer = GrammarLexer(
-    g,
-    lexers={
-        "command_slots": SimpleLexer("class:pygments.keyword"),
-        "command_key_value": SimpleLexer("class:pygments.keyword"),
-        "command_key_fields": SimpleLexer("class:pygments.keyword"),
-        "command_key": SimpleLexer("class:pygments.keyword"),
-        "key": SimpleLexer("class:operator"),
-        "value": SimpleLexer("class:number"),
-    },
-)
-
 # TODO verify
 # Can all grammer have only 1 token, and completer based on lexer?
-completer = GrammarCompleter(
-    g,
-    {
-        "command_slots": WordCompleter(original_commands["command_slots"]),
-        "command_key_value": WordCompleter(["SET", "GETSET", "HAAA"]),
-        "command_key_fields": WordCompleter(["HDEL"]),
-        "command_key": WordCompleter(["HGETALL", "GET"]),
-    },
+lexers_dict = {
+    "key": SimpleLexer("class:operator"),
+    "value": SimpleLexer("class:number"),
+}
+lexers_dict.update(
+    {key: SimpleLexer("class:pygments.keyword") for key in original_commands.keys()}
 )
+lexer = GrammarLexer(g, lexers=lexers_dict)
+
+
+completer_mapping = {
+    syntax: WordCompleter(commands) for syntax, commands in original_commands.items()
+}
+# TODO add key value completer
+completer = GrammarCompleter(g, completer_mapping)
 
 
 def repl(client, session):
