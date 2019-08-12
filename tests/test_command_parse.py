@@ -106,3 +106,27 @@ def test_command_cluster_forget():
     judge("cluster forget a", None)
     judge("cluster forget a 2", None)
     judge("cluster forget abc", None)
+
+
+def test_command_cluster_getkeysinslot():
+    judge(
+        "cluster getkeysinslot 1 1",
+        {"command_slot_count": "cluster getkeysinslot", "slot": "1", "count": "1"},
+    )
+    judge(
+        "CLUSTER GETKEYSINSLOT 1 1",
+        {"command_slot_count": "CLUSTER GETKEYSINSLOT", "slot": "1", "count": "1"},
+    )
+    judge(
+        "cluster getkeysinslot 1123 1121",
+        {
+            "command_slot_count": "cluster getkeysinslot",
+            "slot": "1123",
+            "count": "1121",
+        },
+    )
+    judge("cluster getkeysinslot 1 2 3 4", None)
+    judge("cluster getkeysinslot 1 a", None)
+    judge("cluster getkeysinslot a", None)
+    judge("cluster getkeysinslot a 4", None)
+    judge("cluster getkeysinslot abc", None)
