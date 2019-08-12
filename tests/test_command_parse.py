@@ -41,3 +41,19 @@ def test_command_cluster_count_failure_reports():
     judge("cluster count-failure-reports a", None)
     judge("cluster count-failure-reports a 2", None)
     judge("cluster count-failure-reports abc", None)
+
+
+def test_command_cluster_countkeysinslot():
+    judge(
+        "cluster countkeysinslot 1",
+        {"command_slot": "cluster countkeysinslot", "slot": "1"},
+    )
+    judge(
+        "CLUSTER COUNTKEYSINSLOT 1",
+        {"command_slot": "CLUSTER COUNTKEYSINSLOT", "slot": "1"},
+    )
+    judge("cluster countkeysinslot 1 2 3 4", None)
+    judge("cluster countkeysinslot 1 a", None)
+    judge("cluster countkeysinslot a", None)
+    judge("cluster countkeysinslot a 4", None)
+    judge("cluster countkeysinslot abc", None)
