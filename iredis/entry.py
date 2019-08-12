@@ -93,7 +93,7 @@ def repl(client, session):
         except EOFError:
             print("Goodbye!")
             sys.exit()
-        logger.info(f"Command: {command}")
+        logger.info(f"[Command] {command}")
 
         # blank input
         if not command:

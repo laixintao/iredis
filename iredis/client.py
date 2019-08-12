@@ -32,7 +32,7 @@ class Client:
 
     def send_command(self, command):
         redis_commands = command.split(" ")
-        logger.debug(f"[Redis split comamnd] {redis_commands}")
+        logger.debug(f"[comamnd list] {redis_commands}")
         redis_resp = self._redis_client.execute_command(*redis_commands)
         # FIXME command name
         command_name = redis_commands[0]
