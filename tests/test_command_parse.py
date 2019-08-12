@@ -93,11 +93,10 @@ def test_command_cluster_failover():
         "CLUSTER FAILOVER TAKEOVER",
         {"command_failoverchoice": "CLUSTER FAILOVER", "failoverchoice": "TAKEOVER"},
     )
+
+
 def test_command_cluster_forget():
-    judge(
-        "cluster forget 1",
-        {"command_node": "cluster forget", "node": "1"},
-    )
+    judge("cluster forget 1", {"command_node": "cluster forget", "node": "1"})
     judge(
         "CLUSTER COUNT-FAILURE-REPORTS 1",
         {"command_node": "CLUSTER COUNT-FAILURE-REPORTS", "node": "1"},
@@ -107,4 +106,3 @@ def test_command_cluster_forget():
     judge("cluster forget a", None)
     judge("cluster forget a 2", None)
     judge("cluster forget abc", None)
-
