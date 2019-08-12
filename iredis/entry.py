@@ -22,15 +22,9 @@ from prompt_toolkit.styles import Style
 from .client import Client
 from .renders import render_dict
 from .redis_lexer import RedisLexer
-from .redis_commands import REDIS_COMMANDS
+from .redis_commands import REDIS_COMMANDS, original_commands
 
 
-logging.basicConfig(
-    filename="iredis.log",
-    filemode="a",
-    format="%(levelname)5s %(message)s",
-    level="DEBUG",
-)
 logger = logging.getLogger(__name__)
 
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
@@ -63,6 +57,7 @@ logger.debug(f"[timer] Grammer created: {time.time() - start_time} from start.")
 lexer = GrammarLexer(
     g,
     lexers={
+        "command_slots": SimpleLexer("class:pygments.keyword"),
         "command_key_value": SimpleLexer("class:pygments.keyword"),
         "command_key_fields": SimpleLexer("class:pygments.keyword"),
         "command_key": SimpleLexer("class:pygments.keyword"),
@@ -76,6 +71,7 @@ lexer = GrammarLexer(
 completer = GrammarCompleter(
     g,
     {
+        "command_slots": WordCompleter(original_commands["command_slots"]),
         "command_key_value": WordCompleter(["SET", "GETSET", "HAAA"]),
         "command_key_fields": WordCompleter(["HDEL"]),
         "command_key": WordCompleter(["HGETALL", "GET"]),
