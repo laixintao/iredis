@@ -13,7 +13,6 @@ from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.styles import Style
 from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.completion import WordCompleter
-from prompt_toolkit.contrib.regular_languages.compiler import compile
 from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
 from prompt_toolkit.lexers import SimpleLexer
@@ -22,15 +21,10 @@ from prompt_toolkit.styles import Style
 from .client import Client
 from .renders import render_dict
 from .redis_lexer import RedisLexer
-from .redis_commands import REDIS_COMMANDS
+from .redis_grammar import redis_grammar
+from .commands_csv_loader import original_commands
 
 
-logging.basicConfig(
-    filename="iredis.log",
-    filemode="a",
-    format="%(levelname)5s %(message)s",
-    level="DEBUG",
-)
 logger = logging.getLogger(__name__)
 
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
@@ -45,10 +39,6 @@ STYLE = Style.from_dict(
 start_time = time.time()
 
 
-def create_grammar():
-    return compile(REDIS_COMMANDS)
-
-
 example_style = Style.from_dict(
     {
         "operator": "#33aa33 bold",
@@ -57,30 +47,26 @@ example_style = Style.from_dict(
     }
 )
 
-g = create_grammar()
 logger.debug(f"[timer] Grammer created: {time.time() - start_time} from start.")
 
-lexer = GrammarLexer(
-    g,
-    lexers={
-        "command_key_value": SimpleLexer("class:pygments.keyword"),
-        "command_key_fields": SimpleLexer("class:pygments.keyword"),
-        "command_key": SimpleLexer("class:pygments.keyword"),
-        "key": SimpleLexer("class:operator"),
-        "value": SimpleLexer("class:number"),
-    },
-)
-
 # TODO verify
-# Can all grammer have only 1 token, and completer based on lexer?
-completer = GrammarCompleter(
-    g,
-    {
-        "command_key_value": WordCompleter(["SET", "GETSET", "HAAA"]),
-        "command_key_fields": WordCompleter(["HDEL"]),
-        "command_key": WordCompleter(["HGETALL", "GET"]),
-    },
+# Can all redis_grammar have only 1 token, and completer based on lexer?
+lexers_dict = {
+    "key": SimpleLexer("class:operator"),
+    "value": SimpleLexer("class:number"),
+}
+lexers_dict.update(
+    {key: SimpleLexer("class:pygments.keyword") for key in original_commands.keys()}
 )
+lexer = GrammarLexer(redis_grammar, lexers=lexers_dict)
+
+
+completer_mapping = {
+    syntax: WordCompleter(commands + [command.lower() for command in commands])
+    for syntax, commands in original_commands.items()
+}
+# TODO add key value completer
+completer = GrammarCompleter(redis_grammar, completer_mapping)
 
 
 def repl(client, session):
