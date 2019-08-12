@@ -15,6 +15,7 @@ from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.lexers import SimpleLexer
 from prompt_toolkit.styles import Style
 
@@ -84,6 +85,7 @@ def repl(client, session):
                 style=example_style,
                 lexer=lexer,
                 completer=completer,
+                auto_suggest=AutoSuggestFromHistory(),
             )
         except KeyboardInterrupt:
             logger.warning("KeyboardInterrupt!")
