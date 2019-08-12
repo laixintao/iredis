@@ -67,7 +67,8 @@ lexer = GrammarLexer(g, lexers=lexers_dict)
 
 
 completer_mapping = {
-    syntax: WordCompleter(commands) for syntax, commands in original_commands.items()
+    syntax: WordCompleter(commands + [command.lower() for command in commands])
+    for syntax, commands in original_commands.items()
 }
 # TODO add key value completer
 completer = GrammarCompleter(g, completer_mapping)
