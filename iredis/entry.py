@@ -21,7 +21,7 @@ from prompt_toolkit.styles import Style
 from .client import Client
 from .renders import render_dict
 from .redis_lexer import RedisLexer
-from .redis_commands import original_commands, redis_grammar
+from .redis_grammar import original_commands, redis_grammar
 
 
 logger = logging.getLogger(__name__)
