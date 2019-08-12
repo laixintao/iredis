@@ -27,7 +27,7 @@ for syntax in t.keys():
     commands = t[syntax]
     lower_commands = [command.lower() for command in commands]
     commands += lower_commands
-    re_commands = [command.replace(" ","\s+") for command in commands]
+    re_commands = [command.replace(" ", "\s+") for command in commands]
     t[syntax] = "|".join(re_commands)
 
 
