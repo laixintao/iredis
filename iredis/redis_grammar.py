@@ -16,7 +16,7 @@ FIELDS = f"""(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"""
 FAILOVERCHOICE = (
     "(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
 )  # TODO is lowercase accept by server?
-COUNT = "\d+"
+COUNT = f"""(?P<count>\d+)"""
 
 
 REDIS_COMMANDS = f"""
