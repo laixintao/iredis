@@ -60,12 +60,8 @@ def test_command_cluster_countkeysinslot():
 
 
 def test_command_cluster_delslots():
-    judge(
-        "cluster delslots 1", {"command_slots": "cluster delslots", "slots": "1"}
-    )
-    judge(
-        "CLUSTER DELSLOTS 1", {"command_slots": "CLUSTER DELSLOTS", "slots": "1"}
-    )
+    judge("cluster delslots 1", {"command_slots": "cluster delslots", "slots": "1"})
+    judge("CLUSTER DELSLOTS 1", {"command_slots": "CLUSTER DELSLOTS", "slots": "1"})
     judge(
         "cluster delslots 1 2 3 4",
         {"command_slots": "cluster delslots", "slots": "1 2 3 4"},
@@ -74,3 +70,26 @@ def test_command_cluster_delslots():
     judge("cluster delslots a", None)
     judge("cluster delslots a 4", None)
     judge("cluster delslots abc", None)
+
+
+def test_command_cluster_failover():
+    judge(
+        "cluster failover force",
+        {"command_failoverchoice": "cluster failover", "failoverchoice": "force"},
+    )
+    judge(
+        "cluster failover takeover",
+        {"command_failoverchoice": "cluster failover", "failoverchoice": "takeover"},
+    )
+    judge(
+        "CLUSTER FAILOVER FORCE",
+        {"command_failoverchoice": "CLUSTER FAILOVER", "failoverchoice": "FORCE"},
+    )
+    judge(
+        "CLUSTER FAILOVER takeover",
+        {"command_failoverchoice": "CLUSTER FAILOVER", "failoverchoice": "takeover"},
+    )
+    judge(
+        "CLUSTER FAILOVER TAKEOVER",
+        {"command_failoverchoice": "CLUSTER FAILOVER", "failoverchoice": "TAKEOVER"},
+    )
