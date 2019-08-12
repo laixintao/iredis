@@ -13,12 +13,16 @@ NODE = f"(?P<node>{VALID_NODE})"
 KEY = f"""(?P<key>{VALID_TOKEN})"""
 VALUE = f"""(?P<value>{VALID_TOKEN})"""
 FIELDS = f"""(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"""
+FAILOVERCHOICE = (
+    "(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
+)  # TODO is lowercase accept by server?
 
 
 REDIS_COMMANDS = f"""
 (\s*  (?P<command_slots>({t['command_slots']}))        \s+ {SLOTS}                                    \s*)|
 (\s*  (?P<command_node>({t['command_node']}))          \s+ {NODE}                                     \s*)|
 (\s*  (?P<command_slot>({t['command_slot']}))          \s+ {SLOT}                                     \s*)|
+(\s*  (?P<command_failoverchoice>({t['command_failoverchoice']}))          \s+ {FAILOVERCHOICE}       \s*)|
 
 (\s*  (?P<command_key>(HGETALL|GET))      \s+  {KEY}                                    \s*)|
 (\s*  (?P<command_key_fields>(HDEL))      \s+  {KEY}  \s+ {FIELDS}                      \s*)|
