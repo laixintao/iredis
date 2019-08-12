@@ -1,2 +1,6 @@
+Group,Command,Syntax
 cluster,CLUSTER ADDSLOTS,command_slots
 cluster,CLUSTER COUNT-FAILURE-REPORTS,command_node
+cluster,CLUSTER COUNTKEYSINSLOT,command_slot
+cluster,CLUSTER DELSLOTS,command_slots
+cluster,CLUSTER FAILOVER,command_failoverchoice

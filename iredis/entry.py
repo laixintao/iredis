@@ -62,10 +62,15 @@ lexer = GrammarLexer(redis_grammar, lexers=lexers_dict)
 
 
 completer_mapping = {
-    syntax: WordCompleter(commands + [command.lower() for command in commands])
+    syntax: WordCompleter(
+        commands + [command.lower() for command in commands], sentence=True
+    )
     for syntax, commands in original_commands.items()
 }
 # TODO add key value completer
+completer_mapping.update(
+    {"failoverchoice": WordCompleter(["TAKEOVER", "FORCE", "takeover", "force"])}
+)
 completer = GrammarCompleter(redis_grammar, completer_mapping)
 
 
