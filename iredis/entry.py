@@ -66,6 +66,9 @@ completer_mapping = {
     for syntax, commands in original_commands.items()
 }
 # TODO add key value completer
+completer_mapping.update(
+    {"failoverchoice": WordCompleter(["TAKEOVER", "FORCE", "takeover", "force"])}
+)
 completer = GrammarCompleter(redis_grammar, completer_mapping)
 
 
