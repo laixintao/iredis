@@ -13,7 +13,6 @@ from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.styles import Style
 from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.completion import WordCompleter
-from prompt_toolkit.contrib.regular_languages.compiler import compile
 from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
 from prompt_toolkit.lexers import SimpleLexer
@@ -22,7 +21,7 @@ from prompt_toolkit.styles import Style
 from .client import Client
 from .renders import render_dict
 from .redis_lexer import RedisLexer
-from .redis_commands import REDIS_COMMANDS, original_commands
+from .redis_commands import original_commands, redis_grammar
 
 
 logger = logging.getLogger(__name__)
@@ -39,10 +38,6 @@ STYLE = Style.from_dict(
 start_time = time.time()
 
 
-def create_grammar():
-    return compile(REDIS_COMMANDS)
-
-
 example_style = Style.from_dict(
     {
         "operator": "#33aa33 bold",
@@ -51,11 +46,10 @@ example_style = Style.from_dict(
     }
 )
 
-g = create_grammar()
 logger.debug(f"[timer] Grammer created: {time.time() - start_time} from start.")
 
 # TODO verify
-# Can all grammer have only 1 token, and completer based on lexer?
+# Can all redis_grammar have only 1 token, and completer based on lexer?
 lexers_dict = {
     "key": SimpleLexer("class:operator"),
     "value": SimpleLexer("class:number"),
@@ -63,7 +57,7 @@ lexers_dict = {
 lexers_dict.update(
     {key: SimpleLexer("class:pygments.keyword") for key in original_commands.keys()}
 )
-lexer = GrammarLexer(g, lexers=lexers_dict)
+lexer = GrammarLexer(redis_grammar, lexers=lexers_dict)
 
 
 completer_mapping = {
@@ -71,7 +65,7 @@ completer_mapping = {
     for syntax, commands in original_commands.items()
 }
 # TODO add key value completer
-completer = GrammarCompleter(g, completer_mapping)
+completer = GrammarCompleter(redis_grammar, completer_mapping)
 
 
 def repl(client, session):
