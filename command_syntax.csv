@@ -1,1 +1,2 @@
 cluster,CLUSTER ADDSLOTS,command_slots
+cluster,CLUSTER COUNT-FAILURE-REPORTS,command_node

@@ -1,6 +1,8 @@
 import csv
 import copy
 
+from prompt_toolkit.contrib.regular_languages.compiler import compile
+
 VALID_TOKEN = r"""(
 ("([^"]|\\")*?")     |# with quotes
 ([^\s"]+)             # without quotes
@@ -38,3 +40,5 @@ REDIS_COMMANDS = f"""
 (\s*  (?P<command_key_fields>(HDEL))      \s+  {KEY}  \s+ {FIELDS}                      \s*)|
 (\s*  (?P<command_key_value>(SET|KSET|HAAA))   \s+   {KEY}   \s+   {VALUE}                \s*) 
 """
+
+redis_grammar = compile(REDIS_COMMANDS)
