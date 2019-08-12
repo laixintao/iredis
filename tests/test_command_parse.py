@@ -57,3 +57,20 @@ def test_command_cluster_countkeysinslot():
     judge("cluster countkeysinslot a", None)
     judge("cluster countkeysinslot a 4", None)
     judge("cluster countkeysinslot abc", None)
+
+
+def test_command_cluster_delslots():
+    judge(
+        "cluster delslots 1", {"command_slots": "cluster delslots", "slots": "1"}
+    )
+    judge(
+        "CLUSTER DELSLOTS 1", {"command_slots": "CLUSTER DELSLOTS", "slots": "1"}
+    )
+    judge(
+        "cluster delslots 1 2 3 4",
+        {"command_slots": "cluster delslots", "slots": "1 2 3 4"},
+    )
+    judge("cluster delslots 1 a", None)
+    judge("cluster delslots a", None)
+    judge("cluster delslots a 4", None)
+    judge("cluster delslots abc", None)
