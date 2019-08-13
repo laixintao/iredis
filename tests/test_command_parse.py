@@ -130,3 +130,9 @@ def test_command_cluster_getkeysinslot():
     judge("cluster getkeysinslot a", None)
     judge("cluster getkeysinslot a 4", None)
     judge("cluster getkeysinslot abc", None)
+
+def test_command_cluster_info():
+    judge("cluster info", {"command": "cluster info"})
+    judge("CLUSTER INFO", {"command": "CLUSTER INFO"})
+    judge("CLUSTER INFO 1", None)
+    judge("Acluster info", None)

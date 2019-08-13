@@ -25,6 +25,9 @@ REDIS_COMMANDS = f"""
 (\s*  (?P<command_slot>({t['command_slot']}))          \s+ {SLOT}                                     \s*)|
 (\s*  (?P<command_failoverchoice>({t['command_failoverchoice']}))  \s+ {FAILOVERCHOICE}               \s*)|
 (\s*  (?P<command_slot_count>({t['command_slot_count']}))          \s+ {SLOT}   \s+   {COUNT}         \s*)|
+(\s*  (?P<command>({t['command']}))                                                                   \s*)|
+
+
 
 (\s*  (?P<command_key>(HGETALL|GET))      \s+  {KEY}                                    \s*)|
 (\s*  (?P<command_key_fields>(HDEL))      \s+  {KEY}  \s+ {FIELDS}                      \s*)|
