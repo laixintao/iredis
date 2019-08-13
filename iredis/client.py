@@ -31,10 +31,17 @@ class Client:
         return f"{self.host}:{self.port}[{self.db}]"
 
     def send_command(self, command):
+        # FIXME args include ", strip it
+        # multi key: "123" "foo" "bar"
+        # \" : "fo\"o"
+        # space
         redis_commands = command.split(" ")
         logger.debug(f"[comamnd list] {redis_commands}")
         redis_resp = self._redis_client.execute_command(*redis_commands)
-        # FIXME command name
+        # FIXME command name can not only split by " "
+        # command name include " "
+        # for key in variables:
+        #   key.starts_with command_*  then it is command
         command_name = redis_commands[0]
         if command_name in self.answer_callbacks:
             rendered = self.answer_callbacks[command_name](redis_resp)

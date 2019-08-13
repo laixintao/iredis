@@ -11,6 +11,8 @@ A Terminal Client for Redis with AutoCompletion and Syntax Highlighting.
 - <kbd>Ctrl</kbd> + <kbd>C</kbd> to clear cureent line, won't exit redis-cli. Use <kbd>Ctrl</kbd> + <kbd>D</kbd>  
 - Say "Goodbye!" to you when you exit!
 - <kbd>Ctrl</kbd> + <kbd>R</kbd> to open **reverse-i-search** to search through command history.
+- iredis is smart, `CLUSTER NODES`, then `CLUSTER COUNT-FAILURE-REPORTS node-id`, iredis will do auto complete based on previous command.
+- Command validate: `CLUSTER MEET IP PORT`
 
 ## Install
 

@@ -4,3 +4,13 @@ cluster,CLUSTER COUNT-FAILURE-REPORTS,command_node
 cluster,CLUSTER COUNTKEYSINSLOT,command_slot
 cluster,CLUSTER DELSLOTS,command_slots
 cluster,CLUSTER FAILOVER,command_failoverchoice
+cluster,CLUSTER FORGET,command_node
+cluster,CLUSTER GETKEYSINSLOT,command_slot_count
+cluster,CLUSTER INFO,command
+cluster,CLUSTER KEYSLOT,command_key
+cluster,CLUSTER MEET,command_ip_port
+cluster,CLUSTER NODES,command
+cluster,CLUSTER REPLICAS,command_node
+cluster,CLUSTER REPLICATE,command_node
+cluster,CLUSTER RESET,command_resetchoice
+cluster,CLUSTER SAVECONFIG,command
