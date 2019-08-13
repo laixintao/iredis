@@ -162,3 +162,33 @@ def test_command_cluster_meet(judge_command):
 def test_command_cluster_nodes(judge_command):
     judge_command("cluster nodes", {"command": "cluster nodes"})
     judge_command("CLUSTER NODES", {"command": "CLUSTER NODES"})
+
+def test_command_cluster_reset(judge_command):
+    judge_command(
+        "cluster reset hard",
+        {"command_resetchoice": "cluster reset", "resetchoice": "hard"},
+    )
+    judge_command(
+        "cluster reset soft",
+        {"command_resetchoice": "cluster reset", "resetchoice": "soft"},
+    )
+    judge_command(
+        "CLUSTER RESET HARD",
+        {"command_resetchoice": "CLUSTER RESET", "resetchoice": "HARD"},
+    )
+    judge_command(
+        "CLUSTER RESET soft",
+        {"command_resetchoice": "CLUSTER RESET", "resetchoice": "soft"},
+    )
+    judge_command(
+        "CLUSTER RESET SOFT",
+        {"command_resetchoice": "CLUSTER RESET", "resetchoice": "SOFT"},
+    )
+    judge_command(
+        "CLUSTER RESET SOFT1",
+        None
+    )
+    judge_command(
+        "CLUSTER RESET SAOFT",
+        None
+    )

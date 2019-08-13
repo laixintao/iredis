@@ -17,6 +17,9 @@ FIELDS = f"""(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"""
 FAILOVERCHOICE = (
     "(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
 )  # TODO is lowercase accept by server?
+RESETCHOICE = (
+    "(?P<resetchoice>(HARD|SOFT|hard|soft))"
+)  # TODO is lowercase accept by server?
 COUNT = f"""(?P<count>\d+)"""
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
@@ -35,6 +38,7 @@ REDIS_COMMANDS = f"""
 (\s*  (?P<command_node>({t['command_node']}))          \s+ {NODE}                                     \s*)|
 (\s*  (?P<command_slot>({t['command_slot']}))          \s+ {SLOT}                                     \s*)|
 (\s*  (?P<command_failoverchoice>({t['command_failoverchoice']}))  \s+ {FAILOVERCHOICE}               \s*)|
+(\s*  (?P<command_resetchoice>({t['command_resetchoice']}))        \s+ {RESETCHOICE}               \s*)|
 (\s*  (?P<command_slot_count>({t['command_slot_count']}))          \s+ {SLOT}   \s+   {COUNT}         \s*)|
 (\s*  (?P<command>({t['command']}))                                                                   \s*)|
 (\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
