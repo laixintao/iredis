@@ -13,3 +13,4 @@ cluster,CLUSTER NODES,command
 cluster,CLUSTER REPLICAS,command_node
 cluster,CLUSTER REPLICATE,command_node
 cluster,CLUSTER RESET,command_resetchoice
+cluster,CLUSTER SAVECONFIG,command
