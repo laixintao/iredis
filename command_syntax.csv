@@ -14,3 +14,4 @@ cluster,CLUSTER REPLICAS,command_node
 cluster,CLUSTER REPLICATE,command_node
 cluster,CLUSTER RESET,command_resetchoice
 cluster,CLUSTER SAVECONFIG,command
+cluster,CLUSTER SET-CONFIG-EPOCH,command_epoch
