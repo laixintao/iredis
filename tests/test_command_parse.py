@@ -131,8 +131,29 @@ def test_command_cluster_getkeysinslot():
     judge("cluster getkeysinslot a 4", None)
     judge("cluster getkeysinslot abc", None)
 
+
 def test_command_cluster_info():
     judge("cluster info", {"command": "cluster info"})
     judge("CLUSTER INFO", {"command": "CLUSTER INFO"})
     judge("CLUSTER INFO 1", None)
     judge("Acluster info", None)
+
+
+def test_command_cluster_keyslot():
+    judge("cluster keyslot mykey", {"command_key": "cluster keyslot", "key": "mykey"})
+    judge("cluster keyslot MYKEY", {"command_key": "cluster keyslot", "key": "MYKEY"})
+    judge("CLUSTER KEYSLOT MYKEY", {"command_key": "CLUSTER KEYSLOT", "key": "MYKEY"})
+
+
+def test_command_with_key_in_quotes():
+    judge(
+        'cluster keyslot "mykey"', {"command_key": "cluster keyslot", "key": '"mykey"'}
+    )
+    judge(
+        'cluster keyslot "\\"mykey"',
+        {"command_key": "cluster keyslot", "key": '"\\"mykey"'},
+    )
+    judge(
+        'cluster keyslot "mykey "',
+        {"command_key": "cluster keyslot", "key": '"mykey "'},
+    )
