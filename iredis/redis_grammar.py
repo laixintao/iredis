@@ -7,6 +7,7 @@ VALID_TOKEN = r"""(
 )"""
 VALID_SLOT = """\d+"""  # TODO add range? max value:16384
 VALID_NODE = "\d+"
+
 SLOT = f"""(?P<slot>{VALID_SLOT})"""
 SLOTS = f"""(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"""
 NODE = f"(?P<node>{VALID_NODE})"
@@ -26,7 +27,7 @@ REDIS_COMMANDS = f"""
 (\s*  (?P<command_failoverchoice>({t['command_failoverchoice']}))  \s+ {FAILOVERCHOICE}               \s*)|
 (\s*  (?P<command_slot_count>({t['command_slot_count']}))          \s+ {SLOT}   \s+   {COUNT}         \s*)|
 (\s*  (?P<command>({t['command']}))                                                                   \s*)|
-
+(\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
 
 
 (\s*  (?P<command_key>(HGETALL|GET))      \s+  {KEY}                                    \s*)|
