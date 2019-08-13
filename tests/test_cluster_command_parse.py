@@ -146,3 +146,14 @@ def test_command_cluster_keyslot(judge_command):
     judge_command(
         "CLUSTER KEYSLOT MYKEY", {"command_key": "CLUSTER KEYSLOT", "key": "MYKEY"}
     )
+
+
+def test_command_cluster_meet(judge_command):
+    judge_command(
+        "cluster meet 192.168.0.1 12200",
+        {"command_ip_port": "cluster meet", "ip": "192.168.0.1", "port": "12200"},
+    )
+    judge_command(
+        "CLUSTER MEET 192.168.0.1 12200",
+        {"command_ip_port": "CLUSTER MEET", "ip": "192.168.0.1", "port": "12200"},
+    )
