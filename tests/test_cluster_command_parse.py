@@ -163,6 +163,7 @@ def test_command_cluster_nodes(judge_command):
     judge_command("cluster nodes", {"command": "cluster nodes"})
     judge_command("CLUSTER NODES", {"command": "CLUSTER NODES"})
 
+
 def test_command_cluster_reset(judge_command):
     judge_command(
         "cluster reset hard",
@@ -184,11 +185,17 @@ def test_command_cluster_reset(judge_command):
         "CLUSTER RESET SOFT",
         {"command_resetchoice": "CLUSTER RESET", "resetchoice": "SOFT"},
     )
+    judge_command("CLUSTER RESET SOFT1", None)
+    judge_command("CLUSTER RESET SAOFT", None)
+
+
+def test_command_cluster_set_config_epoch(judge_command):
+    judge_command("cluster set-config-epoch 123123 ad", None)
     judge_command(
-        "CLUSTER RESET SOFT1",
-        None
+        "cluster set-config-epoch 0 ",
+        {"command_epoch": "cluster set-config-epoch", "epoch": "0"},
     )
     judge_command(
-        "CLUSTER RESET SAOFT",
-        None
+        "cluster set-config-epoch 123123 ",
+        {"command_epoch": "cluster set-config-epoch", "epoch": "123123"},
     )
