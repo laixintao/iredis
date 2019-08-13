@@ -18,6 +18,16 @@ FAILOVERCHOICE = (
     "(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
 )  # TODO is lowercase accept by server?
 COUNT = f"""(?P<count>\d+)"""
+# IP re copied from:
+# https://www.regular-expressions.info/ip.html
+IP = """(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
+               (25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
+               (25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
+               (25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]))"""
+# Port re copied from:
+# https://stackoverflow.com/questions/12968093/regex-to-validate-port-number
+# pompt_toolkit limit: Exception: {4}-style repetition not yet supported
+PORT = "(?P<port>[1-9]|[1-5]?\d\d\d?\d?|6[1-4][0-9]\d\d\d|65[1-4]\d\d|655[1-2][0-9]|6553[1-5])"
 
 
 REDIS_COMMANDS = f"""
@@ -28,6 +38,7 @@ REDIS_COMMANDS = f"""
 (\s*  (?P<command_slot_count>({t['command_slot_count']}))          \s+ {SLOT}   \s+   {COUNT}         \s*)|
 (\s*  (?P<command>({t['command']}))                                                                   \s*)|
 (\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
+(\s*  (?P<command_ip_port>({t['command_ip_port']}))    \s+ {IP}    \s+ {PORT}                         \s*)|
 
 
 (\s*  (?P<command_key>(HGETALL|GET))      \s+  {KEY}                                    \s*)|
