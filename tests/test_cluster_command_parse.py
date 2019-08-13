@@ -1,6 +1,15 @@
+"""
+redis command in `cluster` group parse test.
+"""
+
+
 def test_command_cluster_addslots(judge_command):
-    judge_command("cluster addslots 1", {"command_slots": "cluster addslots", "slots": "1"})
-    judge_command("CLUSTER ADDSLOTS 1", {"command_slots": "CLUSTER ADDSLOTS", "slots": "1"})
+    judge_command(
+        "cluster addslots 1", {"command_slots": "cluster addslots", "slots": "1"}
+    )
+    judge_command(
+        "CLUSTER ADDSLOTS 1", {"command_slots": "CLUSTER ADDSLOTS", "slots": "1"}
+    )
     judge_command(
         "cluster addslots 1 2 3 4",
         {"command_slots": "cluster addslots", "slots": "1 2 3 4"},
@@ -44,8 +53,12 @@ def test_command_cluster_countkeysinslot(judge_command):
 
 
 def test_command_cluster_delslots(judge_command):
-    judge_command("cluster delslots 1", {"command_slots": "cluster delslots", "slots": "1"})
-    judge_command("CLUSTER DELSLOTS 1", {"command_slots": "CLUSTER DELSLOTS", "slots": "1"})
+    judge_command(
+        "cluster delslots 1", {"command_slots": "cluster delslots", "slots": "1"}
+    )
+    judge_command(
+        "CLUSTER DELSLOTS 1", {"command_slots": "CLUSTER DELSLOTS", "slots": "1"}
+    )
     judge_command(
         "cluster delslots 1 2 3 4",
         {"command_slots": "cluster delslots", "slots": "1 2 3 4"},
@@ -124,6 +137,12 @@ def test_command_cluster_info(judge_command):
 
 
 def test_command_cluster_keyslot(judge_command):
-    judge_command("cluster keyslot mykey", {"command_key": "cluster keyslot", "key": "mykey"})
-    judge_command("cluster keyslot MYKEY", {"command_key": "cluster keyslot", "key": "MYKEY"})
-    judge_command("CLUSTER KEYSLOT MYKEY", {"command_key": "CLUSTER KEYSLOT", "key": "MYKEY"})
+    judge_command(
+        "cluster keyslot mykey", {"command_key": "cluster keyslot", "key": "mykey"}
+    )
+    judge_command(
+        "cluster keyslot MYKEY", {"command_key": "cluster keyslot", "key": "MYKEY"}
+    )
+    judge_command(
+        "CLUSTER KEYSLOT MYKEY", {"command_key": "CLUSTER KEYSLOT", "key": "MYKEY"}
+    )
