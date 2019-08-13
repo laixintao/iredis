@@ -21,7 +21,6 @@ from prompt_toolkit.styles import Style
 
 from .client import Client
 from .renders import render_dict
-from .redis_lexer import RedisLexer
 from .redis_grammar import redis_grammar
 from .commands_csv_loader import original_commands
 
