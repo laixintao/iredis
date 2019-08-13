@@ -10,3 +10,6 @@ cluster,CLUSTER INFO,command
 cluster,CLUSTER KEYSLOT,command_key
 cluster,CLUSTER MEET,command_ip_port
 cluster,CLUSTER NODES,command
+cluster,CLUSTER REPLICAS,command_node
+cluster,CLUSTER REPLICATE,command_node
+cluster,CLUSTER RESET,command_resetchoice
