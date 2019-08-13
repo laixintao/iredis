@@ -157,3 +157,8 @@ def test_command_cluster_meet(judge_command):
         "CLUSTER MEET 192.168.0.1 12200",
         {"command_ip_port": "CLUSTER MEET", "ip": "192.168.0.1", "port": "12200"},
     )
+
+
+def test_command_cluster_nodes(judge_command):
+    judge_command("cluster nodes", {"command": "cluster nodes"})
+    judge_command("CLUSTER NODES", {"command": "CLUSTER NODES"})
