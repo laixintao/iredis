@@ -34,6 +34,8 @@ There is a full Redis command list in [commands.csv](commands.csv) file, downloa
 python scripts/download_redis_commands.py > commands.csv
 ```
 
+Current implemented commands: [command_syntax.csv](command_syntax.csv).
+
 ## Planned Features
 
 - Zsh style history
