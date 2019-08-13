@@ -6,3 +6,4 @@ cluster,CLUSTER DELSLOTS,command_slots
 cluster,CLUSTER FAILOVER,command_failoverchoice
 cluster,CLUSTER FORGET,command_node
 cluster,CLUSTER GETKEYSINSLOT,command_slot_count
+cluster,CLUSTER INFO,command
