@@ -31,3 +31,4 @@ generic,DUMP,command_key
 generic,EXISTS,command_keys
 generic,EXPIRE,command_key_second
 generic,EXPIREAT,command_key_timestamp
+generic,KEYS,command_pattern
