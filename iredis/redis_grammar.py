@@ -1,3 +1,6 @@
+"""
+command_nodex: x means node?
+"""
 from prompt_toolkit.contrib.regular_languages.compiler import compile
 from .commands_csv_loader import t
 
@@ -20,6 +23,8 @@ FAILOVERCHOICE = (
 RESETCHOICE = (
     r"(?P<resetchoice>(HARD|SOFT|hard|soft))"
 )  # TODO is lowercase accept by server?
+SLOTSUBCMD = r"(?P<slotsubcmd>(IMPORTING|MIGRATING|NODE|importing|migrating|node))"
+SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
 COUNT = fr"(?P<count>\d+)"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
@@ -38,13 +43,20 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_slots>({t['command_slots']}))        \s+ {SLOTS}                                    \s*)|
 (\s*  (?P<command_node>({t['command_node']}))          \s+ {NODE}                                     \s*)|
 (\s*  (?P<command_slot>({t['command_slot']}))          \s+ {SLOT}                                     \s*)|
-(\s*  (?P<command_failoverchoice>({t['command_failoverchoice']}))  \s+ {FAILOVERCHOICE}               \s*)|
-(\s*  (?P<command_resetchoice>({t['command_resetchoice']}))        \s+ {RESETCHOICE}                  \s*)|
-(\s*  (?P<command_slot_count>({t['command_slot_count']}))          \s+ {SLOT}   \s+   {COUNT}         \s*)|
+(\s*  (?P<command_failoverchoice>({t['command_failoverchoice']}))
+                                                       \s+ {FAILOVERCHOICE}                           \s*)|
+(\s*  (?P<command_resetchoice>({t['command_resetchoice']}))
+                                                       \s+ {RESETCHOICE}                              \s*)|
+(\s*  (?P<command_slot_count>({t['command_slot_count']}))
+                                                       \s+ {SLOT}    \s+ {COUNT}        \s*)|
 (\s*  (?P<command>({t['command']}))                                                                   \s*)|
 (\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
-(\s*  (?P<command_ip_port>({t['command_ip_port']}))    \s+ {IP}    \s+ {PORT}                         \s*)|
+(\s*  (?P<command_ip_port>({t['command_ip_port']}))    \s+ {IP}      \s+ {PORT}                       \s*)|
 (\s*  (?P<command_epoch>({t['command_epoch']}))        \s+ {EPOCH}                                    \s*)|
+(\s*  (?P<command_slot_slotsubcmd_nodex>({t['command_slot_slotsubcmd_nodex']}))
+                                                       \s+ {SLOT}    \s+ {SLOTSUBCMD}   (\s+ {NODE})? \s*)|
+(\s*  (?P<command_slot_slotsubcmd_nodex>({t['command_slot_slotsubcmd_nodex']}))
+                                                       \s+ {SLOT}    \s+ {SLOTSUBCMDBARE}             \s*)|
 
 
 (\s*  (?P<command_key>(HGETALL|GET))      \s+  {KEY}                                    \s*)|
