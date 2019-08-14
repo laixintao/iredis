@@ -26,6 +26,7 @@ RESETCHOICE = (
 SLOTSUBCMD = r"(?P<slotsubcmd>(IMPORTING|MIGRATING|NODE|importing|migrating|node))"
 SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
 COUNT = fr"(?P<count>\d+)"
+MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
 IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
@@ -58,7 +59,8 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {SLOT}    \s+ {SLOTSUBCMD}   (\s+ {NODE})? \s*)|
 (\s*  (?P<command_slot_slotsubcmd_nodex>({t['command_slot_slotsubcmd_nodex']}))
                                                        \s+ {SLOT}    \s+ {SLOTSUBCMDBARE}             \s*)|
-(\s*  (?P<command_password>({t['command_password']}))  \s+ {PASSWORD}                                    \s*)|
+(\s*  (?P<command_password>({t['command_password']}))  \s+ {PASSWORD}                                 \s*)|
+(\s*  (?P<command_message>({t['command_message']}))    \s+ {MESSAGE}                                  \s*)|
 
 """
 
