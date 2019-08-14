@@ -32,3 +32,6 @@ generic,EXISTS,command_keys
 generic,EXPIRE,command_key_second
 generic,EXPIREAT,command_key_timestamp
 generic,KEYS,command_pattern
+generic,MIGRATE,pass
+generic,MOVE,command_key_index
+generic,OBJECT,pass

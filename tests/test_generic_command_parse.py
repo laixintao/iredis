@@ -40,3 +40,10 @@ def test_keys(judge_command):
     judge_command("KEYS *", {"command_pattern": "KEYS", "pattern": "*"})
     judge_command("KEYS *abc", {"command_pattern": "KEYS", "pattern": "*abc"})
     judge_command("keys abc*", {"command_pattern": "keys", "pattern": "abc*"})
+
+
+def test_move(judge_command):
+    judge_command(
+        "MOVE key 14", {"command_key_index": "MOVE", "key": "key", "index": "14"}
+    )
+
