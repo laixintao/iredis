@@ -14,5 +14,10 @@ def judge_command():
 
         variables = m.variables()
         for expect_token, expect_value in expect.items():
-            assert variables.get(expect_token) == expect_value
+            all_variables = variables.getall(expect_token)
+            if len(all_variables) > 1:
+                assert sorted(all_variables) == sorted(expect_value)
+            else:
+                assert variables.get(expect_token) == expect_value
+
     return judge_command_func
