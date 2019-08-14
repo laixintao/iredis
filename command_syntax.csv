@@ -35,3 +35,5 @@ generic,KEYS,command_pattern
 generic,MIGRATE,pass
 generic,MOVE,command_key_index
 generic,OBJECT,pass
+generic,PERSIST,command_key
+generic,PEXPIRE,command_key_millisecond

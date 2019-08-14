@@ -47,3 +47,12 @@ def test_move(judge_command):
         "MOVE key 14", {"command_key_index": "MOVE", "key": "key", "index": "14"}
     )
 
+def test_pexpire(judge_command):
+    judge_command(
+        "PEXPIRE key 12", {"command_key_millisecond": "PEXPIRE", "key": "key", "millisecond": "12"}
+    )
+    judge_command("PEXPIRE key a12", None)
+    judge_command(
+        "PEXPIRE 12 12", {"command_key_millisecond": "PEXPIRE", "key": "12", "millisecond": "12"}
+    )
+    judge_command("PEXPIRE 12", None)
