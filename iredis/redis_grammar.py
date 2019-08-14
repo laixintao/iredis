@@ -21,6 +21,7 @@ SLOT = fr"(?P<slot>{VALID_SLOT})"
 SLOTS = fr"(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"
 NODE = fr"(?P<node>{VALID_NODE})"
 KEY = fr"(?P<key>{VALID_TOKEN})"
+NEWKEY = fr"(?P<newkey>{VALID_TOKEN})"
 VALUE = fr"(?P<value>{VALID_TOKEN})"
 FIELDS = fr"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 KEYS = fr"(?P<keys>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
@@ -89,8 +90,10 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {INDEX}                      \s*)|
 (\s*  (?P<command_key_millisecond>({t['command_key_millisecond']})) 
                                                        \s+ {KEY}     \s+ {MILLISECOND}                \s*)|
-(\s*  (?P<command_key_timestampms>({t['command_key_timestampms']})) 
+(\s*  (?P<command_key_timestampms>({t['command_key_timestampms']}))
                                                        \s+ {KEY}     \s+ {TIMESTAMPMS}                \s*)|
+(\s*  (?P<command_key_newkey>({t['command_key_newkey']}))
+                                                       \s+ {KEY}     \s+ {NEWKEY}                     \s*)|
 """
 
 start_time = time.time()
