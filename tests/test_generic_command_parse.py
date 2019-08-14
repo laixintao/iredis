@@ -7,3 +7,11 @@ def test_del(judge_command):
     judge_command(
         r'DEL "hell\"o world"', {"command_key": "DEL", "key": r'"hell\"o world"'}
     )
+
+
+def test_exists(judge_command):
+    judge_command("EXISTS foo bar", {"command_keys": "EXISTS", "keys": "foo bar"})
+    judge_command("EXISTS foo", {"command_keys": "EXISTS", "keys": "foo"})
+    judge_command("EXISTS 1", {"command_keys": "EXISTS", "keys": "1"})
+    judge_command('EXISTS "foo bar"', {"command_keys": "EXISTS", "keys": '"foo bar"'})
+    judge_command(r'EXISTS "\""', {"command_keys": "EXISTS", "keys": r'"\""'})

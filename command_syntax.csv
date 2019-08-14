@@ -28,3 +28,4 @@ connection,SELECT,command_index
 connection,SWAPDB,command_index_index
 generic,DEL,command_key
 generic,DUMP,command_key
+generic,EXISTS,command_keys
