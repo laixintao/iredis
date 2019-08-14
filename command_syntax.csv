@@ -16,3 +16,7 @@ cluster,CLUSTER RESET,command_resetchoice
 cluster,CLUSTER SAVECONFIG,command
 cluster,CLUSTER SET-CONFIG-EPOCH,command_epoch
 cluster,CLUSTER SETSLOT,command_slot_slotsubcmd_nodex
+cluster,CLUSTER SLAVES,command_node
+cluster,CLUSTER SLOTS,command
+cluster,READONLY,command
+cluster,READWRITE,command
