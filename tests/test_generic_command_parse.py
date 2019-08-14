@@ -34,3 +34,9 @@ def test_expireat(judge_command):
         {"command_key_second": "EXPIRE", "key": "key", "second": "1565787643"},
     )
     judge_command("EXPIRE key a12", None)
+
+
+def test_keys(judge_command):
+    judge_command("KEYS *", {"command_pattern": "KEYS", "pattern": "*"})
+    judge_command("KEYS *abc", {"command_pattern": "KEYS", "pattern": "*abc"})
+    judge_command("keys abc*", {"command_pattern": "keys", "pattern": "abc*"})

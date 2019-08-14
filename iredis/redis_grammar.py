@@ -49,6 +49,7 @@ PASSWORD = fr"(?P<password>{VALID_TOKEN})"
 INDEX = r"(?P<index>(1[0-5]|\d))"
 SECOND = fr"(?P<second>{NUM})"
 TIMESTAMP = fr"(?P<timestamp>{NUM})"
+PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
 
 
 REDIS_COMMANDS = fr"""
@@ -80,7 +81,8 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_second>({t['command_key_second']})) 
                                                        \s+ {KEY}     \s+ {SECOND}                     \s*)|
 (\s*  (?P<command_key_timestamp>({t['command_key_timestamp']})) 
-                                                       \s+ {KEY}     \s+ {TIMESTAMP}                  \s*)
+                                                       \s+ {KEY}     \s+ {TIMESTAMP}                  \s*)|
+(\s*  (?P<command_pattern>({t['command_pattern']}))    \s+ {PATTERN}                                  \s*)|
 """
 
 start_time = time.time()
