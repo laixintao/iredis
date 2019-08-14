@@ -34,18 +34,14 @@ STYLE = Style.from_dict(
         "": "",
         # Prompt.
         "hostname": "",
+        "operator": "#33aa33 bold",
+        "number": "#ff0000 bold",
+        "trailing-input": "bg:#662222 #ffffff",
+        "password": "hidden"
     }
 )
 start_time = time.time()
 
-
-example_style = Style.from_dict(
-    {
-        "operator": "#33aa33 bold",
-        "number": "#ff0000 bold",
-        "trailing-input": "bg:#662222 #ffffff",
-    }
-)
 
 logger.debug(f"[timer] Grammer created: {time.time() - start_time} from start.")
 
@@ -54,6 +50,7 @@ logger.debug(f"[timer] Grammer created: {time.time() - start_time} from start.")
 lexers_dict = {
     "key": SimpleLexer("class:operator"),
     "value": SimpleLexer("class:number"),
+    "password": SimpleLexer("class:password"),
 }
 lexers_dict.update(
     {key: SimpleLexer("class:pygments.keyword") for key in original_commands.keys()}
@@ -81,11 +78,12 @@ def repl(client, session):
         try:
             command = session.prompt(
                 "{hostname}> ".format(hostname=str(client)),
-                style=example_style,
+                style=STYLE,
                 lexer=lexer,
                 completer=completer,
                 auto_suggest=AutoSuggestFromHistory(),
             )
+            
         except KeyboardInterrupt:
             logger.warning("KeyboardInterrupt!")
             continue
@@ -102,6 +100,7 @@ def repl(client, session):
             answer = client.send_command(command)
         # Error with previous command or exception
         except Exception as e:
+            logger.exception(e)
             print("(error)", str(e))
 
         # Fine with answer

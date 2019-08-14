@@ -20,3 +20,9 @@ cluster,CLUSTER SLAVES,command_node
 cluster,CLUSTER SLOTS,command
 cluster,READONLY,command
 cluster,READWRITE,command
+connection,AUTH,command_password
+connection,ECHO,command_message
+connection,PING,command_messagex
+connection,QUIT,command
+connection,SELECT,command_index
+connection,SWAPDB,command_index_index
