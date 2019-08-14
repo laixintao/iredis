@@ -20,3 +20,4 @@ cluster,CLUSTER SLAVES,command_node
 cluster,CLUSTER SLOTS,command
 cluster,READONLY,command
 cluster,READWRITE,command
+connection,AUTH,command_password

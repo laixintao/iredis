@@ -44,6 +44,7 @@ example_style = Style.from_dict(
         "operator": "#33aa33 bold",
         "number": "#ff0000 bold",
         "trailing-input": "bg:#662222 #ffffff",
+        "password": "hidden"
     }
 )
 
@@ -54,6 +55,7 @@ logger.debug(f"[timer] Grammer created: {time.time() - start_time} from start.")
 lexers_dict = {
     "key": SimpleLexer("class:operator"),
     "value": SimpleLexer("class:number"),
+    "password": SimpleLexer("class:password"),
 }
 lexers_dict.update(
     {key: SimpleLexer("class:pygments.keyword") for key in original_commands.keys()}
