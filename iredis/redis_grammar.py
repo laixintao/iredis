@@ -50,6 +50,8 @@ INDEX = r"(?P<index>(1[0-5]|\d))"
 SECOND = fr"(?P<second>{NUM})"
 TIMESTAMP = fr"(?P<timestamp>{NUM})"
 PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
+MILLISECOND = fr"(?P<millisecond>{NUM})"
+TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
 
 
 REDIS_COMMANDS = fr"""
@@ -85,6 +87,8 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_pattern>({t['command_pattern']}))    \s+ {PATTERN}                                  \s*)|
 (\s*  (?P<command_key_index>({t['command_key_index']})) 
                                                        \s+ {KEY}     \s+ {INDEX}                      \s*)|
+(\s*  (?P<command_key_millisecond>({t['command_key_millisecond']})) 
+                                                       \s+ {KEY}     \s+ {MILLISECOND}                \s*)|
 """
 
 start_time = time.time()
