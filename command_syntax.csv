@@ -26,3 +26,4 @@ connection,PING,command_messagex
 connection,QUIT,command
 connection,SELECT,command_index
 connection,SWAPDB,command_index_index
+generic,DEL,command_key

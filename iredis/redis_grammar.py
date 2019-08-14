@@ -66,6 +66,7 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_index>({t['command_index']}))        \s+ {INDEX}                                    \s*)|
 (\s*  (?P<command_index_index>({t['command_index_index']}))
                                                        \s+ {INDEX}   \s+ {INDEX}                      \s*)|
+(\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                    \s*)|
 
 """
 
