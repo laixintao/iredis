@@ -38,3 +38,6 @@ generic,OBJECT,pass
 generic,PERSIST,command_key
 generic,PEXPIRE,command_key_millisecond
 generic,PEXPIREAT,command_key_timestampms
+generic,PTTL,command_key
+generic,RANDOMKEY,command
+generic,RENAME,command_key_newkey
