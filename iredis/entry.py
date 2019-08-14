@@ -34,19 +34,14 @@ STYLE = Style.from_dict(
         "": "",
         # Prompt.
         "hostname": "",
-    }
-)
-start_time = time.time()
-
-
-example_style = Style.from_dict(
-    {
         "operator": "#33aa33 bold",
         "number": "#ff0000 bold",
         "trailing-input": "bg:#662222 #ffffff",
         "password": "hidden"
     }
 )
+start_time = time.time()
+
 
 logger.debug(f"[timer] Grammer created: {time.time() - start_time} from start.")
 
@@ -83,7 +78,7 @@ def repl(client, session):
         try:
             command = session.prompt(
                 "{hostname}> ".format(hostname=str(client)),
-                style=example_style,
+                style=STYLE,
                 lexer=lexer,
                 completer=completer,
                 auto_suggest=AutoSuggestFromHistory(),
