@@ -1,8 +1,13 @@
 """
 command_nodex: x means node?
 """
+import time
+import logging
+
 from prompt_toolkit.contrib.regular_languages.compiler import compile
 from .commands_csv_loader import t
+
+logger = logging.getLogger(__name__)
 
 VALID_TOKEN = r"""(
 ("([^"]|\\")*?")     |# with quotes
@@ -10,13 +15,16 @@ VALID_TOKEN = r"""(
 )"""
 VALID_SLOT = r"\d+"  # TODO add range? max value:16384
 VALID_NODE = r"\d+"
+NUM = r"\d+"
 
 SLOT = fr"(?P<slot>{VALID_SLOT})"
 SLOTS = fr"(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"
 NODE = fr"(?P<node>{VALID_NODE})"
 KEY = fr"(?P<key>{VALID_TOKEN})"
+NEWKEY = fr"(?P<newkey>{VALID_TOKEN})"
 VALUE = fr"(?P<value>{VALID_TOKEN})"
 FIELDS = fr"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
+KEYS = fr"(?P<keys>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 FAILOVERCHOICE = (
     r"(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
 )  # TODO is lowercase accept by server?
@@ -25,7 +33,7 @@ RESETCHOICE = (
 )  # TODO is lowercase accept by server?
 SLOTSUBCMD = r"(?P<slotsubcmd>(IMPORTING|MIGRATING|NODE|importing|migrating|node))"
 SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
-COUNT = fr"(?P<count>\d+)"
+COUNT = fr"(?P<count>{NUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
@@ -37,9 +45,14 @@ IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
 # https://stackoverflow.com/questions/12968093/regex-to-validate-port-number
 # pompt_toolkit limit: Exception: {4}-style repetition not yet supported
 PORT = r"(?P<port>[1-9]|[1-5]?\d\d\d?\d?|6[1-4][0-9]\d\d\d|65[1-4]\d\d|655[1-2][0-9]|6553[1-5])"
-EPOCH = r"(?P<epoch>\d+)"
+EPOCH = fr"(?P<epoch>{NUM})"
 PASSWORD = fr"(?P<password>{VALID_TOKEN})"
 INDEX = r"(?P<index>(1[0-5]|\d))"
+SECOND = fr"(?P<second>{NUM})"
+TIMESTAMP = fr"(?P<timestamp>{NUM})"
+PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
+MILLISECOND = fr"(?P<millisecond>{NUM})"
+TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
 
 
 REDIS_COMMANDS = fr"""
@@ -66,7 +79,24 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_index>({t['command_index']}))        \s+ {INDEX}                                    \s*)|
 (\s*  (?P<command_index_index>({t['command_index_index']}))
                                                        \s+ {INDEX}   \s+ {INDEX}                      \s*)|
-
+(\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
+(\s*  (?P<command_keys>({t['command_keys']}))          \s+ {KEYS}                                     \s*)|
+(\s*  (?P<command_key_second>({t['command_key_second']})) 
+                                                       \s+ {KEY}     \s+ {SECOND}                     \s*)|
+(\s*  (?P<command_key_timestamp>({t['command_key_timestamp']})) 
+                                                       \s+ {KEY}     \s+ {TIMESTAMP}                  \s*)|
+(\s*  (?P<command_pattern>({t['command_pattern']}))    \s+ {PATTERN}                                  \s*)|
+(\s*  (?P<command_key_index>({t['command_key_index']})) 
+                                                       \s+ {KEY}     \s+ {INDEX}                      \s*)|
+(\s*  (?P<command_key_millisecond>({t['command_key_millisecond']})) 
+                                                       \s+ {KEY}     \s+ {MILLISECOND}                \s*)|
+(\s*  (?P<command_key_timestampms>({t['command_key_timestampms']}))
+                                                       \s+ {KEY}     \s+ {TIMESTAMPMS}                \s*)|
+(\s*  (?P<command_key_newkey>({t['command_key_newkey']}))
+                                                       \s+ {KEY}     \s+ {NEWKEY}                     \s*)|
 """
 
+start_time = time.time()
 redis_grammar = compile(REDIS_COMMANDS)
+end_time = time.time()
+logger.debug(f"[grammar compile time] {end_time - start_time}")
