@@ -199,3 +199,59 @@ def test_command_cluster_set_config_epoch(judge_command):
         "cluster set-config-epoch 123123 ",
         {"command_epoch": "cluster set-config-epoch", "epoch": "123123"},
     )
+
+
+def test_command_cluster_set_slot(judge_command):
+    judge_command(
+        "cluster setslot 123 importing 123123",
+        {
+            "command_slot_slotsubcmd_nodex": "cluster setslot",
+            "slot": "123",
+            "slotsubcmd": "importing",
+            "node": "123123",
+        },
+    )
+    judge_command(
+        "cluster setslot 123 migrating 123123",
+        {
+            "command_slot_slotsubcmd_nodex": "cluster setslot",
+            "slot": "123",
+            "slotsubcmd": "migrating",
+            "node": "123123",
+        },
+    )
+    judge_command(
+        "cluster setslot 123 node 123123",
+        {
+            "command_slot_slotsubcmd_nodex": "cluster setslot",
+            "slot": "123",
+            "slotsubcmd": "node",
+            "node": "123123",
+        },
+    )
+    judge_command(
+        "cluster setslot 123 MIGRATING 123123",
+        {
+            "command_slot_slotsubcmd_nodex": "cluster setslot",
+            "slot": "123",
+            "slotsubcmd": "MIGRATING",
+            "node": "123123",
+        },
+    )
+    judge_command(
+        "cluster setslot 123 stable",
+        {
+            "command_slot_slotsubcmd_nodex": "cluster setslot",
+            "slot": "123",
+            "slotsubcmd": "stable",
+        },
+    )
+    judge_command(
+        "cluster setslot 123 STABLE",
+        {
+            "command_slot_slotsubcmd_nodex": "cluster setslot",
+            "slot": "123",
+            "slotsubcmd": "STABLE",
+        },
+    )
+    judge_command("cluster setslot 123 STABLE 123123", None)
