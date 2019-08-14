@@ -61,6 +61,7 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {SLOT}    \s+ {SLOTSUBCMDBARE}             \s*)|
 (\s*  (?P<command_password>({t['command_password']}))  \s+ {PASSWORD}                                 \s*)|
 (\s*  (?P<command_message>({t['command_message']}))    \s+ {MESSAGE}                                  \s*)|
+(\s*  (?P<command_messagex>({t['command_messagex']}))  (\s+{MESSAGE})?                            \s*)|
 
 """
 

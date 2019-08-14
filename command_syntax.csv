@@ -22,3 +22,4 @@ cluster,READONLY,command
 cluster,READWRITE,command
 connection,AUTH,command_password
 connection,ECHO,command_message
+connection,PING,command_messagex
