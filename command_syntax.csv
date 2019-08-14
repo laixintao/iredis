@@ -41,3 +41,12 @@ generic,PEXPIREAT,command_key_timestampms
 generic,PTTL,command_key
 generic,RANDOMKEY,command
 generic,RENAME,command_key_newkey
+generic,RENAMENX,command_key_newkey
+generic,RESTORE,pass
+generic,SCAN,pass
+generic,SORT,pass
+generic,TOUCH,command_keys
+generic,TTL,command_key
+generic,TYPE,command_key
+generic,UNLINK,command_keys
+generic,WAIT,pass
