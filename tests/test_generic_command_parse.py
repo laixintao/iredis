@@ -56,3 +56,9 @@ def test_pexpire(judge_command):
         "PEXPIRE 12 12", {"command_key_millisecond": "PEXPIRE", "key": "12", "millisecond": "12"}
     )
     judge_command("PEXPIRE 12", None)
+def test_pexpireat(judge_command):
+    judge_command(
+        "PEXPIREAT key 1565787643",
+        {"command_key_timestampms": "PEXPIREAT", "key": "key", "timestampms": "1565787643"},
+    )
+    judge_command("PEXPIREAT key a12", None)

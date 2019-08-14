@@ -37,3 +37,4 @@ generic,MOVE,command_key_index
 generic,OBJECT,pass
 generic,PERSIST,command_key
 generic,PEXPIRE,command_key_millisecond
+generic,PEXPIREAT,command_key_timestampms
