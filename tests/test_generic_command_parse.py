@@ -26,3 +26,11 @@ def test_expire(judge_command):
         "EXPIRE 12 12", {"command_key_second": "EXPIRE", "key": "12", "second": "12"}
     )
     judge_command("EXPIRE 12", None)
+
+
+def test_expireat(judge_command):
+    judge_command(
+        "EXPIRE key 1565787643",
+        {"command_key_second": "EXPIRE", "key": "key", "second": "1565787643"},
+    )
+    judge_command("EXPIRE key a12", None)
