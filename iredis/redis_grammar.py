@@ -1,8 +1,13 @@
 """
 command_nodex: x means node?
 """
+import time
+import logging
+
 from prompt_toolkit.contrib.regular_languages.compiler import compile
 from .commands_csv_loader import t
+
+logger = logging.getLogger(__name__)
 
 VALID_TOKEN = r"""(
 ("([^"]|\\")*?")     |# with quotes
@@ -43,6 +48,7 @@ EPOCH = fr"(?P<epoch>{NUM})"
 PASSWORD = fr"(?P<password>{VALID_TOKEN})"
 INDEX = r"(?P<index>(1[0-5]|\d))"
 SECOND = fr"(?P<second>{NUM})"
+TIMESTAMP = fr"(?P<timestamp>{NUM})"
 
 
 REDIS_COMMANDS = fr"""
@@ -73,7 +79,11 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_keys>({t['command_keys']}))          \s+ {KEYS}                                     \s*)|
 (\s*  (?P<command_key_second>({t['command_key_second']})) 
                                                        \s+ {KEY}     \s+ {SECOND}                     \s*)|
-
+(\s*  (?P<command_key_timestamp>({t['command_key_timestamp']})) 
+                                                       \s+ {KEY}     \s+ {TIMESTAMP}                  \s*)
 """
 
+start_time = time.time()
 redis_grammar = compile(REDIS_COMMANDS)
+end_time = time.time()
+logger.debug(f"[grammar compile time] {end_time - start_time}")
