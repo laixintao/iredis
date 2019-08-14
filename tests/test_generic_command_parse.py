@@ -15,3 +15,14 @@ def test_exists(judge_command):
     judge_command("EXISTS 1", {"command_keys": "EXISTS", "keys": "1"})
     judge_command('EXISTS "foo bar"', {"command_keys": "EXISTS", "keys": '"foo bar"'})
     judge_command(r'EXISTS "\""', {"command_keys": "EXISTS", "keys": r'"\""'})
+
+
+def test_expire(judge_command):
+    judge_command(
+        "EXPIRE key 12", {"command_key_second": "EXPIRE", "key": "key", "second": "12"}
+    )
+    judge_command("EXPIRE key a12", None)
+    judge_command(
+        "EXPIRE 12 12", {"command_key_second": "EXPIRE", "key": "12", "second": "12"}
+    )
+    judge_command("EXPIRE 12", None)
