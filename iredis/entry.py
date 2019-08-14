@@ -83,6 +83,7 @@ def repl(client, session):
                 completer=completer,
                 auto_suggest=AutoSuggestFromHistory(),
             )
+            
         except KeyboardInterrupt:
             logger.warning("KeyboardInterrupt!")
             continue
