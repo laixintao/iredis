@@ -83,6 +83,8 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_timestamp>({t['command_key_timestamp']})) 
                                                        \s+ {KEY}     \s+ {TIMESTAMP}                  \s*)|
 (\s*  (?P<command_pattern>({t['command_pattern']}))    \s+ {PATTERN}                                  \s*)|
+(\s*  (?P<command_key_index>({t['command_key_index']})) 
+                                                       \s+ {KEY}     \s+ {INDEX}                      \s*)|
 """
 
 start_time = time.time()
