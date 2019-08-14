@@ -21,3 +21,4 @@ cluster,CLUSTER SLOTS,command
 cluster,READONLY,command
 cluster,READWRITE,command
 connection,AUTH,command_password
+connection,ECHO,command_message

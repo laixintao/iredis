@@ -99,6 +99,7 @@ def repl(client, session):
             answer = client.send_command(command)
         # Error with previous command or exception
         except Exception as e:
+            logger.exception(e)
             print("(error)", str(e))
 
         # Fine with answer
