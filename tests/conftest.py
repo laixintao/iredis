@@ -1,7 +1,9 @@
 import pytest
-from iredis.redis_grammar import redis_grammar
+from iredis.redis_grammar import REDIS_COMMANDS
+from prompt_toolkit.contrib.regular_languages.compiler import compile
 
 
+redis_grammar = compile(REDIS_COMMANDS)
 @pytest.fixture
 def judge_command():
     def judge_command_func(command, expect):
