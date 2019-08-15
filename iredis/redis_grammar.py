@@ -96,4 +96,3 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {NEWKEY}                     \s*)|
 (\s*  (?P<command_pass>({t['command_pass']}))          \s+ {ANY}                                      \s*)
 """
-
