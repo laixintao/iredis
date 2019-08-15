@@ -23,6 +23,7 @@ from .client import Client
 from .renders import render_dict
 from .redis_grammar import redis_grammar
 from .commands_csv_loader import group2commands, group2command_res
+from .utils import timer
 
 
 logger = logging.getLogger(__name__)
@@ -76,7 +77,7 @@ def get_completer(group2commands, redis_grammar):
 def repl(client, session, lexer, completer):
     style = get_style()
     while True:
-        logger.debug("REPL waiting for command...")
+        timer("REPL waiting for command...")
         try:
             command = session.prompt(
                 "{hostname}> ".format(hostname=str(client)),
