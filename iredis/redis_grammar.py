@@ -5,7 +5,8 @@ import time
 import logging
 
 from prompt_toolkit.contrib.regular_languages.compiler import compile
-from .commands_csv_loader import t
+from .commands_csv_loader import group2command_res as t
+from .utils import timer
 
 logger = logging.getLogger(__name__)
 
@@ -98,7 +99,7 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_pass>({t['command_pass']}))          \s+ {ANY}                                      \s*)
 """
 
-start_time = time.time()
+timer("start compile grammer...")
 redis_grammar = compile(REDIS_COMMANDS)
 end_time = time.time()
-logger.debug(f"[grammar compile time] {end_time - start_time}")
+timer("compile finished!")
