@@ -2,8 +2,9 @@
 import os
 import sys
 import logging
-from pathlib import Path
 import time
+import threading
+from pathlib import Path
 
 import redis
 import click
@@ -18,10 +19,11 @@ from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.lexers import SimpleLexer
 from prompt_toolkit.styles import Style
+from prompt_toolkit.contrib.regular_languages.compiler import compile
 
 from .client import Client
 from .renders import render_dict
-from .redis_grammar import redis_grammar
+from .redis_grammar import REDIS_COMMANDS
 from .commands_csv_loader import group2commands, group2command_res
 from .utils import timer
 
@@ -74,16 +76,41 @@ def get_completer(group2commands, redis_grammar):
     return completer
 
 
-def repl(client, session, lexer, completer):
+def compile_grammar_bg(session):
+    """
+    compile redis grammar in a thread, and patch session's lexer
+    and completer.
+    """
+
+    def compile_and_patch(session):
+        start_time = time.time()
+        logger.debug("[compile] start compile grammer...")
+        redis_grammar = compile(REDIS_COMMANDS)
+        end_time = time.time()
+        logger.debug(f"[compile] Compile finished! Cost: {end_time - start_time}")
+
+        # get lexer
+        lexer = get_lexer(group2commands.keys(), redis_grammar)
+        # get completer
+        completer = get_completer(group2commands, redis_grammar)
+
+        session.completer = completer
+        session.lexer = lexer
+        logger.debug("[compile] Patch finished!")
+
+    compiling_thread = threading.Thread(target=compile_and_patch, args=(session,))
+    compiling_thread.start()
+
+
+def repl(client, session):
     style = get_style()
+    compile_grammar_bg(session)
     while True:
         timer("REPL waiting for command...")
         try:
             command = session.prompt(
                 "{hostname}> ".format(hostname=str(client)),
                 style=style,
-                lexer=lexer,
-                completer=completer,
                 auto_suggest=AutoSuggestFromHistory(),
             )
 
@@ -139,9 +166,5 @@ def main():
     session = PromptSession(history=FileHistory(HISTORY_FILE))
     # redis client
     client = Client(**ctx.params)
-    # get lexer
-    lexer = get_lexer(group2commands.keys(), redis_grammar)
-    # get completer
-    completer = get_completer(group2commands, redis_grammar)
 
-    repl(client, session, lexer, completer)
+    repl(client, session)
