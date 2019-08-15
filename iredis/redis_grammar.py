@@ -53,6 +53,7 @@ TIMESTAMP = fr"(?P<timestamp>{NUM})"
 PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
 MILLISECOND = fr"(?P<millisecond>{NUM})"
 TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
+ANY = r"(?P<any>.*)"
 
 
 REDIS_COMMANDS = fr"""
@@ -94,6 +95,7 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {TIMESTAMPMS}                \s*)|
 (\s*  (?P<command_key_newkey>({t['command_key_newkey']}))
                                                        \s+ {KEY}     \s+ {NEWKEY}                     \s*)|
+(\s*  (?P<command_pass>({t['command_pass']}))          \s+ {ANY}                                      \s*)
 """
 
 start_time = time.time()
