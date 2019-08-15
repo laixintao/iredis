@@ -8,3 +8,6 @@ logging.basicConfig(
     format="%(levelname)5s %(message)s",
     level="DEBUG",
 )
+
+logger = logging.getLogger(__name__)
+logger.info("------ iRedis ------")
