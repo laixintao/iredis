@@ -32,9 +32,9 @@ generic,EXISTS,command_keys
 generic,EXPIRE,command_key_second
 generic,EXPIREAT,command_key_timestamp
 generic,KEYS,command_pattern
-generic,MIGRATE,pass
+generic,MIGRATE,command_pass
 generic,MOVE,command_key_index
-generic,OBJECT,pass
+generic,OBJECT,command_pass
 generic,PERSIST,command_key
 generic,PEXPIRE,command_key_millisecond
 generic,PEXPIREAT,command_key_timestampms
@@ -42,11 +42,187 @@ generic,PTTL,command_key
 generic,RANDOMKEY,command
 generic,RENAME,command_key_newkey
 generic,RENAMENX,command_key_newkey
-generic,RESTORE,pass
-generic,SCAN,pass
-generic,SORT,pass
+generic,RESTORE,command_pass
+generic,SCAN,command_pass
+generic,SORT,command_pass
 generic,TOUCH,command_keys
 generic,TTL,command_key
 generic,TYPE,command_key
 generic,UNLINK,command_keys
-generic,WAIT,pass
+generic,WAIT,command_pass
+geo,GEOADD,command_pass
+geo,GEODIST,command_pass
+geo,GEOHASH,command_pass
+geo,GEOPOS,command_pass
+geo,GEORADIUS,command_pass
+geo,GEORADIUSBYMEMBER,command_pass
+hash,HDEL,command_pass
+hash,HEXISTS,command_pass
+hash,HGET,command_pass
+hash,HGETALL,command_pass
+hash,HINCRBY,command_pass
+hash,HINCRBYFLOAT,command_pass
+hash,HKEYS,command_pass
+hash,HLEN,command_pass
+hash,HMGET,command_pass
+hash,HMSET,command_pass
+hash,HSCAN,command_pass
+hash,HSET,command_pass
+hash,HSETNX,command_pass
+hash,HSTRLEN,command_pass
+hash,HVALS,command_pass
+hyperloglog,PFADD,command_pass
+hyperloglog,PFCOUNT,command_pass
+hyperloglog,PFMERGE,command_pass
+list,BLPOP,command_pass
+list,BRPOP,command_pass
+list,BRPOPLPUSH,command_pass
+list,LINDEX,command_pass
+list,LINSERT,command_pass
+list,LLEN,command_pass
+list,LPOP,command_pass
+list,LPUSH,command_pass
+list,LPUSHX,command_pass
+list,LRANGE,command_pass
+list,LREM,command_pass
+list,LSET,command_pass
+list,LTRIM,command_pass
+list,RPOP,command_pass
+list,RPOPLPUSH,command_pass
+list,RPUSH,command_pass
+list,RPUSHX,command_pass
+pubsub,PSUBSCRIBE,command_pass
+pubsub,PUBLISH,command_pass
+pubsub,PUBSUB,command_pass
+pubsub,PUNSUBSCRIBE,command_pass
+pubsub,SUBSCRIBE,command_pass
+pubsub,UNSUBSCRIBE,command_pass
+scripting,EVAL,command_pass
+scripting,EVALSHA,command_pass
+scripting,SCRIPT DEBUG,command_pass
+scripting,SCRIPT EXISTS,command_pass
+scripting,SCRIPT FLUSH,command_pass
+scripting,SCRIPT KILL,command_pass
+scripting,SCRIPT LOAD,command_pass
+server,BGREWRITEAOF,command_pass
+server,BGSAVE,command_pass
+server,CLIENT GETNAME,command_pass
+server,CLIENT ID,command_pass
+server,CLIENT KILL,command_pass
+server,CLIENT LIST,command_pass
+server,CLIENT PAUSE,command_pass
+server,CLIENT REPLY,command_pass
+server,CLIENT SETNAME,command_pass
+server,CLIENT UNBLOCK,command_pass
+server,COMMAND,command_pass
+server,COMMAND COUNT,command_pass
+server,COMMAND GETKEYS,command_pass
+server,COMMAND INFO,command_pass
+server,CONFIG GET,command_pass
+server,CONFIG RESETSTAT,command_pass
+server,CONFIG REWRITE,command_pass
+server,CONFIG SET,command_pass
+server,DBSIZE,command_pass
+server,DEBUG OBJECT,command_pass
+server,DEBUG SEGFAULT,command_pass
+server,FLUSHALL,command_pass
+server,FLUSHDB,command_pass
+server,INFO,command_pass
+server,LASTSAVE,command_pass
+server,MEMORY DOCTOR,command_pass
+server,MEMORY HELP,command_pass
+server,MEMORY MALLOC-STATS,command_pass
+server,MEMORY PURGE,command_pass
+server,MEMORY STATS,command_pass
+server,MEMORY USAGE,command_pass
+server,MONITOR,command_pass
+server,REPLICAOF,command_pass
+server,ROLE,command_pass
+server,SAVE,command_pass
+server,SHUTDOWN,command_pass
+server,SLAVEOF,command_pass
+server,SLOWLOG,command_pass
+server,SYNC,command_pass
+server,TIME,command_pass
+set,SADD,command_pass
+set,SCARD,command_pass
+set,SDIFF,command_pass
+set,SDIFFSTORE,command_pass
+set,SINTER,command_pass
+set,SINTERSTORE,command_pass
+set,SISMEMBER,command_pass
+set,SMEMBERS,command_pass
+set,SMOVE,command_pass
+set,SPOP,command_pass
+set,SRANDMEMBER,command_pass
+set,SREM,command_pass
+set,SSCAN,command_pass
+set,SUNION,command_pass
+set,SUNIONSTORE,command_pass
+sorted_set,BZPOPMAX,command_pass
+sorted_set,BZPOPMIN,command_pass
+sorted_set,ZADD,command_pass
+sorted_set,ZCARD,command_pass
+sorted_set,ZCOUNT,command_pass
+sorted_set,ZINCRBY,command_pass
+sorted_set,ZINTERSTORE,command_pass
+sorted_set,ZLEXCOUNT,command_pass
+sorted_set,ZPOPMAX,command_pass
+sorted_set,ZPOPMIN,command_pass
+sorted_set,ZRANGE,command_pass
+sorted_set,ZRANGEBYLEX,command_pass
+sorted_set,ZRANGEBYSCORE,command_pass
+sorted_set,ZRANK,command_pass
+sorted_set,ZREM,command_pass
+sorted_set,ZREMRANGEBYLEX,command_pass
+sorted_set,ZREMRANGEBYRANK,command_pass
+sorted_set,ZREMRANGEBYSCORE,command_pass
+sorted_set,ZREVRANGE,command_pass
+sorted_set,ZREVRANGEBYLEX,command_pass
+sorted_set,ZREVRANGEBYSCORE,command_pass
+sorted_set,ZREVRANK,command_pass
+sorted_set,ZSCAN,command_pass
+sorted_set,ZSCORE,command_pass
+sorted_set,ZUNIONSTORE,command_pass
+stream,XACK,command_pass
+stream,XADD,command_pass
+stream,XCLAIM,command_pass
+stream,XDEL,command_pass
+stream,XGROUP,command_pass
+stream,XINFO,command_pass
+stream,XLEN,command_pass
+stream,XPENDING,command_pass
+stream,XRANGE,command_pass
+stream,XREAD,command_pass
+stream,XREADGROUP,command_pass
+stream,XREVRANGE,command_pass
+stream,XTRIM,command_pass
+string,APPEND,command_pass
+string,BITCOUNT,command_pass
+string,BITFIELD,command_pass
+string,BITOP,command_pass
+string,BITPOS,command_pass
+string,DECR,command_pass
+string,DECRBY,command_pass
+string,GET,command_pass
+string,GETBIT,command_pass
+string,GETRANGE,command_pass
+string,GETSET,command_pass
+string,INCR,command_pass
+string,INCRBY,command_pass
+string,INCRBYFLOAT,command_pass
+string,MGET,command_pass
+string,MSET,command_pass
+string,MSETNX,command_pass
+string,PSETEX,command_pass
+string,SET,command_pass
+string,SETBIT,command_pass
+string,SETEX,command_pass
+string,SETNX,command_pass
+string,SETRANGE,command_pass
+string,STRLEN,command_pass
+transactions,DISCARD,command_pass
+transactions,EXEC,command_pass
+transactions,MULTI,command_pass
+transactions,UNWATCH,command_pass
+transactions,WATCH,command_pass
