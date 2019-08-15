@@ -22,68 +22,71 @@ from prompt_toolkit.styles import Style
 from .client import Client
 from .renders import render_dict
 from .redis_grammar import redis_grammar
-from .commands_csv_loader import original_commands
+from .commands_csv_loader import group2commands, group2command_res
+from .utils import timer
 
 
 logger = logging.getLogger(__name__)
 
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
-STYLE = Style.from_dict(
-    {
-        # User input (default text).
-        "": "",
-        # Prompt.
-        "hostname": "",
-        "operator": "#33aa33 bold",
-        "number": "#ff0000 bold",
-        "trailing-input": "bg:#662222 #ffffff",
-        "password": "hidden"
-    }
-)
-start_time = time.time()
 
 
-logger.debug(f"[timer] Grammer created: {time.time() - start_time} from start.")
-
-# TODO verify
-# Can all redis_grammar have only 1 token, and completer based on lexer?
-lexers_dict = {
-    "key": SimpleLexer("class:operator"),
-    "value": SimpleLexer("class:number"),
-    "password": SimpleLexer("class:password"),
-}
-lexers_dict.update(
-    {key: SimpleLexer("class:pygments.keyword") for key in original_commands.keys()}
-)
-lexer = GrammarLexer(redis_grammar, lexers=lexers_dict)
-
-
-completer_mapping = {
-    syntax: WordCompleter(
-        commands + [command.lower() for command in commands], sentence=True
+def get_style():
+    return Style.from_dict(
+        {
+            # User input (default text).
+            "": "",
+            # Prompt.
+            "hostname": "",
+            "operator": "#33aa33 bold",
+            "number": "#ff0000 bold",
+            "trailing-input": "bg:#662222 #ffffff",
+            "password": "hidden",
+        }
     )
-    for syntax, commands in original_commands.items()
-}
-# TODO add key value completer
-completer_mapping.update(
-    {"failoverchoice": WordCompleter(["TAKEOVER", "FORCE", "takeover", "force"])}
-)
-completer = GrammarCompleter(redis_grammar, completer_mapping)
 
 
-def repl(client, session):
-    logger.debug(f"[timer] First REPL: {time.time() - start_time} from start.")
+def get_lexer(command_groups, redis_grammar):
+    lexers_dict = {
+        "key": SimpleLexer("class:operator"),
+        "value": SimpleLexer("class:number"),
+        "password": SimpleLexer("class:password"),
+    }
+    lexers_dict.update(
+        {key: SimpleLexer("class:pygments.keyword") for key in command_groups}
+    )
+    lexer = GrammarLexer(redis_grammar, lexers=lexers_dict)
+    return lexer
+
+
+def get_completer(group2commands, redis_grammar):
+    completer_mapping = {
+        command_group: WordCompleter(
+            commands + [command.lower() for command in commands], sentence=True
+        )
+        for command_group, commands in group2commands.items()
+    }
+    # TODO add key value completer
+    completer_mapping.update(
+        {"failoverchoice": WordCompleter(["TAKEOVER", "FORCE", "takeover", "force"])}
+    )
+    completer = GrammarCompleter(redis_grammar, completer_mapping)
+    return completer
+
+
+def repl(client, session, lexer, completer):
+    style = get_style()
     while True:
-        logger.debug("REPL waiting for command...")
+        timer("REPL waiting for command...")
         try:
             command = session.prompt(
                 "{hostname}> ".format(hostname=str(client)),
-                style=STYLE,
+                style=style,
                 lexer=lexer,
                 completer=completer,
                 auto_suggest=AutoSuggestFromHistory(),
             )
-            
+
         except KeyboardInterrupt:
             logger.warning("KeyboardInterrupt!")
             continue
@@ -120,6 +123,7 @@ def gather_args(ctx, h, p, n):
 
 
 def main():
+    enter_main_time = time.time()
     # invoke in non-standalone mode to gather args
     ctx = gather_args.main(standalone_mode=False)
     if not ctx:  # called help
@@ -131,7 +135,13 @@ def main():
         f = open(HISTORY_FILE, "w+")
         f.close()
 
+    # prompt session
     session = PromptSession(history=FileHistory(HISTORY_FILE))
-
+    # redis client
     client = Client(**ctx.params)
-    repl(client, session)
+    # get lexer
+    lexer = get_lexer(group2commands.keys(), redis_grammar)
+    # get completer
+    completer = get_completer(group2commands, redis_grammar)
+
+    repl(client, session, lexer, completer)
