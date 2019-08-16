@@ -4,7 +4,8 @@ Redis client.
 import logging
 
 import redis
-from redis.client import CaseInsensitiveDict
+from redis.connection import Connection
+from redis.exceptions import ResponseError, TimeoutError, ConnectionError
 
 from . import renders
 
@@ -25,10 +26,35 @@ class Client:
         self._redis_client = redis.StrictRedis(
             self.host, self.port, self.db, decode_responses=True
         )
-        self.answer_callbacks = CaseInsensitiveDict(self.__class__.ANSWER_CALLBACKS)
+        self.connection = Connection()
+        self.answer_callbacks = {}
 
     def __str__(self):
         return f"{self.host}:{self.port}[{self.db}]"
+
+    def execute_command(self, *args, **options):
+        "Execute a command and return a parsed response"
+        command_name = args[0]
+        try:
+            self.connection.send_command(*args)
+            return self.parse_response(self.connection, command_name, **options)
+        except (ConnectionError, TimeoutError) as e:
+            self.connection.disconnect()
+            if not (self.connection.retry_on_timeout and isinstance(e, TimeoutError)):
+                raise
+            self.connection.send_command(*args)
+            return self.parse_response(self.connection, command_name, **options)
+
+    def parse_response(self, connection, command_name, **options):
+        "Parses a response from the Redis server"
+        try:
+            response = connection.read_response()
+        except ResponseError:
+            # only print response error
+            raise
+        # TODO
+        # resp callback
+        return response
 
     def send_command(self, command):
         # FIXME args include ", strip it
@@ -37,7 +63,7 @@ class Client:
         # space
         redis_commands = command.split(" ")
         logger.debug(f"[comamnd list] {redis_commands}")
-        redis_resp = self._redis_client.execute_command(*redis_commands)
+        redis_resp = self.execute_command(*redis_commands)
         # FIXME command name can not only split by " "
         # command name include " "
         # for key in variables:
