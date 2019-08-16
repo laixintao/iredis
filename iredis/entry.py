@@ -6,7 +6,6 @@ import time
 import threading
 from pathlib import Path
 
-import redis
 import click
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
