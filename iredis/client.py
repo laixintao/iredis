@@ -55,7 +55,7 @@ class Client:
         "Parses a response from the Redis server"
         try:
             response = connection.read_response()
-        except ResponseError as e :
+        except ResponseError as e:
             rendered = str(e)
         else:
             # FIXME command name can not only split by " "
@@ -69,6 +69,23 @@ class Client:
             else:
                 rendered = response
         return rendered
+
+    def parse_input(self, input_command):
+        """
+        parse input command to command and args.
+        convert input to upper case, we use upper case command internally;
+        strip quotes in args
+        """
+        return None
+
+    def _strip_quotes(self, s):
+        """
+
+        Raise Error if quotes not match
+        """
+        for char in s:
+            pass
+
 
     def send_command(self, command):
         # FIXME args include ", strip it
