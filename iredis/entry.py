@@ -24,7 +24,7 @@ from .client import Client
 from .renders import render_dict
 from .redis_grammar import REDIS_COMMANDS
 from .commands_csv_loader import group2commands, group2command_res
-from .utils import timer
+from .utils import timer, literal_bytes
 
 
 logger = logging.getLogger(__name__)
