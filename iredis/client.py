@@ -11,6 +11,7 @@ from iredis.exceptions import InvalidArguments
 
 from . import renders
 from .commands_csv_loader import all_commands
+from .utils import nativestr
 
 logger = logging.getLogger(__name__)
 
@@ -27,14 +28,21 @@ class Client:
                 mapping[func_name] = func
         return mapping
 
-    def __init__(self, h, p, n):
+    def __init__(self, h, p, n, encoding="utf-8", decode_responses=False):
         self.host = h
         self.port = p
         self.db = n
+        self.encoding = encoding
+        self.decode_responses = decode_responses
         self._redis_client = redis.StrictRedis(
-            self.host, self.port, self.db, decode_responses=True
+            self.host,
+            self.port,
+            self.db,
+            decode_responses=decode_responses,
+            encoding=encoding,
         )
         self.connection = Connection()
+        # all command upper case
         self.answer_callbacks = {"KEYS": "render_int"}
         self.callbacks = self.reder_funcname_mapping()
 
@@ -45,17 +53,23 @@ class Client:
 
     def execute_command(self, command_name, *args, **options):
         "Execute a command and return a parsed response"
-        # TODO if command is auth and n is not None
-        # need to SELECT after auth
         try:
             self.connection.send_command(command_name, *args)
-            return self.parse_response(self.connection, command_name, **options)
+            resp = self.parse_response(self.connection, command_name, **options)
+        # retry on timeout
         except (ConnectionError, TimeoutError) as e:
             self.connection.disconnect()
             if not (self.connection.retry_on_timeout and isinstance(e, TimeoutError)):
                 raise
             self.connection.send_command(command_name, *args)
-            return self.parse_response(self.connection, command_name, **options)
+            resp = self.parse_response(self.connection, command_name, **options)
+        # SELECT db on AUTH
+        if command_name.upper() == "AUTH" and self.db:
+            select_result = self.execute_command("SELECT", self.db)
+            if nativestr(select_result) != "OK":
+                raise ConnectionError("Invalid Database")
+
+        return resp
 
     def parse_response(self, connection, command_name, **options):
         "Parses a response from the Redis server"
@@ -64,8 +78,9 @@ class Client:
         except ResponseError as e:
             rendered = str(e)
         else:
-            if command_name in self.answer_callbacks:
-                callback_name = self.answer_callbacks[command_name]
+            command_upper = command_name.upper()
+            if command_upper in self.answer_callbacks:
+                callback_name = self.answer_callbacks[command_upper]
                 callback = self.callbacks[callback_name]
                 rendered = callback(response)
             else:

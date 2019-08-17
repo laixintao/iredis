@@ -19,3 +19,7 @@ def timer(title):
 
     _last_timer = now
     _timer_counter += 1
+
+
+def nativestr(x):
+    return x if isinstance(x, str) else x.decode("utf-8", "replace")
