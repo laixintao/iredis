@@ -45,7 +45,7 @@ class RedisGrammarCompleter(GrammarCompleter):
     ) -> Iterable[Completion]:
         origin_text = document.text_before_cursor
         stripped = FakeDocument()
-        stripped.text_before_cursor = origin_text.strip()
+        stripped.text_before_cursor = origin_text.lstrip()
         # Do not complete on spaces, too slow
         if not origin_text.strip():
             return []
