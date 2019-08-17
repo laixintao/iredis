@@ -91,7 +91,7 @@ class Client:
 
     def _strip_quote_args(self, s):
         """
-        Given string s, split it into args.
+        Given string s, split it into args.(Like bash paring)
         Handle with all quote cases.
 
         Raise ``InvalidArguments`` if quotes not match
@@ -105,10 +105,14 @@ class Client:
         for char in s:
             if in_quote:
                 # close quote
-                if char == in_quote and not pre_back_slash:
-                    yield from self._valide_token(word)
-                    word = []
-                    in_quote = None
+                if char == in_quote:
+                    if not pre_back_slash:
+                        yield from self._valide_token(word)
+                        word = []
+                        in_quote = None
+                    else:
+                        # previous char is \ , merge with current "
+                        word[-1] = char
                 else:
                     word.append(char)
             # not in quote
@@ -125,7 +129,7 @@ class Client:
                     in_quote = char
                 else:
                     word.append(char)
-            if char == r"\\" and not pre_back_slash:
+            if char == "\\" and not pre_back_slash:
                 pre_back_slash = True
             else:
                 pre_back_slash = False
