@@ -12,9 +12,13 @@ client = Client("127.0.0.1", "6379", None)
         ('''hello"world"''', ["helloworld"]),
         (r'''hello\"world"''', [r"hello\world"]),
         (r'"\\"', [r"\\"]),
+        (r'\\', [r"\\"]),
         (r"\abcd ef", [r"\abcd", "ef"]),
+        # quotes in quotes
         (r""" 'hello"world' """, ['hello"world']),
         (r""" "hello'world" """, ["hello'world"]),
+        (r""" 'hello\'world'""", ["hello'world"]),
+        (r""" "hello\"world" """, ['hello"world']),
     ],
 )
 def test_stipe_quote_escaple_in_quote(test_input, expected):
