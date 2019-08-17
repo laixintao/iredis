@@ -41,3 +41,5 @@ def load_command():
 
 
 group2commands, group2command_res = load_command()
+# all redis command strings, in UPPER case
+all_commands = sum(group2commands.values(), [])
