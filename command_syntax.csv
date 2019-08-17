@@ -26,7 +26,7 @@ connection,PING,command_messagex
 connection,QUIT,command
 connection,SELECT,command_index
 connection,SWAPDB,command_index_index
-generic,DEL,command_key
+generic,DEL,command_keys
 generic,DUMP,command_key
 generic,EXISTS,command_keys
 generic,EXPIRE,command_key_second
