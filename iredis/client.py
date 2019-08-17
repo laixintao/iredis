@@ -1,11 +1,13 @@
 """
-Redis client.
+IRedis client.
 """
+import re
 import logging
 
 import redis
 from redis.connection import Connection
 from redis.exceptions import ResponseError, TimeoutError, ConnectionError
+from iredis.exceptions import InvalidArguments
 
 from . import renders
 
@@ -36,10 +38,14 @@ class Client:
         self.callbacks = self.reder_funcname_mapping()
 
     def __str__(self):
-        return f"{self.host}:{self.port}[{self.db}]"
+        if self.db:
+            return f"{self.host}:{self.port}[{self.db}]"
+        return f"{self.host}:{self.port}"
 
     def execute_command(self, *args, **options):
         "Execute a command and return a parsed response"
+        # TODO if command is auth and n is not None
+        # need to SELECT after auth
         command_name = args[0]
         try:
             self.connection.send_command(*args)
@@ -78,14 +84,32 @@ class Client:
         """
         return None
 
-    def _strip_quotes(self, s):
+    def _strip_quote_args(self, s):
         """
+        Given string s, split it into args.
+        Handle with all quote cases.
 
         Raise Error if quotes not match
         """
+        word = []
+        in_quote = pre = None
         for char in s:
-            pass
-
+            # none-quote char
+            if (
+                char not in ["'", '"']  # non-quote string
+                or (char == in_quote and pre == "\\")  # escaped string
+                or (in_quote and char != in_quote)  # double quote in single quote
+            ):
+                yield char
+            # close quote
+            elif char == in_quote and pre != "\\":
+                in_quote = None
+            # open quote
+            elif char in ["'", '"']:
+                in_quote = char
+            pre = char
+        if in_quote or pre == "\\":
+            raise InvalidArguments
 
     def send_command(self, command):
         # FIXME args include ", strip it
