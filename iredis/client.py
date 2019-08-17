@@ -10,6 +10,7 @@ from redis.exceptions import ResponseError, TimeoutError, ConnectionError
 from iredis.exceptions import InvalidArguments
 
 from . import renders
+from .commands_csv_loader import all_commands
 
 logger = logging.getLogger(__name__)
 
@@ -42,19 +43,18 @@ class Client:
             return f"{self.host}:{self.port}[{self.db}]"
         return f"{self.host}:{self.port}"
 
-    def execute_command(self, *args, **options):
+    def execute_command(self, command_name, *args, **options):
         "Execute a command and return a parsed response"
         # TODO if command is auth and n is not None
         # need to SELECT after auth
-        command_name = args[0]
         try:
-            self.connection.send_command(*args)
+            self.connection.send_command(command_name, *args)
             return self.parse_response(self.connection, command_name, **options)
         except (ConnectionError, TimeoutError) as e:
             self.connection.disconnect()
             if not (self.connection.retry_on_timeout and isinstance(e, TimeoutError)):
                 raise
-            self.connection.send_command(*args)
+            self.connection.send_command(command_name, *args)
             return self.parse_response(self.connection, command_name, **options)
 
     def parse_response(self, connection, command_name, **options):
@@ -64,10 +64,6 @@ class Client:
         except ResponseError as e:
             rendered = str(e)
         else:
-            # FIXME command name can not only split by " "
-            # command name include " "
-            # for key in variables:
-            #   key.starts_with command_*  then it is command
             if command_name in self.answer_callbacks:
                 callback_name = self.answer_callbacks[command_name]
                 callback = self.callbacks[callback_name]
@@ -141,11 +137,24 @@ class Client:
             raise InvalidArguments()
 
     def send_command(self, command):
-        # FIXME args include ", strip it
-        # multi key: "123" "foo" "bar"
-        # \" : "fo\"o"
-        # space
-        redis_commands = command.split(" ")
-        logger.debug(f"[comamnd list] {redis_commands}")
-        redis_resp = self.execute_command(*redis_commands)
+        """
+        Send command to redis-server, return parsed response.
+        """
+
+        # Parse command-name and args
+        upper_raw_command = command.upper()
+        for command_name in all_commands:
+            if upper_raw_command.startswith(command_name):
+                l = len(command_name)
+                input_command = command[:l]
+                input_args = command[l:]
+                break
+        else:
+            raise InvalidArguments(r"`{command} is not a valide Redis Command")
+
+        args = list(self._strip_quote_args(input_args))
+
+        logger.debug(f"[Parsed comamnd name] {input_command}")
+        logger.debug(f"[Parsed comamnd args] {args}")
+        redis_resp = self.execute_command(input_command, *args)
         return redis_resp
