@@ -8,6 +8,8 @@ def test_del(judge_command):
     )
     judge_command("DEL abc def", {"command_keys": "DEL", "keys": "abc def"})
     judge_command("DEL 1 2", {"command_keys": "DEL", "keys": "1 2"})
+    judge_command("DEL 'he \"llo'", {"command_keys": "DEL", "keys": "'he \"llo'"})
+    judge_command("""DEL 'he "llo' "abc" 'def' """, {"command_keys": "DEL", "keys": "'he \"llo' \"abc\" 'def'"})
 
 
 def test_exists(judge_command):

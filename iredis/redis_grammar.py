@@ -9,8 +9,9 @@ from .commands_csv_loader import group2command_res as t
 logger = logging.getLogger(__name__)
 
 VALID_TOKEN = r"""(
-("([^"]|\\")*?")     |# with quotes
-([^\s"]+)             # without quotes
+("([^"]|\\")*?")     |# with double quotes
+('([^']|\\')*?')     |# with single quotes
+([^\s"]+)            # without quotes
 )"""
 VALID_SLOT = r"\d+"  # TODO add range? max value:16384
 VALID_NODE = r"\d+"
