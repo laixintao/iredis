@@ -142,7 +142,7 @@ def repl(client, session):
 @click.pass_context
 @click.option("-h", help="Server hostname", default="127.0.0.1")
 @click.option("-p", help="Server port", default="6379")
-@click.option("-n", help="Database number.", default="0")
+@click.option("-n", help="Database number.", default=None)
 def gather_args(ctx, h, p, n):
     logger.info(f"iredis start, host={h}, port={p}, db={n}.")
     return ctx
