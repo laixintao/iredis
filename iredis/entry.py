@@ -5,6 +5,8 @@ import logging
 import time
 import threading
 from pathlib import Path
+from typing import Dict, Iterable, List
+
 
 import click
 from prompt_toolkit import PromptSession
@@ -18,7 +20,9 @@ from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.lexers import SimpleLexer
 from prompt_toolkit.styles import Style
+from prompt_toolkit.document import Document
 from prompt_toolkit.contrib.regular_languages.compiler import compile
+from prompt_toolkit.completion import Completion, CompleteEvent
 
 from .client import Client
 from .renders import render_dict
@@ -26,10 +30,26 @@ from .redis_grammar import REDIS_COMMANDS
 from .commands_csv_loader import group2commands, group2command_res
 from .utils import timer, literal_bytes
 
-
 logger = logging.getLogger(__name__)
 
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
+
+
+class FakeDocument:
+    pass
+
+
+class RedisGrammarCompleter(GrammarCompleter):
+    def get_completions(
+        self, document: Document, complete_event: CompleteEvent
+    ) -> Iterable[Completion]:
+        origin_text = document.text_before_cursor
+        stripped = FakeDocument()
+        stripped.text_before_cursor = origin_text.strip()
+        # Do not complete on spaces, too slow
+        if not origin_text.strip():
+            return []
+        return super().get_completions(stripped, complete_event)
 
 
 def get_style():
@@ -71,7 +91,7 @@ def get_completer(group2commands, redis_grammar):
     completer_mapping.update(
         {"failoverchoice": WordCompleter(["TAKEOVER", "FORCE", "takeover", "force"])}
     )
-    completer = GrammarCompleter(redis_grammar, completer_mapping)
+    completer = RedisGrammarCompleter(redis_grammar, completer_mapping)
     return completer
 
 
@@ -111,6 +131,8 @@ def repl(client, session):
                 "{hostname}> ".format(hostname=str(client)),
                 style=style,
                 auto_suggest=AutoSuggestFromHistory(),
+                complete_while_typing=True,
+                complete_in_thread=True
             )
 
         except KeyboardInterrupt:
