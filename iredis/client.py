@@ -84,32 +84,57 @@ class Client:
         """
         return None
 
+    def _valide_token(self, words):
+        token = "".join(words).strip()
+        if token:
+            yield token
+
     def _strip_quote_args(self, s):
         """
         Given string s, split it into args.
         Handle with all quote cases.
 
-        Raise Error if quotes not match
+        Raise ``InvalidArguments`` if quotes not match
+
+        :return: args list.
         """
+        sperator = re.compile(r"\s")
         word = []
-        in_quote = pre = None
+        in_quote = None
+        pre_back_slash = False
         for char in s:
-            # none-quote char
-            if (
-                char not in ["'", '"']  # non-quote string
-                or (char == in_quote and pre == "\\")  # escaped string
-                or (in_quote and char != in_quote)  # double quote in single quote
-            ):
-                yield char
-            # close quote
-            elif char == in_quote and pre != "\\":
-                in_quote = None
-            # open quote
-            elif char in ["'", '"']:
-                in_quote = char
-            pre = char
-        if in_quote or pre == "\\":
-            raise InvalidArguments
+            if in_quote:
+                # close quote
+                if char == in_quote and not pre_back_slash:
+                    yield from self._valide_token(word)
+                    word = []
+                    in_quote = None
+                else:
+                    word.append(char)
+            # not in quote
+            else:
+                # sperator
+                if sperator.match(char):
+                    if word:
+                        yield from self._valide_token(word)
+                        word = []
+                    else:
+                        word.append(char)
+                # open quotes
+                elif char in ["'", '"']:
+                    in_quote = char
+                else:
+                    word.append(char)
+            if char == r"\\" and not pre_back_slash:
+                pre_back_slash = True
+            else:
+                pre_back_slash = False
+
+        if word:
+            yield from self._valide_token(word)
+        # quote not close
+        if in_quote:
+            raise InvalidArguments()
 
     def send_command(self, command):
         # FIXME args include ", strip it
