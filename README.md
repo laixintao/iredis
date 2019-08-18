@@ -13,7 +13,7 @@ A Terminal Client for Redis with AutoCompletion and Syntax Highlighting.
 - <kbd>Ctrl</kbd> + <kbd>R</kbd> to open **reverse-i-search** to search through command history.
 - iredis is smart, `CLUSTER NODES`, then `CLUSTER COUNT-FAILURE-REPORTS node-id`, iredis will do auto complete based on previous command.
 - Command validation: `CLUSTER MEET IP PORT`
-- Zsh style history(use <kbd>↑</kdb> to do part history search).
+- Zsh style history(use <kbd>↑</kbd> to do part history search).
 
 ## Install
 
