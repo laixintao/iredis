@@ -126,6 +126,7 @@ def repl(client, session):
     compile_grammar_bg(session)
     while True:
         timer("REPL waiting for command...")
+        logger.debug(f"session: {session}, {session.completer}")
         try:
             command = session.prompt(
                 "{hostname}> ".format(hostname=str(client)),
@@ -149,7 +150,7 @@ def repl(client, session):
             continue
 
         try:
-            answer = client.send_command(command)
+            answer = client.send_command(command, session.completer)
         # Error with previous command or exception
         except Exception as e:
             logger.exception(e)
