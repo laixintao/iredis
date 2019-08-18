@@ -59,8 +59,8 @@ def get_style():
             "": "",
             # Prompt.
             "hostname": "",
-            "operator": "#33aa33 bold",
-            "number": "#ff0000 bold",
+            "key": "#33aa33",
+            "integer": "#ff0000",
             "trailing-input": "bg:#662222 #ffffff",
             "password": "hidden",
         }
@@ -69,8 +69,9 @@ def get_style():
 
 def get_lexer(command_groups, redis_grammar):
     lexers_dict = {
-        "key": SimpleLexer("class:operator"),
-        "value": SimpleLexer("class:number"),
+        "key": SimpleLexer("class:key"),
+        "keys": SimpleLexer("class:key"),
+        "index": SimpleLexer("class:integer"),
         "password": SimpleLexer("class:password"),
     }
     lexers_dict.update(
@@ -124,8 +125,10 @@ def compile_grammar_bg(session):
 def repl(client, session):
     style = get_style()
     compile_grammar_bg(session)
+    timer("First REPL command enter")
     while True:
-        timer("REPL waiting for command...")
+        logger.info("↓↓↓↓↓↓" * 10)
+        logger.info("REPL waiting for command...")
         try:
             command = session.prompt(
                 "{hostname}> ".format(hostname=str(client)),
@@ -149,7 +152,7 @@ def repl(client, session):
             continue
 
         try:
-            answer = client.send_command(command)
+            answer = client.send_command(command, session.completer)
         # Error with previous command or exception
         except Exception as e:
             logger.exception(e)
