@@ -37,6 +37,6 @@ def test_stipe_quote_escaple_in_quote(test_input, expected):
 def test_send_command(_input, command_name, expect_args):
     client = Client("127.0.0.1", "6379", None)
     client.execute_command = MagicMock()
-    client.send_command(_input)
+    client.send_command(_input, None)
     args, kwargs = client.execute_command.call_args
     assert args == (command_name, *expect_args)
