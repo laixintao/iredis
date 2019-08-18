@@ -2,7 +2,7 @@
 Render redis-server responses.
 This module will be auto loaded to callbacks.
 
-func(redis-response, completers: GrammarCompleter) -> formatted result
+func(redis-response, completers: GrammarCompleter) -> formatted result(str)
 """
 import logging
 from prompt_toolkit.completion import WordCompleter
@@ -24,12 +24,13 @@ def render_int(value, completers=None):
 
 def render_list(items, style=None):
     # TODO with return type class / style
+    index_width = len(str(len(items)))
     rendered = []
-    for item in items:
+    for index, item in enumerate(items):
         if isinstance(item, bytes):
             item = output_bytes(item)
-        rendered.append(item)
-    return rendered
+        rendered.append(f'{index:{index_width}}) "{item}"')
+    return "\n".join(rendered)
 
 
 def command_keys(items, completer):
