@@ -79,7 +79,6 @@ class Client:
             if nativestr(select_result) != "OK":
                 raise ConnectionError("Invalid Database")
 
-
         return resp
 
     def parse_response(self, connection, completer, command_name, **options):
