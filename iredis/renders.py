@@ -36,6 +36,7 @@ def command_keys(items, completer):
     rendered = render_list(items)
     if completer:
         completer.completers["key"] = WordCompleter(rendered)
+        completer.completers["keys"] = WordCompleter(rendered)
         logger.debug(f"[Completer] key completer updated.")
     else:
         logger.debug(f"[Completer] completer is None, not updated.")
