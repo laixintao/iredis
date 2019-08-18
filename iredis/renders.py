@@ -29,7 +29,7 @@ def render_list(items, style=None):
     for index, item in enumerate(items):
         if isinstance(item, bytes):
             item = output_bytes(item)
-        rendered.append(f'{index:{index_width}}) "{item}"')
+        rendered.append(f'{index+1:{index_width}}) "{item}"')
     return "\n".join(rendered)
 
 
