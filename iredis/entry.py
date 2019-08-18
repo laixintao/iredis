@@ -59,8 +59,8 @@ def get_style():
             "": "",
             # Prompt.
             "hostname": "",
-            "operator": "#33aa33 bold",
-            "number": "#ff0000 bold",
+            "key": "#33aa33",
+            "integer": "#ff0000",
             "trailing-input": "bg:#662222 #ffffff",
             "password": "hidden",
         }
@@ -69,8 +69,9 @@ def get_style():
 
 def get_lexer(command_groups, redis_grammar):
     lexers_dict = {
-        "key": SimpleLexer("class:operator"),
-        "value": SimpleLexer("class:number"),
+        "key": SimpleLexer("class:key"),
+        "keys": SimpleLexer("class:key"),
+        "index": SimpleLexer("class:integer"),
         "password": SimpleLexer("class:password"),
     }
     lexers_dict.update(
