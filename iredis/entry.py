@@ -186,7 +186,6 @@ def main():
     session = PromptSession(
         "{hostname}> ".format(hostname=str(client)),
         history=FileHistory(HISTORY_FILE),
-        enable_history_search=True,
         style=style,
         auto_suggest=AutoSuggestFromHistory(),
         complete_while_typing=True,
