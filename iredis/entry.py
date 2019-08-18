@@ -88,7 +88,6 @@ def get_completer(group2commands, redis_grammar):
         )
         for command_group, commands in group2commands.items()
     }
-    # TODO add key value completer
     completer_mapping.update(
         {"failoverchoice": WordCompleter(["TAKEOVER", "FORCE", "takeover", "force"])}
     )
@@ -123,20 +122,12 @@ def compile_grammar_bg(session):
 
 
 def repl(client, session):
-    style = get_style()
-    compile_grammar_bg(session)
     timer("First REPL command enter")
     while True:
         logger.info("↓↓↓↓↓↓" * 10)
         logger.info("REPL waiting for command...")
         try:
-            command = session.prompt(
-                "{hostname}> ".format(hostname=str(client)),
-                style=style,
-                auto_suggest=AutoSuggestFromHistory(),
-                complete_while_typing=True,
-                complete_in_thread=True
-            )
+            command = session.prompt()
 
         except KeyboardInterrupt:
             logger.warning("KeyboardInterrupt!")
@@ -187,9 +178,21 @@ def main():
         f = open(HISTORY_FILE, "w+")
         f.close()
 
-    # prompt session
-    session = PromptSession(history=FileHistory(HISTORY_FILE))
     # redis client
     client = Client(**ctx.params)
+
+    style = get_style()
+    # prompt session
+    session = PromptSession(
+        "{hostname}> ".format(hostname=str(client)),
+        history=FileHistory(HISTORY_FILE),
+        enable_history_search=True,
+        style=style,
+        auto_suggest=AutoSuggestFromHistory(),
+        complete_while_typing=True,
+        complete_in_thread=True,
+    )
+
+    compile_grammar_bg(session)
 
     repl(client, session)
