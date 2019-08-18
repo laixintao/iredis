@@ -85,6 +85,7 @@ class Client:
         except ResponseError as e:
             rendered = str(e)
         else:
+            logger.debug(f"[Raw response] {response}")
             command_upper = command_name.upper()
             if command_upper in self.answer_callbacks:
                 callback_name = self.answer_callbacks[command_upper]

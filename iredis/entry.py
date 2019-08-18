@@ -125,9 +125,10 @@ def compile_grammar_bg(session):
 def repl(client, session):
     style = get_style()
     compile_grammar_bg(session)
+    timer("First REPL command enter")
     while True:
-        timer("REPL waiting for command...")
-        logger.debug(f"session: {session}, {session.completer}")
+        logger.info("↓↓↓↓↓↓" * 10)
+        logger.info("REPL waiting for command...")
         try:
             command = session.prompt(
                 "{hostname}> ".format(hostname=str(client)),
