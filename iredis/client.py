@@ -43,7 +43,7 @@ class Client:
         )
         self.connection = Connection()
         # all command upper case
-        self.answer_callbacks = {"KEYS": "render_int"}
+        self.answer_callbacks = {"KEYS": "command_keys"}
         self.callbacks = self.reder_funcname_mapping()
 
     def __str__(self):
@@ -51,21 +51,25 @@ class Client:
             return f"{self.host}:{self.port}[{self.db}]"
         return f"{self.host}:{self.port}"
 
-    def execute_command(self, command_name, *args, **options):
+    def execute_command(self, completer, command_name, *args, **options):
         "Execute a command and return a parsed response"
         try:
             self.connection.send_command(command_name, *args)
-            resp = self.parse_response(self.connection, command_name, **options)
+            resp = self.parse_response(
+                self.connection, completer, command_name, **options
+            )
         # retry on timeout
         except (ConnectionError, TimeoutError) as e:
             self.connection.disconnect()
             if not (self.connection.retry_on_timeout and isinstance(e, TimeoutError)):
                 raise
             self.connection.send_command(command_name, *args)
-            resp = self.parse_response(self.connection, command_name, **options)
+            resp = self.parse_response(
+                self.connection, completer, command_name, **options
+            )
         # SELECT db on AUTH
         if command_name.upper() == "AUTH" and self.db:
-            select_result = self.execute_command("SELECT", self.db)
+            select_result = self.execute_command(completer, "SELECT", self.db)
             if nativestr(select_result) != "OK":
                 raise ConnectionError("Invalid Database")
 
@@ -74,18 +78,19 @@ class Client:
 
         return resp
 
-    def parse_response(self, connection, command_name, **options):
+    def parse_response(self, connection, completer, command_name, **options):
         "Parses a response from the Redis server"
         try:
             response = connection.read_response()
         except ResponseError as e:
             rendered = str(e)
         else:
+            logger.debug(f"[Raw response] {response}")
             command_upper = command_name.upper()
             if command_upper in self.answer_callbacks:
                 callback_name = self.answer_callbacks[command_upper]
                 callback = self.callbacks[callback_name]
-                rendered = callback(response)
+                rendered = callback(response, completer)
             else:
                 rendered = response
         return rendered
@@ -154,9 +159,14 @@ class Client:
         if in_quote:
             raise InvalidArguments()
 
-    def send_command(self, command):
+    def send_command(self, command, completer):
         """
         Send command to redis-server, return parsed response.
+
+        :param command: text command, not parsed
+        :param completer: RedisGrammarCompleter will update completer
+            based on redis response. eg: update key completer after ``keys``
+            command
         """
 
         # Parse command-name and args
@@ -174,5 +184,5 @@ class Client:
 
         logger.debug(f"[Parsed comamnd name] {input_command}")
         logger.debug(f"[Parsed comamnd args] {args}")
-        redis_resp = self.execute_command(input_command, *args)
+        redis_resp = self.execute_command(completer, input_command, *args)
         return redis_resp
