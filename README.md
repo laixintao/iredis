@@ -4,6 +4,8 @@
 
 A Terminal Client for Redis with AutoCompletion and Syntax Highlighting.
 
+![](./docs/assets/auto-complete.png)
+
 **This project is under development, any comments are welcome.**
 
 ## Features
