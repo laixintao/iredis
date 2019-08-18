@@ -161,6 +161,11 @@ class Client:
     def send_command(self, command, completer):
         """
         Send command to redis-server, return parsed response.
+
+        :param command: text command, not parsed
+        :param completer: RedisGrammarCompleter will update completer
+            based on redis response. eg: update key completer after ``keys``
+            command
         """
 
         # Parse command-name and args
