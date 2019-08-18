@@ -12,14 +12,12 @@ import click
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.shortcuts import prompt
-from prompt_toolkit.styles import Style
 from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.lexers import SimpleLexer
-from prompt_toolkit.styles import Style
 from prompt_toolkit.document import Document
 from prompt_toolkit.contrib.regular_languages.compiler import compile
 from prompt_toolkit.completion import Completion, CompleteEvent
@@ -29,6 +27,7 @@ from .renders import render_dict
 from .redis_grammar import REDIS_COMMANDS
 from .commands_csv_loader import group2commands, group2command_res
 from .utils import timer, literal_bytes
+from .style import STYLE
 
 logger = logging.getLogger(__name__)
 
@@ -50,21 +49,6 @@ class RedisGrammarCompleter(GrammarCompleter):
         if not origin_text.strip():
             return []
         return super().get_completions(stripped, complete_event)
-
-
-def get_style():
-    return Style.from_dict(
-        {
-            # User input (default text).
-            "": "",
-            # Prompt.
-            "hostname": "",
-            "key": "#33aa33",
-            "integer": "#ff0000",
-            "trailing-input": "bg:#662222 #ffffff",
-            "password": "hidden",
-        }
-    )
 
 
 def get_lexer(command_groups, redis_grammar):
@@ -181,7 +165,7 @@ def main():
     # redis client
     client = Client(**ctx.params)
 
-    style = get_style()
+    style = STYLE
     # prompt session
     session = PromptSession(
         history=FileHistory(HISTORY_FILE),
