@@ -41,7 +41,7 @@ class Client:
             decode_responses=decode_responses,
             encoding=encoding,
         )
-        self.connection = Connection()
+        self.connection = Connection(host=self.host, port=self.port, db=self.db)
         # all command upper case
         self.answer_callbacks = {"KEYS": "command_keys"}
         self.callbacks = self.reder_funcname_mapping()
@@ -53,6 +53,11 @@ class Client:
 
     def execute_command(self, completer, command_name, *args, **options):
         "Execute a command and return a parsed response"
+        # === pre hook ===
+        if command_name.upper() == "SELECT":
+            logger.debug("[Pre hook] Command is SELECT, change self.db.")
+            self.db = int(args[0])
+
         try:
             self.connection.send_command(command_name, *args)
             resp = self.parse_response(
@@ -67,14 +72,13 @@ class Client:
             resp = self.parse_response(
                 self.connection, completer, command_name, **options
             )
+        # === After hook ===
         # SELECT db on AUTH
         if command_name.upper() == "AUTH" and self.db:
             select_result = self.execute_command(completer, "SELECT", self.db)
             if nativestr(select_result) != "OK":
                 raise ConnectionError("Invalid Database")
 
-        if command_name.upper() == "SELECT":
-            self.db = int(args[0])
 
         return resp
 
