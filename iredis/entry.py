@@ -127,7 +127,7 @@ def repl(client, session):
         logger.info("↓↓↓↓↓↓" * 10)
         logger.info("REPL waiting for command...")
         try:
-            command = session.prompt()
+            command = session.prompt("{hostname}> ".format(hostname=str(client)))
 
         except KeyboardInterrupt:
             logger.warning("KeyboardInterrupt!")
@@ -184,7 +184,6 @@ def main():
     style = get_style()
     # prompt session
     session = PromptSession(
-        "{hostname}> ".format(hostname=str(client)),
         history=FileHistory(HISTORY_FILE),
         style=style,
         auto_suggest=AutoSuggestFromHistory(),
