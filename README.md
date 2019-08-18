@@ -8,12 +8,14 @@ A Terminal Client for Redis with AutoCompletion and Syntax Highlighting.
 
 ## Features
 
+- Advanced code completion. If you run command `KEYS` then run `DEL`, iredis will auto complete your command based on `KEYS` result.
+- Command validation: `CLUSTER MEET IP PORT`
+- Command highlighting, fully based on redis grammar. Any valide command in iredis shell is a valide redis command.
 - <kbd>Ctrl</kbd> + <kbd>C</kbd> to clear cureent line, won't exit redis-cli. Use <kbd>Ctrl</kbd> + <kbd>D</kbd>  
 - Say "Goodbye!" to you when you exit!
 - <kbd>Ctrl</kbd> + <kbd>R</kbd> to open **reverse-i-search** to search through command history.
-- iredis is smart, `CLUSTER NODES`, then `CLUSTER COUNT-FAILURE-REPORTS node-id`, iredis will do auto complete based on previous command.
-- Command validation: `CLUSTER MEET IP PORT`
 - Zsh style history(use <kbd>↑</kbd> to do part history search).
+- Auto suggestions. (Like [fish shell](http://fishshell.com/).)
 
 ## Install
 
@@ -39,6 +41,7 @@ Current implemented commands: [command_syntax.csv](command_syntax.csv).
 
 ## Planned Features
 
+- Full help document.
 
 ## Related Projects
 
