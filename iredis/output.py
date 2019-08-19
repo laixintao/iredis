@@ -15,3 +15,5 @@ def ensure_str(origin):
         return [ensure_str(b) for b in origin]
     elif isinstance(origin, bytes):
         return output_bytes(origin)
+    else:
+        raise Exception(f"Unkown type: {type(origin)}, origin: {origin}")
