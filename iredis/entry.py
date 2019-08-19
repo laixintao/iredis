@@ -21,6 +21,7 @@ from prompt_toolkit.lexers import SimpleLexer
 from prompt_toolkit.document import Document
 from prompt_toolkit.contrib.regular_languages.compiler import compile
 from prompt_toolkit.completion import Completion, CompleteEvent
+from prompt_toolkit import print_formatted_text
 
 from .client import Client
 from .renders import render_dict
@@ -135,7 +136,7 @@ def repl(client, session):
 
         # Fine with answer
         else:
-            print(answer)
+            print_formatted_text(answer)
 
 
 # command line entry here...

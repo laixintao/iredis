@@ -6,8 +6,10 @@ func(redis-response, completers: GrammarCompleter) -> formatted result(str)
 """
 import logging
 from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.formatted_text import to_formatted_text, FormattedText
 
 from .output import output_bytes
+from .style import STYLE_DICT
 
 logger = logging.getLogger(__name__)
 
@@ -23,18 +25,18 @@ def render_int(value, completers=None):
 
 
 def render_list(items, style=None):
-    # TODO with return type class / style
     index_width = len(str(len(items)))
     rendered = []
     for index, item in enumerate(items):
         if isinstance(item, bytes):
             item = output_bytes(item)
-        rendered.append(f'{index+1:{index_width}}) "{item}"')
-    return "\n".join(rendered)
+        text = f'{index+1:{index_width}}) "{item}"\n'
+        rendered.append((style, text))
+    return FormattedText(rendered)
 
 
 def command_keys(items, completer):
-    rendered = render_list(items)
+    rendered = render_list(items, STYLE_DICT["key"])
     if completer:
         completer.completers["key"] = WordCompleter(rendered)
         completer.completers["keys"] = WordCompleter(rendered)
