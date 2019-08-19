@@ -43,7 +43,7 @@ class Client:
         )
         self.connection = Connection(host=self.host, port=self.port, db=self.db)
         # all command upper case
-        self.answer_callbacks = {"KEYS": "command_keys"}
+        self.answer_callbacks = {"KEYS": "command_keys", "GET": "simple_string_reply"}
         self.callbacks = self.reder_funcname_mapping()
 
     def __str__(self):
