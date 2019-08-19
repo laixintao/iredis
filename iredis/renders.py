@@ -30,7 +30,9 @@ def render_list(items, style=None):
     for index, item in enumerate(items):
         if isinstance(item, bytes):
             item = output_bytes(item)
-        text = f'{index+1:{index_width}}) "{item}"\n'
+        index_const_width = f"{index+1:{index_width}})"
+        rendered.append(("", index_const_width))
+        text = f' "{item}"\n'
         rendered.append((style, text))
     return FormattedText(rendered)
 
