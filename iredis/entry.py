@@ -139,6 +139,9 @@ def repl(client, session):
             print_formatted_text(answer, end="")
 
 
+RAW_HELP = """
+Use raw formatting for replies (default when STDOUT is not a tty). However, you can use --no-raw to force formatted output even when STDOUT is not a tty.
+"""
 # command line entry here...
 @click.command(
     help="""When no command is given, redis-cli starts in interactive mode."""
@@ -147,9 +150,11 @@ def repl(client, session):
 @click.option("-h", help="Server hostname", default="127.0.0.1")
 @click.option("-p", help="Server port", default="6379")
 @click.option("-n", help="Database number.", default=None)
+@click.option("--raw/--no-raw", default=False, is_flag=True, help=RAW_HELP)
 @click.argument("cmd", nargs=-1)
-def gather_args(ctx, h, p, n, cmd):
+def gather_args(ctx, h, p, n, raw, cmd):
     logger.info(f"iredis start, host={h}, port={p}, db={n}.")
+    logger.info(f"iredis start, raw={raw}")
     logger.info(f"iredis start whith commands: {cmd}")
     return ctx
 
