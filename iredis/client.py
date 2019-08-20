@@ -28,19 +28,12 @@ class Client:
                 mapping[func_name] = func
         return mapping
 
-    def __init__(self, h, p, n, encoding="utf-8", decode_responses=False):
-        self.host = h
-        self.port = p
-        self.db = n
+    def __init__(self, host, port, db, encoding="utf-8", decode_responses=False):
+        self.host = host
+        self.port = port
+        self.db = db
         self.encoding = encoding
         self.decode_responses = decode_responses
-        self._redis_client = redis.StrictRedis(
-            self.host,
-            self.port,
-            self.db,
-            decode_responses=decode_responses,
-            encoding=encoding,
-        )
         self.connection = Connection(host=self.host, port=self.port, db=self.db)
         # all command upper case
         self.answer_callbacks = {
