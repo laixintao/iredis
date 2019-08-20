@@ -189,6 +189,12 @@ def main():
         return
     # redis client
     client = Client(ctx.params["h"], ctx.params["p"], ctx.params["n"])
+    if not sys.stdin.isatty():
+        for line in sys.stdin.readlines():
+            logger.debug(f"[Command stdin] {line}")
+            answer = client.send_command(line, None)
+            write_result(answer)
+        return
 
     if ctx.params["cmd"]:  # no interactive mode
         answer = client.send_command(" ".join(ctx.params["cmd"]), None)
@@ -212,6 +218,5 @@ def main():
         complete_in_thread=True,
     )
 
-    # TODO check if input in not tty
     compile_grammar_bg(session)
     repl(client, session)

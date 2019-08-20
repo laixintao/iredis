@@ -34,7 +34,7 @@ def render_int(value, completers=None):
 
 def render_list(byte_items, str_items, style=None):
     if config.raw:
-        return b"\n".join(byte_items )
+        return b"\n".join(byte_items)
     index_width = len(str(len(str_items)))
     rendered = []
     for index, item in enumerate(str_items):
