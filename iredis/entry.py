@@ -107,13 +107,14 @@ def compile_grammar_bg(session):
     compiling_thread.start()
 
 
-def write_result(text, is_raw):
+def write_result(text):
     """
     :param text: is_raw: bytes, not raw: FormattedText
     :is_raw: bool
     """
-    if is_raw:
-        os.write(sys.stdout, text)
+    if config.raw:
+        sys.stdout.buffer.write(text)
+        sys.stdout.write("\n")
     else:
         print_formatted_text(text, end="")
 
@@ -191,7 +192,7 @@ def main():
 
     if ctx.params["cmd"]:  # no interactive mode
         answer = client.send_command(" ".join(ctx.params["cmd"]), None)
-        print_formatted_text(answer, end="")
+        write_result(answer)
         logger.warn("[OVER] command executed, exit...")
         return
 
