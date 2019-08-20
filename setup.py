@@ -39,4 +39,5 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
     entry_points={"console_scripts": ["iredis = iredis.entry:main"]},
+    dependency_links=["git+git://github.com/pallets/click@master#egg=click"],
 )
