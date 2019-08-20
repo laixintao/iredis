@@ -1,4 +1,4 @@
-click
 redis
 prompt_toolkit
 Pygments==2.4.2
+click@https://codeload.github.com/pallets/click/zip/master
