@@ -151,7 +151,7 @@ def repl(client, session):
 
         # Fine with answer
         else:
-            write_result(answer, is_raw)
+            write_result(answer)
 
 
 RAW_HELP = """
