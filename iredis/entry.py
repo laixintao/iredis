@@ -29,6 +29,7 @@ from .redis_grammar import REDIS_COMMANDS
 from .commands_csv_loader import group2commands, group2command_res
 from .utils import timer, literal_bytes
 from .style import STYLE
+from .config import config
 
 logger = logging.getLogger(__name__)
 
@@ -117,7 +118,8 @@ def write_result(text, is_raw):
         print_formatted_text(text, end="")
 
 
-def repl(client, session, is_raw, decode=None):
+def repl(client, session):
+    is_raw = config.raw
     timer(f"First REPL command enter, is_raw={is_raw}.")
     while True:
         logger.info("↓↓↓↓" * 10)
@@ -151,10 +153,6 @@ def repl(client, session, is_raw, decode=None):
             write_result(answer, is_raw)
 
 
-class Config:
-    pass
-
-
 RAW_HELP = """
 Use raw formatting for replies (default when STDOUT is not a tty). However, you can use --no-raw to force formatted output even when STDOUT is not a tty.
 """
@@ -170,16 +168,15 @@ Use raw formatting for replies (default when STDOUT is not a tty). However, you 
 @click.argument("cmd", nargs=-1)
 def gather_args(ctx, h, p, n, raw, cmd):
     logger.info(f"[start args] host={h}, port={p}, db={n}, raw={raw}, cmd={cmd}.")
-    ctx.config = Config()
     # figout raw output or formatted output
     if ctx.get_parameter_source("raw") == click.ParameterSource.COMMANDLINE:
-        ctx.config.raw = raw
+        config.raw = raw
     else:
         if sys.stdout.isatty():
-            ctx.config.raw = False
+            config.raw = False
         else:
-            ctx.config.raw = True
-    logger.debug(f"[Config] Is raw output? {ctx.config.raw}")
+            config.raw = True
+    logger.debug(f"[Config] Is raw output? {config.raw}")
     return ctx
 
 
@@ -214,6 +211,6 @@ def main():
         complete_in_thread=True,
     )
 
+    # TODO check if input in not tty
     compile_grammar_bg(session)
-
     repl(client, session)
