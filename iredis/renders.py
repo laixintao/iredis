@@ -44,13 +44,15 @@ def render_list(items, style=None):
 
 def command_keys(items, completer):
     str_items = ensure_str(items)
-    rendered = render_list(str_items, STYLE_DICT["key"])
+    # update completers
     if completer:
         completer.completers["key"] = WordCompleter(str_items)
         completer.completers["keys"] = WordCompleter(str_items)
         logger.debug(f"[Completer] key completer updated.")
     else:
         logger.debug(f"[Completer] completer is None, not updated.")
+
+    rendered = render_list(str_items, STYLE_DICT["key"])
     return rendered
 
 
