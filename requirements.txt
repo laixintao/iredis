@@ -1,4 +1,4 @@
-click
+click==8.0.dev0
 redis
 prompt_toolkit
 Pygments==2.4.2
