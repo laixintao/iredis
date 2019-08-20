@@ -11,7 +11,9 @@ def output_bytes(b):
 
 
 def ensure_str(origin):
-    if isinstance(origin, list):
+    if isinstance(origin, str):
+        return origin
+    elif isinstance(origin, list):
         return [ensure_str(b) for b in origin]
     elif isinstance(origin, bytes):
         return output_bytes(origin)
