@@ -10,6 +10,7 @@ from prompt_toolkit.formatted_text import to_formatted_text, FormattedText
 
 from .output import output_bytes, ensure_str
 from .style import STYLE_DICT
+from .config import config
 
 logger = logging.getLogger(__name__)
 
@@ -31,10 +32,12 @@ def render_int(value, completers=None):
     return value
 
 
-def render_list(items, style=None):
-    index_width = len(str(len(items)))
+def render_list(byte_items, str_items, style=None):
+    if config.raw:
+        return b"\n".join(byte_items)
+    index_width = len(str(len(str_items)))
     rendered = []
-    for index, item in enumerate(items):
+    for index, item in enumerate(str_items):
         index_const_width = f"{index+1:{index_width}})"
         rendered.append(("", index_const_width))
         text = f' "{item}"\n'
@@ -44,13 +47,19 @@ def render_list(items, style=None):
 
 def command_keys(items, completer):
     str_items = ensure_str(items)
-    rendered = render_list(str_items, STYLE_DICT["key"])
+
+    # update completers
     if completer:
         completer.completers["key"] = WordCompleter(str_items)
         completer.completers["keys"] = WordCompleter(str_items)
         logger.debug(f"[Completer] key completer updated.")
     else:
         logger.debug(f"[Completer] completer is None, not updated.")
+
+    # render is render, completer is completer
+    # render and completer are in same function but code are splitted.
+    # Give back to Ceasar what is Ceasar's and to God what is God's.
+    rendered = render_list(items, str_items, STYLE_DICT["key"])
     return rendered
 
 

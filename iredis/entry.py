@@ -29,6 +29,7 @@ from .redis_grammar import REDIS_COMMANDS
 from .commands_csv_loader import group2commands, group2command_res
 from .utils import timer, literal_bytes
 from .style import STYLE
+from .config import config
 
 logger = logging.getLogger(__name__)
 
@@ -106,10 +107,23 @@ def compile_grammar_bg(session):
     compiling_thread.start()
 
 
+def write_result(text):
+    """
+    :param text: is_raw: bytes, not raw: FormattedText
+    :is_raw: bool
+    """
+    if config.raw:
+        sys.stdout.buffer.write(text)
+        sys.stdout.write("\n")
+    else:
+        print_formatted_text(text, end="")
+
+
 def repl(client, session):
-    timer("First REPL command enter")
+    is_raw = config.raw
+    timer(f"First REPL command enter, is_raw={is_raw}.")
     while True:
-        logger.info("↓↓↓↓↓↓" * 10)
+        logger.info("↓↓↓↓" * 10)
         logger.info("REPL waiting for command...")
         try:
             command = session.prompt("{hostname}> ".format(hostname=str(client)))
@@ -132,21 +146,38 @@ def repl(client, session):
         # Error with previous command or exception
         except Exception as e:
             logger.exception(e)
+            # TODO red error color
             print("(error)", str(e))
 
         # Fine with answer
         else:
-            print_formatted_text(answer)
+            write_result(answer)
 
 
+RAW_HELP = """
+Use raw formatting for replies (default when STDOUT is not a tty). However, you can use --no-raw to force formatted output even when STDOUT is not a tty.
+"""
 # command line entry here...
-@click.command()
+@click.command(
+    help="""When no command is given, redis-cli starts in interactive mode."""
+)
 @click.pass_context
 @click.option("-h", help="Server hostname", default="127.0.0.1")
 @click.option("-p", help="Server port", default="6379")
 @click.option("-n", help="Database number.", default=None)
-def gather_args(ctx, h, p, n):
-    logger.info(f"iredis start, host={h}, port={p}, db={n}.")
+@click.option("--raw/--no-raw", default=False, is_flag=True, help=RAW_HELP)
+@click.argument("cmd", nargs=-1)
+def gather_args(ctx, h, p, n, raw, cmd):
+    logger.info(f"[start args] host={h}, port={p}, db={n}, raw={raw}, cmd={cmd}.")
+    # figout raw output or formatted output
+    if ctx.get_parameter_source("raw") == click.ParameterSource.COMMANDLINE:
+        config.raw = raw
+    else:
+        if sys.stdout.isatty():
+            config.raw = False
+        else:
+            config.raw = True
+    logger.debug(f"[Config] Is raw output? {config.raw}")
     return ctx
 
 
@@ -156,15 +187,26 @@ def main():
     ctx = gather_args.main(standalone_mode=False)
     if not ctx:  # called help
         return
+    # redis client
+    client = Client(ctx.params["h"], ctx.params["p"], ctx.params["n"])
+    if not sys.stdin.isatty():
+        for line in sys.stdin.readlines():
+            logger.debug(f"[Command stdin] {line}")
+            answer = client.send_command(line, None)
+            write_result(answer)
+        return
+
+    if ctx.params["cmd"]:  # no interactive mode
+        answer = client.send_command(" ".join(ctx.params["cmd"]), None)
+        write_result(answer)
+        logger.warn("[OVER] command executed, exit...")
+        return
 
     # Create history file if not exists.
     if not os.path.exists(HISTORY_FILE):
         logger.info(f"History file {HISTORY_FILE} not exists, create now...")
         f = open(HISTORY_FILE, "w+")
         f.close()
-
-    # redis client
-    client = Client(**ctx.params)
 
     style = STYLE
     # prompt session
@@ -177,5 +219,4 @@ def main():
     )
 
     compile_grammar_bg(session)
-
     repl(client, session)
