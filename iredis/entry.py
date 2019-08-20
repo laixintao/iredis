@@ -139,6 +139,10 @@ def repl(client, session):
             print_formatted_text(answer, end="")
 
 
+class Config:
+    pass
+
+
 RAW_HELP = """
 Use raw formatting for replies (default when STDOUT is not a tty). However, you can use --no-raw to force formatted output even when STDOUT is not a tty.
 """
@@ -153,9 +157,17 @@ Use raw formatting for replies (default when STDOUT is not a tty). However, you 
 @click.option("--raw/--no-raw", default=False, is_flag=True, help=RAW_HELP)
 @click.argument("cmd", nargs=-1)
 def gather_args(ctx, h, p, n, raw, cmd):
-    logger.info(f"iredis start, host={h}, port={p}, db={n}.")
-    logger.info(f"iredis start, raw={raw}")
-    logger.info(f"iredis start whith commands: {cmd}")
+    logger.info(f"[start args] host={h}, port={p}, db={n}, raw={raw}, cmd={cmd}.")
+    ctx.config = Config()
+    # figout raw output or formatted output
+    if ctx.get_parameter_source("raw") == click.ParameterSource.COMMANDLINE:
+        ctx.config.raw = raw
+    else:
+        if sys.stdout.isatty():
+            ctx.config.raw = False
+        else:
+            ctx.config.raw = True
+    logger.debug(f"[Config] Is raw output? {ctx.config.raw}")
     return ctx
 
 
