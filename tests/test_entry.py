@@ -19,6 +19,7 @@ from iredis.entry import gather_args
 def test_command_entry_tty(is_tty, raw_arg_is_raw, final_config_is_raw):
     # is tty + raw -> raw
     with patch("sys.stdout.isatty") as patch_tty:
+        from iredis.config import config
         patch_tty.return_value = is_tty
         if raw_arg_is_raw is None:
             call = ["iredis"]
@@ -28,5 +29,5 @@ def test_command_entry_tty(is_tty, raw_arg_is_raw, final_config_is_raw):
             call = ["iredis", "--no-raw"]
         else:
             raise Exception()
-        ctx = gather_args.main(call, standalone_mode=False)
-        assert ctx.config.raw == final_config_is_raw
+        gather_args.main(call, standalone_mode=False)
+        assert config.raw == final_config_is_raw
