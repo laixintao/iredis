@@ -136,17 +136,21 @@ def repl(client, session):
 
         # Fine with answer
         else:
-            print_formatted_text(answer)
+            print_formatted_text(answer, end="")
 
 
 # command line entry here...
-@click.command()
+@click.command(
+    help="""When no command is given, redis-cli starts in interactive mode."""
+)
 @click.pass_context
 @click.option("-h", help="Server hostname", default="127.0.0.1")
 @click.option("-p", help="Server port", default="6379")
 @click.option("-n", help="Database number.", default=None)
-def gather_args(ctx, h, p, n):
+@click.argument("cmd", nargs=-1)
+def gather_args(ctx, h, p, n, cmd):
     logger.info(f"iredis start, host={h}, port={p}, db={n}.")
+    logger.info(f"iredis start whith commands: {cmd}")
     return ctx
 
 
@@ -156,15 +160,20 @@ def main():
     ctx = gather_args.main(standalone_mode=False)
     if not ctx:  # called help
         return
+    # redis client
+    client = Client(ctx.params["h"], ctx.params["p"], ctx.params["n"])
+
+    if ctx.params["cmd"]:  # no interactive mode
+        answer = client.send_command(" ".join(ctx.params["cmd"]), None)
+        print_formatted_text(answer, end="")
+        logger.warn("[OVER] command executed, exit...")
+        return
 
     # Create history file if not exists.
     if not os.path.exists(HISTORY_FILE):
         logger.info(f"History file {HISTORY_FILE} not exists, create now...")
         f = open(HISTORY_FILE, "w+")
         f.close()
-
-    # redis client
-    client = Client(**ctx.params)
 
     style = STYLE
     # prompt session
