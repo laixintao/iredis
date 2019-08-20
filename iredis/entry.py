@@ -106,10 +106,21 @@ def compile_grammar_bg(session):
     compiling_thread.start()
 
 
-def repl(client, session):
-    timer("First REPL command enter")
+def write_result(text, is_raw):
+    """
+    :param text: is_raw: bytes, not raw: FormattedText
+    :is_raw: bool
+    """
+    if is_raw:
+        os.write(sys.stdout, text)
+    else:
+        print_formatted_text(text, end="")
+
+
+def repl(client, session, is_raw, decode=None):
+    timer(f"First REPL command enter, is_raw={is_raw}.")
     while True:
-        logger.info("↓↓↓↓↓↓" * 10)
+        logger.info("↓↓↓↓" * 10)
         logger.info("REPL waiting for command...")
         try:
             command = session.prompt("{hostname}> ".format(hostname=str(client)))
@@ -132,11 +143,12 @@ def repl(client, session):
         # Error with previous command or exception
         except Exception as e:
             logger.exception(e)
+            # TODO red error color
             print("(error)", str(e))
 
         # Fine with answer
         else:
-            print_formatted_text(answer, end="")
+            write_result(answer, is_raw)
 
 
 class Config:
