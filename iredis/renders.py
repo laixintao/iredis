@@ -52,3 +52,14 @@ def command_keys(items, completer):
     else:
         logger.debug(f"[Completer] completer is None, not updated.")
     return rendered
+
+
+def render_ok(text, completer):
+    """
+    If response is b'OK', render ok with success color.
+    else render message with Error color.
+    """
+    text = ensure_str(text)
+    if text == "OK":
+        return FormattedText([(STYLE_DICT["success"], text)])
+    return FormattedText([(STYLE_DICT["error"], text)])

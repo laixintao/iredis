@@ -43,7 +43,11 @@ class Client:
         )
         self.connection = Connection(host=self.host, port=self.port, db=self.db)
         # all command upper case
-        self.answer_callbacks = {"KEYS": "command_keys", "GET": "simple_string_reply"}
+        self.answer_callbacks = {
+            "KEYS": "command_keys",
+            "GET": "simple_string_reply",
+            "SELECT": "render_ok",
+        }
         self.callbacks = self.reder_funcname_mapping()
 
     def __str__(self):
@@ -85,17 +89,17 @@ class Client:
         "Parses a response from the Redis server"
         try:
             response = connection.read_response()
+            logger.info(f"[Redis-Server] Response: {response}")
         except ResponseError as e:
-            rendered = str(e)
+            logger.warn(f"[Redis-Server] ERROR: {str(e)}")
+            response = str(e)
+        command_upper = command_name.upper()
+        if command_upper in self.answer_callbacks:
+            callback_name = self.answer_callbacks[command_upper]
+            callback = self.callbacks[callback_name]
+            rendered = callback(response, completer)
         else:
-            logger.debug(f"[Raw response] {response}")
-            command_upper = command_name.upper()
-            if command_upper in self.answer_callbacks:
-                callback_name = self.answer_callbacks[command_upper]
-                callback = self.callbacks[callback_name]
-                rendered = callback(response, completer)
-            else:
-                rendered = response
+            rendered = response
         return rendered
 
     def parse_input(self, input_command):
