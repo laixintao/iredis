@@ -69,6 +69,10 @@ def _ensure_str(origin, decode=None):
         raise Exception(f"Unkown type: {type(origin)}, origin: {origin}")
 
 
+def render_simple_string_reply(value, completers=None):
+    return _double_quotes(_ensure_str(value))
+
+
 def render_int(value, completers=None):
     return value
 

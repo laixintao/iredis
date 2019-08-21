@@ -38,8 +38,8 @@ class Client:
         # all command upper case
         self.answer_callbacks = {
             "KEYS": "command_keys",
-            "GET": "simple_string_reply",
-            "SELECT": "render_ok",
+            "GET": "render_simple_string_reply",
+            "SELECT": "render_simple_string_reply_ok",
         }
         self.callbacks = self.reder_funcname_mapping()
 
