@@ -85,7 +85,10 @@ def render_list(byte_items, str_items, style=None):
     for index, item in enumerate(str_items):
         index_const_width = f"{index+1:{index_width}})"
         rendered.append(("", index_const_width))
-        text = f" {item}\n"
+        if index + 1 < len(str_items):
+            text = f" {item}\n"
+        else:  # last one don't have \n
+            text = f" {item}"
         rendered.append((style, text))
     return FormattedText(rendered)
 
