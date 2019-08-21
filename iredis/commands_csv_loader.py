@@ -25,7 +25,7 @@ def load_command():
                 continue
             syntax, command, syntax, func_name = line
             group.setdefault(syntax, []).append(command)
-            callback[command] = func_name
+            command2callback[command] = func_name
 
     group2commands = copy.deepcopy(group)
 
