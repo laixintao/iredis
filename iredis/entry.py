@@ -158,6 +158,9 @@ def repl(client, session):
 RAW_HELP = """
 Use raw formatting for replies (default when STDOUT is not a tty). However, you can use --no-raw to force formatted output even when STDOUT is not a tty.
 """
+DECODE_HELP = (
+    "decode response, defult is No decode, which will output all bytes literals."
+)
 # command line entry here...
 @click.command(
     help="""When no command is given, redis-cli starts in interactive mode."""
@@ -167,9 +170,12 @@ Use raw formatting for replies (default when STDOUT is not a tty). However, you 
 @click.option("-p", help="Server port", default="6379")
 @click.option("-n", help="Database number.", default=None)
 @click.option("--raw/--no-raw", default=False, is_flag=True, help=RAW_HELP)
+@click.option("--decode", default=None, help=DECODE_HELP)
 @click.argument("cmd", nargs=-1)
-def gather_args(ctx, h, p, n, raw, cmd):
-    logger.info(f"[start args] host={h}, port={p}, db={n}, raw={raw}, cmd={cmd}.")
+def gather_args(ctx, h, p, n, raw, cmd, decode):
+    logger.info(
+        f"[start args] host={h}, port={p}, db={n}, raw={raw}, cmd={cmd}, decode={decode}."
+    )
     # figout raw output or formatted output
     if ctx.get_parameter_source("raw") == click.ParameterSource.COMMANDLINE:
         config.raw = raw
@@ -178,7 +184,10 @@ def gather_args(ctx, h, p, n, raw, cmd):
             config.raw = False
         else:
             config.raw = True
+    # set config decode
+    config.decode = decode
     logger.debug(f"[Config] Is raw output? {config.raw}")
+    logger.debug(f"[Config] Decode option: {config.decode}")
     return ctx
 
 
