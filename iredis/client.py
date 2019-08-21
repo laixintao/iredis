@@ -28,13 +28,23 @@ class Client:
                 mapping[func_name] = func
         return mapping
 
-    def __init__(self, host, port, db, encoding="utf-8", decode_responses=False):
+    def __init__(self, host, port, db, encoding=None):
         self.host = host
         self.port = port
         self.db = db
-        self.encoding = encoding
-        self.decode_responses = decode_responses
-        self.connection = Connection(host=self.host, port=self.port, db=self.db)
+        if encoding:
+            self.connection = Connection(
+                host=self.host,
+                port=self.port,
+                db=self.db,
+                encoding=encoding,
+                decode_responses=True,
+                encoding_errors="replace",
+            )
+        else:
+            self.connection = Connection(
+                host=self.host, port=self.port, db=self.db, decode_responses=False
+            )
         # all command upper case
         self.answer_callbacks = {
             "KEYS": "command_keys",

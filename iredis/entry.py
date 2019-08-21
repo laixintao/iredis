@@ -198,7 +198,7 @@ def main():
     if not ctx:  # called help
         return
     # redis client
-    client = Client(ctx.params["h"], ctx.params["p"], ctx.params["n"])
+    client = Client(ctx.params["h"], ctx.params["p"], ctx.params["n"], config.decode)
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():
             logger.debug(f"[Command stdin] {line}")
