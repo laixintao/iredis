@@ -117,6 +117,7 @@ def write_result(text):
         sys.stdout.write("\n")
     else:
         print_formatted_text(text, end="")
+        print_formatted_text()
 
 
 def repl(client, session):
