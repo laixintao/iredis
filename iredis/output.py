@@ -1,3 +1,6 @@
+import re
+
+
 def output_bytes(b):
     """
     convert bytes to printable text.
@@ -13,10 +16,12 @@ def output_bytes(b):
     b'hello' -> "hello"
     b'double"quotes"' -> "double\"quotes\""
     """
-    # TODO unescape single quote
-    # TODO escape double quote and backslash
     s = str(b)
     s = s[2:-1]  # remove b' '
+    # unescape single quote
+    s = s.replace(r"\'", "'")
+    # escape double quote and backslash
+    s = s.replace('"', '\\"')
     return s
 
 
