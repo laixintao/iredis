@@ -24,7 +24,6 @@ from prompt_toolkit.completion import Completion, CompleteEvent
 from prompt_toolkit import print_formatted_text
 
 from .client import Client
-from .renders import render_dict
 from .redis_grammar import REDIS_COMMANDS
 from .commands_csv_loader import group2commands, group2command_res
 from .utils import timer, literal_bytes
@@ -186,6 +185,7 @@ def gather_args(ctx, h, p, n, raw, cmd, decode):
             config.raw = True
     # set config decode
     config.decode = decode
+
     logger.debug(f"[Config] Is raw output? {config.raw}")
     logger.debug(f"[Config] Decode option: {config.decode}")
     return ctx
