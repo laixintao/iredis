@@ -51,3 +51,18 @@ def test_render_list_while_config_raw():
     raw = ["hello", "world", "foo"]
     out = renders.render_list([item.encode() for item in raw], raw)
     assert b"hello\nworld\nfoo" == out
+
+
+def test_ensure_str_bytes():
+    assert renders._ensure_str(b"hello world") == r"hello world"
+    assert renders._ensure_str(b"hello'world") == r"hello'world"
+    assert renders._ensure_str("你好".encode()) == r"\xe4\xbd\xa0\xe5\xa5\xbd"
+
+
+def test_double_quotes():
+    assert renders._double_quotes('hello"world') == r'"hello\"world"'
+    assert renders._double_quotes('"hello\\world"') == '"\\"hello\\world\\""'
+
+    assert renders._double_quotes("'") == '"\'"'
+    assert renders._double_quotes("\\") == '"\\"'
+    assert renders._double_quotes('"') == '"\\""'
