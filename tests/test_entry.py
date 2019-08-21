@@ -20,6 +20,7 @@ def test_command_entry_tty(is_tty, raw_arg_is_raw, final_config_is_raw):
     # is tty + raw -> raw
     with patch("sys.stdout.isatty") as patch_tty:
         from iredis.config import config
+
         patch_tty.return_value = is_tty
         if raw_arg_is_raw is None:
             call = ["iredis"]
@@ -31,3 +32,13 @@ def test_command_entry_tty(is_tty, raw_arg_is_raw, final_config_is_raw):
             raise Exception()
         gather_args.main(call, standalone_mode=False)
         assert config.raw == final_config_is_raw
+
+
+def test_command_with_decode_utf_8():
+    from iredis.config import config
+
+    gather_args.main(["iredis", "--decode", "utf-8"], standalone_mode=False)
+    assert config.decode == "utf-8"
+
+    gather_args.main(["iredis"], standalone_mode=False)
+    assert config.decode == None
