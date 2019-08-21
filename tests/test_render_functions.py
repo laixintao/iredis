@@ -66,3 +66,7 @@ def test_double_quotes():
     assert renders._double_quotes("'") == '"\'"'
     assert renders._double_quotes("\\") == '"\\"'
     assert renders._double_quotes('"') == '"\\""'
+
+
+def test_simple_string_reply():
+    assert renders.render_simple_string_reply(b"'\"") == '''"'\\""'''
