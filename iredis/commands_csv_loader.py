@@ -16,14 +16,16 @@ def load_command():
 
     group = {}
     first_line = True
+    command2callback = {}
     with open(syntax_path) as command_syntax:
         csvreader = csv.reader(command_syntax)
         for line in csvreader:
             if first_line:
                 first_line = False
                 continue
-            syntax, command, syntax = line
+            syntax, command, syntax, func_name = line
             group.setdefault(syntax, []).append(command)
+            command2callback[command] = func_name
 
     group2commands = copy.deepcopy(group)
 
@@ -37,9 +39,9 @@ def load_command():
         re_commands = [command.replace(" ", "\s+") for command in commands]
         group2command_res[syntax] = "|".join(re_commands)
 
-    return group2commands, group2command_res
+    return group2commands, group2command_res, command2callback
 
 
-group2commands, group2command_res = load_command()
+group2commands, group2command_res, command2callback = load_command()
 # all redis command strings, in UPPER case
-all_commands = sum(group2commands.values(), [])
+all_commands = command2callback.keys()
