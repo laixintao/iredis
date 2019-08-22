@@ -22,13 +22,14 @@ from prompt_toolkit.document import Document
 from prompt_toolkit.contrib.regular_languages.compiler import compile
 from prompt_toolkit.completion import Completion, CompleteEvent
 from prompt_toolkit import print_formatted_text
+from prompt_toolkit.formatted_text import HTML
 
 from .client import Client
 from .redis_grammar import REDIS_COMMANDS
 from .commands_csv_loader import group2commands, group2command_res
 from .utils import timer, literal_bytes
 from .style import STYLE
-from .config import config
+from .config import config, COMPILING_IN_PROGRESS, COMPILING_DONE, COMPILING_JUST_FINISH
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +41,11 @@ class FakeDocument:
 
 
 class RedisGrammarCompleter(GrammarCompleter):
+    """
+    This disable Completer on blank characters, blank char will cause
+    performance issues.
+    """
+
     def get_completions(
         self, document: Document, complete_event: CompleteEvent
     ) -> Iterable[Completion]:
@@ -53,6 +59,8 @@ class RedisGrammarCompleter(GrammarCompleter):
 
 
 def get_lexer(command_groups, redis_grammar):
+    # pygments token
+    # http://pygments.org/docs/tokens/
     lexers_dict = {
         "key": SimpleLexer("class:key"),
         "keys": SimpleLexer("class:key"),
@@ -102,6 +110,10 @@ def compile_grammar_bg(session):
         session.lexer = lexer
         logger.debug("[compile] Patch finished!")
 
+        config.compiling = COMPILING_JUST_FINISH
+        time.sleep(2)
+        config.compiling = COMPILING_DONE
+
     compiling_thread = threading.Thread(target=compile_and_patch, args=(session,))
     compiling_thread.start()
 
@@ -119,14 +131,57 @@ def write_result(text):
         print_formatted_text()
 
 
+class BottomToolbar:
+    CHAR = "⣾⣷⣯⣟⡿⢿⣻⣽"
+
+    def __init__(self):
+        self.index = 0
+
+    def get_animation_char(self):
+        animation = self.CHAR[self.index]
+
+        self.index += 1
+        if self.index == len(self.CHAR):
+            self.index = 0
+        return animation
+
+    def render(self):
+        if config.compiling == COMPILING_IN_PROGRESS:
+            anim = self.get_animation_char()
+            loading_text = (
+                "class:bottom-toolbar.off",
+                f"Loading Redis commands {anim}\n",
+            )
+        elif config.compiling == COMPILING_JUST_FINISH:
+            loading_text = (
+                "class:bottom-toolbar.loaded",
+                f"Redis commands loaded! Auto Completer activated!\n",
+            )
+        else:
+            loading_text = ("class:bottom-toolbar", "")
+        bottoms = [loading_text, ("class:bottom-toolbar.on", "[Help] GET key")]
+
+        return bottoms
+
+
 def repl(client, session):
     is_raw = config.raw
     timer(f"First REPL command enter, is_raw={is_raw}.")
     while True:
         logger.info("↓↓↓↓" * 10)
         logger.info("REPL waiting for command...")
+        if config.compiling != COMPILING_DONE:
+            # auto refresh to display animation...
+            _interval = 0.1
+        else:
+            _interval = None
+
         try:
-            command = session.prompt("{hostname}> ".format(hostname=str(client)))
+            command = session.prompt(
+                "{hostname}> ".format(hostname=str(client)),
+                bottom_toolbar=BottomToolbar().render,
+                refresh_interval=_interval,
+            )
 
         except KeyboardInterrupt:
             logger.warning("KeyboardInterrupt!")
@@ -225,7 +280,6 @@ def main():
         style=style,
         auto_suggest=AutoSuggestFromHistory(),
         complete_while_typing=True,
-        complete_in_thread=True,
     )
 
     compile_grammar_bg(session)
