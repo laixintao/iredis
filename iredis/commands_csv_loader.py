@@ -1,7 +1,19 @@
 import os
 import csv
+import json
 import copy
 from pathlib import Path
+from .utils import timer
+
+project_path = Path(os.path.dirname(os.path.abspath(__file__))) / ".."
+
+
+def load_command_summary():
+    commands_json_path = project_path / "commands.json"
+
+    with open(commands_json_path) as jsonfile:
+        commands_summary = json.load(jsonfile)
+    return commands_summary
 
 
 def load_command():
@@ -11,8 +23,7 @@ def load_command():
         - original_commans: dict, command name : Command
         - command_group: dict, group_name: command_names
     """
-    outter = os.path.dirname(os.path.abspath(__file__))
-    syntax_path = Path(outter) / ".." / "command_syntax.csv"
+    syntax_path = project_path / "command_syntax.csv"
 
     group = {}
     first_line = True
@@ -42,6 +53,9 @@ def load_command():
     return group2commands, group2command_res, command2callback
 
 
+timer("[Loader] Start loading commands file...")
 group2commands, group2command_res, command2callback = load_command()
 # all redis command strings, in UPPER case
 all_commands = command2callback.keys()
+commands_summary = load_command_summary()
+timer("[Loader] Finished loading commands.")
