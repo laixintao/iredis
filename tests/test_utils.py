@@ -13,7 +13,7 @@ def test_timer():
         args, kwargs = mock_logger.debug.call_args
         matched = re.match(r"\[timer (\d)\] (0\.\d+) -> bar", args[0])
 
-        assert matched.group(1) == str(1)
+        assert matched.group(1) == str(3)
         assert 0.1 <= float(matched.group(2)) <= 0.2
 
         # --- test again ---
@@ -24,5 +24,5 @@ def test_timer():
         args, kwargs = mock_logger.debug.call_args
         matched = re.match(r"\[timer (\d)\] (0\.\d+) -> bar", args[0])
 
-        assert matched.group(1) == str(3)
+        assert matched.group(1) == str(5)
         assert 0.2 <= float(matched.group(2)) <= 0.3
