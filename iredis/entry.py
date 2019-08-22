@@ -59,6 +59,8 @@ class RedisGrammarCompleter(GrammarCompleter):
 
 
 def get_lexer(command_groups, redis_grammar):
+    # pygments token
+    # http://pygments.org/docs/tokens/
     lexers_dict = {
         "key": SimpleLexer("class:key"),
         "keys": SimpleLexer("class:key"),
