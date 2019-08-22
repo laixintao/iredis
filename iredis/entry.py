@@ -144,16 +144,22 @@ class BottomToolbar:
         return animation
 
     def render(self):
-        anim = self.get_animation_char()
         if config.compiling == COMPILING_IN_PROGRESS:
-            loading_text = f"Loading Redis commands {anim}\n"
+            anim = self.get_animation_char()
+            loading_text = (
+                "class:bottom-toolbar.off",
+                f"Loading Redis commands {anim}\n",
+            )
         elif config.compiling == COMPILING_JUST_FINISH:
-            loading_text = f"Redis commands loaded! Auto Completer activated!\n"
+            loading_text = (
+                "class:bottom-toolbar.loaded",
+                f"Redis commands loaded! Auto Completer activated!\n",
+            )
         else:
-            loading_text = ""
+            loading_text = ("class:bottom-toolbar", "")
+        bottoms = [loading_text, ("class:bottom-toolbar.on", "[Help] GET key")]
 
-
-        return HTML(f"{loading_text}Help:...")
+        return bottoms
 
 
 def repl(client, session):
