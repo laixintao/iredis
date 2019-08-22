@@ -1,10 +1,10 @@
 import re
 import time
-from iredis.utils import timer, _strip_quote_args
-
-
 import pytest
 from unittest.mock import MagicMock, patch
+
+from iredis.utils import timer, _strip_quote_args, split_command_args
+from iredis.commands_csv_loader import all_commands
 
 
 def test_timer():
@@ -50,3 +50,11 @@ def test_timer():
 )
 def test_stipe_quote_escaple_in_quote(test_input, expected):
     assert list(_strip_quote_args(test_input)) == expected
+
+
+@pytest.mark.parametrize(
+    "command,expected",
+    [("GET a", "GET"), ("cluster info", "cluster info"), ("getbit foo 17", "getbit")],
+)
+def test_split_commands(command, expected):
+    assert split_command_args(command, all_commands)[0] == expected
