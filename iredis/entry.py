@@ -29,7 +29,7 @@ from .redis_grammar import REDIS_COMMANDS
 from .commands_csv_loader import group2commands, group2command_res
 from .utils import timer, literal_bytes
 from .style import STYLE
-from .config import config
+from .config import config, COMPILING_IN_PROGRESS, COMPILING_DONE, COMPILING_JUST_FINISH
 
 logger = logging.getLogger(__name__)
 
@@ -107,8 +107,10 @@ def compile_grammar_bg(session):
         session.completer = completer
         session.lexer = lexer
         logger.debug("[compile] Patch finished!")
-        
-        config.compiling = False
+
+        config.compiling = COMPILING_JUST_FINISH
+        time.sleep(2)
+        config.compiling = COMPILING_DONE
 
     compiling_thread = threading.Thread(target=compile_and_patch, args=(session,))
     compiling_thread.start()
@@ -143,12 +145,15 @@ class BottomToolbar:
 
     def render(self):
         anim = self.get_animation_char()
-        loading_text = ""
-        if config.compiling:
+        if config.compiling == COMPILING_IN_PROGRESS:
             loading_text = f"Loading Redis commands {anim}\n"
-        return HTML(
-            f'{loading_text}Help:...'
-        )
+        elif config.compiling == COMPILING_JUST_FINISH:
+            loading_text = f"Redis commands loaded! Auto Completer activated!\n"
+        else:
+            loading_text = ""
+
+
+        return HTML(f"{loading_text}Help:...")
 
 
 def repl(client, session):
@@ -157,12 +162,12 @@ def repl(client, session):
     while True:
         logger.info("↓↓↓↓" * 10)
         logger.info("REPL waiting for command...")
-        if config.compiling:
+        if config.compiling != COMPILING_DONE:
             # auto refresh to display animation...
             _interval = 0.1
         else:
             _interval = None
-            
+
         try:
             command = session.prompt(
                 "{hostname}> ".format(hostname=str(client)),

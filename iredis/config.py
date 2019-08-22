@@ -1,3 +1,8 @@
+COMPILING_IN_PROGRESS = 0
+COMPILING_JUST_FINISH = 1
+COMPILING_DONE = 2
+
+
 class Config:
     """
     Global config, set once on start, then
@@ -14,7 +19,7 @@ class Config:
     def __init__(self):
         self.raw = False
         self.decode = None
-        self.compiling = True  # is loading redis commands?
+        self.compiling = COMPILING_IN_PROGRESS  # is loading redis commands?
 
 
 config = Config()
