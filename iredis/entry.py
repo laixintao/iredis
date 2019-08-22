@@ -23,6 +23,11 @@ from prompt_toolkit.contrib.regular_languages.compiler import compile
 from prompt_toolkit.completion import Completion, CompleteEvent
 from prompt_toolkit import print_formatted_text
 from prompt_toolkit.formatted_text import HTML
+from prompt_toolkit.layout.processors import (
+    Processor,
+    Transformation,
+    TransformationInput,
+)
 
 from .client import Client
 from .redis_grammar import REDIS_COMMANDS
@@ -56,6 +61,24 @@ class RedisGrammarCompleter(GrammarCompleter):
         if not origin_text.strip():
             return []
         return super().get_completions(stripped, complete_event)
+
+
+class GetCommandProcessor(Processor):
+    """
+    A `Processor` that doesn't do anything.
+    """
+
+    def __init__(self):
+        self.last_text = None
+
+    def apply_transformation(
+        self, transformation_input: TransformationInput
+    ) -> Transformation:
+        input_text = transformation_input.document.text
+        if input_text != self.last_text:
+            logger.debug(f"[Processor] {transformation_input.document}")
+            self.last_text = input_text
+        return Transformation(transformation_input.fragments)
 
 
 def get_lexer(command_groups, redis_grammar):
@@ -181,6 +204,7 @@ def repl(client, session):
                 "{hostname}> ".format(hostname=str(client)),
                 bottom_toolbar=BottomToolbar().render,
                 refresh_interval=_interval,
+                input_processors=[GetCommandProcessor()],
             )
 
         except KeyboardInterrupt:
