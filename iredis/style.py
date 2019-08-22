@@ -10,8 +10,8 @@ STYLE_DICT = {
     "integer": "#ff0000",
     "trailing-input": "bg:#ff0000 #000000",
     "password": "hidden",
-    "success": "#A6E22E",
-    "error": "#F92672",
+    "success": "bg:#222222 #00ff5f bold",
+    "error": "bg:#222222 #ff005f bold",
     # bottom-toolbar
     "bottom-toolbar": "bg:#222222 #aaaaaa",
     "bottom-toolbar.on": "bg:#222222 #ffffff",
