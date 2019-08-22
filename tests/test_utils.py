@@ -1,7 +1,10 @@
 import re
 import time
-from iredis.utils import timer
-from unittest.mock import patch
+from iredis.utils import timer, _strip_quote_args
+
+
+import pytest
+from unittest.mock import MagicMock, patch
 
 
 def test_timer():
@@ -26,3 +29,24 @@ def test_timer():
 
         assert matched.group(1) == str(5)
         assert 0.2 <= float(matched.group(2)) <= 0.3
+
+
+@pytest.mark.parametrize(
+    "test_input,expected",
+    [
+        ("hello world", ["hello", "world"]),
+        ("'hello world'", ["hello world"]),
+        ('''hello"world"''', ["helloworld"]),
+        (r'''hello\"world"''', [r"hello\world"]),
+        (r'"\\"', [r"\\"]),
+        (r"\\", [r"\\"]),
+        (r"\abcd ef", [r"\abcd", "ef"]),
+        # quotes in quotes
+        (r""" 'hello"world' """, ['hello"world']),
+        (r""" "hello'world" """, ["hello'world"]),
+        (r""" 'hello\'world'""", ["hello'world"]),
+        (r""" "hello\"world" """, ['hello"world']),
+    ],
+)
+def test_stipe_quote_escaple_in_quote(test_input, expected):
+    assert list(_strip_quote_args(test_input)) == expected
