@@ -137,6 +137,8 @@ def repl(client, session):
         try:
             command = session.prompt(
                 "{hostname}> ".format(hostname=str(client)),
+                bottom_toolbar=bottom_toolbar,
+                refresh_interval=0.5,
             )
 
         except KeyboardInterrupt:
