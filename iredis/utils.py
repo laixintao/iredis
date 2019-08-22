@@ -100,7 +100,7 @@ def split_command_args(command, all_commands):
     """
     upper_raw_command = command.upper()
     for command_name in all_commands:
-        if upper_raw_command.startswith(command_name):
+        if re.match(r"\s*{}( .*)?$".format(command_name), upper_raw_command):
             l = len(command_name)
             input_command = command[:l]
             input_args = command[l:]
