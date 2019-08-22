@@ -22,6 +22,7 @@ from prompt_toolkit.document import Document
 from prompt_toolkit.contrib.regular_languages.compiler import compile
 from prompt_toolkit.completion import Completion, CompleteEvent
 from prompt_toolkit import print_formatted_text
+from prompt_toolkit.formatted_text import HTML
 
 from .client import Client
 from .redis_grammar import REDIS_COMMANDS
@@ -119,6 +120,14 @@ def write_result(text):
         print_formatted_text()
 
 
+def bottom_toolbar():
+    import datetime
+
+    return HTML(
+        f'This is a <b><style bg="ansired">Toolbar</style></b>\n<br /> {datetime.datetime.now()}!'
+    )
+
+
 def repl(client, session):
     is_raw = config.raw
     timer(f"First REPL command enter, is_raw={is_raw}.")
@@ -126,7 +135,9 @@ def repl(client, session):
         logger.info("↓↓↓↓" * 10)
         logger.info("REPL waiting for command...")
         try:
-            command = session.prompt("{hostname}> ".format(hostname=str(client)))
+            command = session.prompt(
+                "{hostname}> ".format(hostname=str(client)),
+            )
 
         except KeyboardInterrupt:
             logger.warning("KeyboardInterrupt!")
@@ -225,7 +236,6 @@ def main():
         style=style,
         auto_suggest=AutoSuggestFromHistory(),
         complete_while_typing=True,
-        complete_in_thread=True,
     )
 
     compile_grammar_bg(session)
