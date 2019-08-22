@@ -10,7 +10,7 @@ from redis.exceptions import ResponseError, TimeoutError, ConnectionError
 from iredis.exceptions import InvalidArguments
 
 from . import renders
-from .commands_csv_loader import all_commands
+from .commands_csv_loader import all_commands, command2callback
 from .utils import nativestr
 
 logger = logging.getLogger(__name__)
@@ -46,11 +46,7 @@ class Client:
                 host=self.host, port=self.port, db=self.db, decode_responses=False
             )
         # all command upper case
-        self.answer_callbacks = {
-            "KEYS": "command_keys",
-            "GET": "render_simple_string_reply",
-            "SELECT": "render_simple_string_reply_ok",
-        }
+        self.answer_callbacks = command2callback
         self.callbacks = self.reder_funcname_mapping()
 
     def __str__(self):
@@ -97,7 +93,7 @@ class Client:
             logger.warn(f"[Redis-Server] ERROR: {str(e)}")
             response = str(e)
         command_upper = command_name.upper()
-        if command_upper in self.answer_callbacks:
+        if command_upper in self.answer_callbacks and self.answer_callbacks[command_upper]:
             callback_name = self.answer_callbacks[command_upper]
             callback = self.callbacks[callback_name]
             rendered = callback(response, completer)
