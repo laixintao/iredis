@@ -37,40 +37,11 @@ def _literal_bytes(b):
     return s
 
 
-def _double_quotes(unquoted):
-    """
-    Display String like redis-cli.
-    escape inner double quotes.
-    add outter double quotes.
-
-    :param unquoted: list, or str
-    """
-    if isinstance(unquoted, str):
-        # escape double quote
-        escaped = unquoted.replace('"', '\\"')
-        return f'"{escaped}"'  # add outter double quotes
-    elif isinstance(unquoted, list):
-        return [_double_quotes(item) for item in unquoted]
-
-
-def _ensure_str(origin, decode=None):
-    """
-    Ensure is string, for display and completion.
-
-    Then add double quotes
-    """
-    if isinstance(origin, str):
-        return origin
-    elif isinstance(origin, list):
-        return [_ensure_str(b) for b in origin]
-    elif isinstance(origin, bytes):
-        return _literal_bytes(origin)
-    else:
-        raise Exception(f"Unkown type: {type(origin)}, origin: {origin}")
-
-
-def render_simple_string_reply(value, completers=None):
-    return _double_quotes(_ensure_str(value))
+def render_simple_strings(text, style=None):
+    if isinstance(text, bytes):
+        text = output_bytes(text)
+    text = f'"{text}"'
+    return FormattedText([("", text)])
 
 
 def render_int(value, completers=None):
