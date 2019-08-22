@@ -14,6 +14,7 @@ class Config:
     def __init__(self):
         self.raw = False
         self.decode = None
+        self.compiling = True  # is loading redis commands?
 
 
 config = Config()
