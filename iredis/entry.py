@@ -41,6 +41,11 @@ class FakeDocument:
 
 
 class RedisGrammarCompleter(GrammarCompleter):
+    """
+    This disable Completer on blank characters, blank char will cause
+    performance issues.
+    """
+
     def get_completions(
         self, document: Document, complete_event: CompleteEvent
     ) -> Iterable[Completion]:
@@ -102,6 +107,8 @@ def compile_grammar_bg(session):
         session.completer = completer
         session.lexer = lexer
         logger.debug("[compile] Patch finished!")
+        
+        config.compiling = False
 
     compiling_thread = threading.Thread(target=compile_and_patch, args=(session,))
     compiling_thread.start()
@@ -120,12 +127,28 @@ def write_result(text):
         print_formatted_text()
 
 
-def bottom_toolbar():
-    import datetime
+class BottomToolbar:
+    CHAR = "⣾⣷⣯⣟⡿⢿⣻⣽"
 
-    return HTML(
-        f'This is a <b><style bg="ansired">Toolbar</style></b>\n<br /> {datetime.datetime.now()}!'
-    )
+    def __init__(self):
+        self.index = 0
+
+    def get_animation_char(self):
+        animation = self.CHAR[self.index]
+
+        self.index += 1
+        if self.index == len(self.CHAR):
+            self.index = 0
+        return animation
+
+    def render(self):
+        anim = self.get_animation_char()
+        loading_text = ""
+        if config.compiling:
+            loading_text = f"Loading Redis commands {anim}\n"
+        return HTML(
+            f'{loading_text}Help:...'
+        )
 
 
 def repl(client, session):
@@ -134,11 +157,17 @@ def repl(client, session):
     while True:
         logger.info("↓↓↓↓" * 10)
         logger.info("REPL waiting for command...")
+        if config.compiling:
+            # auto refresh to display animation...
+            _interval = 0.1
+        else:
+            _interval = None
+            
         try:
             command = session.prompt(
                 "{hostname}> ".format(hostname=str(client)),
-                bottom_toolbar=bottom_toolbar,
-                refresh_interval=0.5,
+                bottom_toolbar=BottomToolbar().render,
+                refresh_interval=_interval,
             )
 
         except KeyboardInterrupt:
