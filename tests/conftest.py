@@ -1,6 +1,7 @@
 import pytest
 import redis
 from iredis.redis_grammar import REDIS_COMMANDS
+from iredis.client import Client
 from prompt_toolkit.contrib.regular_languages.compiler import compile
 
 
@@ -36,3 +37,8 @@ def clean_redis():
     client = redis.StrictRedis(db=15)
     client.flushdb()
     return client
+
+
+@pytest.fixture
+def iredis_client():
+    return Client("127.0.0.1", "6379", None)

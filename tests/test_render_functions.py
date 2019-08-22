@@ -69,4 +69,13 @@ def test_double_quotes():
 
 
 def test_simple_string_reply():
-    assert renders.render_simple_string_reply(b"'\"") == '''"'\\""'''
+    assert renders.render_simple_strings(b"'\"") == '''"'\\""'''
+
+
+def test_make_sure_all_callback_functions_exists(iredis_client):
+    from iredis.commands_csv_loader import command2callback
+
+    for callback in command2callback.values():
+        if callback == "":
+            continue
+        assert callable(iredis_client.callbacks[callback])
