@@ -23,13 +23,24 @@ from prompt_toolkit.contrib.regular_languages.compiler import compile
 from prompt_toolkit.completion import Completion, CompleteEvent
 from prompt_toolkit import print_formatted_text
 from prompt_toolkit.formatted_text import HTML
+from prompt_toolkit.layout.processors import (
+    Processor,
+    Transformation,
+    TransformationInput,
+)
 
 from .client import Client
 from .redis_grammar import REDIS_COMMANDS
-from .commands_csv_loader import group2commands, group2command_res
-from .utils import timer, literal_bytes
+from .commands_csv_loader import (
+    group2commands,
+    group2command_res,
+    all_commands,
+    commands_summary,
+)
+from .utils import timer, literal_bytes, split_command_args, command_syntax
 from .style import STYLE
 from .config import config, COMPILING_IN_PROGRESS, COMPILING_DONE, COMPILING_JUST_FINISH
+from iredis.exceptions import InvalidArguments
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +49,18 @@ HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
 
 class FakeDocument:
     pass
+
+
+class UserInputCommand:
+    """
+    User inputted command in real time.
+
+    ``RedisGrammarCompleter`` update it, and ``BottomToolbar`` read it
+    """
+
+    def __init__(self):
+        # command will always be upper case
+        self.command = None
 
 
 class RedisGrammarCompleter(GrammarCompleter):
@@ -58,6 +81,34 @@ class RedisGrammarCompleter(GrammarCompleter):
         return super().get_completions(stripped, complete_event)
 
 
+class GetCommandProcessor(Processor):
+    """
+    Update Footer display text while user input.
+    """
+
+    def __init__(self, command_holder):
+        self.last_text = None
+        self.command_holder = command_holder
+
+    def apply_transformation(
+        self, transformation_input: TransformationInput
+    ) -> Transformation:
+        input_text = transformation_input.document.text
+        if input_text != self.last_text:
+            logger.debug(f"[Processor] {transformation_input.document}")
+            try:
+                command, _ = split_command_args(input_text, all_commands)
+            except InvalidArguments:
+                logger.debug(f"[Processor] Redis command not recongnised!")
+                self.command_holder.command = None
+            else:
+                logger.debug(f"[Processor] Redis command: {command}")
+                self.command_holder.command = command.upper()
+
+            self.last_text = input_text
+        return Transformation(transformation_input.fragments)
+
+
 def get_lexer(command_groups, redis_grammar):
     # pygments token
     # http://pygments.org/docs/tokens/
@@ -68,7 +119,7 @@ def get_lexer(command_groups, redis_grammar):
         "password": SimpleLexer("class:password"),
     }
     lexers_dict.update(
-        {key: SimpleLexer("class:pygments.keyword") for key in command_groups}
+        {key: SimpleLexer("class:command") for key in command_groups}
     )
     lexer = GrammarLexer(redis_grammar, lexers=lexers_dict)
     return lexer
@@ -134,8 +185,10 @@ def write_result(text):
 class BottomToolbar:
     CHAR = "⣾⣷⣯⣟⡿⢿⣻⣽"
 
-    def __init__(self):
+    def __init__(self, command_holder):
         self.index = 0
+        # BottomToolbar can only read this variable
+        self.command_holder = command_holder
 
     def get_animation_char(self):
         animation = self.CHAR[self.index]
@@ -159,13 +212,20 @@ class BottomToolbar:
             )
         else:
             loading_text = ("class:bottom-toolbar", "")
-        bottoms = [loading_text, ("class:bottom-toolbar.on", "[Help] GET key")]
+        bottoms = [loading_text]
+
+        # add command help if valide
+        if self.command_holder.command:
+            command_info = commands_summary[self.command_holder.command]
+            hint = command_syntax(self.command_holder.command, command_info)
+            bottoms.extend(hint)
 
         return bottoms
 
 
 def repl(client, session):
     is_raw = config.raw
+    command_holder = UserInputCommand()
     timer(f"First REPL command enter, is_raw={is_raw}.")
     while True:
         logger.info("↓↓↓↓" * 10)
@@ -179,8 +239,9 @@ def repl(client, session):
         try:
             command = session.prompt(
                 "{hostname}> ".format(hostname=str(client)),
-                bottom_toolbar=BottomToolbar().render,
+                bottom_toolbar=BottomToolbar(command_holder).render,
                 refresh_interval=_interval,
+                input_processors=[GetCommandProcessor(command_holder)],
             )
 
         except KeyboardInterrupt:

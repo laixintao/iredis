@@ -3,6 +3,7 @@ import threading
 from unittest.mock import MagicMock
 from iredis.entry import compile_grammar_bg
 
+
 def test_get_ctrl_C():
     pass
 
