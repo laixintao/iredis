@@ -37,7 +37,7 @@ from .commands_csv_loader import (
     all_commands,
     commands_summary,
 )
-from .utils import timer, literal_bytes, split_command_args
+from .utils import timer, literal_bytes, split_command_args, command_syntax
 from .style import STYLE
 from .config import config, COMPILING_IN_PROGRESS, COMPILING_DONE, COMPILING_JUST_FINISH
 from iredis.exceptions import InvalidArguments
@@ -217,23 +217,7 @@ class BottomToolbar:
         # add command help if valide
         if self.command_holder.command:
             command_info = commands_summary[self.command_holder.command]
-            comamnd_group = command_info["group"]
-
-            command_args = []
-            if command_info.get("arguments"):
-                # FIXME
-                # not sure if exist cubcommand
-                command_args = [arg["name"] for arg in command_info["arguments"]]
-
-            # TODO color
-            # TODO since
-            # TODO time complecity
-            bottoms.append(
-                (
-                    "class:bottom-toolbar.on",
-                    f"({comamnd_group}) {self.command_holder.command} {command_args}",
-                )
-            )
+            hint = command_syntax(self.command_holder.command, command_info)
 
         return bottoms
 

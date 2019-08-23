@@ -3,6 +3,7 @@ import time
 import logging
 from iredis.exceptions import InvalidArguments
 
+from prompt_toolkit.formatted_text import FormattedText
 
 logger = logging.getLogger(__name__)
 
@@ -113,3 +114,29 @@ def split_command_args(command, all_commands):
     logger.debug(f"[Parsed comamnd name] {input_command}")
     logger.debug(f"[Parsed comamnd args] {args}")
     return input_command, args
+
+
+def command_syntax(command, command_info):
+    """
+    Get command syntax based on redis-doc/commands.json
+
+    :param command: Command name in uppercase
+    :param command_info: dict loaded from commands.json, only for
+        this command.
+    """
+    bottoms = []  # final display FormattedText
+    comamnd_group = command_info["group"]
+    since = command_info["since"]
+
+    command_args = []
+    if command_info.get("arguments"):
+        for argument in command_info["arguments"]:
+            command_args.append(argument["name"])
+
+    # TODO color
+    # TODO since
+    # TODO time complecity
+    bottoms.append(
+        ("class:bottom-toolbar.on", f"({comamnd_group}) {command} {command_args}")
+    )
+    return FormattedText(bottoms)
