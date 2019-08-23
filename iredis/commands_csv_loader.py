@@ -56,6 +56,7 @@ def load_command():
 timer("[Loader] Start loading commands file...")
 group2commands, group2command_res, command2callback = load_command()
 # all redis command strings, in UPPER case
-all_commands = command2callback.keys()
+# NOTE: Must sort by length, to match longest command first
+all_commands = sorted(command2callback.keys(), key=lambda x:len(x), reverse=True)
 commands_summary = load_command_summary()
 timer("[Loader] Finished loading commands.")
