@@ -84,5 +84,5 @@ workflows:
   version: 2
   unittest:
     jobs:
-      - code-style-check
+      - code_style_check
       - build_then_test
