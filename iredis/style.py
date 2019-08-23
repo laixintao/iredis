@@ -1,11 +1,15 @@
 from prompt_toolkit.styles import Style, merge_styles
 
+override_style = Style([("bottom-toolbar", "noreverse")])
+
+style = REDIS_TOKEN = {"key": "#33aa33", "string": "#E6DB74", "command": "bold #008000"}
+
+
 STYLE_DICT = {
     # User input (default text).
     "": "",
     # Prompt.
     "hostname": "",
-    "key": "#33aa33",
     "integer": "#ff0000",
     "trailing-input": "bg:#ff0000 #000000",
     "password": "hidden",
@@ -35,5 +39,14 @@ STYLE_DICT = {
     "arg-toolbar.text": "nobold",
 }
 
-override_style = Style([("bottom-toolbar", "noreverse")])
-STYLE = merge_styles([override_style, Style.from_dict(STYLE_DICT)])
+BOTTOM_TOOLBAR_TOKEN = {
+    # redis token
+    f"bottom-toolbar.{token}": f"bg:#222222 {token_style}"
+    for token, token_style in REDIS_TOKEN.items()
+}
+
+style.update(STYLE_DICT)
+style.update(BOTTOM_TOOLBAR_TOKEN)
+
+
+STYLE = merge_styles([override_style, Style.from_dict(style)])

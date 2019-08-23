@@ -119,7 +119,7 @@ def get_lexer(command_groups, redis_grammar):
         "password": SimpleLexer("class:password"),
     }
     lexers_dict.update(
-        {key: SimpleLexer("class:pygments.keyword") for key in command_groups}
+        {key: SimpleLexer("class:command") for key in command_groups}
     )
     lexer = GrammarLexer(redis_grammar, lexers=lexers_dict)
     return lexer
@@ -218,6 +218,7 @@ class BottomToolbar:
         if self.command_holder.command:
             command_info = commands_summary[self.command_holder.command]
             hint = command_syntax(self.command_holder.command, command_info)
+            bottoms.extend(hint)
 
         return bottoms
 

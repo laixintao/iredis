@@ -124,19 +124,21 @@ def command_syntax(command, command_info):
     :param command_info: dict loaded from commands.json, only for
         this command.
     """
-    bottoms = []  # final display FormattedText
     comamnd_group = command_info["group"]
+    bottoms = [
+        ("class:bottom-toolbar.on", f"({comamnd_group}) "),
+        ("class:bottom-toolbar.command", f"{command}"),
+    ]  # final display FormattedText
     since = command_info["since"]
 
     command_args = []
     if command_info.get("arguments"):
         for argument in command_info["arguments"]:
-            command_args.append(argument["name"])
+            bottoms.append(
+                (f"class:bottom-toolbar.{argument['type']}", " " + argument["name"])
+            )
 
     # TODO color
     # TODO since
     # TODO time complecity
-    bottoms.append(
-        ("class:bottom-toolbar.on", f"({comamnd_group}) {command} {command_args}")
-    )
     return FormattedText(bottoms)
