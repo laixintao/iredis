@@ -31,7 +31,12 @@ from prompt_toolkit.layout.processors import (
 
 from .client import Client
 from .redis_grammar import REDIS_COMMANDS
-from .commands_csv_loader import group2commands, group2command_res, all_commands, commands_summary
+from .commands_csv_loader import (
+    group2commands,
+    group2command_res,
+    all_commands,
+    commands_summary,
+)
 from .utils import timer, literal_bytes, split_command_args
 from .style import STYLE
 from .config import config, COMPILING_IN_PROGRESS, COMPILING_DONE, COMPILING_JUST_FINISH
@@ -212,19 +217,22 @@ class BottomToolbar:
         # add command help if valide
         if self.command_holder.command:
             command_info = commands_summary[self.command_holder.command]
-            comamnd_group = command_info['group']
+            comamnd_group = command_info["group"]
 
             command_args = []
-            if command_info.get('arguments'):
+            if command_info.get("arguments"):
                 # FIXME
                 # not sure if exist cubcommand
-                command_args = [arg['name'] for arg in command_info['arguments']]
+                command_args = [arg["name"] for arg in command_info["arguments"]]
 
             # TODO color
             # TODO since
             # TODO time complecity
             bottoms.append(
-                ("class:bottom-toolbar.on", f"({comamnd_group}) {self.command_holder.command} {command_args}")
+                (
+                    "class:bottom-toolbar.on",
+                    f"({comamnd_group}) {self.command_holder.command} {command_args}",
+                )
             )
 
         return bottoms

@@ -2,6 +2,7 @@ import pytest
 from unittest.mock import MagicMock, patch
 from iredis.client import Client
 
+
 @pytest.mark.parametrize(
     "_input, command_name, expect_args",
     [
