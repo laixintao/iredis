@@ -1,4 +1,6 @@
-# iRedis
+# IRedis
+
+Interactive Redis.
 
 [![CircleCI](https://circleci.com/gh/laixintao/iredis.svg?style=svg)](https://circleci.com/gh/laixintao/iredis)
 
