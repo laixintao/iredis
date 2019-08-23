@@ -26,7 +26,7 @@ jobs:
       - save_cache:
         paths:
             - ./venv
-          key: v1-dependencies-black
+        key: v1-dependencies-black
 
       - run:
           name: black format
