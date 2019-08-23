@@ -4,7 +4,7 @@
 #
 version: 2
 jobs:
-  - code_style_check:
+  code_style_check:
     docker:
       - image: circleci/python:3.7.1
     working_directory: ~/repo
@@ -35,7 +35,7 @@ jobs:
             black --check
 
 
-  - build_then_test:
+  build_then_test:
     docker:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
