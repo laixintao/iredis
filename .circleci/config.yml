@@ -24,9 +24,9 @@ jobs:
             pip install black
 
       - save_cache:
-        paths:
-            - ./venv
-        key: v1-dependencies-black
+          paths:
+              - ./venv
+          key: v1-dependencies-black
 
       - run:
           name: black format
