@@ -4,7 +4,38 @@
 #
 version: 2
 jobs:
-  build_then_test:
+  - code_style_check:
+    docker:
+      - image: circleci/python:3.7.1
+    working_directory: ~/repo
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-black
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install black
+
+      - save_cache:
+        paths:
+            - ./venv
+          key: v1-dependencies-black
+
+      - run:
+          name: black format
+          command: |
+            . venv/bin/activate
+            black --check
+
+
+  - build_then_test:
     docker:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
@@ -53,4 +84,5 @@ workflows:
   version: 2
   unittest:
     jobs:
+      - code-style-check
       - build_then_test
