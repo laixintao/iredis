@@ -5,6 +5,10 @@ from unittest.mock import MagicMock, patch
 
 from iredis.utils import timer, _strip_quote_args, split_command_args
 from iredis.commands_csv_loader import all_commands
+from iredis.utils import command_syntax
+from iredis.style import STYLE
+from iredis.commands_csv_loader import commands_summary
+from prompt_toolkit import print_formatted_text
 
 
 def test_timer():
@@ -64,3 +68,8 @@ def test_stipe_quote_escaple_in_quote(test_input, expected):
 )
 def test_split_commands(command, expected):
     assert split_command_args(command, all_commands)[0] == expected
+
+
+def test_render_bottom_with_command_json():
+    for command, info in commands_summary.items():
+        print_formatted_text(command_syntax(command, info), style=STYLE)
