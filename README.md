@@ -19,6 +19,7 @@ A Terminal Client for Redis with AutoCompletion and Syntax Highlighting.
 - <kbd>Ctrl</kbd> + <kbd>R</kbd> to open **reverse-i-search** to search through command history.
 - Auto suggestions. (Like [fish shell](http://fishshell.com/).)
 - Support `--encode=utf-8`, to decode Redis' bytes responses.
+- Command hint on bottom, include command syntax, supported redis version, and time complexity.
 
 ## Install
 
