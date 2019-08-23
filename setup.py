@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
-from setuptools import setup
+from setuptools import setup, find_packages
 
 from iredis import __version__
 
@@ -27,9 +27,11 @@ setup(
     maintainer_email="laixintaoo@gmail.com",
     keywords=["Redis", "key-value store", "Commandline tools"],
     license="MIT",
-    packages=["iredis"],
+    packages=find_packages(),
     python_requires=">=3.7",
     install_requires=requirements,
+    # include_package_data=True,
+    package_data={"mypkg": ["commands.csv", "commands.json", "command_syntax.csv"]},
     classifiers=[
         "Environment :: Console",
         "Intended Audience :: Developers",
