@@ -1,4 +1,3 @@
-
 from prompt_toolkit.styles import Style, merge_styles
 
 STYLE_DICT = {
