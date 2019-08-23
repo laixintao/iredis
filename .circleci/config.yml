@@ -4,7 +4,7 @@
 #
 version: 2
 jobs:
-  build:
+  build_then_test:
     docker:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
@@ -39,8 +39,6 @@ jobs:
             - ./venv
           key: v2-dependencies-{{ checksum "dev-requirements.txt" }}
 
-  test:
-    steps:
       - run:
           name: run tests
           command: |
@@ -53,7 +51,6 @@ jobs:
 
 workflows:
   version: 2
-  build_and_test:
+  unittest:
     jobs:
-      - build
-      - test
+      - build_then_test
