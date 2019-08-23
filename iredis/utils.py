@@ -152,7 +152,6 @@ def command_syntax(command, command_info):
         ("class:bottom-toolbar.on", f"({comamnd_group}) "),
         ("class:bottom-toolbar.command", f"{command}"),
     ]  # final display FormattedText
-    since = command_info["since"]
 
     command_args = []
     if command_info.get("arguments"):
@@ -183,7 +182,15 @@ def command_syntax(command, command_info):
                         argument["name"], argument["type"], argument.get("optional")
                     )
                 )
-    # TODO color
-    # TODO since
-    # TODO time complecity
+    if "since" in command_info:
+        since = command_info["since"]
+        bottoms.append(
+            ("class:bottom-toolbar.since", f"   since: {since}"),
+        )
+    if "complexity" in command_info:
+        complexity = command_info["complexity"]
+        bottoms.append(
+            ("class:bottom-toolbar.complexity", f" complexity:{complexity}"),
+        )
+
     return FormattedText(bottoms)
