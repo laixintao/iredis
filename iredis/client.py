@@ -101,6 +101,7 @@ class Client:
             rendered = callback(response, completer)
         else:
             rendered = response
+        logger.info(f"[rendered] {rendered}")
         return rendered
 
     def parse_input(self, input_command):

@@ -9,7 +9,6 @@ import logging
 from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.formatted_text import to_formatted_text, FormattedText
 
-from .style import STYLE_DICT
 from .config import config
 
 logger = logging.getLogger(__name__)
@@ -100,8 +99,8 @@ def render_ok(text, completer):
     """
     text = _ensure_str(text)
     if text == "OK":
-        return FormattedText([(STYLE_DICT["success"], text)])
-    return FormattedText([(STYLE_DICT["error"], text)])
+        return FormattedText([("class:success", text)])
+    return FormattedText([("class:error", text)])
 
 
 def command_keys(items, completer):
@@ -119,5 +118,5 @@ def command_keys(items, completer):
     # render and completer are in same function but code are splitted.
     # Give back to Ceasar what is Ceasar's and to God what is God's.
     double_quoted = _double_quotes(str_items)
-    rendered = render_list(items, double_quoted, STYLE_DICT["key"])
+    rendered = render_list(items, double_quoted, "class:key")
     return rendered

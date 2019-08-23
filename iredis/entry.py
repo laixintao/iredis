@@ -178,7 +178,7 @@ def write_result(text):
         sys.stdout.buffer.write(text)
         sys.stdout.write("\n")
     else:
-        print_formatted_text(text, end="")
+        print_formatted_text(text, end="", style=STYLE)
         print_formatted_text()
 
 
@@ -334,11 +334,10 @@ def main():
         f = open(HISTORY_FILE, "w+")
         f.close()
 
-    style = STYLE
     # prompt session
     session = PromptSession(
         history=FileHistory(HISTORY_FILE),
-        style=style,
+        style=STYLE,
         auto_suggest=AutoSuggestFromHistory(),
         complete_while_typing=True,
     )
