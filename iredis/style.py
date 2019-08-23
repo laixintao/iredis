@@ -2,7 +2,17 @@ from prompt_toolkit.styles import Style, merge_styles
 
 override_style = Style([("bottom-toolbar", "noreverse")])
 
-style = REDIS_TOKEN = {"key": "#33aa33", "string": "#E6DB74", "command": "bold #008000"}
+style = REDIS_TOKEN = {
+    "key": "#33aa33",
+    "pattern": "bold #33aa33",
+    "string": "#E6DB74",
+    "command": "bold #008000",
+    "integer": "#AE81FF",
+    "const": "#AE81FF",
+    "type": "#A6E22E",
+    "time": "#aa22ff",
+    "double": "#bb6688",
+}
 
 
 STYLE_DICT = {
