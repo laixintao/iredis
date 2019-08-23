@@ -116,6 +116,28 @@ def split_command_args(command, all_commands):
     return input_command, args
 
 
+type_convert = {"posix time": "time"}
+
+
+def parse_argument_to_formatted_text(name, _type, is_option):
+    result = []
+    if isinstance(name, str):
+        _type = type_convert.get(_type, _type)
+        result.append((f"class:bottom-toolbar.{_type}", " " + name))
+    elif isinstance(name, list):
+        for inner_name, inner_type in zip(name, _type):
+            inner_type = type_convert.get(inner_type, inner_type)
+            if is_option:
+                result.append(
+                    (f"class:bottom-toolbar.{inner_type}", f" [{inner_name}]")
+                )
+            else:
+                result.append((f"class:bottom-toolbar.{inner_type}", f" {inner_name}"))
+    else:
+        raise Exception()
+    return result
+
+
 def command_syntax(command, command_info):
     """
     Get command syntax based on redis-doc/commands.json
@@ -134,10 +156,32 @@ def command_syntax(command, command_info):
     command_args = []
     if command_info.get("arguments"):
         for argument in command_info["arguments"]:
-            bottoms.append(
-                (f"class:bottom-toolbar.{argument['type']}", " " + argument["name"])
-            )
+            if argument.get("command"):
+                # command [
+                bottoms.append(
+                    (f"class:bottom-toolbar.command", " [" + argument["command"])
+                )
+                if argument.get("enum"):
+                    enums = "|".join(argument["enum"])
+                    bottoms.append((f"class:bottom-toolbar.const", f" [{enums}]"))
+                elif argument.get("name"):
+                    bottoms.extend(
+                        parse_argument_to_formatted_text(
+                            argument["name"], argument["type"], argument.get("optional")
+                        )
+                    )
+                # ]
+                bottoms.append((f"class:bottom-toolbar.command", "]"))
+            elif argument.get("enum"):
+                enums = "|".join(argument["enum"])
+                bottoms.append((f"class:bottom-toolbar.const", f" [{enums}]"))
 
+            else:
+                bottoms.extend(
+                    parse_argument_to_formatted_text(
+                        argument["name"], argument["type"], argument.get("optional")
+                    )
+                )
     # TODO color
     # TODO since
     # TODO time complecity
