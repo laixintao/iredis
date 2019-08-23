@@ -54,7 +54,13 @@ def test_stipe_quote_escaple_in_quote(test_input, expected):
 
 @pytest.mark.parametrize(
     "command,expected",
-    [("GET a", "GET"), ("cluster info", "cluster info"), ("getbit foo 17", "getbit")],
+    [
+        ("GET a", "GET"),
+        ("cluster info", "cluster info"),
+        ("getbit foo 17", "getbit"),
+        ("command ", "command"),
+        (" command count  ", "command count"),
+    ],
 )
 def test_split_commands(command, expected):
     assert split_command_args(command, all_commands)[0] == expected

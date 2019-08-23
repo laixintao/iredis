@@ -99,9 +99,10 @@ def split_command_args(command, all_commands):
     :param command: redis command string, with args
     :param all_commands: full redis commands list
     """
+    command = command.lstrip()
     upper_raw_command = command.upper()
     for command_name in all_commands:
-        if re.match(r"\s*{}( .*)?$".format(command_name), upper_raw_command):
+        if upper_raw_command.startswith(command_name):
             l = len(command_name)
             input_command = command[:l]
             input_args = command[l:]
