@@ -40,6 +40,7 @@ jobs:
           key: v2-dependencies-{{ checksum "dev-requirements.txt" }}
 
   test:
+    steps:
       - run:
           name: run tests
           command: |
