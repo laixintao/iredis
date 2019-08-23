@@ -118,9 +118,7 @@ def get_lexer(command_groups, redis_grammar):
         "index": SimpleLexer("class:integer"),
         "password": SimpleLexer("class:password"),
     }
-    lexers_dict.update(
-        {key: SimpleLexer("class:command") for key in command_groups}
-    )
+    lexers_dict.update({key: SimpleLexer("class:command") for key in command_groups})
     lexer = GrammarLexer(redis_grammar, lexers=lexers_dict)
     return lexer
 
@@ -203,24 +201,22 @@ class BottomToolbar:
             anim = self.get_animation_char()
             loading_text = (
                 "class:bottom-toolbar.off",
-                f"Loading Redis commands {anim}\n",
+                f"Loading Redis commands {anim}",
             )
+            return [loading_text]
         elif config.compiling == COMPILING_JUST_FINISH:
             loading_text = (
                 "class:bottom-toolbar.loaded",
-                f"Redis commands loaded! Auto Completer activated!\n",
+                f"Redis commands loaded! Auto Completer activated!",
             )
+            return [loading_text]
         else:
-            loading_text = ("class:bottom-toolbar", "")
-        bottoms = [loading_text]
-
-        # add command help if valide
-        if self.command_holder.command:
-            command_info = commands_summary[self.command_holder.command]
-            hint = command_syntax(self.command_holder.command, command_info)
-            bottoms.extend(hint)
-
-        return bottoms
+            # add command help if valide
+            if self.command_holder.command:
+                command_info = commands_summary[self.command_holder.command]
+                hint = command_syntax(self.command_holder.command, command_info)
+                return hint
+        return "Report bugs: https://github.com/laixintao/iredis/issues"
 
 
 def repl(client, session):
