@@ -50,6 +50,7 @@ STYLE_DICT = {
     "bottom-toolbar.loaded": "bg:#222222 #44aa44",
     "bottom-toolbar.since": "bg:#222222 #bc7a00",
     "bottom-toolbar.complexity": "bg:#222222 #666666",
+    "bottom-toolbar.group": "bg:#222222 #d2413a bold",
     # completion
     "completion-menu.completion.current": "bg:#ffffff #000000",
     "completion-menu.completion": "bg:#008888 #ffffff",

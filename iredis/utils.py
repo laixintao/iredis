@@ -149,7 +149,7 @@ def command_syntax(command, command_info):
     """
     comamnd_group = command_info["group"]
     bottoms = [
-        ("class:bottom-toolbar.on", f"({comamnd_group}) "),
+        ("class:bottom-toolbar.group", f"({comamnd_group}) "),
         ("class:bottom-toolbar.command", f"{command}"),
     ]  # final display FormattedText
 
