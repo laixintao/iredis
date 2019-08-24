@@ -48,8 +48,8 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            ls /tmp
-            ls /tmp/dist
+            ls -l /tmp
+            ls -l /tmp/dist
             pip list
       - save_cache:
           paths:
@@ -60,7 +60,6 @@ jobs:
           name: test built release
           command: |
             . venv/bin/activate
-            pexpect --help
 
   build-release:
     docker:
