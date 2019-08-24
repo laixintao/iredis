@@ -1,10 +1,8 @@
 """
 IRedis client.
 """
-import re
 import logging
 
-import redis
 from redis.connection import Connection
 from redis.exceptions import ResponseError, TimeoutError, ConnectionError
 
@@ -27,7 +25,7 @@ class Client:
                 mapping[func_name] = func
         return mapping
 
-    def __init__(self, host, port, db, encoding=None):
+    def __init__(self, host, port, db, password=None, encoding=None):
         self.host = host
         self.port = port
         self.db = db
@@ -36,13 +34,15 @@ class Client:
                 host=self.host,
                 port=self.port,
                 db=self.db,
+                password=password,
                 encoding=encoding,
                 decode_responses=True,
                 encoding_errors="replace",
             )
         else:
             self.connection = Connection(
-                host=self.host, port=self.port, db=self.db, decode_responses=False
+                host=self.host, port=self.port, db=self.db,
+                password=password, decode_responses=False
             )
         # all command upper case
         self.answer_callbacks = command2callback
