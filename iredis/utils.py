@@ -2,7 +2,6 @@ import re
 import time
 import logging
 
-import click
 from prompt_toolkit.formatted_text import FormattedText
 
 from iredis.exceptions import InvalidArguments
