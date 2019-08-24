@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "iredis"
+version = "0.1.5"
+description = "Terminal Client for Redis with AutoCompletion and Syntax Highlighting."
+authors = ["laixintao <laixintao1995@163.com>"]
+readme = 'README.md'
+license = "MIT"
+repository = 'https://github.com/laixintao/iredis'
+homepage = "https://github.com/laixintao/iredis"
+keywords=["Redis", "key-value store", "Commandline tools"]
+classifiers = [
+    "Topic :: Environment :: Console",
+    "Topic :: Intended Audience :: Developers",
+    "Topic :: License :: OSI Approved :: MIT License",
+    "Topic :: Operating System :: OS Independent",
+    "Topic :: Programming Language :: Python",
+    "Topic :: Programming Language :: Python :: 3.7",
+]
+include = ["command_syntax.csv", "commands.json"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+redis = "^3"
+prompt_toolkit = "^2"
+Pygments = "^2"
+click = { git = "https://github.com/pallets/click.git", branch = "master" }
+
+[tool.poetry.dev-dependencies]
+pytest = "^5"
+requests = "^2"
+lxml = "^4"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+[tool.poetry.scripts]
+iredis = 'iredis.entry:main'
