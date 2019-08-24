@@ -42,15 +42,13 @@ jobs:
           keys:
             - v1-dependencies-pexpect
       - attach_workspace:
-          at: /tmp/dist
+          at: /tmp/workspace
       - run:
           name: install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            ls -l /tmp
-            ls -l /tmp/dist
-            pip list
+            pip install /tmp/workspace/dist/*.whl
       - save_cache:
           paths:
             - ./venv
