@@ -9,12 +9,16 @@ repository = 'https://github.com/laixintao/iredis'
 homepage = "https://github.com/laixintao/iredis"
 keywords=["Redis", "key-value store", "Commandline tools"]
 classifiers = [
-    "Topic :: Environment :: Console",
-    "Topic :: Intended Audience :: Developers",
-    "Topic :: License :: OSI Approved :: MIT License",
-    "Topic :: Operating System :: OS Independent",
-    "Topic :: Programming Language :: Python",
-    "Topic :: Programming Language :: Python :: 3.7",
+# see https://pypi.org/pypi?%3Aaction=list_classifiers
+    "Development Status :: 2 - Pre-Alpha",
+    "Environment :: Console",
+    "Environment :: Console :: Curses",
+    "Environment :: MacOS X",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.7",
+    "Topic :: Database",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers",
 ]
 include = ["command_syntax.csv", "commands.json"]
 
