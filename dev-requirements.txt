@@ -1,6 +1,0 @@
--r requirements.txt
-pytest
-
-# download scripts
-requests
-lxml
