@@ -37,7 +37,12 @@ from .commands_csv_loader import (
     all_commands,
     commands_summary,
 )
-from .utils import timer, literal_bytes, split_command_args, command_syntax
+from .utils import (
+    timer,
+    literal_bytes,
+    split_command_args,
+    command_syntax,
+)
 from .style import STYLE
 from .config import config, COMPILING_IN_PROGRESS, COMPILING_DONE, COMPILING_JUST_FINISH
 from iredis.exceptions import InvalidArguments
@@ -282,6 +287,7 @@ DECODE_HELP = (
 @click.option("-n", help="Database number.", default=None)
 @click.option("--raw/--no-raw", default=False, is_flag=True, help=RAW_HELP)
 @click.option("--decode", default=None, help=DECODE_HELP)
+@click.version_option()
 @click.argument("cmd", nargs=-1)
 def gather_args(ctx, h, p, n, raw, cmd, decode):
     logger.info(

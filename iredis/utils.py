@@ -1,9 +1,11 @@
 import re
 import time
 import logging
-from iredis.exceptions import InvalidArguments
 
 from prompt_toolkit.formatted_text import FormattedText
+
+from iredis.exceptions import InvalidArguments
+
 
 logger = logging.getLogger(__name__)
 
