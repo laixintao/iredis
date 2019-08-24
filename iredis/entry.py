@@ -42,7 +42,6 @@ from .utils import (
     literal_bytes,
     split_command_args,
     command_syntax,
-    print_version,
 )
 from .style import STYLE
 from .config import config, COMPILING_IN_PROGRESS, COMPILING_DONE, COMPILING_JUST_FINISH
@@ -288,8 +287,7 @@ DECODE_HELP = (
 @click.option("-n", help="Database number.", default=None)
 @click.option("--raw/--no-raw", default=False, is_flag=True, help=RAW_HELP)
 @click.option("--decode", default=None, help=DECODE_HELP)
-@click.option("--version", help="Print iredis version", is_flag=True,
-              callback=print_version, expose_value=False)
+@click.version_option()
 @click.argument("cmd", nargs=-1)
 def gather_args(ctx, h, p, n, raw, cmd, decode):
     logger.info(
