@@ -4,6 +4,8 @@ from unittest.mock import patch
 from click.testing import CliRunner
 
 from iredis.entry import gather_args
+from .conftest import IMMEDIATELY
+
 
 
 @pytest.mark.parametrize(
@@ -46,5 +48,10 @@ def test_command_with_decode_utf_8():
 
 
 def test_short_help_option():
-    c = pexpect.spawn("iredis -h")
+    c = pexpect.spawn("iredis -h", timeout=IMMEDIATELY)
     c.expect("Show this message and exit.")
+
+    c = pexpect.spawn("iredis -h 127.0.0.1")
+    c.expect("127.0.0.1:6379>")
+
+    c.close()
