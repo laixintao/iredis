@@ -179,6 +179,9 @@ workflows:
       - test-release:
           requires:
             - build-release
+          filters:
+            tags:
+              only: /.*/
       - upload-to-pypi:
           requires:
             - test-release
