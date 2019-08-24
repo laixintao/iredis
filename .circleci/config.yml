@@ -183,3 +183,8 @@ workflows:
       - upload-to-pypi:
           requires:
             - test-release
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              only: master
