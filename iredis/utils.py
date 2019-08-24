@@ -197,11 +197,3 @@ def command_syntax(command, command_info):
         )
 
     return FormattedText(bottoms)
-
-
-def print_version(ctx, param, value):
-    import iredis
-    if not value or ctx.resilient_parsing:
-        return
-    click.echo(f'iredis {iredis.__version__}')
-    ctx.exit()
