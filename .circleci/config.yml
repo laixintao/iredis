@@ -14,14 +14,14 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-poetry
+            - v1-dependencies-twine
 
       - run:
           name: install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install poetry
+            pip install twine
 
       - save_cache:
           paths:
@@ -32,36 +32,34 @@ jobs:
           name: build release
           command: |
             . venv/bin/activate
-            poetry --help
+            twine --help
   test-release:
     docker:
       - image: circleci/python:3.7.1
     working_directory: ~/repo
     steps:
-      - checkout
-
-      # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-poetry
+            - v1-dependencies-pexpect
 
       - run:
           name: install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install poetry
+            pip install pexpect
 
       - save_cache:
           paths:
               - ./venv
-          key: v1-dependencies-poetry
+          key: v1-dependencies-pexpect
 
       - run:
-          name: build release
+          name: test built release
           command: |
             . venv/bin/activate
-            poetry --help
+            pexpect --help
+
   build-release:
     docker:
       - image: circleci/python:3.7.1
@@ -90,7 +88,7 @@ jobs:
           name: build release
           command: |
             . venv/bin/activate
-            poetry --help
+            poetry build
 
   style-check:
     docker:
@@ -142,7 +140,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v2-dependencies-{{ checksum "dev-requirements.txt" }}
+            - v2-dependencies-{{ checksum "pyproject.toml" }}
             # fallback to using the latest cache if no exact match is found
             - v2-dependencies-
 
@@ -151,12 +149,13 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install -r dev-requirements.txt
+            pip install poetry
+            poetry install --develop=DEVELOP
 
       - save_cache:
           paths:
             - ./venv
-          key: v2-dependencies-{{ checksum "dev-requirements.txt" }}
+          key: v2-dependencies-{{ checksum "pyproject.toml" }}
 
       - run:
           name: run tests
