@@ -40,7 +40,7 @@ from .commands_csv_loader import (
 from .utils import timer, literal_bytes, split_command_args, command_syntax
 from .style import STYLE
 from .config import config, COMPILING_IN_PROGRESS, COMPILING_DONE, COMPILING_JUST_FINISH
-from iredis.exceptions import InvalidArguments
+from .exceptions import InvalidArguments
 
 logger = logging.getLogger(__name__)
 

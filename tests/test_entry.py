@@ -1,4 +1,5 @@
 import pytest
+import pexpect
 from unittest.mock import patch
 from click.testing import CliRunner
 
@@ -42,3 +43,8 @@ def test_command_with_decode_utf_8():
 
     gather_args.main(["iredis"], standalone_mode=False)
     assert config.decode == None
+
+
+def test_short_help_option():
+    c = pexpect.spawn("iredis -h")
+    c.expect("Show this message and exit.")
