@@ -174,13 +174,13 @@ workflows:
     jobs:
       - style-check
       - unittest
-      - build-release
+      - build-release:
           requires:
             - style-check
             - unittest
-      - test-release
+      - test-release:
           requires:
             - build-release
-      - upload-to-pypi
+      - upload-to-pypi:
           requires:
             - test_release
