@@ -183,4 +183,4 @@ workflows:
             - build-release
       - upload-to-pypi:
           requires:
-            - test_release
+            - test-release
