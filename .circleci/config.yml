@@ -21,7 +21,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip -U install twine pip
+            pip install -U twine pip
 
       - save_cache:
           paths:
