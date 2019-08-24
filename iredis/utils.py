@@ -1,9 +1,12 @@
 import re
 import time
 import logging
+
+import click
+from prompt_toolkit.formatted_text import FormattedText
+
 from iredis.exceptions import InvalidArguments
 
-from prompt_toolkit.formatted_text import FormattedText
 
 logger = logging.getLogger(__name__)
 
@@ -194,3 +197,11 @@ def command_syntax(command, command_info):
         )
 
     return FormattedText(bottoms)
+
+
+def print_version(ctx, param, value):
+    import iredis
+    if not value or ctx.resilient_parsing:
+        return
+    click.echo(f'iredis {iredis.__version__}')
+    ctx.exit()
