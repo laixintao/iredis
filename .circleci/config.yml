@@ -26,7 +26,7 @@ jobs:
             - ./venv
           key: v3-dependencies-poetry
       - run:
-          name: build release
+          name: "upload files to pypi: https://pypi.org/project/iredis/#history"
           command: |
             . venv/bin/activate
             twine upload /tmp/workspace/dist/* -u __token__ -p ${PYPITOKEN}
