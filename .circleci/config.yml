@@ -56,6 +56,7 @@ jobs:
           name: test built release
           command: |
             . venv/bin/activate
+            iredis -h
 
   build-release:
     docker:
