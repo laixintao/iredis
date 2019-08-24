@@ -41,13 +41,15 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-pexpect
-
+      - attach_workspace:
+          at: /tmp/dist
       - run:
           name: install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
-
+            pip install /tmp/dist/*.whl
+            pip list
       - save_cache:
           paths:
             - ./venv
@@ -88,6 +90,9 @@ jobs:
           command: |
             . venv/bin/activate
             poetry build
+      - persist_to_workspace:
+          root: .
+          path: dist
 
   style-check:
     docker:
