@@ -14,7 +14,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v3-dependencies-twine
+            - v4-dependencies-twine
       - run:
           name: install dependencies
           command: |
@@ -24,7 +24,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v3-dependencies-poetry
+          key: v4-dependencies-poetry
       - run:
           name: "upload files to pypi: https://pypi.org/project/iredis/#history"
           command: |
@@ -37,7 +37,7 @@ jobs:
     steps:
       - restore_cache:
           keys:
-            - v3-dependencies-pexpect
+            - v4-dependencies-pexpect
       - attach_workspace:
           at: /tmp/workspace
       - run:
@@ -50,7 +50,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v3-dependencies-pexpect
+          key: v4-dependencies-pexpect
 
       - run:
           name: test built release
@@ -68,7 +68,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v3-dependencies-poetry
+            - v4-dependencies-poetry
 
       - run:
           name: install dependencies
@@ -80,7 +80,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v3-dependencies-poetry
+          key: v4-dependencies-poetry
 
       - run:
           name: build release
@@ -102,7 +102,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v3-dependencies-black
+            - v4-dependencies-black
 
       - run:
           name: install dependencies
@@ -114,7 +114,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v3-dependencies-black
+          key: v4-dependencies-black
 
       - run:
           name: black format
@@ -141,9 +141,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v3-dependencies-{{ checksum "pyproject.toml" }}
+            - v4-dependencies-{{ checksum "pyproject.toml" }}
             # fallback to using the latest cache if no exact match is found
-            - v3-dependencies-
+            - v4-dependencies-
 
       - run:
           name: install dependencies
@@ -156,7 +156,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v3-dependencies-{{ checksum "pyproject.toml" }}
+          key: v4-dependencies-{{ checksum "pyproject.toml" }}
 
       - run:
           name: run tests
