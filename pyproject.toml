@@ -27,7 +27,7 @@ python = "^3.7"
 redis = "^3"
 prompt_toolkit = "^2"
 Pygments = "^2"
-click = { git = "https://github.com/pallets/click.git", branch = "master" }
+click8 = "^8"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5"
