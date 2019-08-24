@@ -37,12 +37,7 @@ from .commands_csv_loader import (
     all_commands,
     commands_summary,
 )
-from .utils import (
-    timer,
-    literal_bytes,
-    split_command_args,
-    command_syntax,
-)
+from .utils import timer, literal_bytes, split_command_args, command_syntax
 from .style import STYLE
 from .config import config, COMPILING_IN_PROGRESS, COMPILING_DONE, COMPILING_JUST_FINISH
 from iredis.exceptions import InvalidArguments
@@ -271,6 +266,11 @@ def repl(client, session):
             write_result(answer)
 
 
+def print_help_msg(command):
+    with click.Context(command) as ctx:
+        click.echo(command.get_help(ctx))
+
+
 RAW_HELP = """
 Use raw formatting for replies (default when STDOUT is not a tty). However, you can use --no-raw to force formatted output even when STDOUT is not a tty.
 """
@@ -278,9 +278,7 @@ DECODE_HELP = (
     "decode response, defult is No decode, which will output all bytes literals."
 )
 # command line entry here...
-@click.command(
-    help="""When no command is given, redis-cli starts in interactive mode."""
-)
+@click.command()
 @click.pass_context
 @click.option("-h", help="Server hostname", default="127.0.0.1")
 @click.option("-p", help="Server port", default="6379")
@@ -290,6 +288,14 @@ DECODE_HELP = (
 @click.version_option()
 @click.argument("cmd", nargs=-1)
 def gather_args(ctx, h, p, n, raw, cmd, decode):
+    """
+    IRedis: Interactive Redis
+
+    When no command is given, redis-cli starts in interactive mode.
+    
+    Type "help" in interactive mode for information on available commands
+    and settings.
+    """
     logger.info(
         f"[start args] host={h}, port={p}, db={n}, raw={raw}, cmd={cmd}, decode={decode}."
     )
@@ -310,9 +316,17 @@ def gather_args(ctx, h, p, n, raw, cmd, decode):
 
 
 def main():
-    enter_main_time = time.time()
+    enter_main_time = time.time()  # just for logs
+
     # invoke in non-standalone mode to gather args
-    ctx = gather_args.main(standalone_mode=False)
+    try:
+        ctx = gather_args.main(standalone_mode=False)
+    except click.exceptions.BadOptionUsage as badoption:
+        if badoption.option_name == "-h":
+            # -h without host, is short command for --help
+            # like redis-cli
+            print_help_msg(gather_args)
+        return
     if not ctx:  # called help
         return
     # redis client
