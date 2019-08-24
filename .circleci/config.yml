@@ -49,6 +49,8 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install /tmp/dist/*.whl
+            ls /tmp
+            ls /tmp/dist
             pip list
       - save_cache:
           paths:
