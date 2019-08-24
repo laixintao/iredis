@@ -175,12 +175,12 @@ workflows:
       - style-check
       - unittest
       - build-release
-        requires:
-          - style-check
-          - unittest
+          requires:
+            - style-check
+            - unittest
       - test-release
-        requires:
-          - build-release
+          requires:
+            - build-release
       - upload-to-pypi
-        requires:
-          - test_release
+          requires:
+            - test_release
