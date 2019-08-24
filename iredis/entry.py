@@ -219,10 +219,10 @@ class BottomToolbar:
         return "Report bugs: https://github.com/laixintao/iredis/issues"
 
 
-def repl(client, session):
+def repl(client, session, start_time):
     is_raw = config.raw
     command_holder = UserInputCommand()
-    timer(f"First REPL command enter, is_raw={is_raw}.")
+    timer(f"First REPL command enter, time cost: {time.time() - start_time}")
     while True:
         logger.info("↓↓↓↓" * 10)
         logger.info("REPL waiting for command...")
@@ -310,8 +310,6 @@ def gather_args(ctx, h, p, n, raw, cmd, decode):
     # set config decode
     config.decode = decode
 
-    logger.debug(f"[Config] Is raw output? {config.raw}")
-    logger.debug(f"[Config] Decode option: {config.decode}")
     return ctx
 
 
@@ -359,4 +357,4 @@ def main():
     )
 
     compile_grammar_bg(session)
-    repl(client, session)
+    repl(client, session, enter_main_time)
