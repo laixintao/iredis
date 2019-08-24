@@ -21,7 +21,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install -U twine pip
+            pip install twine pip==19
 
       - save_cache:
           paths:
@@ -48,7 +48,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install -U pip
+            pip install pip==19
             pip install /tmp/workspace/dist/*.whl
       - save_cache:
           paths:
@@ -77,7 +77,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install -U poetry pip
+            pip install poetry pip==19
 
       - save_cache:
           paths:
@@ -152,7 +152,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install -U poetry pip
+            pip install poetry pip==19
             poetry install --develop=DEVELOP
 
       - save_cache:
