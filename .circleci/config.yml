@@ -131,7 +131,7 @@ jobs:
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
-      - image: circleci/redis:5
+      # - image: circleci/redis:5
 
     working_directory: ~/repo
 
@@ -166,7 +166,7 @@ jobs:
 
 workflows:
   version: 2
-  test-and-release:
+  test-n-release:
     jobs:
       - style-check:
           filters:
