@@ -92,7 +92,8 @@ jobs:
             poetry build
       - persist_to_workspace:
           root: .
-          path: dist
+          paths:
+            - dist
 
   style-check:
     docker:
