@@ -48,6 +48,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
+            pip install -U pip
             pip install /tmp/workspace/dist/*.whl
       - save_cache:
           paths:
