@@ -5,7 +5,7 @@ import copy
 from pathlib import Path
 from .utils import timer
 
-project_path = Path(os.path.dirname(os.path.abspath(__file__))) / ".."
+project_path = Path(os.path.dirname(os.path.abspath(__file__))) / "data"
 
 
 def load_command_summary():

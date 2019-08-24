@@ -14,7 +14,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-twine
+            - v3-dependencies-twine
 
       - run:
           name: install dependencies
@@ -26,7 +26,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v1-dependencies-poetry
+          key: v3-dependencies-poetry
 
       - run:
           name: build release
@@ -40,7 +40,7 @@ jobs:
     steps:
       - restore_cache:
           keys:
-            - v1-dependencies-pexpect
+            - v3-dependencies-pexpect
       - attach_workspace:
           at: /tmp/workspace
       - run:
@@ -53,7 +53,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v1-dependencies-pexpect
+          key: v3-dependencies-pexpect
 
       - run:
           name: test built release
@@ -70,7 +70,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-poetry
+            - v3-dependencies-poetry
 
       - run:
           name: install dependencies
@@ -82,7 +82,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v1-dependencies-poetry
+          key: v3-dependencies-poetry
 
       - run:
           name: build release
@@ -104,7 +104,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-black
+            - v3-dependencies-black
 
       - run:
           name: install dependencies
@@ -116,7 +116,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v1-dependencies-black
+          key: v3-dependencies-black
 
       - run:
           name: black format
@@ -143,9 +143,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v2-dependencies-{{ checksum "pyproject.toml" }}
+            - v3-dependencies-{{ checksum "pyproject.toml" }}
             # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
+            - v3-dependencies-
 
       - run:
           name: install dependencies
@@ -158,7 +158,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v2-dependencies-{{ checksum "pyproject.toml" }}
+          key: v3-dependencies-{{ checksum "pyproject.toml" }}
 
       - run:
           name: run tests
@@ -168,7 +168,7 @@ jobs:
 
 workflows:
   version: 2
-  unittest:
+  test-and-release:
     jobs:
       - style-check
       - unittest
@@ -183,5 +183,7 @@ workflows:
           requires:
             - test-release
           filters:
+            branches:
+              ignore: /.*/
             tags:
-              only: /v[0-9]+(\.[0-9]+)*/
+              only: /^v[0-9]+(\.[0-9]+)*$/
