@@ -168,7 +168,7 @@ jobs:
 
 workflows:
   version: 2
-  test:
+  test-and-release:
     jobs:
       - style-check
       - unittest
@@ -179,8 +179,6 @@ workflows:
       - test-release:
           requires:
             - build-release
-  release:
-    jobs:
       - upload-to-pypi:
           requires:
             - test-release
