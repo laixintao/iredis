@@ -2,6 +2,7 @@
 
 
 [![CircleCI](https://circleci.com/gh/laixintao/iredis.svg?style=svg)](https://circleci.com/gh/laixintao/iredis)
+[![PyPI version](https://badge.fury.io/py/iredis.svg)](https://badge.fury.io/py/iredis)
 
 A Terminal Client for Redis with AutoCompletion and Syntax Highlighting.
 
