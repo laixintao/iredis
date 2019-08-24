@@ -170,15 +170,27 @@ workflows:
   version: 2
   test-and-release:
     jobs:
-      - style-check
-      - unittest
+      - style-check:
+          filters:
+            tags:
+              only: /.*/
+      - unittest:
+          filters:
+            tags:
+              only: /.*/
       - build-release:
           requires:
             - style-check
             - unittest
+          filters:
+            tags:
+              only: /.*/
       - test-release:
           requires:
             - build-release
+          filters:  # required since `upload-to-pypi` has tag filters AND requires `test-release`
+            tags:
+              only: /.*/
       - upload-to-pypi:
           requires:
             - test-release
