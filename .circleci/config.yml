@@ -170,30 +170,20 @@ workflows:
   version: 2
   test-and-release:
     jobs:
-      - style-check:
-          filters:
-            tags:
-              only: /.*/
-      - unittest:
-          filters:
-            tags:
-              only: /.*/
+      - style-check
+      - unittest
       - build-release:
           requires:
             - style-check
             - unittest
-          filters:
-            tags:
-              only: /.*/
       - test-release:
           requires:
             - build-release
-          filters:
-            tags:
-              only: /.*/
       - upload-to-pypi:
           requires:
             - test-release
           filters:
+            branches:
+              ignore: /.*/
             tags:
-              only: /^v.*/
+              only: /^v[0-9]+(\.[0-9]+)*$/
