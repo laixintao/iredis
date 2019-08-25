@@ -1,7 +1,8 @@
+FROM redis as redis-server
+
 FROM python:3
 
 WORKDIR /iredis
-
 COPY . .
 
 RUN apt-get update && apt-get install -y \
@@ -14,4 +15,6 @@ RUN python3 -m venv iredis_env && \
     poetry install --no-dev && \
     rm -rf ~/.cache
 
-CMD ["redis-server", "--daemonize yes", ";", ".", "iredis_env/bin/activate", ";", "iredis"]
+COPY --from=redis-server /usr/local/bin/redis-server /redis-server
+
+CMD ["redis-server", "--daemonize", "yes", ";", ".", "iredis_env/bin/activate", ";", "iredis"]
