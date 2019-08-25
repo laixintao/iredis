@@ -1,4 +1,3 @@
-import re
 import time
 import threading
 import logging
@@ -17,7 +16,6 @@ from .commands_csv_loader import group2commands
 
 
 logger = logging.getLogger(__name__)
-BLANK_RE = re.compile(r"\s")
 
 
 class FakeDocument:
@@ -37,7 +35,7 @@ class RedisGrammarCompleter(GrammarCompleter):
         stripped = FakeDocument()
         stripped.text_before_cursor = origin_text.lstrip()
         # Do not complete on spaces, too slow
-        if BLANK_RE.match(document.char_before_cursor):
+        if not origin_text.strip():
             return []
         return super().get_completions(stripped, complete_event)
 
