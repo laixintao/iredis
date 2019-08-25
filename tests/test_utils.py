@@ -1,7 +1,7 @@
 import re
 import time
 import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 from iredis.utils import timer, _strip_quote_args, split_command_args
 from iredis.commands_csv_loader import all_commands

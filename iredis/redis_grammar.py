@@ -1,7 +1,6 @@
 """
 command_nodex: x means node?
 """
-import time
 import logging
 
 from .commands_csv_loader import group2command_res as t
@@ -82,14 +81,14 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {INDEX}   \s+ {INDEX}                      \s*)|
 (\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
 (\s*  (?P<command_keys>({t['command_keys']}))          \s+ {KEYS}                                     \s*)|
-(\s*  (?P<command_key_second>({t['command_key_second']})) 
+(\s*  (?P<command_key_second>({t['command_key_second']}))
                                                        \s+ {KEY}     \s+ {SECOND}                     \s*)|
-(\s*  (?P<command_key_timestamp>({t['command_key_timestamp']})) 
+(\s*  (?P<command_key_timestamp>({t['command_key_timestamp']}))
                                                        \s+ {KEY}     \s+ {TIMESTAMP}                  \s*)|
 (\s*  (?P<command_pattern>({t['command_pattern']}))    \s+ {PATTERN}                                  \s*)|
-(\s*  (?P<command_key_index>({t['command_key_index']})) 
+(\s*  (?P<command_key_index>({t['command_key_index']}))
                                                        \s+ {KEY}     \s+ {INDEX}                      \s*)|
-(\s*  (?P<command_key_millisecond>({t['command_key_millisecond']})) 
+(\s*  (?P<command_key_millisecond>({t['command_key_millisecond']}))
                                                        \s+ {KEY}     \s+ {MILLISECOND}                \s*)|
 (\s*  (?P<command_key_timestampms>({t['command_key_timestampms']}))
                                                        \s+ {KEY}     \s+ {TIMESTAMPMS}                \s*)|
