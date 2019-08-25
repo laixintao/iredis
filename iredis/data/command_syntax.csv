@@ -215,7 +215,7 @@ string,MGET,command_pass,
 string,MSET,command_pass,
 string,MSETNX,command_pass,
 string,PSETEX,command_pass,
-string,SET,command_pass,
+string,SET,command_pass,render_ok
 string,SETBIT,command_pass,
 string,SETEX,command_pass,
 string,SETNX,command_pass,
