@@ -4,14 +4,6 @@ from unittest.mock import MagicMock
 from iredis.entry import compile_grammar_bg
 
 
-def test_get_ctrl_C():
-    pass
-
-
-def test_get_ctrl_D():
-    pass
-
-
 def test_patch_grammer_and_session_after_startup():
     session = MagicMock()
     normal_thread_count = threading.active_count()
