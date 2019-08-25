@@ -3,7 +3,7 @@ FROM redis as redis-server
 FROM python:3
 
 WORKDIR /iredis
-COPY . .
+COPY iredis poetry.lock pyproject.toml ./
 
 RUN apt-get update && apt-get install -y --allow-unauthenticated \
     redis-server && \
