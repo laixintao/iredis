@@ -280,19 +280,20 @@ DECODE_HELP = (
 # command line entry here...
 @click.command()
 @click.pass_context
-@click.option("-h", help="Server hostname", default="127.0.0.1")
-@click.option("-p", help="Server port", default="6379")
+@click.option("-h", help="Server hostname (default: 127.0.0.1).", default="127.0.0.1")
+@click.option("-p", help="Server port (default: 6379).", default="6379")
 @click.option("-n", help="Database number.", default=None)
+@click.option("-a", "--password", help="Password to use when connecting to the server.")
 @click.option("--raw/--no-raw", default=False, is_flag=True, help=RAW_HELP)
 @click.option("--decode", default=None, help=DECODE_HELP)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
-def gather_args(ctx, h, p, n, raw, cmd, decode):
+def gather_args(ctx, h, p, n, password, raw, cmd, decode):
     """
     IRedis: Interactive Redis
 
     When no command is given, redis-cli starts in interactive mode.
-    
+
     Type "help" in interactive mode for information on available commands
     and settings.
     """
@@ -317,8 +318,11 @@ def main():
     enter_main_time = time.time()  # just for logs
 
     # invoke in non-standalone mode to gather args
+    ctx = None
     try:
         ctx = gather_args.main(standalone_mode=False)
+    except click.exceptions.NoSuchOption as nosuchoption:
+        nosuchoption.show()
     except click.exceptions.BadOptionUsage as badoption:
         if badoption.option_name == "-h":
             # -h without host, is short command for --help
@@ -328,7 +332,8 @@ def main():
     if not ctx:  # called help
         return
     # redis client
-    client = Client(ctx.params["h"], ctx.params["p"], ctx.params["n"], config.decode)
+    client = Client(ctx.params["h"], ctx.params["p"], ctx.params["n"],
+                    ctx.params["password"], config.decode)
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():
             logger.debug(f"[Command stdin] {line}")
