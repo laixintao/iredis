@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y --allow-unauthenticated \
 
 
 WORKDIR /iredis
-COPY poetry.lock pyproject.toml ./
+COPY README.md poetry.lock pyproject.toml ./
 COPY iredis ./iredis
 
 RUN python3 -m venv iredis_env && \
@@ -15,6 +15,5 @@ RUN python3 -m venv iredis_env && \
     poetry install --no-dev && \
     rm -rf ~/.cache
 
-COPY --from=redis-server /usr/local/bin/redis-server /redis-server
 
 CMD ["sh","-c","redis-server --daemonize yes && . iredis_env/bin/activate && iredis"]
