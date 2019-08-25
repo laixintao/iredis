@@ -4,10 +4,9 @@ This module will be auto loaded to callbacks.
 
 func(redis-response, completers: GrammarCompleter) -> formatted result(str)
 """
-import re
 import logging
 from prompt_toolkit.completion import WordCompleter
-from prompt_toolkit.formatted_text import to_formatted_text, FormattedText
+from prompt_toolkit.formatted_text import FormattedText
 
 from .config import config
 
@@ -25,7 +24,7 @@ def _literal_bytes(b):
     we don't add outter double quotes here, since
     completer also need this function's return value
     to patch completers.
-    
+
     b'hello' -> "hello"
     b'double"quotes"' -> "double\"quotes\""
     """

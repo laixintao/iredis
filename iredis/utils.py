@@ -105,9 +105,9 @@ def split_command_args(command, all_commands):
     upper_raw_command = command.upper()
     for command_name in all_commands:
         if upper_raw_command.startswith(command_name):
-            l = len(command_name)
-            input_command = command[:l]
-            input_args = command[l:]
+            name_len = len(command_name)
+            input_command = command[:name_len]
+            input_args = command[name_len:]
             break
     else:
         raise InvalidArguments(r"`{command} is not a valide Redis Command")
@@ -155,7 +155,6 @@ def command_syntax(command, command_info):
         ("class:bottom-toolbar.command", f"{command}"),
     ]  # final display FormattedText
 
-    command_args = []
     if command_info.get("arguments"):
         for argument in command_info["arguments"]:
             if argument.get("command"):
@@ -186,13 +185,9 @@ def command_syntax(command, command_info):
                 )
     if "since" in command_info:
         since = command_info["since"]
-        bottoms.append(
-            ("class:bottom-toolbar.since", f"   since: {since}"),
-        )
+        bottoms.append(("class:bottom-toolbar.since", f"   since: {since}"))
     if "complexity" in command_info:
         complexity = command_info["complexity"]
-        bottoms.append(
-            ("class:bottom-toolbar.complexity", f" complexity:{complexity}"),
-        )
+        bottoms.append(("class:bottom-toolbar.complexity", f" complexity:{complexity}"))
 
     return FormattedText(bottoms)

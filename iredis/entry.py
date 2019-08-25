@@ -89,7 +89,9 @@ def repl(client, session, start_time):
 
 
 RAW_HELP = """
-Use raw formatting for replies (default when STDOUT is not a tty). However, you can use --no-raw to force formatted output even when STDOUT is not a tty.
+Use raw formatting for replies (default when STDOUT is not a tty).
+However, you can use --no-raw to force formatted output even
+when STDOUT is not a tty.
 """
 DECODE_HELP = (
     "decode response, defult is No decode, which will output all bytes literals."
