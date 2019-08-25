@@ -41,11 +41,6 @@ class RedisGrammarCompleter(GrammarCompleter):
             return []
         return super().get_completions(stripped, complete_event)
 
-    def _remove_duplicates(self, items):
-        """
-        Redis grammar guarantee that no completers will be duplicated"""
-        return items
-
 
 def get_completer(group2commands, redis_grammar):
     completer_mapping = {
