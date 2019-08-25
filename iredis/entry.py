@@ -283,8 +283,7 @@ DECODE_HELP = (
 @click.option("-h", help="Server hostname", default="127.0.0.1")
 @click.option("-p", help="Server port", default="6379")
 @click.option("-n", help="Database number.", default=None)
-@click.option("-a", "--password", help="Server password", prompt=True,
-              confirmation_prompt=True, hide_input=True)
+@click.option("-a", "--password", help="Server password")
 @click.option("--raw/--no-raw", default=False, is_flag=True, help=RAW_HELP)
 @click.option("--decode", default=None, help=DECODE_HELP)
 @click.version_option()
@@ -319,8 +318,11 @@ def main():
     enter_main_time = time.time()  # just for logs
 
     # invoke in non-standalone mode to gather args
+    ctx = None
     try:
         ctx = gather_args.main(standalone_mode=False)
+    except click.exceptions.NoSuchOption as nosuchoption:
+        nosuchoption.show()
     except click.exceptions.BadOptionUsage as badoption:
         if badoption.option_name == "-h":
             # -h without host, is short command for --help
