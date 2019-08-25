@@ -108,8 +108,8 @@ def command_keys(items, completer):
 
     # update completers
     if completer:
-        completer.completers["key"] = WordCompleter(str_items)
-        completer.completers["keys"] = WordCompleter(str_items)
+        completer.completers["key"] = WordCompleter(str_items[:config.completer_max])
+        completer.completers["keys"] = WordCompleter(str_items[:config.completer_max])
         logger.debug(f"[Completer] key completer updated.")
     else:
         logger.debug(f"[Completer] completer is None, not updated.")
