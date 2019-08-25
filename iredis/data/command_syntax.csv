@@ -204,7 +204,7 @@ string,BITOP,command_pass,
 string,BITPOS,command_pass,
 string,DECR,command_pass,
 string,DECRBY,command_pass,
-string,GET,command_pass,render_simple_strings
+string,GET,command_key,render_simple_strings
 string,GETBIT,command_pass,
 string,GETRANGE,command_pass,
 string,GETSET,command_pass,
