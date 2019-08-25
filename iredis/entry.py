@@ -280,10 +280,10 @@ DECODE_HELP = (
 # command line entry here...
 @click.command()
 @click.pass_context
-@click.option("-h", help="Server hostname", default="127.0.0.1")
-@click.option("-p", help="Server port", default="6379")
+@click.option("-h", help="Server hostname (default: 127.0.0.1).", default="127.0.0.1")
+@click.option("-p", help="Server port (default: 6379).", default="6379")
 @click.option("-n", help="Database number.", default=None)
-@click.option("-a", "--password", help="Server password")
+@click.option("-a", "--password", help="Password to use when connecting to the server.")
 @click.option("--raw/--no-raw", default=False, is_flag=True, help=RAW_HELP)
 @click.option("--decode", default=None, help=DECODE_HELP)
 @click.version_option()
