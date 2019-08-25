@@ -6,7 +6,7 @@ from iredis.client import Client
 from prompt_toolkit.contrib.regular_languages.compiler import compile
 
 
-TIMEOUT = 5
+TIMEOUT = 30
 redis_grammar = compile(REDIS_COMMANDS)
 
 
@@ -46,7 +46,7 @@ def iredis_client():
     return Client("127.0.0.1", "6379", None)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def local_process():
     """Open iredis subprocess to test"""
     child = pexpect.spawn("iredis -n 15", timeout=TIMEOUT)
