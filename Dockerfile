@@ -1,11 +1,10 @@
-FROM redis as redis-server
-
 FROM python:3
 
 WORKDIR /iredis
+
 COPY . .
 
-RUN RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y \
     redis-server && \
     rm -rf /var/lib/apt/lists/*
 
