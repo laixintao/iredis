@@ -5,7 +5,7 @@ override_style = Style([("bottom-toolbar", "noreverse")])
 style = REDIS_TOKEN = {
     "key": "#33aa33",
     "pattern": "bold #33aa33",
-    "string": "#E6DB74",
+    "string": "#FD971F",
     "command": "bold #008000",
     "integer": "#AE81FF",
     "const": "#AE81FF",
