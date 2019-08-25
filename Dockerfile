@@ -1,17 +1,20 @@
-# Use the offical Golang image to create a build artifact.
-# This is based on Debian and sets the GOPATH to /go.
-# https://hub.docker.com/_/golang
 FROM redis as redis-server
 
-FROM python:3.7.4
+FROM python:3
 
-# Copy local code to the container image.
 WORKDIR /iredis
 COPY . .
 
-RUN pip install poetry && poetry install
+RUN RUN apt-get update && apt-get install -y \
+    redis-server && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m venv iredis_env && \
+    . iredis_env/bin/activate && \
+    pip install poetry && \
+    poetry install --no-dev && \
+    rm -rf ~/.cache
 
 COPY --from=redis-server /usr/local/bin/redis-server /redis-server
 
-# Run the web service on container startup.
-CMD ["iredis"]
+CMD ["redis-server", "--daemonize yes", ";", ".", "iredis_env/bin/activate", ";", "iredis"]
