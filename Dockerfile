@@ -17,4 +17,4 @@ RUN python3 -m venv iredis_env && \
 
 COPY --from=redis-server /usr/local/bin/redis-server /redis-server
 
-CMD ["redis-server", "--daemonize", "yes", ";", ".", "iredis_env/bin/activate", ";", "iredis"]
+CMD ["sh","-c","redis-server --daemonize yes && . iredis_env/bin/activate && iredis"]
