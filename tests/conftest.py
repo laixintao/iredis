@@ -46,7 +46,7 @@ def iredis_client():
     return Client("127.0.0.1", "6379", None)
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def local_process():
     """Open iredis subprocess to test"""
     return pexpect.spawn("iredis", timeout=IMMEDIATELY)
