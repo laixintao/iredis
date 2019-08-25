@@ -91,15 +91,19 @@ def render_list(byte_items, str_items, style=None):
     return FormattedText(rendered)
 
 
+def render_error(error_msg):
+    text = _ensure_str(error_msg)
+    return FormattedText([("class:type", "(error) "), ("class:error", text)])
+
+
 def render_ok(text, completer):
     """
     If response is b'OK', render ok with success color.
     else render message with Error color.
     """
     text = _ensure_str(text)
-    if text == "OK":
-        return FormattedText([("class:success", text)])
-    return FormattedText([("class:error", text)])
+    assert text == "OK"
+    return FormattedText([("class:success", text)])
 
 
 def command_keys(items, completer):

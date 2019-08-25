@@ -6,9 +6,11 @@ import logging
 from redis.connection import Connection
 from redis.exceptions import ResponseError, TimeoutError, ConnectionError
 
+from .exceptions import InvalidArguments
 from . import renders
 from .commands_csv_loader import all_commands, command2callback
 from .utils import nativestr, split_command_args
+from .renders import render_error
 
 logger = logging.getLogger(__name__)
 
@@ -59,9 +61,6 @@ class Client:
     def execute_command(self, completer, command_name, *args, **options):
         "Execute a command and return a parsed response"
         # === pre hook ===
-        if command_name.upper() == "SELECT":
-            logger.debug("[Pre hook] Command is SELECT, change self.db.")
-            self.db = int(args[0])
 
         try:
             self.connection.send_command(command_name, *args)
@@ -83,17 +82,16 @@ class Client:
             select_result = self.execute_command(completer, "SELECT", self.db)
             if nativestr(select_result) != "OK":
                 raise ConnectionError("Invalid Database")
+        if command_name.upper() == "SELECT":
+            logger.debug("[Pre hook] Command is SELECT, change self.db.")
+            self.db = int(args[0])
 
         return resp
 
     def parse_response(self, connection, completer, command_name, **options):
         "Parses a response from the Redis server"
-        try:
-            response = connection.read_response()
-            logger.info(f"[Redis-Server] Response: {response}")
-        except ResponseError as e:
-            logger.warn(f"[Redis-Server] ERROR: {str(e)}")
-            response = str(e)
+        response = connection.read_response()
+        logger.info(f"[Redis-Server] Response: {response}")
         command_upper = command_name.upper()
         if (
             command_upper in self.answer_callbacks
@@ -107,14 +105,6 @@ class Client:
         logger.info(f"[rendered] {rendered}")
         return rendered
 
-    def parse_input(self, input_command):
-        """
-        parse input command to command and args.
-        convert input to upper case, we use upper case command internally;
-        strip quotes in args
-        """
-        return None
-
     def send_command(self, command, completer):
         """
         Send command to redis-server, return parsed response.
@@ -124,6 +114,11 @@ class Client:
             based on redis response. eg: update key completer after ``keys``
             command
         """
-        input_command, args = split_command_args(command, all_commands)
-        redis_resp = self.execute_command(completer, input_command, *args)
+        try:
+            input_command, args = split_command_args(command, all_commands)
+            redis_resp = self.execute_command(completer, input_command, *args)
+        except Exception as e:
+            logger.exception(e)
+            return render_error(str(e))
+
         return redis_resp
