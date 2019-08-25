@@ -5,5 +5,4 @@ steps:
   args: ['image_test.py', '--image', 'gcr.io/$PROJECT_ID/button']
 - name: 'gcr.io/cloud-builders/docker'
   args: ["-it", 'gcr.io/$PROJECT_ID/button', "/bin/bash"]
-images: ['gcr.io/$PROJECT_ID/button']
 timeout: '1200s'
