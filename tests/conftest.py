@@ -6,7 +6,7 @@ from iredis.client import Client
 from prompt_toolkit.contrib.regular_languages.compiler import compile
 
 
-TIMEOUT = 30
+TIMEOUT = 3
 redis_grammar = compile(REDIS_COMMANDS)
 
 
