@@ -7,7 +7,6 @@ Output to csv format.
 import sys
 import csv
 
-import lxml
 from lxml import etree
 import requests
 

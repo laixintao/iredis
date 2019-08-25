@@ -92,7 +92,7 @@ jobs:
           paths:
             - dist
 
-  style-check:
+  black-check:
     docker:
       - image: circleci/python:3.7.1
     working_directory: ~/repo
@@ -121,6 +121,36 @@ jobs:
           command: |
             . venv/bin/activate
             black --check
+
+  flake8-check:
+    docker:
+      - image: circleci/python:3.7.1
+    working_directory: ~/repo
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v4-dependencies-flake8
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install flake8
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v4-dependencies-flake8
+
+      - run:
+          name: run flake8
+          command: |
+            . venv/bin/activate
+            flake8 .
 
   unittest:
     docker:
@@ -168,7 +198,11 @@ workflows:
   version: 2
   test-n-release:
     jobs:
-      - style-check:
+      - black-check:
+          filters:
+            tags:
+              only: /.*/
+      - flake8-check:
           filters:
             tags:
               only: /.*/
@@ -178,8 +212,9 @@ workflows:
               only: /.*/
       - build-release:
           requires:
-            - style-check
+            - black-check
             - unittest
+            - flake8-check
           filters:
             tags:
               only: /.*/
