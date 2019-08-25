@@ -20,6 +20,7 @@ class Config:
         self.raw = False
         self.decode = None
         self.compiling = COMPILING_IN_PROGRESS  # is loading redis commands?
+        self.completer_max = 300
 
 
 config = Config()
