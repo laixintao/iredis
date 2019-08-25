@@ -1,177 +1,32 @@
 # -*- coding: utf-8 -*-
 import os
-import re
-import sys
 import logging
+import sys
 import time
-import threading
 from pathlib import Path
-from typing import Dict, Iterable, List
-
 
 import click
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
-from prompt_toolkit.shortcuts import prompt
-from prompt_toolkit.lexers import PygmentsLexer
-from prompt_toolkit.completion import WordCompleter
-from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
-from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-from prompt_toolkit.lexers import SimpleLexer
-from prompt_toolkit.document import Document
-from prompt_toolkit.contrib.regular_languages.compiler import compile
-from prompt_toolkit.completion import Completion, CompleteEvent
 from prompt_toolkit import print_formatted_text
-from prompt_toolkit.formatted_text import HTML
-from prompt_toolkit.layout.processors import (
-    Processor,
-    Transformation,
-    TransformationInput,
-)
 
 from .client import Client
-from .redis_grammar import REDIS_COMMANDS
-from .commands_csv_loader import (
-    group2commands,
-    group2command_res,
-    all_commands,
-    commands_summary,
-)
-from .utils import timer, literal_bytes, split_command_args, command_syntax
 from .style import STYLE
-from .config import config, COMPILING_IN_PROGRESS, COMPILING_DONE, COMPILING_JUST_FINISH
-from .exceptions import InvalidArguments
+from .config import config, COMPILING_DONE
+from .completers import compile_grammar_bg
+from .processors import UserInputCommand, GetCommandProcessor
+from .bottom import BottomToolbar
+from .utils import timer
 
 logger = logging.getLogger(__name__)
 
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
-BLANK_RE = re.compile(r"\s")
 
 
-class FakeDocument:
-    pass
-
-
-class UserInputCommand:
-    """
-    User inputted command in real time.
-
-    ``RedisGrammarCompleter`` update it, and ``BottomToolbar`` read it
-    """
-
-    def __init__(self):
-        # command will always be upper case
-        self.command = None
-
-
-class RedisGrammarCompleter(GrammarCompleter):
-    """
-    This disable Completer on blank characters, blank char will cause
-    performance issues.
-    """
-
-    def get_completions(
-        self, document: Document, complete_event: CompleteEvent
-    ) -> Iterable[Completion]:
-        origin_text = document.text_before_cursor
-        stripped = FakeDocument()
-        stripped.text_before_cursor = origin_text.lstrip()
-        # Do not complete on spaces, too slow
-        if BLANK_RE.match(document.char_before_cursor):
-            return []
-        return super().get_completions(stripped, complete_event)
-
-    def _remove_duplicates(self, items):
-        """
-        Redis grammar guarantee that no completers will be duplicated"""
-        return items
-
-
-class GetCommandProcessor(Processor):
-    """
-    Update Footer display text while user input.
-    """
-
-    def __init__(self, command_holder):
-        self.last_text = None
-        self.command_holder = command_holder
-
-    def apply_transformation(
-        self, transformation_input: TransformationInput
-    ) -> Transformation:
-        input_text = transformation_input.document.text
-        if input_text != self.last_text:
-            logger.debug(f"[Processor] {transformation_input.document}")
-            try:
-                command, _ = split_command_args(input_text, all_commands)
-            except InvalidArguments:
-                logger.debug(f"[Processor] Redis command not recongnised!")
-                self.command_holder.command = None
-            else:
-                logger.debug(f"[Processor] Redis command: {command}")
-                self.command_holder.command = command.upper()
-
-            self.last_text = input_text
-        return Transformation(transformation_input.fragments)
-
-
-def get_lexer(command_groups, redis_grammar):
-    # pygments token
-    # http://pygments.org/docs/tokens/
-    lexers_dict = {
-        "key": SimpleLexer("class:key"),
-        "keys": SimpleLexer("class:key"),
-        "index": SimpleLexer("class:integer"),
-        "password": SimpleLexer("class:password"),
-    }
-    lexers_dict.update({key: SimpleLexer("class:command") for key in command_groups})
-    lexer = GrammarLexer(redis_grammar, lexers=lexers_dict)
-    return lexer
-
-
-def get_completer(group2commands, redis_grammar):
-    completer_mapping = {
-        command_group: WordCompleter(
-            commands + [command.lower() for command in commands], sentence=True
-        )
-        for command_group, commands in group2commands.items()
-    }
-    completer_mapping.update(
-        {"failoverchoice": WordCompleter(["TAKEOVER", "FORCE", "takeover", "force"])}
-    )
-    completer = RedisGrammarCompleter(redis_grammar, completer_mapping)
-    return completer
-
-
-def compile_grammar_bg(session):
-    """
-    compile redis grammar in a thread, and patch session's lexer
-    and completer.
-    """
-
-    def compile_and_patch(session):
-        start_time = time.time()
-        logger.debug("[compile] start compile grammer...")
-        redis_grammar = compile(REDIS_COMMANDS)
-        end_time = time.time()
-        logger.debug(f"[compile] Compile finished! Cost: {end_time - start_time}")
-
-        # get lexer
-        lexer = get_lexer(group2commands.keys(), redis_grammar)
-        # get completer
-        completer = get_completer(group2commands, redis_grammar)
-
-        session.completer = completer
-        session.lexer = lexer
-        logger.debug("[compile] Patch finished!")
-
-        config.compiling = COMPILING_JUST_FINISH
-        time.sleep(1)
-        config.compiling = COMPILING_DONE
-
-    compiling_thread = threading.Thread(target=compile_and_patch, args=(session,))
-    compiling_thread.start()
+def print_help_msg(command):
+    with click.Context(command) as ctx:
+        click.echo(command.get_help(ctx))
 
 
 def write_result(text):
@@ -187,47 +42,7 @@ def write_result(text):
         print_formatted_text()
 
 
-class BottomToolbar:
-    CHAR = "⣾⣷⣯⣟⡿⢿⣻⣽"
-
-    def __init__(self, command_holder):
-        self.index = 0
-        # BottomToolbar can only read this variable
-        self.command_holder = command_holder
-
-    def get_animation_char(self):
-        animation = self.CHAR[self.index]
-
-        self.index += 1
-        if self.index == len(self.CHAR):
-            self.index = 0
-        return animation
-
-    def render(self):
-        if config.compiling == COMPILING_IN_PROGRESS:
-            anim = self.get_animation_char()
-            loading_text = (
-                "class:bottom-toolbar.off",
-                f"Loading Redis commands {anim}",
-            )
-            return [loading_text]
-        elif config.compiling == COMPILING_JUST_FINISH:
-            loading_text = (
-                "class:bottom-toolbar.loaded",
-                f"Redis commands loaded! Auto Completer activated!",
-            )
-            return [loading_text]
-        else:
-            # add command help if valide
-            if self.command_holder.command:
-                command_info = commands_summary[self.command_holder.command]
-                hint = command_syntax(self.command_holder.command, command_info)
-                return hint
-        return "Report bugs: https://github.com/laixintao/iredis/issues"
-
-
 def repl(client, session, start_time):
-    is_raw = config.raw
     command_holder = UserInputCommand()
     timer(f"First REPL command enter, time cost: {time.time() - start_time}")
     while True:
@@ -271,11 +86,6 @@ def repl(client, session, start_time):
         # Fine with answer
         else:
             write_result(answer)
-
-
-def print_help_msg(command):
-    with click.Context(command) as ctx:
-        click.echo(command.get_help(ctx))
 
 
 RAW_HELP = """

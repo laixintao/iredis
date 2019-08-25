@@ -41,8 +41,11 @@ class Client:
             )
         else:
             self.connection = Connection(
-                host=self.host, port=self.port, db=self.db,
-                password=password, decode_responses=False
+                host=self.host,
+                port=self.port,
+                db=self.db,
+                password=password,
+                decode_responses=False,
             )
         # all command upper case
         self.answer_callbacks = command2callback
