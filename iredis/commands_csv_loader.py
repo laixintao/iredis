@@ -47,7 +47,7 @@ def load_command():
         lower_commands = [command.lower() for command in commands]
         commands += lower_commands
         # Space in command cam be mutiple spaces
-        re_commands = [command.replace(" ", "\s+") for command in commands]
+        re_commands = [command.replace(" ", r"\s+") for command in commands]
         group2command_res[syntax] = "|".join(re_commands)
 
     return group2commands, group2command_res, command2callback
@@ -57,6 +57,6 @@ timer("[Loader] Start loading commands file...")
 group2commands, group2command_res, command2callback = load_command()
 # all redis command strings, in UPPER case
 # NOTE: Must sort by length, to match longest command first
-all_commands = sorted(command2callback.keys(), key=lambda x:len(x), reverse=True)
+all_commands = sorted(command2callback.keys(), key=lambda x: len(x), reverse=True)
 commands_summary = load_command_summary()
 timer("[Loader] Finished loading commands.")
