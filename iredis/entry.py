@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import re
 import sys
 import logging
 import time
@@ -45,6 +46,7 @@ from .exceptions import InvalidArguments
 logger = logging.getLogger(__name__)
 
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
+BLANK_RE = re.compile(r"\s")
 
 
 class FakeDocument:
@@ -76,9 +78,14 @@ class RedisGrammarCompleter(GrammarCompleter):
         stripped = FakeDocument()
         stripped.text_before_cursor = origin_text.lstrip()
         # Do not complete on spaces, too slow
-        if not origin_text.strip():
+        if BLANK_RE.match(document.char_before_cursor):
             return []
         return super().get_completions(stripped, complete_event)
+
+    def _remove_duplicates(self, items):
+        """
+        Redis grammar guarantee that no completers will be duplicated"""
+        return items
 
 
 class GetCommandProcessor(Processor):
@@ -160,7 +167,7 @@ def compile_grammar_bg(session):
         logger.debug("[compile] Patch finished!")
 
         config.compiling = COMPILING_JUST_FINISH
-        time.sleep(2)
+        time.sleep(1)
         config.compiling = COMPILING_DONE
 
     compiling_thread = threading.Thread(target=compile_and_patch, args=(session,))
@@ -332,8 +339,13 @@ def main():
     if not ctx:  # called help
         return
     # redis client
-    client = Client(ctx.params["h"], ctx.params["p"], ctx.params["n"],
-                    ctx.params["password"], config.decode)
+    client = Client(
+        ctx.params["h"],
+        ctx.params["p"],
+        ctx.params["n"],
+        ctx.params["password"],
+        config.decode,
+    )
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():
             logger.debug(f"[Command stdin] {line}")
