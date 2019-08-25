@@ -5,7 +5,7 @@ override_style = Style([("bottom-toolbar", "noreverse")])
 style = REDIS_TOKEN = {
     "key": "#33aa33",
     "pattern": "bold #33aa33",
-    "string": "#E6DB74",
+    "string": "#FD971F",
     "command": "bold #008000",
     "integer": "#AE81FF",
     "const": "#AE81FF",
@@ -40,8 +40,9 @@ STYLE_DICT = {
     "integer": "#ff0000",
     "trailing-input": "bg:#ff0000 #000000",
     "password": "hidden",
-    "success": "bg:#222222 #00ff5f bold",
-    "error": "bg:#222222 #ff005f bold",
+    "success": "#00ff5f bold",
+    "error": "#ff005f bold",
+    "type": "#888",
     # colors below copied from mycli project, ~~love~~
     # bottom-toolbar
     "bottom-toolbar": "bg:#222222 #aaaaaa",
