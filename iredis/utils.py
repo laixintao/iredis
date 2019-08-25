@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 _last_timer = time.time()
 _timer_counter = 0
+sperator = re.compile(r"\s")
 logger.debug(f"[timer] start on {_last_timer}")
 
 
@@ -51,7 +52,6 @@ def _strip_quote_args(s):
 
     :return: args list.
     """
-    sperator = re.compile(r"\s")
     word = []
     in_quote = None
     pre_back_slash = False
@@ -60,7 +60,7 @@ def _strip_quote_args(s):
             # close quote
             if char == in_quote:
                 if not pre_back_slash:
-                    yield from _valide_token(word)
+                    yield "".join(word)
                     word = []
                     in_quote = None
                 else:
@@ -73,10 +73,8 @@ def _strip_quote_args(s):
             # sperator
             if sperator.match(char):
                 if word:
-                    yield from _valide_token(word)
+                    yield "".join(word)
                     word = []
-                else:
-                    word.append(char)
             # open quotes
             elif char in ["'", '"']:
                 in_quote = char
@@ -88,10 +86,10 @@ def _strip_quote_args(s):
             pre_back_slash = False
 
     if word:
-        yield from _valide_token(word)
+        yield "".join(word)
     # quote not close
     if in_quote:
-        raise InvalidArguments()
+        raise InvalidArguments("Invalid argument(s)")
 
 
 def split_command_args(command, all_commands):
