@@ -1,4 +1,5 @@
 [flake8]
 ignore = D203,W503
-exclude = .git,__pycache__,build,dist
+exclude = .git,__pycache__,build,dist,venv
 max-complexity = 14
+max-line-length = 120

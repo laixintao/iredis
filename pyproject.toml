@@ -34,6 +34,7 @@ pytest = "^5"
 requests = "^2"
 lxml = "^4"
 pexpect = "^4.7"
+flake8 = "^3.7"
 
 [tool.poetry.scripts]
 iredis = 'iredis.entry:main'
