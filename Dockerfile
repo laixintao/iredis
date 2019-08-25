@@ -16,4 +16,4 @@ RUN python3 -m venv iredis_env && \
     rm -rf ~/.cache
 
 
-CMD ["sh","-c","redis-server --daemonize yes && . iredis_env/bin/activate && iredis"]
+CMD ["sh","-c","redis-server --daemonize yes && echo 'run docker run -it your-image-id iredis_env/bin/iredis'"]
