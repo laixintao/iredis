@@ -4,9 +4,8 @@ IRedis client.
 import logging
 
 from redis.connection import Connection
-from redis.exceptions import ResponseError, TimeoutError, ConnectionError
+from redis.exceptions import TimeoutError, ConnectionError
 
-from .exceptions import InvalidArguments
 from . import renders
 from .commands_csv_loader import all_commands, command2callback
 from .utils import nativestr, split_command_args
