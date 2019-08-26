@@ -9,7 +9,6 @@ style = REDIS_TOKEN = {
     "command": "bold #008000",
     "integer": "#AE81FF",
     "const": "#AE81FF",
-    "type": "#A6E22E",
     "time": "#aa22ff",
     "double": "#bb6688",
 }
