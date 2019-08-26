@@ -9,7 +9,6 @@ style = REDIS_TOKEN = {
     "command": "bold #008000",
     "integer": "#AE81FF",
     "const": "#AE81FF",
-    "type": "#A6E22E",
     "time": "#aa22ff",
     "double": "#bb6688",
 }
@@ -37,7 +36,7 @@ STYLE_DICT = {
     "": "",
     # Prompt.
     "hostname": "",
-    "integer": "#ff0000",
+    "index": "#ff0000",
     "trailing-input": "bg:#ff0000 #000000",
     "password": "hidden",
     "success": "#00ff5f bold",
