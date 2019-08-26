@@ -37,7 +37,7 @@ STYLE_DICT = {
     "": "",
     # Prompt.
     "hostname": "",
-    "integer": "#ff0000",
+    "index": "#ff0000",
     "trailing-input": "bg:#ff0000 #000000",
     "password": "hidden",
     "success": "#00ff5f bold",
