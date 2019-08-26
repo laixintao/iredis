@@ -10,12 +10,6 @@ A Terminal Client for Redis with AutoCompletion and Syntax Highlighting. It is a
 
 ![](./docs/assets/auto-complete.png)
 
-## Try Now on Google Cloud Run
-
-[![Run on Google Cloud](https://storage.googleapis.com/cloudrun/button.svg)](https://console.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_image=gcr.io/cloudrun/button&cloudshell_git_repo=https://github.com/laixintao/iredis.git)
-
-*Google Cloud Run Hint: You can try iredis on Google Clour Run. Note GCR will try to deploy this image to cloud run, but we actually don't need to deploy, it's just a cli tool, so you just run `docker run -it you-built-image` after deply fails.*
-
 **This project is under development, any comments are welcome.**
 
 ## Features
