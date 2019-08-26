@@ -53,6 +53,8 @@ PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
 MILLISECOND = fr"(?P<millisecond>{NUM})"
 TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
 ANY = r"(?P<any>.*)"
+EXPIRATION = fr"(?P<expiration>(EX|PX|ex|px)\s+{NUM})"
+CONDITION = r"(?P<condition>(NX|XX|nx|xx))"
 
 
 REDIS_COMMANDS = fr"""
@@ -94,5 +96,8 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {TIMESTAMPMS}                \s*)|
 (\s*  (?P<command_key_newkey>({t['command_key_newkey']}))
                                                        \s+ {KEY}     \s+ {NEWKEY}                     \s*)|
-(\s*  (?P<command_pass>({t['command_pass']}))          \s+ {ANY}                                      \s*)
+(\s*  (?P<command_pass>({t['command_pass']}))          \s+ {ANY}                                      \s*)|
+(\s*  (?P<command_key_value_expiration_condition>({t['command_key_value_expiration_condition']}))
+                                                       \s+ {KEY}     \s+ {VALUE}
+                                                       (\s+ {EXPIRATION})?    (\s+ {CONDITION})?      \s*)|
 """
