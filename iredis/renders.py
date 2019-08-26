@@ -101,6 +101,8 @@ def render_ok(text, completer):
     If response is b'OK', render ok with success color.
     else render message with Error color.
     """
+    if text is None:
+        return FormattedText([("class:type", "(nil)")])
     text = _ensure_str(text)
     assert text == "OK"
     return FormattedText([("class:success", text)])
