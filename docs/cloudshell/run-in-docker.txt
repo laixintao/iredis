@@ -1,11 +1,3 @@
-To try iredis in docker, firstly start a redis-server in docker:
+Try redis in docker(which contains a redis-server):
 
-    docker run -d -p 26379:6379 redis
-
-Then build image with latest iredis:
-
-    docker build -t iredis .
-
-Start iredis:
-
-    docker run -it iredis -p 26379
+    docker build -t iredis . &&  docker run -it iredis
