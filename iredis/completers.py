@@ -18,7 +18,7 @@ from .commands_csv_loader import group2commands
 logger = logging.getLogger(__name__)
 
 
-class LRUWrodCompleter(WordCompleter):
+class LatestUsedFirstWordCompleter(WordCompleter):
     """
     Not thread safe.
     """
@@ -76,7 +76,7 @@ def get_completer(group2commands, redis_grammar):
         )
         for command_group, commands in group2commands.items()
     }
-    keys_completer = LRUWrodCompleter(config.completer_max, [])
+    keys_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     completer_mapping.update(
         {
             "failoverchoice": WordCompleter(["TAKEOVER", "FORCE", "takeover", "force"]),

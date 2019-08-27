@@ -132,7 +132,7 @@ class Client:
         Only works when compile-grammar thread is done.
         """
         if not completer:
-            logger.warn("[Pre patch completer] Complter not ready, not patched...")
+            logger.warning("[Pre patch completer] Complter not ready, not patched...")
             return
         redis_grammar = completer.compiled_grammar
         m = redis_grammar.match(command)
