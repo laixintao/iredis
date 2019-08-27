@@ -8,7 +8,7 @@ from redis.exceptions import TimeoutError, ConnectionError
 
 from . import renders
 from .commands_csv_loader import all_commands, command2callback
-from .utils import nativestr, split_command_args
+from .utils import nativestr, split_command_args, _strip_quote_args
 from .renders import render_error
 
 logger = logging.getLogger(__name__)
@@ -115,9 +115,36 @@ class Client:
         """
         try:
             input_command, args = split_command_args(command, all_commands)
+            self.patch_completers(command, completer)
             redis_resp = self.execute_command(completer, input_command, *args)
         except Exception as e:
             logger.exception(e)
             return render_error(str(e))
 
         return redis_resp
+
+    def patch_completers(self, command, completer):
+        """
+        Before execute command, patch completers first.
+        Eg: When user run `GET foo`, key completer need to
+          touch foo.
+
+        Only works when compile-grammar thread is done.
+        """
+        if not completer:
+            logger.warn("[Pre patch completer] Complter not ready, not patched...")
+            return
+        redis_grammar = completer.compiled_grammar
+        m = redis_grammar.match(command)
+        variables = m.variables()
+        # parse keys
+        keys_token = variables.getall("keys")
+        if keys_token:
+            for key in _strip_quote_args(keys_token):
+                completer.completers['key'].touch(key)
+        key_token = variables.getall("key")
+        if key_token:
+            # NOTE variables.getall always be a list
+            for single_key in _strip_quote_args(key_token):
+                completer.completers['key'].touch(single_key)
+        logger.debug(f"[Complter key] Done: {completer.completers['key'].words}")
