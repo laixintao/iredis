@@ -18,6 +18,10 @@ from .commands_csv_loader import group2commands
 logger = logging.getLogger(__name__)
 
 
+class LRUWrodCompleter(WordCompleter):
+    pass
+
+
 class FakeDocument:
     pass
 
