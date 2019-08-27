@@ -18,6 +18,35 @@ from .commands_csv_loader import group2commands
 logger = logging.getLogger(__name__)
 
 
+class LatestUsedFirstWordCompleter(WordCompleter):
+    """
+    Not thread safe.
+    """
+
+    def __init__(self, max_words, words, *args, **kwargs):
+        self.words = words
+        self.max_words = max_words
+        super().__init__(words, *args, **kwargs)
+
+    def touch(self, word):
+        """
+        Make sure word is in the first place of the completer
+        list.
+        """
+        logger.info(f"[LRU]: {self.words} ++ {word}")
+        if word in self.words:
+            self.words.remove(word)
+        else:  # not in words
+            if len(self.words) == self.max_words:  # full
+                self.words.pop()
+        self.words.insert(0, word)
+        logger.info(f"[LRU] Done: {self.words}")
+
+    def touch_words(self, words):
+        for word in words:
+            self.touch(word)
+
+
 class FakeDocument:
     pass
 
@@ -47,8 +76,13 @@ def get_completer(group2commands, redis_grammar):
         )
         for command_group, commands in group2commands.items()
     }
+    keys_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     completer_mapping.update(
-        {"failoverchoice": WordCompleter(["TAKEOVER", "FORCE", "takeover", "force"])}
+        {
+            "failoverchoice": WordCompleter(["TAKEOVER", "FORCE", "takeover", "force"]),
+            "keys": keys_completer,
+            "key": keys_completer,  # key and keys are the same
+        }
     )
     completer = RedisGrammarCompleter(redis_grammar, completer_mapping)
     return completer

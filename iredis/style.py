@@ -11,6 +11,7 @@ style = REDIS_TOKEN = {
     "const": "#AE81FF",
     "time": "#aa22ff",
     "double": "#bb6688",
+    "nil": "#808080",
 }
 
 GROUP = {

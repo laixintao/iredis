@@ -5,12 +5,12 @@ This module will be auto loaded to callbacks.
 func(redis-response, completers: GrammarCompleter) -> formatted result(str)
 """
 import logging
-from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.formatted_text import FormattedText
 
 from .config import config
 
 logger = logging.getLogger(__name__)
+NIL = FormattedText([("class:type", "(nil)")])
 
 
 def _literal_bytes(b):
@@ -56,6 +56,9 @@ def _ensure_str(origin, decode=None):
     Ensure is string, for display and completion.
 
     Then add double quotes
+
+    Note: this method do not handle nil, make sure check (nil)
+          out of this method.
     """
     if isinstance(origin, str):
         return origin
@@ -68,6 +71,8 @@ def _ensure_str(origin, decode=None):
 
 
 def render_simple_strings(value, completers=None):
+    if value is None:
+        return NIL
     return _double_quotes(_ensure_str(value))
 
 
@@ -102,7 +107,7 @@ def render_ok(text, completer):
     else render message with Error color.
     """
     if text is None:
-        return FormattedText([("class:type", "(nil)")])
+        return NIL
     text = _ensure_str(text)
     assert text == "OK"
     return FormattedText([("class:success", text)])
@@ -113,8 +118,8 @@ def command_keys(items, completer):
 
     # update completers
     if completer:
-        completer.completers["key"] = WordCompleter(str_items[: config.completer_max])
-        completer.completers["keys"] = WordCompleter(str_items[: config.completer_max])
+        key_completer = completer.completers["key"]
+        key_completer.touch_words(str_items)
         logger.debug(f"[Completer] key completer updated.")
     else:
         logger.debug(f"[Completer] completer is None, not updated.")
