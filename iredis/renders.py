@@ -5,7 +5,6 @@ This module will be auto loaded to callbacks.
 func(redis-response, completers: GrammarCompleter) -> formatted result(str)
 """
 import logging
-from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.formatted_text import FormattedText
 
 from .config import config

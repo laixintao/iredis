@@ -33,12 +33,14 @@ class LRUWrodCompleter(WordCompleter):
         Make sure word is in the first place of the completer
         list.
         """
+        logger.info(f"[LRU]: {self.words} ++ {word}")
         if word in self.words:
             self.words.remove(word)
         else:  # not in words
             if len(self.words) == self.max_words:  # full
                 self.words.pop()
         self.words.insert(0, word)
+        logger.info(f"[LRU] Done: {self.words}")
 
     def touch_words(self, words):
         for word in words:
