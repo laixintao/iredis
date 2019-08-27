@@ -136,6 +136,9 @@ class Client:
             return
         redis_grammar = completer.compiled_grammar
         m = redis_grammar.match(command)
+        if not m:
+            # invalide command!
+            return
         variables = m.variables()
         # parse keys
         keys_token = variables.getall("keys")
