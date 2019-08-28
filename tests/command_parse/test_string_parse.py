@@ -50,3 +50,14 @@ def test_set(judge_command):
             "condition": "XX",
         },
     )
+
+
+def test_append(judge_command):
+    judge_command(
+        "append foo bar", {"command_key_value": "append", "key": "foo", "value": "bar"}
+    )
+    judge_command(
+        "APPEND foo 'bar'",
+        {"command_key_value": "APPEND", "key": "foo", "value": "'bar'"},
+    )
+    judge_command("APPEND foo", None)
