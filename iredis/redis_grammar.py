@@ -68,7 +68,6 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_slot_count>({t['command_slot_count']}))
                                                        \s+ {SLOT}    \s+ {COUNT}        \s*)|
 (\s*  (?P<command>({t['command']}))                                                                   \s*)|
-(\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
 (\s*  (?P<command_ip_port>({t['command_ip_port']}))    \s+ {IP}      \s+ {PORT}                       \s*)|
 (\s*  (?P<command_epoch>({t['command_epoch']}))        \s+ {EPOCH}                                    \s*)|
 (\s*  (?P<command_slot_slotsubcmd_nodex>({t['command_slot_slotsubcmd_nodex']}))
@@ -83,6 +82,8 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {INDEX}   \s+ {INDEX}                      \s*)|
 (\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
 (\s*  (?P<command_keys>({t['command_keys']}))          \s+ {KEYS}                                     \s*)|
+(\s*  (?P<command_key_value>({t['command_key_value']}))
+                                                       \s+ {KEY}     \s+ {VALUE}                      \s*)|
 (\s*  (?P<command_key_second>({t['command_key_second']}))
                                                        \s+ {KEY}     \s+ {SECOND}                     \s*)|
 (\s*  (?P<command_key_timestamp>({t['command_key_timestamp']}))
