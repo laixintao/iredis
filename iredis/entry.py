@@ -45,6 +45,8 @@ def write_result(text):
 def repl(client, session, start_time):
     command_holder = UserInputCommand()
     timer(f"First REPL command enter, time cost: {time.time() - start_time}")
+    in_transaction = False  # True is in the transaction stage
+
     while True:
         logger.info("↓↓↓↓" * 10)
         logger.info("REPL waiting for command...")
@@ -55,11 +57,13 @@ def repl(client, session, start_time):
             _interval = None
 
         try:
+            get_rprompt = lambda: '<transaction>' if in_transaction else None
             command = session.prompt(
                 "{hostname}> ".format(hostname=str(client)),
                 bottom_toolbar=BottomToolbar(command_holder).render,
                 refresh_interval=_interval,
                 input_processors=[GetCommandProcessor(command_holder)],
+                rprompt=get_rprompt,
             )
 
         except KeyboardInterrupt:
@@ -74,6 +78,12 @@ def repl(client, session, start_time):
         # blank input
         if not command:
             continue
+
+        if len(command.split(' ')) == 1 and command.upper() == 'MULTI':
+            in_transaction = True
+        elif len(command.split(' ')) == 1 and (command.upper() == 'EXEC' or
+                                               command.upper() == 'DISCARD'):
+            in_transaction = False
 
         try:
             answer = client.send_command(command, session.completer)
@@ -112,6 +122,12 @@ def gather_args(ctx, h, p, n, password, raw, cmd, decode):
     IRedis: Interactive Redis
 
     When no command is given, redis-cli starts in interactive mode.
+
+    \b
+    Examples:
+      - iredis
+      - iredis -h 127.0.0.1 -p 6379
+      - iredis -h 127.0.0.1 -p 6379 -a <password>
 
     Type "help" in interactive mode for information on available commands
     and settings.
@@ -168,7 +184,7 @@ def main():
     if ctx.params["cmd"]:  # no interactive mode
         answer = client.send_command(" ".join(ctx.params["cmd"]), None)
         write_result(answer)
-        logger.warn("[OVER] command executed, exit...")
+        logger.warning("[OVER] command executed, exit...")
         return
 
     # Create history file if not exists.
