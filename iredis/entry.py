@@ -42,10 +42,6 @@ def write_result(text):
         print_formatted_text()
 
 
-def get_rprompt():
-    return '<transaction>'
-
-
 def repl(client, session, start_time):
     command_holder = UserInputCommand()
     timer(f"First REPL command enter, time cost: {time.time() - start_time}")
@@ -66,7 +62,7 @@ def repl(client, session, start_time):
                 bottom_toolbar=BottomToolbar(command_holder).render,
                 refresh_interval=_interval,
                 input_processors=[GetCommandProcessor(command_holder)],
-                rprompt=get_rprompt if in_transaction else None,
+                rprompt='<transaction>' if in_transaction else None,
             )
 
         except KeyboardInterrupt:
