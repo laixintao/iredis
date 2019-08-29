@@ -207,7 +207,7 @@ string,DECRBY,command_pass,
 string,GET,command_key,render_simple_strings
 string,GETBIT,command_pass,
 string,GETRANGE,command_pass,
-string,GETSET,command_pass,
+string,GETSET,command_key_value,render_simple_strings
 string,INCR,command_pass,
 string,INCRBY,command_pass,
 string,INCRBYFLOAT,command_pass,
