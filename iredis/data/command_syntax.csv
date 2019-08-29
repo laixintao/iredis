@@ -198,7 +198,7 @@ stream,XREADGROUP,command_pass,
 stream,XREVRANGE,command_pass,
 stream,XTRIM,command_pass,
 string,APPEND,command_key_value,render_int
-string,BITCOUNT,command_pass,
+string,BITCOUNT,command_key_start_end,render_int
 string,BITFIELD,command_pass,
 string,BITOP,command_pass,
 string,BITPOS,command_pass,
