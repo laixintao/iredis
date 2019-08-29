@@ -15,6 +15,7 @@ VALID_TOKEN = r"""(
 VALID_SLOT = r"\d+"  # TODO add range? max value:16384
 VALID_NODE = r"\d+"
 NUM = r"\d+"
+POSITION = r"-?\d+"
 
 SLOT = fr"(?P<slot>{VALID_SLOT})"
 SLOTS = fr"(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"
@@ -55,6 +56,8 @@ TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
 ANY = r"(?P<any>.*)"
 EXPIRATION = fr"(?P<expiration>(EX|PX|ex|px)\s+{NUM})"
 CONDITION = r"(?P<condition>(NX|XX|nx|xx))"
+START = fr"(?P<start>{POSITION})"
+END = fr"(?P<end>{POSITION})"
 
 
 REDIS_COMMANDS = fr"""
@@ -101,4 +104,6 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_value_expiration_condition>({t['command_key_value_expiration_condition']}))
                                                        \s+ {KEY}     \s+ {VALUE}
                                                        (\s+ {EXPIRATION})?    (\s+ {CONDITION})?      \s*)|
+(\s*  (?P<command_key_start_end>({t['command_key_start_end']}))
+                                                       \s+ {KEY}     (\s+ {START} \s+ {END})          \s*)|
 """
