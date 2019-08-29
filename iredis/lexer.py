@@ -13,6 +13,8 @@ def get_lexer(command_groups, redis_grammar):
         "keys": SimpleLexer("class:key"),
         "value": SimpleLexer("class:string"),
         "expiration": SimpleLexer("class:integer"),
+        "start": SimpleLexer("class:integer"),
+        "end": SimpleLexer("class:integer"),
         "condition": SimpleLexer("class:const"),
         "index": SimpleLexer("class:index"),
         "password": SimpleLexer("class:password"),
