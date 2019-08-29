@@ -105,5 +105,5 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {VALUE}
                                                        (\s+ {EXPIRATION})?    (\s+ {CONDITION})?      \s*)|
 (\s*  (?P<command_key_start_end>({t['command_key_start_end']}))
-                                                       \s+ {KEY}     (\s+ {START} \s+ {END})          \s*)|
+                                                       \s+ {KEY}     (\s+ {START} \s+ {END})?         \s*)|
 """
