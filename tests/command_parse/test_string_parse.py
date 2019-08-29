@@ -78,3 +78,9 @@ def test_bitcount(judge_command):
         {"command_key_start_end": "bitcount", "key": "foo", "start": "-2", "end": "-1"},
     )
     judge_command("bitcount foo -2", None)
+
+
+def test_get_set(judge_command):
+    judge_command(
+        "GETSET abc bar", {"command_key_value": "GETSET", "key": "abc", "value": "bar"}
+    )
