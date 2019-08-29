@@ -5,6 +5,8 @@ from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
 def get_lexer(command_groups, redis_grammar):
     """
     Input command render color with lexer mapping below
+
+    This converts token to styles in style.py
     """
     # pygments token
     # http://pygments.org/docs/tokens/

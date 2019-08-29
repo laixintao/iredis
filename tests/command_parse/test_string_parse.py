@@ -61,3 +61,20 @@ def test_append(judge_command):
         {"command_key_value": "APPEND", "key": "foo", "value": "'bar'"},
     )
     judge_command("APPEND foo", None)
+
+
+def test_bitcount(judge_command):
+    judge_command("bitcount foo", {"command_key_start_end": "bitcount", "key": "foo"})
+    judge_command(
+        "bitcount foo 1 5",
+        {"command_key_start_end": "bitcount", "key": "foo", "start": "1", "end": "5"},
+    )
+    judge_command(
+        "bitcount foo 1 -5",
+        {"command_key_start_end": "bitcount", "key": "foo", "start": "1", "end": "-5"},
+    )
+    judge_command(
+        "bitcount foo -2 -1",
+        {"command_key_start_end": "bitcount", "key": "foo", "start": "-2", "end": "-1"},
+    )
+    judge_command("bitcount foo -2", None)
