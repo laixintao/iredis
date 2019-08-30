@@ -104,13 +104,20 @@ class Client:
         response = connection.read_response()
         logger.info(f"[Redis-Server] Response: {response}")
         command_upper = command_name.upper()
-        if (
+        # if in transaction, use queue render first
+        if config.transaction:
+            callback = renders.render_transaction_queue
+            rendered = callback(response, completer)
+        # else, use defined callback
+        elif (
             command_upper in self.answer_callbacks
             and self.answer_callbacks[command_upper]
         ):
             callback_name = self.answer_callbacks[command_upper]
             callback = self.callbacks[callback_name]
             rendered = callback(response, completer)
+        # FIXME
+        # not implemented command, use no transaction
         else:
             rendered = response
         logger.info(f"[rendered] {rendered}")
