@@ -82,9 +82,16 @@ class Client:
             select_result = self.execute_command(completer, "SELECT", self.db)
             if nativestr(select_result) != "OK":
                 raise ConnectionError("Invalid Database")
-        if command_name.upper() == "SELECT":
-            logger.debug("[Pre hook] Command is SELECT, change self.db.")
+        elif command_name.upper() == "SELECT":
+            logger.debug("[After hook] Command is SELECT, change self.db.")
             self.db = int(args[0])
+        # TRANSATION state chage
+        elif command_name.upper() == "MULTI":
+            logger.debug("[After hook] Command is MULTI, start transaction.")
+            config.transaction = True
+        elif command_name.upper() in ["EXEC", "DISCARD"]:
+            logger.debug(f"[After hook] Command is {command_name}, unset transaction.")
+            config.transaction = False
 
         return resp
 
@@ -120,10 +127,6 @@ class Client:
             self.patch_completers(command, completer)
             redis_resp = self.execute_command(completer, input_command, *args)
         except Exception as e:
-            # When the transaction has an error, the callback method throws an
-            # exception before it is executed.
-            if input_command.startswith('exec'):
-                config.transaction = False
             logger.exception(e)
             return render_error(str(e))
 
@@ -150,10 +153,10 @@ class Client:
         keys_token = variables.getall("keys")
         if keys_token:
             for key in _strip_quote_args(keys_token):
-                completer.completers['key'].touch(key)
+                completer.completers["key"].touch(key)
         key_token = variables.getall("key")
         if key_token:
             # NOTE variables.getall always be a list
             for single_key in _strip_quote_args(key_token):
-                completer.completers['key'].touch(single_key)
+                completer.completers["key"].touch(single_key)
         logger.debug(f"[Complter key] Done: {completer.completers['key'].words}")
