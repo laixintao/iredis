@@ -202,8 +202,8 @@ string,BITCOUNT,command_key_start_end,render_int
 string,BITFIELD,command_pass,
 string,BITOP,command_pass,
 string,BITPOS,command_pass,
-string,DECR,command_pass,
-string,DECRBY,command_pass,
+string,DECR,command_key,render_int
+string,DECRBY,command_key_delta,render_int
 string,GET,command_key,render_simple_strings
 string,GETBIT,command_pass,
 string,GETRANGE,command_pass,

@@ -104,3 +104,21 @@ def test_incr_by(judge_command):
     judge_command(
         "INCRBY foo -21", {"command_key_delta": "INCRBY", "key": "foo", "delta": "-21"}
     )
+def test_decr(judge_command):
+    judge_command("DECR foo", {"command_key": "DECR", "key": "foo"})
+    judge_command("DECR", None)
+    judge_command("DECR foo 1", None)
+
+
+def test_decr_by(judge_command):
+    judge_command("DECRBY foo", None)
+    judge_command("DECRBY", None)
+    judge_command(
+        "DECRBY foo 1", {"command_key_delta": "DECRBY", "key": "foo", "delta": "1"}
+    )
+    judge_command(
+        "DECRBY foo 200", {"command_key_delta": "DECRBY", "key": "foo", "delta": "200"}
+    )
+    judge_command(
+        "DECRBY foo -21", {"command_key_delta": "DECRBY", "key": "foo", "delta": "-21"}
+    )
