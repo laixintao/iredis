@@ -124,3 +124,28 @@ def test_decr_by(judge_command):
     judge_command(
         "DECRBY foo -21", {"command_key_delta": "DECRBY", "key": "foo", "delta": "-21"}
     )
+
+
+def test_command_set_range(judge_command):
+    judge_command(
+        "SETRANGE foo 10 bar",
+        {
+            "command_key_offset_value": "SETRANGE",
+            "key": "foo",
+            "offset": "10",
+            "value": "bar",
+        },
+    )
+    judge_command(
+        "SETRANGE foo bar",
+        None,
+    )
+    judge_command(
+        "SETRANGE Redis 10 'hello world'",
+        {
+            "command_key_offset_value": "SETRANGE",
+            "key": "Redis",
+            "offset": "10",
+            "value": "'hello world'",
+        },
+    )
