@@ -77,7 +77,7 @@ def render_simple_strings(value, completers=None):
 
 
 def render_int(value, completers=None):
-    return value
+    return FormattedText([("class:type", "(integer) "), ("", str(value))])
 
 
 def render_list(byte_items, str_items, style=None):
