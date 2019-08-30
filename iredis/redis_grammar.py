@@ -59,6 +59,7 @@ CONDITION = r"(?P<condition>(NX|XX|nx|xx))"
 START = fr"(?P<start>{NNUM})"
 END = fr"(?P<end>{NNUM})"
 DELTA = fr"(?P<delta>{NNUM})"
+OFFSET = fr"(?P<offset>{NUM})"
 
 
 REDIS_COMMANDS = fr"""
@@ -109,4 +110,6 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     (\s+ {START} \s+ {END})?         \s*)|
 (\s*  (?P<command_key_delta>({t['command_key_delta']}))
                                                        \s+ {KEY}     \s+ {DELTA}                      \s*)|
+(\s*  (?P<command_key_offset_value>({t['command_key_offset_value']}))
+                                                       \s+ {KEY}     \s+ {OFFSET} \s+ {VALUE}         \s*)|
 """

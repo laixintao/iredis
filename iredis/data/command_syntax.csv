@@ -219,7 +219,7 @@ string,SET,command_key_value_expiration_condition,render_ok
 string,SETBIT,command_pass,
 string,SETEX,command_pass,
 string,SETNX,command_pass,
-string,SETRANGE,command_pass,
+string,SETRANGE,command_key_offset_value,render_int
 string,STRLEN,command_key,render_int
 transactions,DISCARD,command_pass,
 transactions,EXEC,command_pass,
