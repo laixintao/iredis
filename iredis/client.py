@@ -62,6 +62,13 @@ class Client:
     def execute_command_and_read_response(self, completer, command_name, *args, **options):
         "Execute a command and return a parsed response"
         # === pre hook ===
+        # TRANSATION state chage
+        if command_name.upper() == "MULTI":
+            logger.debug("[After hook] Command is MULTI, start transaction.")
+            config.transaction = True
+        elif command_name.upper() in ["EXEC", "DISCARD"]:
+            logger.debug(f"[After hook] Command is {command_name}, unset transaction.")
+            config.transaction = False
 
         try:
             self.connection.send_command(command_name, *args)
@@ -70,7 +77,6 @@ class Client:
             )
         # retry on timeout
         except (ConnectionError, TimeoutError) as e:
-            config.transaction = False
             self.connection.disconnect()
             if not (self.connection.retry_on_timeout and isinstance(e, TimeoutError)):
                 raise
@@ -79,9 +85,6 @@ class Client:
                 self.connection, completer, command_name, **options
             )
         except redis.exceptions.ExecAbortError:
-            config.transaction = False
-            raise
-        except Exception:
             config.transaction = False
             raise
 
@@ -94,13 +97,6 @@ class Client:
         elif command_name.upper() == "SELECT":
             logger.debug("[After hook] Command is SELECT, change self.db.")
             self.db = int(args[0])
-        # TRANSATION state chage
-        elif command_name.upper() == "MULTI":
-            logger.debug("[After hook] Command is MULTI, start transaction.")
-            config.transaction = True
-        elif command_name.upper() in ["EXEC", "DISCARD"]:
-            logger.debug(f"[After hook] Command is {command_name}, unset transaction.")
-            config.transaction = False
 
         return resp
 
