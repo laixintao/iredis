@@ -36,6 +36,7 @@ STYLE_DICT = {
     # User input (default text).
     "": "",
     # Prompt.
+    "rprompt": "bg:#ff0066 #ffffff",
     "hostname": "",
     "index": "#ff0000",
     "trailing-input": "bg:#ff0000 #000000",
