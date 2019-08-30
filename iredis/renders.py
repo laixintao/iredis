@@ -113,6 +113,29 @@ def render_ok(text, completer):
     return FormattedText([("class:success", text)])
 
 
+def render_multi_ok(text, completer):
+    if text is None:
+        return NIL
+    text = _ensure_str(text)
+    config.transaction = True
+    assert text == "OK"
+    return FormattedText([("class:success", text)])
+
+
+def render_discard_ok(text, completer):
+    if text is None:
+        return NIL
+    text = _ensure_str(text)
+    config.transaction = False
+    assert text == "OK"
+    return FormattedText([("class:success", text)])
+
+
+def render_exec_ok(items, completer):
+    config.transaction = False
+    return items
+
+
 def command_keys(items, completer):
     str_items = _ensure_str(items)
 
