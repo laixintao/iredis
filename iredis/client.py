@@ -59,7 +59,7 @@ class Client:
             return f"{self.host}:{self.port}[{self.db}]"
         return f"{self.host}:{self.port}"
 
-    def execute_command(self, completer, command_name, *args, **options):
+    def execute_command_and_read_response(self, completer, command_name, *args, **options):
         "Execute a command and return a parsed response"
         # === pre hook ===
 
@@ -80,10 +80,11 @@ class Client:
         except redis.exceptions.ExecAbortError:
             config.transaction = False
             raise
+
         # === After hook ===
         # SELECT db on AUTH
         if command_name.upper() == "AUTH" and self.db:
-            select_result = self.execute_command(completer, "SELECT", self.db)
+            select_result = self.execute_command_and_read_response(completer, "SELECT", self.db)
             if nativestr(select_result) != "OK":
                 raise ConnectionError("Invalid Database")
         elif command_name.upper() == "SELECT":
@@ -149,7 +150,7 @@ class Client:
         try:
             input_command, args = split_command_args(command, all_commands)
             self.patch_completers(command, completer)
-            redis_resp = self.execute_command(completer, input_command, *args)
+            redis_resp = self.execute_command_and_read_response(completer, input_command, *args)
         except Exception as e:
             logger.exception(e)
             return render_error(str(e))
