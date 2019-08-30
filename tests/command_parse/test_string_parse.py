@@ -84,3 +84,23 @@ def test_get_set(judge_command):
     judge_command(
         "GETSET abc bar", {"command_key_value": "GETSET", "key": "abc", "value": "bar"}
     )
+
+
+def test_incr(judge_command):
+    judge_command("INCR foo", {"command_key": "INCR", "key": "foo"})
+    judge_command("INCR", None)
+    judge_command("INCR foo 1", None)
+
+
+def test_incr_by(judge_command):
+    judge_command("INCRBY foo", None)
+    judge_command("INCRBY", None)
+    judge_command(
+        "INCRBY foo 1", {"command_key_delta": "INCRBY", "key": "foo", "delta": "1"}
+    )
+    judge_command(
+        "INCRBY foo 200", {"command_key_delta": "INCRBY", "key": "foo", "delta": "200"}
+    )
+    judge_command(
+        "INCRBY foo -21", {"command_key_delta": "INCRBY", "key": "foo", "delta": "-21"}
+    )
