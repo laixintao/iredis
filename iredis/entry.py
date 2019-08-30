@@ -45,7 +45,6 @@ def write_result(text):
 def repl(client, session, start_time):
     command_holder = UserInputCommand()
     timer(f"First REPL command enter, time cost: {time.time() - start_time}")
-    in_transaction = False  # True is in the transaction stage
 
     while True:
         logger.info("↓↓↓↓" * 10)
@@ -62,7 +61,7 @@ def repl(client, session, start_time):
                 bottom_toolbar=BottomToolbar(command_holder).render,
                 refresh_interval=_interval,
                 input_processors=[GetCommandProcessor(command_holder)],
-                rprompt='<transaction>' if in_transaction else None,
+                rprompt=lambda: '<transaction>' if config.transaction else None,
             )
 
         except KeyboardInterrupt:
@@ -77,12 +76,6 @@ def repl(client, session, start_time):
         # blank input
         if not command:
             continue
-
-        if len(command.split(' ')) == 1 and command.upper() == 'MULTI':
-            in_transaction = True
-        elif len(command.split(' ')) == 1 and (command.upper() == 'EXEC' or
-                                               command.upper() == 'DISCARD'):
-            in_transaction = False
 
         try:
             answer = client.send_command(command, session.completer)
@@ -105,6 +98,8 @@ when STDOUT is not a tty.
 DECODE_HELP = (
     "decode response, defult is No decode, which will output all bytes literals."
 )
+
+
 # command line entry here...
 @click.command()
 @click.pass_context
