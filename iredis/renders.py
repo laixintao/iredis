@@ -132,7 +132,6 @@ def render_discard_ok(text, completer):
 
 
 def render_exec_ok(items, completer):
-    print('render exec ok')
     config.transaction = False
     return items
 
