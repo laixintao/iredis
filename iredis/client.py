@@ -7,6 +7,7 @@ from redis.connection import Connection
 from redis.exceptions import TimeoutError, ConnectionError
 
 from . import renders
+from .config import config
 from .commands_csv_loader import all_commands, command2callback
 from .utils import nativestr, split_command_args, _strip_quote_args
 from .renders import render_error
@@ -113,11 +114,16 @@ class Client:
             based on redis response. eg: update key completer after ``keys``
             command
         """
+        input_command = ""
         try:
             input_command, args = split_command_args(command, all_commands)
             self.patch_completers(command, completer)
             redis_resp = self.execute_command(completer, input_command, *args)
         except Exception as e:
+            # When the transaction has an error, the callback method throws an
+            # exception before it is executed.
+            if input_command.startswith('exec'):
+                config.transaction = False
             logger.exception(e)
             return render_error(str(e))
 
