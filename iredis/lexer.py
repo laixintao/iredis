@@ -17,6 +17,7 @@ def get_lexer(command_groups, redis_grammar):
         "expiration": SimpleLexer("class:integer"),
         "start": SimpleLexer("class:integer"),
         "end": SimpleLexer("class:integer"),
+        "delta": SimpleLexer("class:integer"),
         "condition": SimpleLexer("class:const"),
         "index": SimpleLexer("class:index"),
         "password": SimpleLexer("class:password"),
