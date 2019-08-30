@@ -3,6 +3,7 @@ IRedis client.
 """
 import logging
 
+import redis
 from redis.connection import Connection
 from redis.exceptions import TimeoutError, ConnectionError
 
@@ -76,6 +77,9 @@ class Client:
             resp = self.parse_response(
                 self.connection, completer, command_name, **options
             )
+        except redis.exceptions.ExecAbortError:
+            config.transaction = False
+            raise
         # === After hook ===
         # SELECT db on AUTH
         if command_name.upper() == "AUTH" and self.db:
