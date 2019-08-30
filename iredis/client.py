@@ -70,6 +70,7 @@ class Client:
             )
         # retry on timeout
         except (ConnectionError, TimeoutError) as e:
+            config.transaction = False
             self.connection.disconnect()
             if not (self.connection.retry_on_timeout and isinstance(e, TimeoutError)):
                 raise
@@ -78,6 +79,9 @@ class Client:
                 self.connection, completer, command_name, **options
             )
         except redis.exceptions.ExecAbortError:
+            config.transaction = False
+            raise
+        except Exception:
             config.transaction = False
             raise
 
