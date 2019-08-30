@@ -221,8 +221,8 @@ string,SETEX,command_pass,
 string,SETNX,command_pass,
 string,SETRANGE,command_pass,
 string,STRLEN,command_pass,
-transactions,DISCARD,command_pass,render_discard_ok
-transactions,EXEC,command_pass,render_exec_ok
-transactions,MULTI,command_pass,render_multi_ok
+transactions,DISCARD,command_pass,render_ok
+transactions,EXEC,command_pass,
+transactions,MULTI,command_pass,render_ok
 transactions,UNWATCH,command_pass,
 transactions,WATCH,command_pass,
