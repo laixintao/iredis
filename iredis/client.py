@@ -99,17 +99,17 @@ class Client:
 
         return resp
 
-    def parse_response(self, connection, completer, command_name, **options):
-        "Parses a response from the Redis server"
-        response = connection.read_response()
-        logger.info(f"[Redis-Server] Response: {response}")
+    def render_command_result(self, command_name, response, completer):
+        """
+        Render command result using callback
+
+        :param command_name: command name, (will be converted
+            to UPPER case;
+        :param completer: completers to be patched;
+        """
         command_upper = command_name.upper()
-        # if in transaction, use queue render first
-        if config.transaction:
-            callback = renders.render_transaction_queue
-            rendered = callback(response, completer)
         # else, use defined callback
-        elif (
+        if (
             command_upper in self.answer_callbacks
             and self.answer_callbacks[command_upper]
         ):
@@ -118,9 +118,22 @@ class Client:
             rendered = callback(response, completer)
         # FIXME
         # not implemented command, use no transaction
+        # this `else` should be deleted finally
         else:
             rendered = response
         logger.info(f"[rendered] {rendered}")
+        return rendered
+
+    def parse_response(self, connection, completer, command_name, **options):
+        "Parses a response from the Redis server"
+        response = connection.read_response()
+        logger.info(f"[Redis-Server] Response: {response}")
+        # if in transaction, use queue render first
+        if config.transaction:
+            callback = renders.render_transaction_queue
+            rendered = callback(response, completer)
+        else:
+            rendered = self.render_command_result(command_name, response, completer)
         return rendered
 
     def send_command(self, command, completer):
@@ -167,7 +180,7 @@ class Client:
                 completer.completers["key"].touch(key)
         key_token = variables.getall("key")
         if key_token:
-            # NOTE variables.getall always be a list
+            # NOTE variables.getall will always be a list
             for single_key in _strip_quote_args(key_token):
                 completer.completers["key"].touch(single_key)
         logger.debug(f"[Complter key] Done: {completer.completers['key'].words}")
