@@ -42,6 +42,7 @@ STYLE_DICT = {
     "trailing-input": "bg:#ff0000 #000000",
     "password": "hidden",
     "success": "#00ff5f bold",
+    "queued": "#32CD32 bold",
     "error": "#ff005f bold",
     "type": "#888",
     # colors below copied from mycli project, ~~love~~

@@ -3,6 +3,7 @@ IRedis client.
 """
 import logging
 
+import redis
 from redis.connection import Connection
 from redis.exceptions import TimeoutError, ConnectionError
 
@@ -58,9 +59,16 @@ class Client:
             return f"{self.host}:{self.port}[{self.db}]"
         return f"{self.host}:{self.port}"
 
-    def execute_command(self, completer, command_name, *args, **options):
+    def execute_command_and_read_response(self, completer, command_name, *args, **options):
         "Execute a command and return a parsed response"
         # === pre hook ===
+        # TRANSATION state chage
+        if command_name.upper() == "MULTI":
+            logger.debug("[After hook] Command is MULTI, start transaction.")
+            config.transaction = True
+        elif command_name.upper() in ["EXEC", "DISCARD"]:
+            logger.debug(f"[After hook] Command is {command_name}, unset transaction.")
+            config.transaction = False
 
         try:
             self.connection.send_command(command_name, *args)
@@ -76,23 +84,32 @@ class Client:
             resp = self.parse_response(
                 self.connection, completer, command_name, **options
             )
+        except redis.exceptions.ExecAbortError:
+            config.transaction = False
+            raise
+
         # === After hook ===
         # SELECT db on AUTH
         if command_name.upper() == "AUTH" and self.db:
-            select_result = self.execute_command(completer, "SELECT", self.db)
+            select_result = self.execute_command_and_read_response(completer, "SELECT", self.db)
             if nativestr(select_result) != "OK":
                 raise ConnectionError("Invalid Database")
-        if command_name.upper() == "SELECT":
-            logger.debug("[Pre hook] Command is SELECT, change self.db.")
+        elif command_name.upper() == "SELECT":
+            logger.debug("[After hook] Command is SELECT, change self.db.")
             self.db = int(args[0])
 
         return resp
 
-    def parse_response(self, connection, completer, command_name, **options):
-        "Parses a response from the Redis server"
-        response = connection.read_response()
-        logger.info(f"[Redis-Server] Response: {response}")
+    def render_command_result(self, command_name, response, completer):
+        """
+        Render command result using callback
+
+        :param command_name: command name, (will be converted
+            to UPPER case;
+        :param completer: completers to be patched;
+        """
         command_upper = command_name.upper()
+        # else, use defined callback
         if (
             command_upper in self.answer_callbacks
             and self.answer_callbacks[command_upper]
@@ -100,9 +117,24 @@ class Client:
             callback_name = self.answer_callbacks[command_upper]
             callback = self.callbacks[callback_name]
             rendered = callback(response, completer)
+        # FIXME
+        # not implemented command, use no transaction
+        # this `else` should be deleted finally
         else:
             rendered = response
         logger.info(f"[rendered] {rendered}")
+        return rendered
+
+    def parse_response(self, connection, completer, command_name, **options):
+        "Parses a response from the Redis server"
+        response = connection.read_response()
+        logger.info(f"[Redis-Server] Response: {response}")
+        # if in transaction, use queue render first
+        if config.transaction:
+            callback = renders.render_transaction_queue
+            rendered = callback(response, completer)
+        else:
+            rendered = self.render_command_result(command_name, response, completer)
         return rendered
 
     def send_command(self, command, completer):
@@ -118,12 +150,8 @@ class Client:
         try:
             input_command, args = split_command_args(command, all_commands)
             self.patch_completers(command, completer)
-            redis_resp = self.execute_command(completer, input_command, *args)
+            redis_resp = self.execute_command_and_read_response(completer, input_command, *args)
         except Exception as e:
-            # When the transaction has an error, the callback method throws an
-            # exception before it is executed.
-            if input_command.startswith('exec'):
-                config.transaction = False
             logger.exception(e)
             return render_error(str(e))
 
@@ -150,10 +178,10 @@ class Client:
         keys_token = variables.getall("keys")
         if keys_token:
             for key in _strip_quote_args(keys_token):
-                completer.completers['key'].touch(key)
+                completer.completers["key"].touch(key)
         key_token = variables.getall("key")
         if key_token:
-            # NOTE variables.getall always be a list
+            # NOTE variables.getall will always be a list
             for single_key in _strip_quote_args(key_token):
-                completer.completers['key'].touch(single_key)
+                completer.completers["key"].touch(single_key)
         logger.debug(f"[Complter key] Done: {completer.completers['key'].words}")

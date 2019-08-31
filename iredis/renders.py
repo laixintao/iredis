@@ -113,27 +113,15 @@ def render_ok(text, completer):
     return FormattedText([("class:success", text)])
 
 
-def render_multi_ok(text, completer):
-    if text is None:
-        return NIL
+def render_transaction_queue(text, completer):
+    """
+    Used when client session is in a transaction.
+
+    Response message should be "QUEUE" or Error.
+    """
     text = _ensure_str(text)
-    config.transaction = True
-    assert text == "OK"
-    return FormattedText([("class:success", text)])
-
-
-def render_discard_ok(text, completer):
-    if text is None:
-        return NIL
-    text = _ensure_str(text)
-    config.transaction = False
-    assert text == "OK"
-    return FormattedText([("class:success", text)])
-
-
-def render_exec_ok(items, completer):
-    config.transaction = False
-    return items
+    assert text == "QUEUED"
+    return FormattedText([("class:queued", text)])
 
 
 def command_keys(items, completer):
