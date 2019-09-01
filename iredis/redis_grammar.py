@@ -112,4 +112,6 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {DELTA}                      \s*)|
 (\s*  (?P<command_key_offset_value>({t['command_key_offset_value']}))
                                                        \s+ {KEY}     \s+ {OFFSET} \s+ {VALUE}         \s*)|
+(\s*  (?P<command_key_second_value>({t['command_key_second_value']}))
+                                                       \s+ {KEY}     \s+ {SECOND} \s+ {VALUE}         \s*)|
 """
