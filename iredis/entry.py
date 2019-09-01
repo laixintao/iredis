@@ -45,6 +45,7 @@ def write_result(text):
 def repl(client, session, start_time):
     command_holder = UserInputCommand()
     timer(f"First REPL command enter, time cost: {time.time() - start_time}")
+
     while True:
         logger.info("↓↓↓↓" * 10)
         logger.info("REPL waiting for command...")
@@ -60,6 +61,7 @@ def repl(client, session, start_time):
                 bottom_toolbar=BottomToolbar(command_holder).render,
                 refresh_interval=_interval,
                 input_processors=[GetCommandProcessor(command_holder)],
+                rprompt=lambda: '<transaction>' if config.transaction else None,
             )
 
         except KeyboardInterrupt:
@@ -96,6 +98,8 @@ when STDOUT is not a tty.
 DECODE_HELP = (
     "decode response, defult is No decode, which will output all bytes literals."
 )
+
+
 # command line entry here...
 @click.command()
 @click.pass_context
@@ -112,6 +116,12 @@ def gather_args(ctx, h, p, n, password, raw, cmd, decode):
     IRedis: Interactive Redis
 
     When no command is given, redis-cli starts in interactive mode.
+
+    \b
+    Examples:
+      - iredis
+      - iredis -h 127.0.0.1 -p 6379
+      - iredis -h 127.0.0.1 -p 6379 -a <password>
 
     Type "help" in interactive mode for information on available commands
     and settings.
@@ -168,7 +178,7 @@ def main():
     if ctx.params["cmd"]:  # no interactive mode
         answer = client.send_command(" ".join(ctx.params["cmd"]), None)
         write_result(answer)
-        logger.warn("[OVER] command executed, exit...")
+        logger.warning("[OVER] command executed, exit...")
         return
 
     # Create history file if not exists.

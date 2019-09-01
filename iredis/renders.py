@@ -113,6 +113,17 @@ def render_ok(text, completer):
     return FormattedText([("class:success", text)])
 
 
+def render_transaction_queue(text, completer):
+    """
+    Used when client session is in a transaction.
+
+    Response message should be "QUEUE" or Error.
+    """
+    text = _ensure_str(text)
+    assert text == "QUEUED"
+    return FormattedText([("class:queued", text)])
+
+
 def command_keys(items, completer):
     str_items = _ensure_str(items)
 

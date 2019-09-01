@@ -21,6 +21,16 @@ class Config:
         self.decode = None
         self.compiling = COMPILING_IN_PROGRESS  # is loading redis commands?
         self.completer_max = 300
+        self.transaction = False
+        # for transaction render
+        self.queued_commands = []
+
+    def __setter__(self, name, value):
+        # for every time start a transaction
+        # clear the queued commands first
+        if name == "transaction" and value is True:
+            self.queued_commands = []
+        super().__setattr__(name, value)
 
 
 config = Config()
