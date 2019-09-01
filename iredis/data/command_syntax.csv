@@ -220,7 +220,7 @@ string,SETBIT,command_pass,
 string,SETEX,command_pass,
 string,SETNX,command_pass,
 string,SETRANGE,command_pass,
-string,STRLEN,command_pass,
+string,STRLEN,command_key,render_int
 transactions,DISCARD,command_pass,render_ok
 transactions,EXEC,command_pass,
 transactions,MULTI,command_pass,render_ok
