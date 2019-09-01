@@ -136,16 +136,35 @@ def test_command_set_range(judge_command):
             "value": "bar",
         },
     )
-    judge_command(
-        "SETRANGE foo bar",
-        None,
-    )
+    judge_command("SETRANGE foo bar", None)
     judge_command(
         "SETRANGE Redis 10 'hello world'",
         {
             "command_key_offset_value": "SETRANGE",
             "key": "Redis",
             "offset": "10",
+            "value": "'hello world'",
+        },
+    )
+
+
+def test_command_set_ex(judge_command):
+    judge_command(
+        "SETEX key 10 value",
+        {
+            "command_key_second_value": "SETEX",
+            "key": "key",
+            "second": "10",
+            "value": "value",
+        },
+    )
+    judge_command("SETEX foo 10", None)
+    judge_command(
+        "setex Redis 10 'hello world'",
+        {
+            "command_key_second_value": "setex",
+            "key": "Redis",
+            "second": "10",
             "value": "'hello world'",
         },
     )
