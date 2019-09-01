@@ -217,7 +217,7 @@ string,MSETNX,command_pass,
 string,PSETEX,command_pass,
 string,SET,command_key_value_expiration_condition,render_ok
 string,SETBIT,command_pass,
-string,SETEX,command_pass,
+string,SETEX,command_key_second_value,render_simple_strings
 string,SETNX,command_pass,
 string,SETRANGE,command_key_offset_value,render_int
 string,STRLEN,command_key,render_int
