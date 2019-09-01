@@ -37,14 +37,11 @@ class GetCommandProcessor(Processor):
     ) -> Transformation:
         input_text = transformation_input.document.text
         if input_text != self.last_text:
-            logger.debug(f"[Processor] {transformation_input.document}")
             try:
                 command, _ = split_command_args(input_text, all_commands)
             except InvalidArguments:
-                logger.debug(f"[Processor] Redis command not recongnised!")
                 self.command_holder.command = None
             else:
-                logger.debug(f"[Processor] Redis command: {command}")
                 self.command_holder.command = command.upper()
 
             self.last_text = input_text
