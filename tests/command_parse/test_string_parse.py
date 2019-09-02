@@ -64,20 +64,37 @@ def test_append(judge_command):
 
 
 def test_bitcount(judge_command):
-    judge_command("bitcount foo", {"command_key_start_end": "bitcount", "key": "foo"})
+    judge_command("bitcount foo", {"command_key_start_end_x": "bitcount", "key": "foo"})
     judge_command(
         "bitcount foo 1 5",
-        {"command_key_start_end": "bitcount", "key": "foo", "start": "1", "end": "5"},
+        {"command_key_start_end_x": "bitcount", "key": "foo", "start": "1", "end": "5"},
     )
     judge_command(
         "bitcount foo 1 -5",
-        {"command_key_start_end": "bitcount", "key": "foo", "start": "1", "end": "-5"},
+        {"command_key_start_end_x": "bitcount", "key": "foo", "start": "1", "end": "-5"},
     )
     judge_command(
         "bitcount foo -2 -1",
-        {"command_key_start_end": "bitcount", "key": "foo", "start": "-2", "end": "-1"},
+        {"command_key_start_end_x": "bitcount", "key": "foo", "start": "-2", "end": "-1"},
     )
     judge_command("bitcount foo -2", None)
+
+
+def test_getrange(judge_command):
+    judge_command("getrange foo", None)
+    judge_command(
+        "getrange foo 1 5",
+        {"command_key_start_end": "getrange", "key": "foo", "start": "1", "end": "5"},
+    )
+    judge_command(
+        "getrange foo 1 -5",
+        {"command_key_start_end": "getrange", "key": "foo", "start": "1", "end": "-5"},
+    )
+    judge_command(
+        "getrange foo -2 -1",
+        {"command_key_start_end": "getrange", "key": "foo", "start": "-2", "end": "-1"},
+    )
+    judge_command("getrange foo -2", None)
 
 
 def test_get_set(judge_command):
