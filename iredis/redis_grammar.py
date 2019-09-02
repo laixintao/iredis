@@ -129,4 +129,7 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {MILLISECOND}   \s+ {VALUE}  \s*)|
 (\s*  (?P<command_operation_key_keys>({t['command_operation_key_keys']}))
                                                        \s+ {OPERATION}     \s+ {KEY} \s+ {KEYS}       \s*)|
+(\s*  (?P<command_key_bit_start_end>({t['command_key_bit_start_end']}))
+                                                       \s+ {KEY}              \s+ {BIT}
+                                                       (\s+ {START})?         (\s+ {END})?            \s*)|
 """

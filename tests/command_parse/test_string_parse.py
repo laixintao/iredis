@@ -268,3 +268,29 @@ def test_bitop(judge_command):
         },
     )
     judge_command("BITOP AND dest", None)
+
+
+def test_bitpos(judge_command):
+    judge_command(
+        "BITPOS mykey 1 3 5",
+        {
+            "command_key_bit_start_end": "BITPOS",
+            "key": "mykey",
+            "bit": "1",
+            "start": "3",
+            "end": "5",
+        },
+    )
+    judge_command(
+        "BITPOS mykey 1",
+        {"command_key_bit_start_end": "BITPOS", "key": "mykey", "bit": "1"},
+    )
+    judge_command(
+        "BITPOS mykey 1 3",
+        {
+            "command_key_bit_start_end": "BITPOS",
+            "key": "mykey",
+            "bit": "1",
+            "start": "3",
+        },
+    )
