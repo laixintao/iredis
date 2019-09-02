@@ -223,3 +223,13 @@ def test_command_incrbyfloat(judge_command):
 
 def test_command_mget(judge_command):
     judge_command("mget foo bar", {"command_keys": "mget", "keys": "foo bar"})
+
+
+def test_mset(judge_command):
+    judge_command(
+        "mset foo bar", {"command_key_valuess": "mset", "key": "foo", "value": "bar"}
+    )
+    judge_command(
+        "mset foo bar hello world",
+        {"command_key_valuess": "mset", "key": "hello", "value": "world"},
+    )
