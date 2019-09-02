@@ -205,7 +205,7 @@ string,BITPOS,command_pass,
 string,DECR,command_key,render_int
 string,DECRBY,command_key_delta,render_int
 string,GET,command_key,render_simple_strings
-string,GETBIT,command_pass,
+string,GETBIT,command_key_offset,render_int
 string,GETRANGE,command_pass,
 string,GETSET,command_key_value,render_simple_strings
 string,INCR,command_key,render_int

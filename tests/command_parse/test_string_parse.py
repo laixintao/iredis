@@ -181,3 +181,17 @@ def test_command_setbit(judge_command):
     )
     judge_command("SETBIT foo 10 10", None)
     judge_command("SETBIT foo 10 abc", None)
+
+
+def test_command_getbit(judge_command):
+    judge_command(
+        "GETBIT key 10",
+        {"command_key_offset": "GETBIT", "key": "key", "offset": "10"},
+    )
+    judge_command(
+        "GETBIT foo 0",
+        {"command_key_offset": "GETBIT", "key": "foo", "offset": "10"},
+    )
+    judge_command("GETBIT foo -1", None)
+    judge_command("SETBIT foo abc", None)
+    judge_command("SETBIT foo", None)
