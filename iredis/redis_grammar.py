@@ -122,4 +122,6 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {SECOND} \s+ {VALUE}         \s*)|
 (\s*  (?P<command_key_float>({t['command_key_float']}))
                                                        \s+ {KEY}     \s+ {FLOAT}                      \s*)|
+(\s*  (?P<command_key_valuess>({t['command_key_valuess']}))
+                                                       (\s+ {KEY}     \s+ {VALUE})+                   \s*)|
 """
