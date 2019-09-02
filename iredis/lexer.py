@@ -14,6 +14,7 @@ def get_lexer(command_groups, redis_grammar):
         "key": SimpleLexer("class:key"),
         "keys": SimpleLexer("class:key"),
         "value": SimpleLexer("class:string"),
+        "bit": SimpleLexer("class:bit"),
         "expiration": SimpleLexer("class:integer"),
         "start": SimpleLexer("class:integer"),
         "end": SimpleLexer("class:integer"),
