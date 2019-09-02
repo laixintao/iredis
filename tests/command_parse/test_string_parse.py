@@ -219,3 +219,7 @@ def test_command_incrbyfloat(judge_command):
         "INCRBYFLOAT key -5.0e3",
         {"command_key_float": "INCRBYFLOAT", "key": "key", "float": "-5.0e3"},
     )
+
+
+def test_command_mget(judge_command):
+    judge_command("mget foo bar", {"command_keys": "mget", "keys": "foo bar"})
