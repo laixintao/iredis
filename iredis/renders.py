@@ -77,10 +77,13 @@ def render_simple_strings(value, completers=None):
 
 
 def render_int(value, completers=None):
-    return value
+    return FormattedText([("class:type", "(integer) "), ("", str(value))])
 
 
-def render_list(byte_items, str_items, style=None):
+def _render_list(byte_items, str_items, style=None):
+    """Complute the newline/number-width/lineno,
+    render list to FormattedText
+    """
     if config.raw:
         return b"\n".join(byte_items)
     index_width = len(str(len(str_items)))
@@ -94,6 +97,15 @@ def render_list(byte_items, str_items, style=None):
             text = f" {item}"
         rendered.append((style, text))
     return FormattedText(rendered)
+
+
+def render_list(text, completer):
+    """
+    Render callback for redis Array Reply
+    """
+    str_items = _ensure_str(text)
+    double_quoted = _double_quotes(str_items)
+    return _render_list(text, double_quoted, "class:string")
 
 
 def render_error(error_msg):
@@ -139,5 +151,5 @@ def command_keys(items, completer):
     # render and completer are in same function but code are splitted.
     # Give back to Ceasar what is Ceasar's and to God what is God's.
     double_quoted = _double_quotes(str_items)
-    rendered = render_list(items, double_quoted, "class:key")
+    rendered = _render_list(items, double_quoted, "class:key")
     return rendered

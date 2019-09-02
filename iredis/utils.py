@@ -112,8 +112,7 @@ def split_command_args(command, all_commands):
 
     args = list(_strip_quote_args(input_args))
 
-    logger.debug(f"[Parsed comamnd name] {input_command}")
-    logger.debug(f"[Parsed comamnd args] {args}")
+    logger.debug(f"[Utils split command] Command: {input_command} Args: {args}")
     return input_command, args
 
 
