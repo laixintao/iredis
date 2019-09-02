@@ -212,7 +212,7 @@ string,INCR,command_key,render_int
 string,INCRBY,command_key_delta,render_int
 string,INCRBYFLOAT,command_key_float,render_simple_strings
 string,MGET,command_keys,render_list
-string,MSET,command_pass,
+string,MSET,command_key_valuess,render_ok
 string,MSETNX,command_pass,
 string,PSETEX,command_pass,
 string,SET,command_key_value_expiration_condition,render_ok
