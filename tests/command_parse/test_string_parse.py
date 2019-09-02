@@ -64,20 +64,37 @@ def test_append(judge_command):
 
 
 def test_bitcount(judge_command):
-    judge_command("bitcount foo", {"command_key_start_end": "bitcount", "key": "foo"})
+    judge_command("bitcount foo", {"command_key_start_end_x": "bitcount", "key": "foo"})
     judge_command(
         "bitcount foo 1 5",
-        {"command_key_start_end": "bitcount", "key": "foo", "start": "1", "end": "5"},
+        {"command_key_start_end_x": "bitcount", "key": "foo", "start": "1", "end": "5"},
     )
     judge_command(
         "bitcount foo 1 -5",
-        {"command_key_start_end": "bitcount", "key": "foo", "start": "1", "end": "-5"},
+        {"command_key_start_end_x": "bitcount", "key": "foo", "start": "1", "end": "-5"},
     )
     judge_command(
         "bitcount foo -2 -1",
-        {"command_key_start_end": "bitcount", "key": "foo", "start": "-2", "end": "-1"},
+        {"command_key_start_end_x": "bitcount", "key": "foo", "start": "-2", "end": "-1"},
     )
     judge_command("bitcount foo -2", None)
+
+
+def test_getrange(judge_command):
+    judge_command("getrange foo", None)
+    judge_command(
+        "getrange foo 1 5",
+        {"command_key_start_end": "getrange", "key": "foo", "start": "1", "end": "5"},
+    )
+    judge_command(
+        "getrange foo 1 -5",
+        {"command_key_start_end": "getrange", "key": "foo", "start": "1", "end": "-5"},
+    )
+    judge_command(
+        "getrange foo -2 -1",
+        {"command_key_start_end": "getrange", "key": "foo", "start": "-2", "end": "-1"},
+    )
+    judge_command("getrange foo -2", None)
 
 
 def test_get_set(judge_command):
@@ -223,3 +240,74 @@ def test_command_incrbyfloat(judge_command):
 
 def test_command_mget(judge_command):
     judge_command("mget foo bar", {"command_keys": "mget", "keys": "foo bar"})
+
+
+def test_mset(judge_command):
+    judge_command(
+        "mset foo bar", {"command_key_valuess": "mset", "key": "foo", "value": "bar"}
+    )
+    judge_command(
+        "mset foo bar hello world",
+        {"command_key_valuess": "mset", "key": "hello", "value": "world"},
+    )
+
+
+def test_psetex(judge_command):
+    judge_command(
+        "psetex foo 1000 bar",
+        {
+            "command_key_millisecond_value": "psetex",
+            "key": "foo",
+            "value": "bar",
+            "millisecond": "1000",
+        },
+    )
+    judge_command("psetex foo bar", None)
+
+
+def test_bitop(judge_command):
+    judge_command(
+        "BITOP AND dest key1 key2",
+        {
+            "command_operation_key_keys": "BITOP",
+            "operation": "AND",
+            "key": "dest",
+            "keys": "key1 key2",
+        },
+    )
+    judge_command(
+        "BITOP AND dest key1",
+        {
+            "command_operation_key_keys": "BITOP",
+            "operation": "AND",
+            "key": "dest",
+            "keys": "key1",
+        },
+    )
+    judge_command("BITOP AND dest", None)
+
+
+def test_bitpos(judge_command):
+    judge_command(
+        "BITPOS mykey 1 3 5",
+        {
+            "command_key_bit_start_end": "BITPOS",
+            "key": "mykey",
+            "bit": "1",
+            "start": "3",
+            "end": "5",
+        },
+    )
+    judge_command(
+        "BITPOS mykey 1",
+        {"command_key_bit_start_end": "BITPOS", "key": "mykey", "bit": "1"},
+    )
+    judge_command(
+        "BITPOS mykey 1 3",
+        {
+            "command_key_bit_start_end": "BITPOS",
+            "key": "mykey",
+            "bit": "1",
+            "start": "3",
+        },
+    )

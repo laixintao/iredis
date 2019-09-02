@@ -37,6 +37,7 @@ COUNT = fr"(?P<count>{NUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 BIT = r"(?P<bit>0|1)"
 FLOAT = r"(?P<float>-?(\d|\.|e)+)"
+OPERATION = r"(?P<operation>(AND|OR|XOR|NOT))"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
 IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
@@ -108,8 +109,10 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_value_expiration_condition>({t['command_key_value_expiration_condition']}))
                                                        \s+ {KEY}     \s+ {VALUE}
                                                        (\s+ {EXPIRATION})?    (\s+ {CONDITION})?      \s*)|
-(\s*  (?P<command_key_start_end>({t['command_key_start_end']}))
+(\s*  (?P<command_key_start_end_x>({t['command_key_start_end_x']}))
                                                        \s+ {KEY}     (\s+ {START} \s+ {END})?         \s*)|
+(\s*  (?P<command_key_start_end>({t['command_key_start_end']}))
+                                                       \s+ {KEY}     \s+ {START}  \s+ {END}           \s*)|
 (\s*  (?P<command_key_delta>({t['command_key_delta']}))
                                                        \s+ {KEY}     \s+ {DELTA}                      \s*)|
 (\s*  (?P<command_key_offset_value>({t['command_key_offset_value']}))
@@ -122,4 +125,13 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {SECOND} \s+ {VALUE}         \s*)|
 (\s*  (?P<command_key_float>({t['command_key_float']}))
                                                        \s+ {KEY}     \s+ {FLOAT}                      \s*)|
+(\s*  (?P<command_key_valuess>({t['command_key_valuess']}))
+                                                       (\s+ {KEY}    \s+ {VALUE})+                    \s*)|
+(\s*  (?P<command_key_millisecond_value>({t['command_key_millisecond_value']}))
+                                                       \s+ {KEY}     \s+ {MILLISECOND}   \s+ {VALUE}  \s*)|
+(\s*  (?P<command_operation_key_keys>({t['command_operation_key_keys']}))
+                                                       \s+ {OPERATION}     \s+ {KEY} \s+ {KEYS}       \s*)|
+(\s*  (?P<command_key_bit_start_end>({t['command_key_bit_start_end']}))
+                                                       \s+ {KEY}              \s+ {BIT}
+                                                       (\s+ {START})?         (\s+ {END})?            \s*)|
 """
