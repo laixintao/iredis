@@ -109,8 +109,10 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_value_expiration_condition>({t['command_key_value_expiration_condition']}))
                                                        \s+ {KEY}     \s+ {VALUE}
                                                        (\s+ {EXPIRATION})?    (\s+ {CONDITION})?      \s*)|
-(\s*  (?P<command_key_start_end>({t['command_key_start_end']}))
+(\s*  (?P<command_key_start_end_x>({t['command_key_start_end_x']}))
                                                        \s+ {KEY}     (\s+ {START} \s+ {END})?         \s*)|
+(\s*  (?P<command_key_start_end>({t['command_key_start_end']}))
+                                                       \s+ {KEY}     \s+ {START}  \s+ {END}           \s*)|
 (\s*  (?P<command_key_delta>({t['command_key_delta']}))
                                                        \s+ {KEY}     \s+ {DELTA}                      \s*)|
 (\s*  (?P<command_key_offset_value>({t['command_key_offset_value']}))
