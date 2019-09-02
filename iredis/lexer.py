@@ -17,6 +17,7 @@ def get_lexer(command_groups, redis_grammar):
         "bit": SimpleLexer("class:bit"),
         "expiration": SimpleLexer("class:integer"),
         "start": SimpleLexer("class:integer"),
+        "float": SimpleLexer("class:integer"),
         "end": SimpleLexer("class:integer"),
         "delta": SimpleLexer("class:integer"),
         "offset": SimpleLexer("class:integer"),

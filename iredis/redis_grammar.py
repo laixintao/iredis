@@ -36,6 +36,7 @@ SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
 COUNT = fr"(?P<count>{NUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 BIT = r"(?P<bit>0|1)"
+FLOAT = r"(?P<float>-?(\d|\.|e)+)"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
 IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
@@ -119,4 +120,6 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {OFFSET}                     \s*)|
 (\s*  (?P<command_key_second_value>({t['command_key_second_value']}))
                                                        \s+ {KEY}     \s+ {SECOND} \s+ {VALUE}         \s*)|
+(\s*  (?P<command_key_float>({t['command_key_float']}))
+                                                       \s+ {KEY}     \s+ {FLOAT}                      \s*)|
 """
