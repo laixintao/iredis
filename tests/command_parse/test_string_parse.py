@@ -187,13 +187,35 @@ def test_command_setbit(judge_command):
 
 def test_command_getbit(judge_command):
     judge_command(
-        "GETBIT key 10",
-        {"command_key_offset": "GETBIT", "key": "key", "offset": "10"},
+        "GETBIT key 10", {"command_key_offset": "GETBIT", "key": "key", "offset": "10"}
     )
     judge_command(
-        "GETBIT foo 0",
-        {"command_key_offset": "GETBIT", "key": "foo", "offset": "0"},
+        "GETBIT foo 0", {"command_key_offset": "GETBIT", "key": "foo", "offset": "0"}
     )
     judge_command("GETBIT foo -1", None)
     judge_command("SETBIT foo abc", None)
     judge_command("SETBIT foo", None)
+
+
+def test_command_incrbyfloat(judge_command):
+    judge_command("INCRBYFLOAT key", None)
+    judge_command(
+        "INCRBYFLOAT key 1.1",
+        {"command_key_float": "INCRBYFLOAT", "key": "key", "float": "1.1"},
+    )
+    judge_command(
+        "INCRBYFLOAT key .1",
+        {"command_key_float": "INCRBYFLOAT", "key": "key", "float": ".1"},
+    )
+    judge_command(
+        "INCRBYFLOAT key 1.",
+        {"command_key_float": "INCRBYFLOAT", "key": "key", "float": "1."},
+    )
+    judge_command(
+        "INCRBYFLOAT key 5.0e3",
+        {"command_key_float": "INCRBYFLOAT", "key": "key", "float": "5.0e3"},
+    )
+    judge_command(
+        "INCRBYFLOAT key -5.0e3",
+        {"command_key_float": "INCRBYFLOAT", "key": "key", "float": "-5.0e3"},
+    )

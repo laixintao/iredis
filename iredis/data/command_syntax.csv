@@ -210,7 +210,7 @@ string,GETRANGE,command_key_start_end,render_simple_strings
 string,GETSET,command_key_value,render_simple_strings
 string,INCR,command_key,render_int
 string,INCRBY,command_key_delta,render_int
-string,INCRBYFLOAT,command_pass,
+string,INCRBYFLOAT,command_key_float,render_simple_strings
 string,MGET,command_pass,
 string,MSET,command_pass,
 string,MSETNX,command_pass,
