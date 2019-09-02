@@ -211,7 +211,7 @@ string,GETSET,command_key_value,render_simple_strings
 string,INCR,command_key,render_int
 string,INCRBY,command_key_delta,render_int
 string,INCRBYFLOAT,command_key_float,render_simple_strings
-string,MGET,command_pass,
+string,MGET,command_keys,render_list
 string,MSET,command_pass,
 string,MSETNX,command_pass,
 string,PSETEX,command_pass,
