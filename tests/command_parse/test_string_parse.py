@@ -181,6 +181,8 @@ def test_command_setbit(judge_command):
     )
     judge_command("SETBIT foo 10 10", None)
     judge_command("SETBIT foo 10 abc", None)
+    judge_command("SETBIT foo 10", None)
+    judge_command("SETBIT foo", None)
 
 
 def test_command_getbit(judge_command):
