@@ -168,3 +168,16 @@ def test_command_set_ex(judge_command):
             "value": "'hello world'",
         },
     )
+
+
+def test_command_setbit(judge_command):
+    judge_command(
+        "SETBIT key 10 0",
+        {"command_key_offset_bit": "SETBIT", "key": "key", "offset": "10", "bit": "0"},
+    )
+    judge_command(
+        "SETBIT foo 10 1",
+        {"command_key_offset_bit": "SETBIT", "key": "foo", "offset": "10", "bit": "1"},
+    )
+    judge_command("SETBIT foo 10 10", None)
+    judge_command("SETBIT foo 10 abc", None)
