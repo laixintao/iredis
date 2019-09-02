@@ -16,6 +16,8 @@ def get_lexer(command_groups, redis_grammar):
         "value": SimpleLexer("class:string"),
         "bit": SimpleLexer("class:bit"),
         "expiration": SimpleLexer("class:integer"),
+        "second": SimpleLexer("class:integer"),
+        "millisecond": SimpleLexer("class:integer"),
         "start": SimpleLexer("class:integer"),
         "float": SimpleLexer("class:integer"),
         "end": SimpleLexer("class:integer"),
