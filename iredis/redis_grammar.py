@@ -15,6 +15,7 @@ VALID_TOKEN = r"""(
 VALID_SLOT = r"\d+"  # TODO add range? max value:16384
 VALID_NODE = r"\d+"
 NUM = r"\d+"
+NNUM = r"-?\d+"  # number cloud be negative
 
 SLOT = fr"(?P<slot>{VALID_SLOT})"
 SLOTS = fr"(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"
@@ -34,6 +35,8 @@ SLOTSUBCMD = r"(?P<slotsubcmd>(IMPORTING|MIGRATING|NODE|importing|migrating|node
 SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
 COUNT = fr"(?P<count>{NUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
+BIT = r"(?P<bit>0|1)"
+FLOAT = r"(?P<float>-?(\d|\.|e)+)"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
 IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
@@ -55,6 +58,10 @@ TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
 ANY = r"(?P<any>.*)"
 EXPIRATION = fr"(?P<expiration>(EX|PX|ex|px)\s+{NUM})"
 CONDITION = r"(?P<condition>(NX|XX|nx|xx))"
+START = fr"(?P<start>{NNUM})"
+END = fr"(?P<end>{NNUM})"
+DELTA = fr"(?P<delta>{NNUM})"
+OFFSET = fr"(?P<offset>{NUM})"
 
 
 REDIS_COMMANDS = fr"""
@@ -66,9 +73,8 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_resetchoice>({t['command_resetchoice']}))
                                                        \s+ {RESETCHOICE}                              \s*)|
 (\s*  (?P<command_slot_count>({t['command_slot_count']}))
-                                                       \s+ {SLOT}    \s+ {COUNT}        \s*)|
+                                                       \s+ {SLOT}    \s+ {COUNT}                      \s*)|
 (\s*  (?P<command>({t['command']}))                                                                   \s*)|
-(\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
 (\s*  (?P<command_ip_port>({t['command_ip_port']}))    \s+ {IP}      \s+ {PORT}                       \s*)|
 (\s*  (?P<command_epoch>({t['command_epoch']}))        \s+ {EPOCH}                                    \s*)|
 (\s*  (?P<command_slot_slotsubcmd_nodex>({t['command_slot_slotsubcmd_nodex']}))
@@ -83,6 +89,8 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {INDEX}   \s+ {INDEX}                      \s*)|
 (\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
 (\s*  (?P<command_keys>({t['command_keys']}))          \s+ {KEYS}                                     \s*)|
+(\s*  (?P<command_key_value>({t['command_key_value']}))
+                                                       \s+ {KEY}     \s+ {VALUE}                      \s*)|
 (\s*  (?P<command_key_second>({t['command_key_second']}))
                                                        \s+ {KEY}     \s+ {SECOND}                     \s*)|
 (\s*  (?P<command_key_timestamp>({t['command_key_timestamp']}))
@@ -100,4 +108,18 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_value_expiration_condition>({t['command_key_value_expiration_condition']}))
                                                        \s+ {KEY}     \s+ {VALUE}
                                                        (\s+ {EXPIRATION})?    (\s+ {CONDITION})?      \s*)|
+(\s*  (?P<command_key_start_end>({t['command_key_start_end']}))
+                                                       \s+ {KEY}     (\s+ {START} \s+ {END})?         \s*)|
+(\s*  (?P<command_key_delta>({t['command_key_delta']}))
+                                                       \s+ {KEY}     \s+ {DELTA}                      \s*)|
+(\s*  (?P<command_key_offset_value>({t['command_key_offset_value']}))
+                                                       \s+ {KEY}     \s+ {OFFSET} \s+ {VALUE}         \s*)|
+(\s*  (?P<command_key_offset_bit>({t['command_key_offset_bit']}))
+                                                       \s+ {KEY}     \s+ {OFFSET} \s+ {BIT}           \s*)|
+(\s*  (?P<command_key_offset>({t['command_key_offset']}))
+                                                       \s+ {KEY}     \s+ {OFFSET}                     \s*)|
+(\s*  (?P<command_key_second_value>({t['command_key_second_value']}))
+                                                       \s+ {KEY}     \s+ {SECOND} \s+ {VALUE}         \s*)|
+(\s*  (?P<command_key_float>({t['command_key_float']}))
+                                                       \s+ {KEY}     \s+ {FLOAT}                      \s*)|
 """
