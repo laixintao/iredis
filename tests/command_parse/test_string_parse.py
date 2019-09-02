@@ -233,3 +233,16 @@ def test_mset(judge_command):
         "mset foo bar hello world",
         {"command_key_valuess": "mset", "key": "hello", "value": "world"},
     )
+
+
+def test_psetex(judge_command):
+    judge_command(
+        "psetex foo 1000 bar",
+        {
+            "command_key_millisecond_value": "psetex",
+            "key": "foo",
+            "value": "bar",
+            "millisecond": '1000',
+        },
+    )
+    judge_command("psetex foo bar", None)
