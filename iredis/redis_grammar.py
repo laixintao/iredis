@@ -73,7 +73,7 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_resetchoice>({t['command_resetchoice']}))
                                                        \s+ {RESETCHOICE}                              \s*)|
 (\s*  (?P<command_slot_count>({t['command_slot_count']}))
-                                                       \s+ {SLOT}    \s+ {COUNT}        \s*)|
+                                                       \s+ {SLOT}    \s+ {COUNT}                      \s*)|
 (\s*  (?P<command>({t['command']}))                                                                   \s*)|
 (\s*  (?P<command_ip_port>({t['command_ip_port']}))    \s+ {IP}      \s+ {PORT}                       \s*)|
 (\s*  (?P<command_epoch>({t['command_epoch']}))        \s+ {EPOCH}                                    \s*)|
