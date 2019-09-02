@@ -242,7 +242,29 @@ def test_psetex(judge_command):
             "command_key_millisecond_value": "psetex",
             "key": "foo",
             "value": "bar",
-            "millisecond": '1000',
+            "millisecond": "1000",
         },
     )
     judge_command("psetex foo bar", None)
+
+
+def test_bitop(judge_command):
+    judge_command(
+        "BITOP AND dest key1 key2",
+        {
+            "command_operation_key_keys": "BITOP",
+            "operation": "AND",
+            "key": "dest",
+            "keys": "key1 key2",
+        },
+    )
+    judge_command(
+        "BITOP AND dest key1",
+        {
+            "command_operation_key_keys": "BITOP",
+            "operation": "AND",
+            "key": "dest",
+            "keys": "key1",
+        },
+    )
+    judge_command("BITOP AND dest", None)

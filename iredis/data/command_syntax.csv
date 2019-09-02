@@ -200,7 +200,7 @@ stream,XTRIM,command_pass,
 string,APPEND,command_key_value,render_int
 string,BITCOUNT,command_key_start_end,render_int
 string,BITFIELD,command_pass,
-string,BITOP,command_pass,
+string,BITOP,command_operation_key_keys,render_int
 string,BITPOS,command_pass,
 string,DECR,command_key,render_int
 string,DECRBY,command_key_delta,render_int
