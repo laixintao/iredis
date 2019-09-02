@@ -214,7 +214,7 @@ string,INCRBYFLOAT,command_key_float,render_simple_strings
 string,MGET,command_keys,render_list
 string,MSET,command_key_valuess,render_ok
 string,MSETNX,command_key_valuess,render_int
-string,PSETEX,command_pass,
+string,PSETEX,command_key_millisecond_value,render_simple_strings
 string,SET,command_key_value_expiration_condition,render_ok
 string,SETBIT,command_key_offset_bit,render_int
 string,SETEX,command_key_second_value,render_simple_strings
