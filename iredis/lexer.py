@@ -24,6 +24,7 @@ def get_lexer(command_groups, redis_grammar):
         "delta": SimpleLexer("class:integer"),
         "offset": SimpleLexer("class:integer"),
         "condition": SimpleLexer("class:const"),
+        "operation": SimpleLexer("class:const"),
         "index": SimpleLexer("class:index"),
         "password": SimpleLexer("class:password"),
     }
