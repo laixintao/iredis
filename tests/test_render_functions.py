@@ -53,6 +53,16 @@ def test__render_list_while_config_raw():
     assert b"hello\nworld\nfoo" == out
 
 
+def test_render_list_with_nil_init():
+    from iredis.config import config
+
+    config.raw = False
+    raw = ["hello", None, "world"]
+    out = renders._render_list([item.encode() for item in raw if item], raw)
+    out = strip_formatted_text(out)
+    assert out == "1)hello\n2) (nil)\n3)world"
+
+
 def test_ensure_str_bytes():
     assert renders._ensure_str(b"hello world") == r"hello world"
     assert renders._ensure_str(b"hello'world") == r"hello'world"
