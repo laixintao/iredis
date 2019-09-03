@@ -18,3 +18,12 @@ def test_send_command(_input, command_name, expect_args):
     client.send_command(_input, None)
     args, kwargs = client.execute_command_and_read_response.call_args
     assert args == (None, command_name, *expect_args)
+
+
+def test_patch_completer(completer):
+    client = Client("127.0.0.1", "6379", None)
+    client.patch_completers("MGET foo bar hello world", completer)
+    assert completer.completers["key"].words == ["world", "hello", "bar", "foo"]
+    assert completer.completers["keys"].words == ["world", "hello", "bar", "foo"]
+    client.patch_completers("GET bar", completer)
+    assert completer.completers["keys"].words == ["bar", "world", "hello", "foo"]
