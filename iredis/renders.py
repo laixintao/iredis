@@ -10,7 +10,9 @@ from prompt_toolkit.formatted_text import FormattedText
 from .config import config
 
 logger = logging.getLogger(__name__)
-NIL = FormattedText([("class:type", "(nil)")])
+NIL_TUPLE = ("class:type", "(nil)")
+NEWLINE_TUPLE = ("", "\n")
+NIL = FormattedText([NIL_TUPLE])
 
 
 def _literal_bytes(b):
@@ -85,27 +87,39 @@ def _render_list(byte_items, str_items, style=None):
     render list to FormattedText
     """
     if config.raw:
-        return b"\n".join(byte_items)
+        return b"\n".join(text if text else b"" for text in byte_items)
     index_width = len(str(len(str_items)))
     rendered = []
     for index, item in enumerate(str_items):
         index_const_width = f"{index+1:{index_width}})"
         rendered.append(("", index_const_width))
+        # list item
+        if item is None:
+            rendered.append(("", " "))  # add a space before nil
+            rendered.append(NIL_TUPLE)
+        else:
+            rendered.append((style, item))
+
+        # add a newline for eachline
         if index + 1 < len(str_items):
-            text = f" {item}\n"
-        else:  # last one don't have \n
-            text = f" {item}"
-        rendered.append((style, text))
+            rendered.append(NEWLINE_TUPLE)
     return FormattedText(rendered)
 
 
 def render_list(text, completer):
     """
     Render callback for redis Array Reply
+    Note: Cloud be null in it.
     """
-    str_items = _ensure_str(text)
-    double_quoted = _double_quotes(str_items)
-    return _render_list(text, double_quoted, "class:string")
+    str_items = []
+    for item in text:
+        if item is None:
+            str_items.append(None)
+        else:
+            str_item = _ensure_str(item)
+            double_quoted = _double_quotes(str_item)
+            str_items.append(double_quoted)
+    return _render_list(text, str_items, "class:string")
 
 
 def render_error(error_msg):
