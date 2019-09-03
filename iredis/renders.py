@@ -87,7 +87,7 @@ def _render_list(byte_items, str_items, style=None):
     render list to FormattedText
     """
     if config.raw:
-        return b"\n".join(text if text else "" for text in byte_items)
+        return b"\n".join(text if text else b"" for text in byte_items)
     index_width = len(str(len(str_items)))
     rendered = []
     for index, item in enumerate(str_items):
