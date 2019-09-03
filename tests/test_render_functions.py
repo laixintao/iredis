@@ -5,7 +5,7 @@ def strip_formatted_text(formatted_text):
     return "".join(text[1] for text in formatted_text)
 
 
-def test__render_list_index():
+def test_render_list_index():
     from iredis.config import config
 
     config.raw = False
@@ -18,7 +18,7 @@ def test__render_list_index():
     assert "4)" not in out
 
 
-def test__render_list_index_const_width():
+def test_render_list_index_const_width():
     from iredis.config import config
 
     config.raw = False
@@ -44,13 +44,32 @@ def test__render_list_index_const_width():
     assert "\n10)" in out
 
 
-def test__render_list_while_config_raw():
+def test_render_list_while_config_raw():
     from iredis.config import config
 
     config.raw = True
     raw = ["hello", "world", "foo"]
     out = renders._render_list([item.encode() for item in raw], raw)
     assert b"hello\nworld\nfoo" == out
+
+
+def test_render_list_with_nil_init():
+    from iredis.config import config
+
+    config.raw = False
+    raw = [b"hello", None, b"world"]
+    out = renders.render_list(raw, None)
+    out = strip_formatted_text(out)
+    assert out == '1)"hello"\n2) (nil)\n3)"world"'
+
+
+def test_render_list_with_nil_init_while_config_raw():
+    from iredis.config import config
+
+    config.raw = True
+    raw = [b"hello", None, b"world"]
+    out = renders.render_list(raw, None)
+    assert out == b'hello\n\nworld'
 
 
 def test_ensure_str_bytes():

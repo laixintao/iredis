@@ -3,11 +3,18 @@ import pytest
 import redis
 from iredis.redis_grammar import REDIS_COMMANDS
 from iredis.client import Client
+from iredis.completers import get_completer
+from iredis.commands_csv_loader import group2commands
 from prompt_toolkit.contrib.regular_languages.compiler import compile
 
 
 TIMEOUT = 3
 redis_grammar = compile(REDIS_COMMANDS)
+
+
+@pytest.fixture
+def completer():
+    return get_completer(group2commands, redis_grammar)
 
 
 @pytest.fixture
