@@ -21,10 +21,11 @@ SLOT = fr"(?P<slot>{VALID_SLOT})"
 SLOTS = fr"(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"
 NODE = fr"(?P<node>{VALID_NODE})"
 KEY = fr"(?P<key>{VALID_TOKEN})"
+KEYS = fr"(?P<keys>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
+DESTINATION = fr"(?P<destination>{VALID_TOKEN})"
 NEWKEY = fr"(?P<newkey>{VALID_TOKEN})"
 VALUE = fr"(?P<value>{VALID_TOKEN})"
 FIELDS = fr"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
-KEYS = fr"(?P<keys>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 MEMBER = fr"(?P<member>{VALID_TOKEN})"
 MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 FAILOVERCHOICE = (
@@ -138,4 +139,6 @@ REDIS_COMMANDS = fr"""
                                                        (\s+ {START})?         (\s+ {END})?            \s*)|
 (\s*  (?P<command_key_members>({t['command_key_members']}))
                                                        \s+ {KEY}    \s+ {MEMBERS}                     \s*)|
+(\s*  (?P<command_destination_keys>({t['command_destination_keys']}))
+                                                       \s+ {DESTINATION}    \s+ {KEYS}                \s*)|
 """

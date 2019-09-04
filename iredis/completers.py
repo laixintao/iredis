@@ -83,6 +83,7 @@ def get_completer(group2commands, redis_grammar):
             "failoverchoice": WordCompleter(["TAKEOVER", "FORCE", "takeover", "force"]),
             "keys": key_completer,
             "key": key_completer,  # key and keys are the same
+            "destination": key_completer,
             "member": member_completer,
             "members": member_completer,
         }
