@@ -153,7 +153,7 @@ set,SINTERSTORE,command_destination_keys,render_int
 set,SISMEMBER,command_key_member,render_int
 set,SMEMBERS,command_key,render_list
 set,SMOVE,command_key_newkey_member,render_int
-set,SPOP,command_pass,
+set,SPOP,command_key_count_x,render_list_or_string
 set,SRANDMEMBER,command_pass,
 set,SREM,command_pass,
 set,SSCAN,command_pass,

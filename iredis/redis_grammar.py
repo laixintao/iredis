@@ -145,4 +145,6 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}    \s+ {MEMBER}                      \s*)|
 (\s*  (?P<command_key_newkey_member>({t['command_key_newkey_member']}))
                                                        \s+ {KEY}    \s+ {NEWKEY}   \s+ {MEMBER}       \s*)|
+(\s*  (?P<command_key_count_x>({t['command_key_count_x']}))
+                                                       \s+ {KEY}    (\s+ {COUNT})?                    \s*)|
 """
