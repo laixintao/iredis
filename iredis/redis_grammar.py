@@ -25,6 +25,8 @@ NEWKEY = fr"(?P<newkey>{VALID_TOKEN})"
 VALUE = fr"(?P<value>{VALID_TOKEN})"
 FIELDS = fr"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 KEYS = fr"(?P<keys>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
+MEMBER = fr"(?P<member>{VALID_TOKEN})"
+MEMBERS = fr"(?P<member>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 FAILOVERCHOICE = (
     r"(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
 )  # TODO is lowercase accept by server?
@@ -134,4 +136,6 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_bit_start_end>({t['command_key_bit_start_end']}))
                                                        \s+ {KEY}              \s+ {BIT}
                                                        (\s+ {START})?         (\s+ {END})?            \s*)|
+(\s*  (?P<command_key_members>({t['command_key_members']}))   
+                                                       \s+ {KEY}    \s+ {MEMBERS}                     \s*)|
 """
