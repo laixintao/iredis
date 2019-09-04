@@ -81,9 +81,12 @@ def get_completer(group2commands, redis_grammar):
     completer_mapping.update(
         {
             "failoverchoice": WordCompleter(["TAKEOVER", "FORCE", "takeover", "force"]),
+            # all key related completers share the same completer
             "keys": key_completer,
-            "key": key_completer,  # key and keys are the same
+            "key": key_completer,
             "destination": key_completer,
+            "newkey": key_completer,
+            # member
             "member": member_completer,
             "members": member_completer,
         }
