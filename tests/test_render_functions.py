@@ -1,4 +1,6 @@
+from prompt_toolkit.formatted_text import FormattedText
 from iredis import renders
+from iredis.config import config
 
 
 def strip_formatted_text(formatted_text):
@@ -117,3 +119,20 @@ def test_make_sure_all_callback_functions_exists(iredis_client):
         if callback == "":
             continue
         assert callable(iredis_client.callbacks[callback])
+
+
+def test_render_list_or_string():
+    config.raw = False
+    assert renders.render_list_or_string("") == '""'
+    assert renders.render_list_or_string("foo") == '"foo"'
+    assert renders.render_list_or_string([b"foo", b"bar"]) == FormattedText(
+        [
+            ("", "1)"),
+            ("", " "),
+            ("class:string", '"foo"'),
+            ("", "\n"),
+            ("", "2)"),
+            ("", " "),
+            ("class:string", '"bar"'),
+        ]
+    )
