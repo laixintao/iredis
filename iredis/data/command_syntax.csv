@@ -145,7 +145,7 @@ server,SLOWLOG,command_pass,
 server,SYNC,command_pass,
 server,TIME,command_pass,
 set,SADD,command_pass,
-set,SCARD,command_pass,
+set,SCARD,command_key,render_int
 set,SDIFF,command_pass,
 set,SDIFFSTORE,command_pass,
 set,SINTER,command_pass,
