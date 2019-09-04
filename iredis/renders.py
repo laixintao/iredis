@@ -74,6 +74,8 @@ def _ensure_str(origin, decode=None):
 
 
 def render_simple_strings(value, completers=None):
+    if config.raw:
+        return value
     if value is None:
         return NIL
     return _double_quotes(_ensure_str(value))

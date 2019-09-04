@@ -112,6 +112,11 @@ def test_simple_string_reply():
     assert renders.render_simple_strings(b"'\"") == '''"'\\""'''
 
 
+def test_simple_string_reply_raw():
+    config.raw = True
+    assert renders.render_simple_strings(b"hello") == b"hello"
+
+
 def test_make_sure_all_callback_functions_exists(iredis_client):
     from iredis.commands_csv_loader import command2callback
 
