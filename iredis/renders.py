@@ -125,6 +125,12 @@ def render_list(text, completer):
     return _render_list(text, str_items, "class:string")
 
 
+def render_list_or_string(text, completer):
+    if isinstance(text, list):
+        return render_list(text, completer)
+    return render_simple_strings(text, completer)
+
+
 def render_error(error_msg):
     text = _ensure_str(error_msg)
     return FormattedText([("class:type", "(error) "), ("class:error", text)])

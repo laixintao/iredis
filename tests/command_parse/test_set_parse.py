@@ -46,3 +46,10 @@ def test_smove(judge_command):
     )
     judge_command("SMOVE foo m1", None)
     judge_command("SMOVE foo", None)
+
+
+def test_spop(judge_command):
+    judge_command("SPOP set", {"command_key_count_x": "SPOP", "key": "set"})
+    judge_command(
+        "SPOP set 3", {"command_key_count_x": "SPOP", "key": "set", "count": "3"}
+    )
