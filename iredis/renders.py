@@ -125,7 +125,7 @@ def render_list(text, completer):
     return _render_list(text, str_items, "class:string")
 
 
-def render_list_or_string(text, completer):
+def render_list_or_string(text, completer=None):
     if isinstance(text, list):
         return render_list(text, completer)
     return render_simple_strings(text, completer)
