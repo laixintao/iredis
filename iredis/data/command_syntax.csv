@@ -152,7 +152,7 @@ set,SINTER,command_keys,render_list
 set,SINTERSTORE,command_destination_keys,render_int
 set,SISMEMBER,command_key_member,render_int
 set,SMEMBERS,command_key,render_list
-set,SMOVE,command_pass,
+set,SMOVE,command_key_newkey_member,render_int
 set,SPOP,command_pass,
 set,SRANDMEMBER,command_pass,
 set,SREM,command_pass,
