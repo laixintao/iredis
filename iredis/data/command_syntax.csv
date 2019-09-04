@@ -151,7 +151,7 @@ set,SDIFFSTORE,command_pass,
 set,SINTER,command_pass,
 set,SINTERSTORE,command_pass,
 set,SISMEMBER,command_pass,
-set,SMEMBERS,command_pass,
+set,SMEMBERS,command_key,render_list
 set,SMOVE,command_pass,
 set,SPOP,command_pass,
 set,SRANDMEMBER,command_pass,
