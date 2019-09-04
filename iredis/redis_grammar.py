@@ -26,7 +26,7 @@ VALUE = fr"(?P<value>{VALID_TOKEN})"
 FIELDS = fr"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 KEYS = fr"(?P<keys>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 MEMBER = fr"(?P<member>{VALID_TOKEN})"
-MEMBERS = fr"(?P<member>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
+MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 FAILOVERCHOICE = (
     r"(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
 )  # TODO is lowercase accept by server?
