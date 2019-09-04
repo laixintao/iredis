@@ -13,6 +13,8 @@ def get_lexer(command_groups, redis_grammar):
     lexers_dict = {
         "key": SimpleLexer("class:key"),
         "keys": SimpleLexer("class:key"),
+        "member": SimpleLexer("class:member"),
+        "members": SimpleLexer("class:member"),
         "value": SimpleLexer("class:string"),
         "bit": SimpleLexer("class:bit"),
         "expiration": SimpleLexer("class:integer"),

@@ -6,6 +6,7 @@ style = REDIS_TOKEN = {
     "key": "#33aa33",
     "pattern": "bold #33aa33",
     "string": "#FD971F",
+    "member": "#FD971F",
     "command": "bold #008000",
     "integer": "#AE81FF",
     "start": "#AE81FF",  # TODO auto merge with integer
