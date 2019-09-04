@@ -32,3 +32,17 @@ def test_is_member(judge_command):
         {"command_key_member": "SISMEMBER", "key": "foo", "member": "m1"},
     )
     judge_command("SISMEMBER foo", None)
+
+
+def test_smove(judge_command):
+    judge_command(
+        "SMOVE foo bar m2",
+        {
+            "command_key_newkey_member": "SMOVE",
+            "key": "foo",
+            "newkey": "bar",
+            "member": "m2",
+        },
+    )
+    judge_command("SMOVE foo m1", None)
+    judge_command("SMOVE foo", None)
