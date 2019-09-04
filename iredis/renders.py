@@ -94,8 +94,8 @@ def _render_list(byte_items, str_items, style=None):
         index_const_width = f"{index+1:{index_width}})"
         rendered.append(("", index_const_width))
         # list item
+        rendered.append(("", " "))  # add a space before item
         if item is None:
-            rendered.append(("", " "))  # add a space before nil
             rendered.append(NIL_TUPLE)
         else:
             rendered.append((style, item))
