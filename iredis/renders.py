@@ -10,9 +10,10 @@ from prompt_toolkit.formatted_text import FormattedText
 from .config import config
 
 logger = logging.getLogger(__name__)
-NIL_TUPLE = ("class:type", "(nil)")
 NEWLINE_TUPLE = ("", "\n")
+NIL_TUPLE = ("class:type", "(nil)")
 NIL = FormattedText([NIL_TUPLE])
+EMPTY_LIST = FormattedText([("class:type", "(empty list or set)")])
 
 
 def _literal_bytes(b):
@@ -90,6 +91,8 @@ def _render_list(byte_items, str_items, style=None):
         return b"\n".join(text if text else b"" for text in byte_items)
     index_width = len(str(len(str_items)))
     rendered = []
+    if not str_items:
+        return EMPTY_LIST
     for index, item in enumerate(str_items):
         index_const_width = f"{index+1:{index_width}})"
         rendered.append(("", index_const_width))

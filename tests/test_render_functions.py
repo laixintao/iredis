@@ -69,7 +69,26 @@ def test_render_list_with_nil_init_while_config_raw():
     config.raw = True
     raw = [b"hello", None, b"world"]
     out = renders.render_list(raw, None)
-    assert out == b'hello\n\nworld'
+    assert out == b"hello\n\nworld"
+
+
+def test_render_list_with_empty_list_raw():
+    from iredis.config import config
+
+    config.raw = True
+    raw = []
+    out = renders.render_list(raw, None)
+    assert out == b""
+
+
+def test_render_list_with_empty_list():
+    from iredis.config import config
+
+    config.raw = False
+    raw = []
+    out = renders.render_list(raw, None)
+    out = strip_formatted_text(out)
+    assert out == "(empty list or set)"
 
 
 def test_ensure_str_bytes():
