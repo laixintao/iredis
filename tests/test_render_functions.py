@@ -60,7 +60,7 @@ def test_render_list_with_nil_init():
     raw = [b"hello", None, b"world"]
     out = renders.render_list(raw, None)
     out = strip_formatted_text(out)
-    assert out == '1)"hello"\n2) (nil)\n3)"world"'
+    assert out == '1) "hello"\n2) (nil)\n3) "world"'
 
 
 def test_render_list_with_nil_init_while_config_raw():
