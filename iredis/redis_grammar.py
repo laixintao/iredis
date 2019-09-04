@@ -136,6 +136,6 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_bit_start_end>({t['command_key_bit_start_end']}))
                                                        \s+ {KEY}              \s+ {BIT}
                                                        (\s+ {START})?         (\s+ {END})?            \s*)|
-(\s*  (?P<command_key_members>({t['command_key_members']}))   
+(\s*  (?P<command_key_members>({t['command_key_members']}))
                                                        \s+ {KEY}    \s+ {MEMBERS}                     \s*)|
 """
