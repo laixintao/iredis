@@ -23,3 +23,12 @@ def test_sdiffstore(judge_command):
         {"command_destination_keys": "SDIFFSTORE", "destination": "foo", "keys": "m1"},
     )
     judge_command("SDIFFSTORE foo", None)
+
+
+def test_is_member(judge_command):
+    judge_command("SISMEMBER foo m1 m2 m3", None)
+    judge_command(
+        "SISMEMBER foo m1",
+        {"command_key_member": "SISMEMBER", "key": "foo", "member": "m1"},
+    )
+    judge_command("SISMEMBER foo", None)
