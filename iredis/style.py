@@ -4,6 +4,7 @@ override_style = Style([("bottom-toolbar", "noreverse")])
 
 style = REDIS_TOKEN = {
     "key": "#33aa33",
+    "important-key": "#058B06",
     "pattern": "bold #33aa33",
     "string": "#FD971F",
     "member": "#FD971F",
