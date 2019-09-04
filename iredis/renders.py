@@ -82,6 +82,8 @@ def render_simple_strings(value, completers=None):
 
 
 def render_int(value, completers=None):
+    if config.raw:
+        return str(value).encode()
     return FormattedText([("class:type", "(integer) "), ("", str(value))])
 
 

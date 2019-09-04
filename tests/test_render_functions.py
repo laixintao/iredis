@@ -109,12 +109,25 @@ def test_double_quotes():
 
 
 def test_simple_string_reply():
+    config.raw = False
     assert renders.render_simple_strings(b"'\"") == '''"'\\""'''
 
 
 def test_simple_string_reply_raw():
     config.raw = True
     assert renders.render_simple_strings(b"hello") == b"hello"
+
+
+def test_render_int():
+    config.raw = False
+    assert renders.render_int(12) == FormattedText(
+        [("class:type", "(integer) "), ("", "12")]
+    )
+
+
+def test_render_int_raw():
+    config.raw = True
+    assert renders.render_int(12) == b"12"
 
 
 def test_make_sure_all_callback_functions_exists(iredis_client):
