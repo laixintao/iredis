@@ -1,6 +1,10 @@
 import pexpect
 import pytest
 import redis
+import time
+import threading
+from unittest.mock import MagicMock
+from iredis.entry import compile_grammar_bg
 from iredis.redis_grammar import REDIS_COMMANDS
 from iredis.client import Client
 from iredis.completers import get_completer
@@ -10,6 +14,7 @@ from prompt_toolkit.contrib.regular_languages.compiler import compile
 
 TIMEOUT = 3
 redis_grammar = compile(REDIS_COMMANDS)
+HISTORY_FILE = ".iredis_history"
 
 
 @pytest.fixture
@@ -59,3 +64,13 @@ def local_process():
     child = pexpect.spawn("iredis -n 15", timeout=TIMEOUT)
     yield child
     child.close()
+
+
+def prompt_session():
+    """Global prompt-toolkit session, compiled grammer"""
+    session = MagicMock()
+    normal_thread_count = threading.active_count()
+    compile_grammar_bg(session)
+    while threading.active_count() > normal_thread_count:
+        time.sleep(0.1)
+    return session

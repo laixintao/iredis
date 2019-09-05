@@ -108,10 +108,11 @@ DECODE_HELP = (
 @click.option("-n", help="Database number.", default=None)
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
 @click.option("--raw/--no-raw", default=False, is_flag=True, help=RAW_HELP)
+@click.option("--newbie/--no-newbie", default=False, is_flag=True, help="Show command hints and useful helps.")
 @click.option("--decode", default=None, help=DECODE_HELP)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
-def gather_args(ctx, h, p, n, password, raw, cmd, decode):
+def gather_args(ctx, h, p, n, password, raw, cmd, decode, newbie):
     """
     IRedis: Interactive Redis
 
@@ -139,6 +140,7 @@ def gather_args(ctx, h, p, n, password, raw, cmd, decode):
             config.raw = True
     # set config decode
     config.decode = decode
+    config.newbie_mode = newbie
 
     return ctx
 
