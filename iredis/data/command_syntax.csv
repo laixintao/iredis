@@ -157,8 +157,8 @@ set,SPOP,command_key_count_x,render_list_or_string
 set,SRANDMEMBER,command_key_count_x,render_list_or_string
 set,SREM,command_key_members,render_int
 set,SSCAN,command_pass,
-set,SUNION,command_pass,
-set,SUNIONSTORE,command_pass,
+set,SUNION,command_keys,render_list
+set,SUNIONSTORE,command_destination_keys,render_int
 sorted_set,BZPOPMAX,command_pass,
 sorted_set,BZPOPMIN,command_pass,
 sorted_set,ZADD,command_pass,
