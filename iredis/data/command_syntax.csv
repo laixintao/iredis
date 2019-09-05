@@ -155,7 +155,7 @@ set,SMEMBERS,command_key,render_list
 set,SMOVE,command_key_newkey_member,render_int
 set,SPOP,command_key_count_x,render_list_or_string
 set,SRANDMEMBER,command_key_count_x,render_list_or_string
-set,SREM,command_pass,
+set,SREM,command_key_members,render_int
 set,SSCAN,command_pass,
 set,SUNION,command_pass,
 set,SUNIONSTORE,command_pass,
