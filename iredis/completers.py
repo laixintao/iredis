@@ -76,12 +76,19 @@ def get_completer(group2commands, redis_grammar):
         )
         for command_group, commands in group2commands.items()
     }
-    keys_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+    key_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+    member_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     completer_mapping.update(
         {
             "failoverchoice": WordCompleter(["TAKEOVER", "FORCE", "takeover", "force"]),
-            "keys": keys_completer,
-            "key": keys_completer,  # key and keys are the same
+            # all key related completers share the same completer
+            "keys": key_completer,
+            "key": key_completer,
+            "destination": key_completer,
+            "newkey": key_completer,
+            # member
+            "member": member_completer,
+            "members": member_completer,
         }
     )
     completer = RedisGrammarCompleter(redis_grammar, completer_mapping)

@@ -10,9 +10,10 @@ from prompt_toolkit.formatted_text import FormattedText
 from .config import config
 
 logger = logging.getLogger(__name__)
-NIL_TUPLE = ("class:type", "(nil)")
 NEWLINE_TUPLE = ("", "\n")
+NIL_TUPLE = ("class:type", "(nil)")
 NIL = FormattedText([NIL_TUPLE])
+EMPTY_LIST = FormattedText([("class:type", "(empty list or set)")])
 
 
 def _literal_bytes(b):
@@ -73,12 +74,16 @@ def _ensure_str(origin, decode=None):
 
 
 def render_simple_strings(value, completers=None):
+    if config.raw:
+        return value
     if value is None:
         return NIL
     return _double_quotes(_ensure_str(value))
 
 
 def render_int(value, completers=None):
+    if config.raw:
+        return str(value).encode()
     return FormattedText([("class:type", "(integer) "), ("", str(value))])
 
 
@@ -90,12 +95,14 @@ def _render_list(byte_items, str_items, style=None):
         return b"\n".join(text if text else b"" for text in byte_items)
     index_width = len(str(len(str_items)))
     rendered = []
+    if not str_items:
+        return EMPTY_LIST
     for index, item in enumerate(str_items):
         index_const_width = f"{index+1:{index_width}})"
         rendered.append(("", index_const_width))
         # list item
+        rendered.append(("", " "))  # add a space before item
         if item is None:
-            rendered.append(("", " "))  # add a space before nil
             rendered.append(NIL_TUPLE)
         else:
             rendered.append((style, item))
@@ -120,6 +127,12 @@ def render_list(text, completer):
             double_quoted = _double_quotes(str_item)
             str_items.append(double_quoted)
     return _render_list(text, str_items, "class:string")
+
+
+def render_list_or_string(text, completer=None):
+    if isinstance(text, list):
+        return render_list(text, completer)
+    return render_simple_strings(text, completer)
 
 
 def render_error(error_msg):

@@ -1,4 +1,6 @@
+from prompt_toolkit.formatted_text import FormattedText
 from iredis import renders
+from iredis.config import config
 
 
 def strip_formatted_text(formatted_text):
@@ -60,7 +62,7 @@ def test_render_list_with_nil_init():
     raw = [b"hello", None, b"world"]
     out = renders.render_list(raw, None)
     out = strip_formatted_text(out)
-    assert out == '1)"hello"\n2) (nil)\n3)"world"'
+    assert out == '1) "hello"\n2) (nil)\n3) "world"'
 
 
 def test_render_list_with_nil_init_while_config_raw():
@@ -69,7 +71,26 @@ def test_render_list_with_nil_init_while_config_raw():
     config.raw = True
     raw = [b"hello", None, b"world"]
     out = renders.render_list(raw, None)
-    assert out == b'hello\n\nworld'
+    assert out == b"hello\n\nworld"
+
+
+def test_render_list_with_empty_list_raw():
+    from iredis.config import config
+
+    config.raw = True
+    raw = []
+    out = renders.render_list(raw, None)
+    assert out == b""
+
+
+def test_render_list_with_empty_list():
+    from iredis.config import config
+
+    config.raw = False
+    raw = []
+    out = renders.render_list(raw, None)
+    out = strip_formatted_text(out)
+    assert out == "(empty list or set)"
 
 
 def test_ensure_str_bytes():
@@ -88,7 +109,25 @@ def test_double_quotes():
 
 
 def test_simple_string_reply():
+    config.raw = False
     assert renders.render_simple_strings(b"'\"") == '''"'\\""'''
+
+
+def test_simple_string_reply_raw():
+    config.raw = True
+    assert renders.render_simple_strings(b"hello") == b"hello"
+
+
+def test_render_int():
+    config.raw = False
+    assert renders.render_int(12) == FormattedText(
+        [("class:type", "(integer) "), ("", "12")]
+    )
+
+
+def test_render_int_raw():
+    config.raw = True
+    assert renders.render_int(12) == b"12"
 
 
 def test_make_sure_all_callback_functions_exists(iredis_client):
@@ -98,3 +137,20 @@ def test_make_sure_all_callback_functions_exists(iredis_client):
         if callback == "":
             continue
         assert callable(iredis_client.callbacks[callback])
+
+
+def test_render_list_or_string():
+    config.raw = False
+    assert renders.render_list_or_string("") == '""'
+    assert renders.render_list_or_string("foo") == '"foo"'
+    assert renders.render_list_or_string([b"foo", b"bar"]) == FormattedText(
+        [
+            ("", "1)"),
+            ("", " "),
+            ("class:string", '"foo"'),
+            ("", "\n"),
+            ("", "2)"),
+            ("", " "),
+            ("class:string", '"bar"'),
+        ]
+    )

@@ -21,10 +21,13 @@ SLOT = fr"(?P<slot>{VALID_SLOT})"
 SLOTS = fr"(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"
 NODE = fr"(?P<node>{VALID_NODE})"
 KEY = fr"(?P<key>{VALID_TOKEN})"
+KEYS = fr"(?P<keys>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
+DESTINATION = fr"(?P<destination>{VALID_TOKEN})"
 NEWKEY = fr"(?P<newkey>{VALID_TOKEN})"
 VALUE = fr"(?P<value>{VALID_TOKEN})"
 FIELDS = fr"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
-KEYS = fr"(?P<keys>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
+MEMBER = fr"(?P<member>{VALID_TOKEN})"
+MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 FAILOVERCHOICE = (
     r"(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
 )  # TODO is lowercase accept by server?
@@ -134,4 +137,14 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_bit_start_end>({t['command_key_bit_start_end']}))
                                                        \s+ {KEY}              \s+ {BIT}
                                                        (\s+ {START})?         (\s+ {END})?            \s*)|
+(\s*  (?P<command_key_members>({t['command_key_members']}))
+                                                       \s+ {KEY}    \s+ {MEMBERS}                     \s*)|
+(\s*  (?P<command_destination_keys>({t['command_destination_keys']}))
+                                                       \s+ {DESTINATION}    \s+ {KEYS}                \s*)|
+(\s*  (?P<command_key_member>({t['command_key_member']}))
+                                                       \s+ {KEY}    \s+ {MEMBER}                      \s*)|
+(\s*  (?P<command_key_newkey_member>({t['command_key_newkey_member']}))
+                                                       \s+ {KEY}    \s+ {NEWKEY}   \s+ {MEMBER}       \s*)|
+(\s*  (?P<command_key_count_x>({t['command_key_count_x']}))
+                                                       \s+ {KEY}    (\s+ {COUNT})?                    \s*)|
 """

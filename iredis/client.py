@@ -12,6 +12,7 @@ from .config import config
 from .commands_csv_loader import all_commands, command2callback
 from .utils import nativestr, split_command_args, _strip_quote_args
 from .renders import render_error
+from .completers import LatestUsedFirstWordCompleter
 
 logger = logging.getLogger(__name__)
 
@@ -180,16 +181,17 @@ class Client:
             # invalide command!
             return
         variables = m.variables()
-        # parse keys
-        keys_token = variables.getall("keys")
-        # NOTE variables.getall will always be a list
-        for every_keys_token in keys_token:
-            # patch completers with splitted key token
-            for key in _strip_quote_args(every_keys_token):
-                completer.completers["key"].touch(key)
-        # parse key
-        key_token = variables.getall("key")
-        for every_key_token in key_token:
-            for single_key in _strip_quote_args(key_token):
-                completer.completers["key"].touch(single_key)
-        logger.debug(f"[Complter key] Done: {completer.completers['key'].words}")
+
+        # auto update LatestUsedFirstWordCompleter
+        for _token, _completer in completer.completers.items():
+            if not isinstance(_completer, LatestUsedFirstWordCompleter):
+                continue
+            # getall always returns a []
+            tokens_in_command = variables.getall(_token)
+            for tokens_in_command in tokens_in_command:
+                # prompt_toolkit didn't support multi tokens
+                # like DEL key1 key2 key3
+                # so we have to split them manualy
+                for single_token in _strip_quote_args(tokens_in_command):
+                    _completer.touch(single_token)
+            logger.debug(f"[Complter {_token} updated] Done: {_completer.words}")
