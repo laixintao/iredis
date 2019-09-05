@@ -9,9 +9,7 @@ from iredis.redis_grammar import REDIS_COMMANDS
 from iredis.client import Client
 from iredis.completers import get_completer
 from iredis.commands_csv_loader import group2commands
-from iredis.config import config
 from prompt_toolkit.contrib.regular_languages.compiler import compile
-
 
 
 TIMEOUT = 3
