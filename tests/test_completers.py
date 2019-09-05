@@ -10,8 +10,6 @@ from iredis.entry import compile_grammar_bg
 from .conftest import prompt_session
 
 
-
-
 def test_LUF_completer_touch():
     c = LatestUsedFirstWordCompleter(3, ["one", "two"])
     c.touch("hello")
