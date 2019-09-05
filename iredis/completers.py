@@ -12,7 +12,7 @@ from prompt_toolkit.completion import Completion, CompleteEvent
 from .config import config, COMPILING_DONE, COMPILING_JUST_FINISH
 from .redis_grammar import REDIS_COMMANDS
 from .lexer import get_lexer
-from .commands_csv_loader import group2commands
+from .commands_csv_loader import group2commands, commands_summary
 
 
 logger = logging.getLogger(__name__)
@@ -70,12 +70,19 @@ class RedisGrammarCompleter(GrammarCompleter):
 
 
 def get_completer(group2commands, redis_grammar):
-    completer_mapping = {
-        command_group: WordCompleter(
-            commands + [command.lower() for command in commands], sentence=True
+    completer_mapping = {}
+    # patch command completer with hint
+    command_hint = {key: info["summary"] for key, info in commands_summary.items()}
+    for command_group, commands in group2commands.items():
+        words = commands + [command.lower() for command in commands]
+        if config.newbie_mode:
+            hint = {command: command_hint[command.upper()] for command in words}
+        else:
+            hint = None
+        completer_mapping[command_group] = WordCompleter(
+            words, sentence=True, meta_dict=hint
         )
-        for command_group, commands in group2commands.items()
-    }
+
     key_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     member_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     completer_mapping.update(

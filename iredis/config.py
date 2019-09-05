@@ -24,6 +24,8 @@ class Config:
         self.transaction = False
         # for transaction render
         self.queued_commands = []
+        # show command hint?
+        self.newbie_mode = False
 
     def __setter__(self, name, value):
         # for every time start a transaction
