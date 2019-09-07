@@ -167,8 +167,8 @@ sorted_set,ZCOUNT,command_pass,
 sorted_set,ZINCRBY,command_pass,
 sorted_set,ZINTERSTORE,command_pass,
 sorted_set,ZLEXCOUNT,command_pass,
-sorted_set,ZPOPMAX,command_pass,
-sorted_set,ZPOPMIN,command_pass,
+sorted_set,ZPOPMAX,command_key_count_x,render_list
+sorted_set,ZPOPMIN,command_key_count_x,render_list
 sorted_set,ZRANGE,command_pass,
 sorted_set,ZRANGEBYLEX,command_pass,
 sorted_set,ZRANGEBYSCORE,command_pass,
