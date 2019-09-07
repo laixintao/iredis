@@ -172,7 +172,7 @@ sorted_set,ZPOPMIN,command_key_count_x,render_list
 sorted_set,ZRANGE,command_pass,
 sorted_set,ZRANGEBYLEX,command_pass,
 sorted_set,ZRANGEBYSCORE,command_pass,
-sorted_set,ZRANK,command_pass,
+sorted_set,ZRANK,command_key_member,render_int
 sorted_set,ZREM,command_pass,
 sorted_set,ZREMRANGEBYLEX,command_pass,
 sorted_set,ZREMRANGEBYRANK,command_pass,
