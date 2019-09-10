@@ -31,6 +31,8 @@ def get_lexer(command_groups, redis_grammar):
         "operation": SimpleLexer("class:const"),
         "index": SimpleLexer("class:index"),
         "password": SimpleLexer("class:password"),
+        "min": SimpleLexer("class:integer"),
+        "max": SimpleLexer("class:integer"),
     }
 
     lexers_dict.update({key: SimpleLexer("class:command") for key in command_groups})
