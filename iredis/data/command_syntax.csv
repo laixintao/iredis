@@ -162,7 +162,7 @@ set,SUNIONSTORE,command_destination_keys,render_int
 sorted_set,BZPOPMAX,command_keys_timeout,render_list_or_string
 sorted_set,BZPOPMIN,command_keys_timeout,render_list_or_string
 sorted_set,ZADD,command_key_condition_changed_incr_score_members,render_string_or_int
-sorted_set,ZCARD,command_pass,
+sorted_set,ZCARD,command_key,render_int
 sorted_set,ZCOUNT,command_key_min_max,render_int
 sorted_set,ZINCRBY,command_pass,
 sorted_set,ZINTERSTORE,command_pass,
