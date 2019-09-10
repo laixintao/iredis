@@ -108,3 +108,34 @@ def test_zlexcount(judge_command):
             "lexmax": "(g",
         },
     )
+
+
+def test_zrange(judge_command):
+    judge_command(
+        "zrange foo -1 10",
+        {
+            "command_key_start_end_withscores_x": "zrange",
+            "key": "foo",
+            "start": "-1",
+            "end": "10",
+        },
+    )
+    judge_command(
+        "zrange foo 0 -1",
+        {
+            "command_key_start_end_withscores_x": "zrange",
+            "key": "foo",
+            "start": "0",
+            "end": "-1",
+        },
+    )
+    judge_command(
+        "zrange foo 0 -1 withscores",
+        {
+            "command_key_start_end_withscores_x": "zrange",
+            "key": "foo",
+            "start": "0",
+            "end": "-1",
+            "withscores": "withscores",
+        },
+    )
