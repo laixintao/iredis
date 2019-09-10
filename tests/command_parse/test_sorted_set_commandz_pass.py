@@ -69,3 +69,42 @@ def test_zincrby(judge_command):
             "member": "foo",
         },
     )
+
+
+def test_zlexcount(judge_command):
+    judge_command(
+        "zlexcount a - +",
+        {
+            "command_key_lexmin_lexmax": "zlexcount",
+            "key": "a",
+            "lexmin": "-",
+            "lexmax": "+",
+        },
+    )
+    judge_command(
+        "zlexcount a (aaaa [z",
+        {
+            "command_key_lexmin_lexmax": "zlexcount",
+            "key": "a",
+            "lexmin": "(aaaa",
+            "lexmax": "[z",
+        },
+    )
+    judge_command(
+        "ZLEXCOUNT myzset - [c",
+        {
+            "command_key_lexmin_lexmax": "ZLEXCOUNT",
+            "key": "myset",
+            "lexmin": "-",
+            "lexmax": "[c",
+        },
+    )
+    judge_command(
+        "ZLEXCOUNT myzset [aaa (g",
+        {
+            "command_key_lexmin_lexmax": "ZLEXCOUNT",
+            "key": "myset",
+            "lexmin": "[aaa",
+            "lexmax": "(g",
+        },
+    )
