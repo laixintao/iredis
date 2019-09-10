@@ -17,6 +17,7 @@ VALID_NODE = r"\d+"
 NUM = r"\d+"
 NNUM = r"-?\d+"  # number cloud be negative
 _FLOAT = r"-?(\d|\.|e)+"
+LEXNUM = fr"(\[\w+)|(\(\w+)|(\+)|(-)"
 
 SLOT = fr"(?P<slot>{VALID_SLOT})"
 SLOTS = fr"(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"
@@ -73,6 +74,8 @@ MIN = fr"(?P<min>{NNUM})"
 MAX = fr"(?P<max>{NNUM})"
 TIMEOUT = fr"(?P<timeout>{NUM})"
 SCORE = fr"(?P<score>{_FLOAT})"
+LEXMIN = fr"(?P<lexmin>{LEXNUM})"
+LEXMAX = fr"(?P<lexmax>{LEXNUM})"
 
 
 REDIS_COMMANDS = fr"""
@@ -166,5 +169,7 @@ REDIS_COMMANDS = fr"""
                                                        (\s+ {SCORE}   \s+ {MEMBER})+                  \s*)|
 (\s*  (?P<command_key_float_member>({t['command_key_float_member']}))
                                                        \s+ {KEY}    \s+ {FLOAT}      \s+ {MEMBER}     \s*)|
+(\s*  (?P<command_key_lexmin_lexmax>({t['command_key_lexmin_lexmax']}))
+                                                       \s+ {KEY}    \s+ {LEXMIN}     \s+ {LEXMAX}     \s*)|
 
 """
