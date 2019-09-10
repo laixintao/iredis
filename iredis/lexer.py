@@ -29,6 +29,7 @@ def get_lexer(command_groups, redis_grammar):
         "offset": SimpleLexer("class:integer"),
         "condition": SimpleLexer("class:const"),
         "operation": SimpleLexer("class:const"),
+        "withscores": SimpleLexer("class:const"),
         "index": SimpleLexer("class:index"),
         "password": SimpleLexer("class:password"),
         "min": SimpleLexer("class:integer"),

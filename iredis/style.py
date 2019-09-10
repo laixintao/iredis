@@ -12,7 +12,7 @@ style = REDIS_TOKEN = {
     "integer": "#AE81FF",
     "start": "#AE81FF",  # TODO auto merge with integer
     "end": "#AE81FF",
-    "const": "#AE81FF",
+    "const": "bold #AE81FF",
     "time": "#aa22ff",
     "double": "#bb6688",
     "nil": "#808080",
