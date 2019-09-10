@@ -140,6 +140,12 @@ def render_list_or_string(text, completer=None):
     return render_simple_strings(text, completer)
 
 
+def render_string_or_int(text, completer=None):
+    if isinstance(text, int):
+        return render_int(text, completer)
+    return render_simple_strings(text, completer)
+
+
 def render_error(error_msg):
     text = _ensure_str(error_msg)
     return FormattedText([("class:type", "(error) "), ("class:error", text)])

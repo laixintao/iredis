@@ -14,3 +14,37 @@ def test_bzpopmax(judge_command):
         "bzpopmin set   4",
         {"command_keys_timeout": "bzpopmin", "keys": "set", "timeout": "4"},
     )
+
+
+def test_zadd(judge_command):
+    judge_command(
+        "zadd t 100 qewqr 23 pp 11 oo",
+        {
+            "command_key_condition_changed_incr_score_members": "zadd",
+            "key": "t",
+            "score": "11",  # FIXME: only have last one
+            "member": "oo",
+        },
+    )
+    judge_command(
+        "zadd t incr 100 foo",
+        {
+            "command_key_condition_changed_incr_score_members": "zadd",
+            "key": "t",
+            "incr": "incr",
+            "score": "100",  # FIXME: only have last one
+            "member": "foo",
+        },
+    )
+    judge_command(
+        "zadd t NX CH incr 100 foo",
+        {
+            "command_key_condition_changed_incr_score_members": "zadd",
+            "key": "t",
+            "condition": "NX",
+            "changed": "CH",
+            "incr": "incr",
+            "score": "100",  # FIXME: only have last one
+            "member": "foo",
+        },
+    )
