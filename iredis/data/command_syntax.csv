@@ -163,7 +163,7 @@ sorted_set,BZPOPMAX,command_pass,
 sorted_set,BZPOPMIN,command_pass,
 sorted_set,ZADD,command_pass,
 sorted_set,ZCARD,command_pass,
-sorted_set,ZCOUNT,command_pass,
+sorted_set,ZCOUNT,command_key_min_max,render_int
 sorted_set,ZINCRBY,command_pass,
 sorted_set,ZINTERSTORE,command_pass,
 sorted_set,ZLEXCOUNT,command_pass,
