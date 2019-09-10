@@ -45,6 +45,7 @@ FLOAT = fr"(?P<float>{_FLOAT})"
 OPERATION = r"(?P<operation>(AND|OR|XOR|NOT))"
 CHANGED = r"(?P<changed>(CH|ch))"
 INCR = r"(?P<incr>(INCR|incr))"
+WITHSCORES = r"(?P<withscores>(WITHSCORES|withscores))"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
 IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
@@ -171,5 +172,8 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}    \s+ {FLOAT}      \s+ {MEMBER}     \s*)|
 (\s*  (?P<command_key_lexmin_lexmax>({t['command_key_lexmin_lexmax']}))
                                                        \s+ {KEY}    \s+ {LEXMIN}     \s+ {LEXMAX}     \s*)|
+(\s*  (?P<command_key_start_end_withscores_x>({t['command_key_start_end_withscores_x']}))
+                                                       \s+ {KEY}    \s+ {START} \s+ {END}
+                                                       (\s+ {WITHSCORES})?                            \s*)|
 
 """
