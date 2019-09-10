@@ -66,6 +66,8 @@ START = fr"(?P<start>{NNUM})"
 END = fr"(?P<end>{NNUM})"
 DELTA = fr"(?P<delta>{NNUM})"
 OFFSET = fr"(?P<offset>{NUM})"
+MIN = fr"(?P<min>{NNUM})"
+MAX = fr"(?P<max>{NNUM})"
 
 
 REDIS_COMMANDS = fr"""
@@ -147,4 +149,6 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}    \s+ {NEWKEY}   \s+ {MEMBER}       \s*)|
 (\s*  (?P<command_key_count_x>({t['command_key_count_x']}))
                                                        \s+ {KEY}    (\s+ {COUNT})?                    \s*)|
+(\s*  (?P<command_key_min_max>({t['command_key_min_max']}))
+                                                       \s+ {KEY}    \s+ {MIN}      \s+ {MAX}          \s*)|
 """
