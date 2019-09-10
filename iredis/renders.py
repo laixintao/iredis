@@ -77,6 +77,7 @@ def render_simple_strings(value, completers=None):
     if config.raw:
         if value is None:
             return b""
+        return value
     if value is None:
         return NIL
     return _double_quotes(_ensure_str(value))
