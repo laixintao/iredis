@@ -164,5 +164,7 @@ REDIS_COMMANDS = fr"""
                                                        (\s+ {CHANGED})?
                                                        (\s+ {INCR})?
                                                        (\s+ {SCORE}   \s+ {MEMBER})+                  \s*)|
+(\s*  (?P<command_key_float_member>({t['command_key_float_member']}))
+                                                       \s+ {KEY}    \s+ {FLOAT}      \s+ {MEMBER}     \s*)|
 
 """

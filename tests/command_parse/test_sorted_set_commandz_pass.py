@@ -48,3 +48,24 @@ def test_zadd(judge_command):
             "member": "foo",
         },
     )
+
+
+def test_zincrby(judge_command):
+    judge_command(
+        "zincrby t 10 foo",
+        {
+            "command_key_float_member": "zincrby",
+            "key": "t",
+            "float": "10",
+            "member": "foo",
+        },
+    )
+    judge_command(
+        "zincrby t 2.3 foo",
+        {
+            "command_key_float_member": "zincrby",
+            "key": "t",
+            "float": "2.3",
+            "member": "foo",
+        },
+    )
