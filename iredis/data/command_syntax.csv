@@ -159,8 +159,8 @@ set,SREM,command_key_members,render_int
 set,SSCAN,command_pass,
 set,SUNION,command_keys,render_list
 set,SUNIONSTORE,command_destination_keys,render_int
-sorted_set,BZPOPMAX,command_pass,
-sorted_set,BZPOPMIN,command_pass,
+sorted_set,BZPOPMAX,command_keys_timeout,render_list_or_string
+sorted_set,BZPOPMIN,command_keys_timeout,render_list_or_string
 sorted_set,ZADD,command_pass,
 sorted_set,ZCARD,command_pass,
 sorted_set,ZCOUNT,command_key_min_max,render_int
