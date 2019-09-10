@@ -33,6 +33,7 @@ def get_lexer(command_groups, redis_grammar):
         "password": SimpleLexer("class:password"),
         "min": SimpleLexer("class:integer"),
         "max": SimpleLexer("class:integer"),
+        "timeout": SimpleLexer("class:integer"),
     }
 
     lexers_dict.update({key: SimpleLexer("class:command") for key in command_groups})

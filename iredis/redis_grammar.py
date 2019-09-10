@@ -68,6 +68,7 @@ DELTA = fr"(?P<delta>{NNUM})"
 OFFSET = fr"(?P<offset>{NUM})"
 MIN = fr"(?P<min>{NNUM})"
 MAX = fr"(?P<max>{NNUM})"
+TIMEOUT = fr"(?P<timeout>{NUM})"
 
 
 REDIS_COMMANDS = fr"""
@@ -110,6 +111,8 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {TIMESTAMPMS}                \s*)|
 (\s*  (?P<command_key_newkey>({t['command_key_newkey']}))
                                                        \s+ {KEY}     \s+ {NEWKEY}                     \s*)|
+(\s*  (?P<command_keys_timeout>({t['command_keys_timeout']}))
+                                                       \s+ {KEYS}    \s+ {TIMEOUT}                     \s*)|
 (\s*  (?P<command_pass>({t['command_pass']}))          \s+ {ANY}                                      \s*)|
 (\s*  (?P<command_key_value_expiration_condition>({t['command_key_value_expiration_condition']}))
                                                        \s+ {KEY}     \s+ {VALUE}

@@ -185,3 +185,7 @@ def command_keys(items, completer):
     double_quoted = _double_quotes(str_items)
     rendered = _render_list(items, double_quoted, "class:key")
     return rendered
+
+
+# TODO
+# special list render, bzpopmax, key-value pair
