@@ -154,3 +154,9 @@ def test_render_list_or_string():
             ("class:string", '"bar"'),
         ]
     )
+
+
+def test_list_or_string():
+    config.raw = False
+    assert renders.render_string_or_int(b"10.1") == '"10.1"'
+    assert renders.render_string_or_int(3) == FormattedText([('class:type', '(integer) '), ('', '3')])
