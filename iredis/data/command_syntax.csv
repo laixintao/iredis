@@ -166,7 +166,7 @@ sorted_set,ZCARD,command_key,render_int
 sorted_set,ZCOUNT,command_key_min_max,render_int
 sorted_set,ZINCRBY,command_key_float_member,render_simple_strings
 sorted_set,ZINTERSTORE,command_pass,
-sorted_set,ZLEXCOUNT,command_pass,
+sorted_set,ZLEXCOUNT,command_key_lexmin_lexmax,render_int
 sorted_set,ZPOPMAX,command_key_count_x,render_list
 sorted_set,ZPOPMIN,command_key_count_x,render_list
 sorted_set,ZRANGE,command_pass,
