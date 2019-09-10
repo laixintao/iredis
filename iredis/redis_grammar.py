@@ -16,6 +16,7 @@ VALID_SLOT = r"\d+"  # TODO add range? max value:16384
 VALID_NODE = r"\d+"
 NUM = r"\d+"
 NNUM = r"-?\d+"  # number cloud be negative
+_FLOAT = r"-?(\d|\.|e)+"
 
 SLOT = fr"(?P<slot>{VALID_SLOT})"
 SLOTS = fr"(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"
@@ -39,8 +40,10 @@ SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
 COUNT = fr"(?P<count>{NUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 BIT = r"(?P<bit>0|1)"
-FLOAT = r"(?P<float>-?(\d|\.|e)+)"
+FLOAT = fr"(?P<float>{_FLOAT})"
 OPERATION = r"(?P<operation>(AND|OR|XOR|NOT))"
+CHANGED = r"(?P<changed>(CH|ch))"
+INCR = r"(?P<incr>(INCR|incr))"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
 IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
@@ -69,6 +72,7 @@ OFFSET = fr"(?P<offset>{NUM})"
 MIN = fr"(?P<min>{NNUM})"
 MAX = fr"(?P<max>{NNUM})"
 TIMEOUT = fr"(?P<timeout>{NUM})"
+SCORE = fr"(?P<score>{_FLOAT})"
 
 
 REDIS_COMMANDS = fr"""
@@ -154,4 +158,11 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}    (\s+ {COUNT})?                    \s*)|
 (\s*  (?P<command_key_min_max>({t['command_key_min_max']}))
                                                        \s+ {KEY}    \s+ {MIN}      \s+ {MAX}          \s*)|
+(\s*  (?P<command_key_condition_changed_incr_score_members>({t['command_key_condition_changed_incr_score_members']}))
+                                                       \s+ {KEY}
+                                                       (\s+ {CONDITION})?
+                                                       (\s+ {CHANGED})?
+                                                       (\s+ {INCR})?
+                                                       (\s+ {SCORE}   \s+ {MEMBER})+                  \s*)|
+
 """
