@@ -1,3 +1,6 @@
+import pytest
+
+
 def test_zcount(judge_command):
     judge_command(
         "zcount foo -10 0",
@@ -141,6 +144,7 @@ def test_zrange(judge_command):
     )
 
 
+@pytest.mark.xfail(reason="Not implemented yet")
 def test_zinterstore(judge_command):
     judge_command("ZINTERSTORE out 2 zset1 zset2 WEIGHTS 2 3", {})
     judge_command("ZINTERSTORE out 2 zset1 zset2 WEIGHTS -1 -2", {})
