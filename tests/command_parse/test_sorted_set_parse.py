@@ -149,3 +149,48 @@ def test_zinterstore(judge_command):
     judge_command("ZINTERSTORE out 2 zset1 zset2 WEIGHTS 2 3", {})
     judge_command("ZINTERSTORE out 2 zset1 zset2 WEIGHTS -1 -2", {})
     judge_command("ZINTERSTORE out 2 zset1 zset2 WEIGHTS 0.2 0.3", {})
+
+
+def test_zrangebylex(judge_command):
+    judge_command(
+        "ZRANGEBYLEX myzset [aaa (g",
+        {
+            "command_key_lexmin_lexmax_limit_offset_count": "ZRANGEBYLEX",
+            "key": "myzset",
+            "lexmin": "[aaa",
+            "lexmax": "(g",
+        },
+    )
+    judge_command(
+        "ZRANGEBYLEX myzset - (c",
+        {
+            "command_key_lexmin_lexmax_limit_offset_count": "ZRANGEBYLEX",
+            "key": "myzset",
+            "lexmin": "-",
+            "lexmax": "(c",
+        },
+    )
+    judge_command(
+        "ZRANGEBYLEX myzset - (c limit 10 100",
+        {
+            "command_key_lexmin_lexmax_limit_offset_count": "ZRANGEBYLEX",
+            "key": "myzset",
+            "lexmin": "-",
+            "lexmax": "(c",
+            "limit": "limit",
+            "offset": "10",
+            "count": "100",
+        },
+    )
+    judge_command(
+        "ZRANGEBYLEX myzset - (c limit 10 -1",
+        {
+            "command_key_lexmin_lexmax_limit_offset_count": "ZRANGEBYLEX",
+            "key": "myzset",
+            "lexmin": "-",
+            "lexmax": "(c",
+            "limit": "limit",
+            "offset": "10",
+            "count": "-1",
+        },
+    )
