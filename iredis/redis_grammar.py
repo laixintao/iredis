@@ -30,22 +30,10 @@ VALUE = fr"(?P<value>{VALID_TOKEN})"
 FIELDS = fr"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 MEMBER = fr"(?P<member>{VALID_TOKEN})"
 MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
-FAILOVERCHOICE = (
-    r"(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
-)  # TODO is lowercase accept by server?
-RESETCHOICE = (
-    r"(?P<resetchoice>(HARD|SOFT|hard|soft))"
-)  # TODO is lowercase accept by server?
-SLOTSUBCMD = r"(?P<slotsubcmd>(IMPORTING|MIGRATING|NODE|importing|migrating|node))"
-SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
 COUNT = fr"(?P<count>{NUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 BIT = r"(?P<bit>0|1)"
 FLOAT = fr"(?P<float>{_FLOAT})"
-OPERATION = r"(?P<operation>(AND|OR|XOR|NOT))"
-CHANGED = r"(?P<changed>(CH|ch))"
-INCR = r"(?P<incr>(INCR|incr))"
-WITHSCORES = r"(?P<withscores>(WITHSCORES|withscores))"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
 IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
@@ -64,9 +52,7 @@ TIMESTAMP = fr"(?P<timestamp>{NUM})"
 PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
 MILLISECOND = fr"(?P<millisecond>{NUM})"
 TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
-ANY = r"(?P<any>.*)"
-EXPIRATION = fr"(?P<expiration>(EX|PX|ex|px)\s+{NUM})"
-CONDITION = r"(?P<condition>(NX|XX|nx|xx))"
+ANY = r"(?P<any>.*)"  # TODO deleted
 START = fr"(?P<start>{NNUM})"
 END = fr"(?P<end>{NNUM})"
 DELTA = fr"(?P<delta>{NNUM})"
@@ -77,7 +63,26 @@ TIMEOUT = fr"(?P<timeout>{NUM})"
 SCORE = fr"(?P<score>{_FLOAT})"
 LEXMIN = fr"(?P<lexmin>{LEXNUM})"
 LEXMAX = fr"(?P<lexmax>{LEXNUM})"
+WEIGHTS = fr"(?P<weights>{_FLOAT}(\s+{_FLOAT})*)"
 
+# const choices
+EXPIRATION = fr"(?P<expiration>(EX|PX|ex|px)\s+{NUM})"
+CONDITION = r"(?P<condition>(NX|XX|nx|xx))"
+OPERATION = r"(?P<operation>(AND|OR|XOR|NOT))"
+CHANGED = r"(?P<changed>(CH|ch))"
+INCR = r"(?P<incr>(INCR|incr))"
+WITHSCORES = r"(?P<withscores>(WITHSCORES|withscores))"
+FAILOVERCHOICE = (
+    r"(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
+)
+RESETCHOICE = (
+    r"(?P<resetchoice>(HARD|SOFT|hard|soft))"
+)
+SLOTSUBCMD = r"(?P<slotsubcmd>(IMPORTING|MIGRATING|NODE|importing|migrating|node))"
+SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
+WEIGHTS_CONST = r"(?P<weights_const>(WEIGHTS|weights))"
+AGGREGATE_CONST = r"(?P<aggregate_const>(AGGREGATE|aggregate))"
+AGGREGATE = r"(?P<aggregate>(SUM|MIN|MAX|sum|min|max))"
 
 REDIS_COMMANDS = fr"""
 (\s*  (?P<command_slots>({t['command_slots']}))        \s+ {SLOTS}                                    \s*)|
@@ -175,5 +180,10 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_start_end_withscores_x>({t['command_key_start_end_withscores_x']}))
                                                        \s+ {KEY}    \s+ {START} \s+ {END}
                                                        (\s+ {WITHSCORES})?                            \s*)|
-
 """
+
+# command_destination_count_keys_weights_x_aggregate_x  can not parse with key numbers.
+# (\s*  (?P<command_destination_count_keys_weights_x_aggregate_x>({t['command_destination_count_keys_weights_x_aggregate_x']}))
+#                                                        \s+ {DESTINATION}        \s+ {COUNT} \s+ {KEYS}
+#                                                        (\s+ {WEIGHTS_CONST}     \s+ {WEIGHTS})?
+#                                                        (\s+ {AGGREGATE_CONST}   \s+ {AGGREGATE})?   \s*)|
