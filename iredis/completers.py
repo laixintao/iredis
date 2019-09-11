@@ -89,6 +89,7 @@ def get_completer(group2commands, redis_grammar):
         {
             "failoverchoice": WordCompleter(["TAKEOVER", "FORCE"], ignore_case=True),
             "withscores": WordCompleter(["WITHSCORES"], ignore_case=True),
+            "limit": WordCompleter(["LIMIT"], ignore_case=True),
             # all key related completers share the same completer
             "keys": key_completer,
             "key": key_completer,

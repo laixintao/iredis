@@ -83,6 +83,7 @@ SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
 WEIGHTS_CONST = r"(?P<weights_const>(WEIGHTS|weights))"
 AGGREGATE_CONST = r"(?P<aggregate_const>(AGGREGATE|aggregate))"
 AGGREGATE = r"(?P<aggregate>(SUM|MIN|MAX|sum|min|max))"
+LIMIT = r"(?P<limit>(LIMIT|limit))"
 
 REDIS_COMMANDS = fr"""
 (\s*  (?P<command_slots>({t['command_slots']}))        \s+ {SLOTS}                                    \s*)|
@@ -180,6 +181,9 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_start_end_withscores_x>({t['command_key_start_end_withscores_x']}))
                                                        \s+ {KEY}    \s+ {START} \s+ {END}
                                                        (\s+ {WITHSCORES})?                            \s*)|
+(\s*  (?P<command_key_lexmin_lexmax_limit_offset_count>({t['command_key_lexmin_lexmax_limit_offset_count']}))
+    \s+ {KEY}  \s+ {LEXMIN}  \s+ {LEXMAX}
+    (\s+ {LIMIT}  \s+ {OFFSET}  \s+ {COUNT})?                                                         \s*)|
 """
 
 # command_destination_count_keys_weights_x_aggregate_x  can not parse with key numbers.
