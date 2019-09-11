@@ -139,3 +139,9 @@ def test_zrange(judge_command):
             "withscores": "withscores",
         },
     )
+
+
+def test_zinterstore(judge_command):
+    judge_command("ZINTERSTORE out 2 zset1 zset2 WEIGHTS 2 3", {})
+    judge_command("ZINTERSTORE out 2 zset1 zset2 WEIGHTS -1 -2", {})
+    judge_command("ZINTERSTORE out 2 zset1 zset2 WEIGHTS 0.2 0.3", {})
