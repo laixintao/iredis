@@ -184,10 +184,12 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_lexmin_lexmax_limit_offset_count>({t['command_key_lexmin_lexmax_limit_offset_count']}))
     \s+ {KEY}  \s+ {LEXMIN}  \s+ {LEXMAX}
     (\s+ {LIMIT}  \s+ {OFFSET}  \s+ {COUNT})?                                                         \s*)|
-"""
+"""  # flake8: noqa  line too long
+
 
 # command_destination_count_keys_weights_x_aggregate_x  can not parse with key numbers.
-# (\s*  (?P<command_destination_count_keys_weights_x_aggregate_x>({t['command_destination_count_keys_weights_x_aggregate_x']}))
+# (\s*  (?P<command_destination_count_keys_weights_x_aggregate_x>
+# ({t['command_destination_count_keys_weights_x_aggregate_x']}))
 #                                                        \s+ {DESTINATION}        \s+ {COUNT} \s+ {KEYS}
 #                                                        (\s+ {WEIGHTS_CONST}     \s+ {WEIGHTS})?
 #                                                        (\s+ {AGGREGATE_CONST}   \s+ {AGGREGATE})?   \s*)|
