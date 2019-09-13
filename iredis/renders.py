@@ -75,6 +75,8 @@ def _ensure_str(origin, decode=None):
 
 def render_simple_strings(value, completers=None):
     if config.raw:
+        if value is None:
+            return b""
         return value
     if value is None:
         return NIL
@@ -83,7 +85,11 @@ def render_simple_strings(value, completers=None):
 
 def render_int(value, completers=None):
     if config.raw:
+        if value is None:
+            return b""
         return str(value).encode()
+    if value is None:
+        return NIL
     return FormattedText([("class:type", "(integer) "), ("", str(value))])
 
 
@@ -135,6 +141,12 @@ def render_list_or_string(text, completer=None):
     return render_simple_strings(text, completer)
 
 
+def render_string_or_int(text, completer=None):
+    if isinstance(text, int):
+        return render_int(text, completer)
+    return render_simple_strings(text, completer)
+
+
 def render_error(error_msg):
     text = _ensure_str(error_msg)
     return FormattedText([("class:type", "(error) "), ("class:error", text)])
@@ -180,3 +192,7 @@ def command_keys(items, completer):
     double_quoted = _double_quotes(str_items)
     rendered = _render_list(items, double_quoted, "class:key")
     return rendered
+
+
+# TODO
+# special list render, bzpopmax, key-value pair

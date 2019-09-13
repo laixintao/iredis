@@ -15,7 +15,9 @@ VALID_TOKEN = r"""(
 VALID_SLOT = r"\d+"  # TODO add range? max value:16384
 VALID_NODE = r"\d+"
 NUM = r"\d+"
-NNUM = r"-?\d+"  # number cloud be negative
+NNUM = r"-?\+?\(?\[?(\d+|inf)"  # number cloud be negative
+_FLOAT = r"-?(\d|\.|e)+"
+LEXNUM = fr"(\[\w+)|(\(\w+)|(\+)|(-)"
 
 SLOT = fr"(?P<slot>{VALID_SLOT})"
 SLOTS = fr"(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"
@@ -28,19 +30,10 @@ VALUE = fr"(?P<value>{VALID_TOKEN})"
 FIELDS = fr"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 MEMBER = fr"(?P<member>{VALID_TOKEN})"
 MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
-FAILOVERCHOICE = (
-    r"(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
-)  # TODO is lowercase accept by server?
-RESETCHOICE = (
-    r"(?P<resetchoice>(HARD|SOFT|hard|soft))"
-)  # TODO is lowercase accept by server?
-SLOTSUBCMD = r"(?P<slotsubcmd>(IMPORTING|MIGRATING|NODE|importing|migrating|node))"
-SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
-COUNT = fr"(?P<count>{NUM})"
+COUNT = fr"(?P<count>{NNUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 BIT = r"(?P<bit>0|1)"
-FLOAT = r"(?P<float>-?(\d|\.|e)+)"
-OPERATION = r"(?P<operation>(AND|OR|XOR|NOT))"
+FLOAT = fr"(?P<float>{_FLOAT})"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
 IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
@@ -59,14 +52,38 @@ TIMESTAMP = fr"(?P<timestamp>{NUM})"
 PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
 MILLISECOND = fr"(?P<millisecond>{NUM})"
 TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
-ANY = r"(?P<any>.*)"
-EXPIRATION = fr"(?P<expiration>(EX|PX|ex|px)\s+{NUM})"
-CONDITION = r"(?P<condition>(NX|XX|nx|xx))"
+ANY = r"(?P<any>.*)"  # TODO deleted
 START = fr"(?P<start>{NNUM})"
 END = fr"(?P<end>{NNUM})"
 DELTA = fr"(?P<delta>{NNUM})"
 OFFSET = fr"(?P<offset>{NUM})"
+MIN = fr"(?P<min>{NNUM})"
+MAX = fr"(?P<max>{NNUM})"
+TIMEOUT = fr"(?P<timeout>{NUM})"
+SCORE = fr"(?P<score>{_FLOAT})"
+LEXMIN = fr"(?P<lexmin>{LEXNUM})"
+LEXMAX = fr"(?P<lexmax>{LEXNUM})"
+WEIGHTS = fr"(?P<weights>{_FLOAT}(\s+{_FLOAT})*)"
 
+# const choices
+EXPIRATION = fr"(?P<expiration>(EX|PX|ex|px)\s+{NUM})"
+CONDITION = r"(?P<condition>(NX|XX|nx|xx))"
+OPERATION = r"(?P<operation>(AND|OR|XOR|NOT))"
+CHANGED = r"(?P<changed>(CH|ch))"
+INCR = r"(?P<incr>(INCR|incr))"
+WITHSCORES = r"(?P<withscores>(WITHSCORES|withscores))"
+FAILOVERCHOICE = (
+    r"(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
+)
+RESETCHOICE = (
+    r"(?P<resetchoice>(HARD|SOFT|hard|soft))"
+)
+SLOTSUBCMD = r"(?P<slotsubcmd>(IMPORTING|MIGRATING|NODE|importing|migrating|node))"
+SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
+WEIGHTS_CONST = r"(?P<weights_const>(WEIGHTS|weights))"
+AGGREGATE_CONST = r"(?P<aggregate_const>(AGGREGATE|aggregate))"
+AGGREGATE = r"(?P<aggregate>(SUM|MIN|MAX|sum|min|max))"
+LIMIT = r"(?P<limit>(LIMIT|limit))"
 
 REDIS_COMMANDS = fr"""
 (\s*  (?P<command_slots>({t['command_slots']}))        \s+ {SLOTS}                                    \s*)|
@@ -108,6 +125,8 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {TIMESTAMPMS}                \s*)|
 (\s*  (?P<command_key_newkey>({t['command_key_newkey']}))
                                                        \s+ {KEY}     \s+ {NEWKEY}                     \s*)|
+(\s*  (?P<command_keys_timeout>({t['command_keys_timeout']}))
+                                                       \s+ {KEYS}    \s+ {TIMEOUT}                     \s*)|
 (\s*  (?P<command_pass>({t['command_pass']}))          \s+ {ANY}                                      \s*)|
 (\s*  (?P<command_key_value_expiration_condition>({t['command_key_value_expiration_condition']}))
                                                        \s+ {KEY}     \s+ {VALUE}
@@ -147,4 +166,35 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}    \s+ {NEWKEY}   \s+ {MEMBER}       \s*)|
 (\s*  (?P<command_key_count_x>({t['command_key_count_x']}))
                                                        \s+ {KEY}    (\s+ {COUNT})?                    \s*)|
+(\s*  (?P<command_key_min_max>({t['command_key_min_max']}))
+                                                       \s+ {KEY}    \s+ {MIN}      \s+ {MAX}          \s*)|
+(\s*  (?P<command_key_condition_changed_incr_score_members>({t['command_key_condition_changed_incr_score_members']}))
+                                                       \s+ {KEY}
+                                                       (\s+ {CONDITION})?
+                                                       (\s+ {CHANGED})?
+                                                       (\s+ {INCR})?
+                                                       (\s+ {SCORE}   \s+ {MEMBER})+                  \s*)|
+(\s*  (?P<command_key_float_member>({t['command_key_float_member']}))
+                                                       \s+ {KEY}    \s+ {FLOAT}      \s+ {MEMBER}     \s*)|
+(\s*  (?P<command_key_lexmin_lexmax>({t['command_key_lexmin_lexmax']}))
+                                                       \s+ {KEY}    \s+ {LEXMIN}     \s+ {LEXMAX}     \s*)|
+(\s*  (?P<command_key_start_end_withscores_x>({t['command_key_start_end_withscores_x']}))
+                                                       \s+ {KEY}    \s+ {START} \s+ {END}
+                                                       (\s+ {WITHSCORES})?                            \s*)|
+(\s*  (?P<command_key_lexmin_lexmax_limit_offset_count>
+      ({t['command_key_lexmin_lexmax_limit_offset_count']}))
+      \s+ {KEY}  \s+ {LEXMIN}  \s+ {LEXMAX}
+      (\s+ {LIMIT}  \s+ {OFFSET}  \s+ {COUNT})?                                                       \s*)|
+(\s*  (?P<command_key_min_max_withscore_x_limit_offset_count_x>
+      ({t['command_key_min_max_withscore_x_limit_offset_count_x']}))
+      \s+ {KEY}  \s+ {MIN}  \s+ {MAX}  (\s+ {WITHSCORES})?
+      (\s+ {LIMIT}  \s+ {OFFSET}  \s+ {COUNT})?                                                       \s*)|
 """
+
+
+# command_destination_count_keys_weights_x_aggregate_x  can not parse with key numbers.
+# (\s*  (?P<command_destination_count_keys_weights_x_aggregate_x>
+# ({t['command_destination_count_keys_weights_x_aggregate_x']}))
+#                                                        \s+ {DESTINATION}        \s+ {COUNT} \s+ {KEYS}
+#                                                        (\s+ {WEIGHTS_CONST}     \s+ {WEIGHTS})?
+#                                                        (\s+ {AGGREGATE_CONST}   \s+ {AGGREGATE})?   \s*)|
