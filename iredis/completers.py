@@ -85,11 +85,26 @@ def get_completer(group2commands, redis_grammar):
 
     key_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     member_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+    const_completers = {
+        "failoverchoice": "TAKEOVER FORCE",
+        "withscores": "WITHSCORES",
+        "limit": "LIMIT",
+        "expiration": "EX PX",
+        "condition": "NX XX",
+        "operation": "AND OR XOR NOT",
+        "changed": "CHANGED",
+        "incr": "INCR",
+        "withscores": "WITHSCORES",
+        "resetchoise": "HARD SOFT",
+    }
     completer_mapping.update(
         {
-            "failoverchoice": WordCompleter(["TAKEOVER", "FORCE"], ignore_case=True),
-            "withscores": WordCompleter(["WITHSCORES"], ignore_case=True),
-            "limit": WordCompleter(["LIMIT"], ignore_case=True),
+            key: WordCompleter(tokens.split(" "), ignore_case=True)
+            for key, tokens in const_completers.items()
+        }
+    )
+    completer_mapping.update(
+        {
             # all key related completers share the same completer
             "keys": key_completer,
             "key": key_completer,
