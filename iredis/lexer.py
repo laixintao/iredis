@@ -18,6 +18,8 @@ def get_lexer(command_groups, redis_grammar):
         "member": SimpleLexer("class:member"),
         "members": SimpleLexer("class:member"),
         "value": SimpleLexer("class:string"),
+        "lexmin": SimpleLexer("class:string"),
+        "lexmax": SimpleLexer("class:string"),
         "bit": SimpleLexer("class:bit"),
         "expiration": SimpleLexer("class:integer"),
         "second": SimpleLexer("class:integer"),
@@ -27,10 +29,18 @@ def get_lexer(command_groups, redis_grammar):
         "end": SimpleLexer("class:integer"),
         "delta": SimpleLexer("class:integer"),
         "offset": SimpleLexer("class:integer"),
-        "condition": SimpleLexer("class:const"),
-        "operation": SimpleLexer("class:const"),
+        "count": SimpleLexer("class:integer"),
         "index": SimpleLexer("class:index"),
         "password": SimpleLexer("class:password"),
+        "min": SimpleLexer("class:integer"),
+        "max": SimpleLexer("class:integer"),
+        "score": SimpleLexer("class:integer"),
+        "timeout": SimpleLexer("class:integer"),
+        # const
+        "condition": SimpleLexer("class:const"),
+        "operation": SimpleLexer("class:const"),
+        "withscores": SimpleLexer("class:const"),
+        "limit": SimpleLexer("class:const"),
     }
 
     lexers_dict.update({key: SimpleLexer("class:command") for key in command_groups})
