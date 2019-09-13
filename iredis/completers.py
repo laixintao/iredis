@@ -96,6 +96,10 @@ def get_completer(group2commands, redis_grammar):
         "incr": "INCR",
         "withscores": "WITHSCORES",
         "resetchoise": "HARD SOFT",
+        "match": "MATCH",
+        "count_const": "COUNT",
+        "type_const": "TYPE",
+        "type": "string list set zset hash stream",
     }
     completer_mapping.update(
         {

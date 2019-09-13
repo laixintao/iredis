@@ -43,7 +43,7 @@ generic,RANDOMKEY,command,
 generic,RENAME,command_key_newkey,
 generic,RENAMENX,command_key_newkey,
 generic,RESTORE,command_pass,
-generic,SCAN,command_pass,
+generic,SCAN,command_cursor_match_pattern_count_type,command_scan
 generic,SORT,command_pass,
 generic,TOUCH,command_keys,
 generic,TTL,command_key,

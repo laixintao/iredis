@@ -194,5 +194,20 @@ def command_keys(items, completer):
     return rendered
 
 
+def command_scan(response, completer):
+    """
+    Render Scan command result.
+    see: https://redis.io/commands/scan
+    """
+    cursor, responses = response
+    rendered = [
+        ("class:type", "(cursor) "),
+        ("class:integer", cursor.decode()),
+        ("", "\n"),
+    ]
+    rendered_keys = command_keys(responses, completer)
+    return FormattedText(rendered + rendered_keys)
+
+
 # TODO
 # special list render, bzpopmax, key-value pair
