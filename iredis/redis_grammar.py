@@ -181,13 +181,15 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_start_end_withscores_x>({t['command_key_start_end_withscores_x']}))
                                                        \s+ {KEY}    \s+ {START} \s+ {END}
                                                        (\s+ {WITHSCORES})?                            \s*)|
-(\s*  (?P<command_key_lexmin_lexmax_limit_offset_count>({t['command_key_lexmin_lexmax_limit_offset_count']}))
-    \s+ {KEY}  \s+ {LEXMIN}  \s+ {LEXMAX}
-    (\s+ {LIMIT}  \s+ {OFFSET}  \s+ {COUNT})?                                                         \s*)|
-(\s*  (?P<command_key_min_max_withscore_x_limit_offset_count_x>({t['command_key_min_max_withscore_x_limit_offset_count_x']}))
+(\s*  (?P<command_key_lexmin_lexmax_limit_offset_count>
+      ({t['command_key_lexmin_lexmax_limit_offset_count']}))
+      \s+ {KEY}  \s+ {LEXMIN}  \s+ {LEXMAX}
+      (\s+ {LIMIT}  \s+ {OFFSET}  \s+ {COUNT})?                                                       \s*)|
+(\s*  (?P<command_key_min_max_withscore_x_limit_offset_count_x>
+      ({t['command_key_min_max_withscore_x_limit_offset_count_x']}))
       \s+ {KEY}  \s+ {MIN}  \s+ {MAX}  (\s+ {WITHSCORES})?
-      (\s+ {LIMIT}  \s+ {OFFSET}  \s+ {COUNT})?                                                        \s*)|
-"""  # flake8: noqa  line too long
+      (\s+ {LIMIT}  \s+ {OFFSET}  \s+ {COUNT})?                                                       \s*)|
+"""
 
 
 # command_destination_count_keys_weights_x_aggregate_x  can not parse with key numbers.
