@@ -34,6 +34,7 @@ def get_lexer(command_groups, redis_grammar):
         "password": SimpleLexer("class:password"),
         "min": SimpleLexer("class:integer"),
         "max": SimpleLexer("class:integer"),
+        "score": SimpleLexer("class:integer"),
         "timeout": SimpleLexer("class:integer"),
         # const
         "condition": SimpleLexer("class:const"),
