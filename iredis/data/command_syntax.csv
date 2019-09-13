@@ -177,8 +177,8 @@ sorted_set,ZREM,command_key_members,render_int
 sorted_set,ZREMRANGEBYLEX,command_key_lexmin_lexmax,render_int
 sorted_set,ZREMRANGEBYRANK,command_key_start_end,render_int
 sorted_set,ZREMRANGEBYSCORE,command_key_min_max,render_int
-sorted_set,ZREVRANGE,command_pass,
-sorted_set,ZREVRANGEBYLEX,command_pass,
+sorted_set,ZREVRANGE,command_key_start_end_withscores_x,render_list
+sorted_set,ZREVRANGEBYLEX,command_key_lexmax_lexmin_limit_offset_count,render_list
 sorted_set,ZREVRANGEBYSCORE,command_pass,
 sorted_set,ZREVRANK,command_pass,
 sorted_set,ZSCAN,command_pass,

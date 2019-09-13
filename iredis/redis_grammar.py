@@ -185,6 +185,10 @@ REDIS_COMMANDS = fr"""
       ({t['command_key_lexmin_lexmax_limit_offset_count']}))
       \s+ {KEY}  \s+ {LEXMIN}  \s+ {LEXMAX}
       (\s+ {LIMIT}  \s+ {OFFSET}  \s+ {COUNT})?                                                       \s*)|
+(\s*  (?P<command_key_lexmax_lexmin_limit_offset_count>
+      ({t['command_key_lexmax_lexmin_limit_offset_count']}))
+      \s+ {KEY}   \s+ {LEXMAX} \s+ {LEXMIN}
+      (\s+ {LIMIT}  \s+ {OFFSET}  \s+ {COUNT})?                                                       \s*)|
 (\s*  (?P<command_key_min_max_withscore_x_limit_offset_count_x>
       ({t['command_key_min_max_withscore_x_limit_offset_count_x']}))
       \s+ {KEY}  \s+ {MIN}  \s+ {MAX}  (\s+ {WITHSCORES})?
