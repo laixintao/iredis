@@ -34,6 +34,7 @@ COUNT = fr"(?P<count>{NNUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 BIT = r"(?P<bit>0|1)"
 FLOAT = fr"(?P<float>{_FLOAT})"
+CURSOR = fr"(?P<cursor>{NUM})"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
 IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
@@ -72,18 +73,18 @@ OPERATION = r"(?P<operation>(AND|OR|XOR|NOT))"
 CHANGED = r"(?P<changed>(CH|ch))"
 INCR = r"(?P<incr>(INCR|incr))"
 WITHSCORES = r"(?P<withscores>(WITHSCORES|withscores))"
-FAILOVERCHOICE = (
-    r"(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
-)
-RESETCHOICE = (
-    r"(?P<resetchoice>(HARD|SOFT|hard|soft))"
-)
+FAILOVERCHOICE = r"(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
+RESETCHOICE = r"(?P<resetchoice>(HARD|SOFT|hard|soft))"
 SLOTSUBCMD = r"(?P<slotsubcmd>(IMPORTING|MIGRATING|NODE|importing|migrating|node))"
 SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
 WEIGHTS_CONST = r"(?P<weights_const>(WEIGHTS|weights))"
 AGGREGATE_CONST = r"(?P<aggregate_const>(AGGREGATE|aggregate))"
 AGGREGATE = r"(?P<aggregate>(SUM|MIN|MAX|sum|min|max))"
 LIMIT = r"(?P<limit>(LIMIT|limit))"
+MATCH = r"(?P<match>(MATCH|match))"
+COUNT_CONST = r"(?P<count_const>(COUNT|count))"
+TYPE_CONST = r"(?P<type_const>(TYPE|type))"
+TYPE = r"(?P<type>(STRING|LIST|SET|ZSET|HASH|STREAM|string|list|set|zset|hash|stream))"
 
 REDIS_COMMANDS = fr"""
 (\s*  (?P<command_slots>({t['command_slots']}))        \s+ {SLOTS}                                    \s*)|
@@ -189,6 +190,9 @@ REDIS_COMMANDS = fr"""
       ({t['command_key_min_max_withscore_x_limit_offset_count_x']}))
       \s+ {KEY}  \s+ {MIN}  \s+ {MAX}  (\s+ {WITHSCORES})?
       (\s+ {LIMIT}  \s+ {OFFSET}  \s+ {COUNT})?                                                       \s*)|
+(\s*  (?P<command_cursor_match_pattern_count_type>({t['command_cursor_match_pattern_count_type']}))
+      \s+ {CURSOR}  (\s+ {MATCH}  \s+ {PATTERN})?
+      (\s+ {COUNT_CONST} \s+ {COUNT})?  (\s+ {TYPE_CONST} \s+ {TYPE})?                                \s*)|
 """
 
 
