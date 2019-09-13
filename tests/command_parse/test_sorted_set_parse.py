@@ -236,3 +236,48 @@ def test_zrangebyscore(judge_command):
             "count": "100",
         },
     )
+
+
+def test_zrevrangebylex(judge_command):
+    judge_command(
+        "ZREVRANGEBYLEX myzset [aaa (g",
+        {
+            "command_key_lexmax_lexmin_limit_offset_count": "ZREVRANGEBYLEX",
+            "key": "myzset",
+            "lexmax": "[aaa",
+            "lexmin": "(g",
+        },
+    )
+    judge_command(
+        "ZREVRANGEBYLEX myzset - (c",
+        {
+            "command_key_lexmax_lexmin_limit_offset_count": "ZREVRANGEBYLEX",
+            "key": "myzset",
+            "lexmax": "-",
+            "lexmin": "(c",
+        },
+    )
+    judge_command(
+        "ZREVRANGEBYLEX myzset - (c limit 10 100",
+        {
+            "command_key_lexmax_lexmin_limit_offset_count": "ZREVRANGEBYLEX",
+            "key": "myzset",
+            "lexmax": "-",
+            "lexmin": "(c",
+            "limit": "limit",
+            "offset": "10",
+            "count": "100",
+        },
+    )
+    judge_command(
+        "ZREVRANGEBYLEX myzset - (c limit 10 -1",
+        {
+            "command_key_lexmax_lexmin_limit_offset_count": "ZREVRANGEBYLEX",
+            "key": "myzset",
+            "lexmax": "-",
+            "lexmin": "(c",
+            "limit": "limit",
+            "offset": "10",
+            "count": "-1",
+        },
+    )
