@@ -15,7 +15,7 @@ VALID_TOKEN = r"""(
 VALID_SLOT = r"\d+"  # TODO add range? max value:16384
 VALID_NODE = r"\d+"
 NUM = r"\d+"
-NNUM = r"-?\+?\(?\[?(\d+)|inf|"  # number cloud be negative
+NNUM = r"-?\+?\(?\[?(\d+|inf)"  # number cloud be negative
 _FLOAT = r"-?(\d|\.|e)+"
 LEXNUM = fr"(\[\w+)|(\(\w+)|(\+)|(-)"
 
@@ -57,7 +57,7 @@ START = fr"(?P<start>{NNUM})"
 END = fr"(?P<end>{NNUM})"
 DELTA = fr"(?P<delta>{NNUM})"
 OFFSET = fr"(?P<offset>{NUM})"
-MIN = fr"(?P<min>({NNUM}))"
+MIN = fr"(?P<min>{NNUM})"
 MAX = fr"(?P<max>{NNUM})"
 TIMEOUT = fr"(?P<timeout>{NUM})"
 SCORE = fr"(?P<score>{_FLOAT})"

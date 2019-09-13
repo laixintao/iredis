@@ -194,3 +194,45 @@ def test_zrangebylex(judge_command):
             "count": "-1",
         },
     )
+
+
+def test_zrangebyscore(judge_command):
+    judge_command(
+        "ZRANGEBYSCORE myzset -inf +inf",
+        {
+            "command_key_min_max_withscore_x_limit_offset_count_x": "ZRANGEBYSCORE",
+            "key": "myzset",
+            "min": "-inf",
+            "max": "+inf",
+        },
+    )
+    judge_command(
+        "ZRANGEBYSCORE myzset 1 2",
+        {
+            "command_key_min_max_withscore_x_limit_offset_count_x": "ZRANGEBYSCORE",
+            "key": "myzset",
+            "min": "1",
+            "max": "2",
+        },
+    )
+    judge_command(
+        "ZRANGEBYSCORE myzset (1 (2",
+        {
+            "command_key_min_max_withscore_x_limit_offset_count_x": "ZRANGEBYSCORE",
+            "key": "myzset",
+            "min": "(1",
+            "max": "(2",
+        },
+    )
+    judge_command(
+        "ZRANGEBYSCORE myzset -inf +inf LIMIT 10 100",
+        {
+            "command_key_min_max_withscore_x_limit_offset_count_x": "ZRANGEBYSCORE",
+            "key": "myzset",
+            "min": "-inf",
+            "max": "+inf",
+            "limit": "LIMIT",
+            "offset": "10",
+            "count": "100",
+        },
+    )
