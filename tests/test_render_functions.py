@@ -248,4 +248,25 @@ def test_command_sscan(completer):
             ("class:member", '" a"'),
         ]
     )
-    assert completer.completers["members"].words == [" a", "dest", "member:__rand_int__", "a"]
+    assert completer.completers["members"].words == [
+        " a",
+        "dest",
+        "member:__rand_int__",
+        "a",
+    ]
+
+
+def test_command_sscan_config_raw(completer):
+    completer.completers["member"].words = []
+    config.raw = True
+    rendered = renders.command_sscan(
+        [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]], completer
+    )
+
+    assert rendered == b"44\na\nmember:__rand_int__\ndest\n a"
+    assert completer.completers["members"].words == [
+        " a",
+        "dest",
+        "member:__rand_int__",
+        "a",
+    ]
