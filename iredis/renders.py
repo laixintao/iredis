@@ -201,8 +201,10 @@ def render_members(items, completer):
 
 
 def _render_scan(render_response, response, completer):
-    # FIXME raw
     cursor, responses = response
+    if config.raw:
+        return b"\n".join([cursor, render_response(responses, completer)])
+
     rendered = [
         ("class:type", "(cursor) "),
         ("class:integer", cursor.decode()),
