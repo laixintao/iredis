@@ -148,6 +148,7 @@ def render_string_or_int(text, completer=None):
 
 
 def render_error(error_msg):
+    # FIXME raw
     text = _ensure_str(error_msg)
     return FormattedText([("class:type", "(error) "), ("class:error", text)])
 
@@ -157,6 +158,7 @@ def render_ok(text, completer):
     If response is b'OK', render ok with success color.
     else render message with Error color.
     """
+    # FIXME raw
     if text is None:
         return NIL
     text = _ensure_str(text)
@@ -170,6 +172,7 @@ def render_transaction_queue(text, completer):
 
     Response message should be "QUEUE" or Error.
     """
+    # FIXME raw
     text = _ensure_str(text)
     assert text == "QUEUED"
     return FormattedText([("class:queued", text)])
@@ -198,6 +201,7 @@ def render_members(items, completer):
 
 
 def _render_scan(render_response, response, completer):
+    # FIXME raw
     cursor, responses = response
     rendered = [
         ("class:type", "(cursor) "),
