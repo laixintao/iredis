@@ -226,5 +226,9 @@ def command_sscan(response, completer):
     return _render_scan(render_members, response, completer)
 
 
+def command_zscan(response, completer, with_score):
+    return _render_scan(render_members, response, completer)
+
+
 # TODO
 # special list render, bzpopmax, key-value pair
