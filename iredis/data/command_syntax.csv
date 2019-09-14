@@ -156,7 +156,7 @@ set,SMOVE,command_key_newkey_member,render_int
 set,SPOP,command_key_count_x,render_list_or_string
 set,SRANDMEMBER,command_key_count_x,render_list_or_string
 set,SREM,command_key_members,render_int
-set,SSCAN,command_pass,
+set,SSCAN,command_key_cursor_match_pattern_count,command_sscan
 set,SUNION,command_keys,render_list
 set,SUNIONSTORE,command_destination_keys,render_int
 sorted_set,BZPOPMAX,command_keys_timeout,render_list_or_string

@@ -175,23 +175,37 @@ def render_transaction_queue(text, completer):
     return FormattedText([("class:queued", text)])
 
 
-def command_keys(items, completer):
+def _update_completer_then_render(items, completer, complter_name, style):
     str_items = _ensure_str(items)
-
     # update completers
     if completer:
-        key_completer = completer.completers["key"]
-        key_completer.touch_words(str_items)
-        logger.debug(f"[Completer] key completer updated.")
+        token_completer = completer.completers[complter_name]
+        token_completer.touch_words(str_items)
+        logger.debug(f"[Completer] {complter_name} completer updated.")
     else:
         logger.debug(f"[Completer] completer is None, not updated.")
-
-    # render is render, completer is completer
-    # render and completer are in same function but code are splitted.
-    # Give back to Ceasar what is Ceasar's and to God what is God's.
     double_quoted = _double_quotes(str_items)
-    rendered = _render_list(items, double_quoted, "class:key")
+    rendered = _render_list(items, double_quoted, style)
     return rendered
+
+
+def command_keys(items, completer):
+    return _update_completer_then_render(items, completer, "key", "class:key")
+
+
+def render_members(items, completer):
+    return _update_completer_then_render(items, completer, "member", "class:member")
+
+
+def _render_scan(render_response, response, completer):
+    cursor, responses = response
+    rendered = [
+        ("class:type", "(cursor) "),
+        ("class:integer", cursor.decode()),
+        ("", "\n"),
+    ]
+    rendered_keys = render_response(responses, completer)
+    return FormattedText(rendered + rendered_keys)
 
 
 def command_scan(response, completer):
@@ -199,14 +213,11 @@ def command_scan(response, completer):
     Render Scan command result.
     see: https://redis.io/commands/scan
     """
-    cursor, responses = response
-    rendered = [
-        ("class:type", "(cursor) "),
-        ("class:integer", cursor.decode()),
-        ("", "\n"),
-    ]
-    rendered_keys = command_keys(responses, completer)
-    return FormattedText(rendered + rendered_keys)
+    return _render_scan(command_keys, response, completer)
+
+
+def command_sscan(response, completer):
+    return _render_scan(render_members, response, completer)
 
 
 # TODO
