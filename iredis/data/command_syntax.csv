@@ -47,7 +47,7 @@ generic,SCAN,command_cursor_match_pattern_count_type,command_scan
 generic,SORT,command_pass,
 generic,TOUCH,command_keys,
 generic,TTL,command_key,
-generic,TYPE,command_key,
+generic,TYPE,command_key,render_simple_strings
 generic,UNLINK,command_keys,
 generic,WAIT,command_pass,
 geo,GEOADD,command_pass,
