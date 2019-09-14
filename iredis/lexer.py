@@ -36,11 +36,17 @@ def get_lexer(command_groups, redis_grammar):
         "max": SimpleLexer("class:integer"),
         "score": SimpleLexer("class:integer"),
         "timeout": SimpleLexer("class:integer"),
+        "cursor": SimpleLexer("class:integer"),
+        "pattern": SimpleLexer("class:pattern"),
+        "type": SimpleLexer("class:string"),
         # const
         "condition": SimpleLexer("class:const"),
         "operation": SimpleLexer("class:const"),
         "withscores": SimpleLexer("class:const"),
         "limit": SimpleLexer("class:const"),
+        "match": SimpleLexer("class:const"),
+        "count_const": SimpleLexer("class:const"),
+        "type_const": SimpleLexer("class:const"),
     }
 
     lexers_dict.update({key: SimpleLexer("class:command") for key in command_groups})
