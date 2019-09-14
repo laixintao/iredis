@@ -181,7 +181,7 @@ sorted_set,ZREVRANGE,command_key_start_end_withscores_x,render_list
 sorted_set,ZREVRANGEBYLEX,command_key_lexmin_lexmax_limit_offset_count,render_list
 sorted_set,ZREVRANGEBYSCORE,command_key_min_max_withscore_x_limit_offset_count_x,render_list
 sorted_set,ZREVRANK,command_key_member,render_int
-sorted_set,ZSCAN,command_pass,
+sorted_set,ZSCAN,command_key_cursor_match_pattern_count,command_sscan
 sorted_set,ZSCORE,command_key_member,render_simple_strings
 sorted_set,ZUNIONSTORE,command_pass,render_int
 stream,XACK,command_pass,
