@@ -69,6 +69,8 @@ class Client:
         if command_name.upper() in ["EXEC", "DISCARD"]:
             logger.debug(f"[After hook] Command is {command_name}, unset transaction.")
             config.transaction = False
+        if command_name.upper() in ["ZSCAN"]:
+            config.withscores = True
 
         try:
             self.connection.send_command(command_name, *args)
@@ -161,7 +163,8 @@ class Client:
         except Exception as e:
             logger.exception(e)
             return render_error(str(e))
-
+        finally:
+            config.withscores = False
         return redis_resp
 
     def pre_hook(self, command, completer):
