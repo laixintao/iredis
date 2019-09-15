@@ -69,7 +69,7 @@ class Client:
         if command_name.upper() in ["EXEC", "DISCARD"]:
             logger.debug(f"[After hook] Command is {command_name}, unset transaction.")
             config.transaction = False
-        if command_name.upper() in ["ZSCAN"]:
+        if command_name.upper() in ["ZSCAN", "ZPOPMAX", "ZPOPMIN"]:
             config.withscores = True
 
         try:
