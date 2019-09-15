@@ -73,7 +73,7 @@ def _ensure_str(origin, decode=None):
         raise Exception(f"Unkown type: {type(origin)}, origin: {origin}")
 
 
-def render_simple_strings(value, completers=None):
+def render_simple_strings(value, completers=None, **kwargs):
     if config.raw:
         if value is None:
             return b""
@@ -83,7 +83,7 @@ def render_simple_strings(value, completers=None):
     return _double_quotes(_ensure_str(value))
 
 
-def render_int(value, completers=None):
+def render_int(value, completers=None, **kwargs):
     if config.raw:
         if value is None:
             return b""
@@ -119,7 +119,7 @@ def _render_list(byte_items, str_items, style=None):
     return FormattedText(rendered)
 
 
-def render_list(text, completer):
+def render_list(text, completer, **kwargs):
     """
     Render callback for redis Array Reply
     Note: Cloud be null in it.
@@ -135,13 +135,13 @@ def render_list(text, completer):
     return _render_list(text, str_items, "class:string")
 
 
-def render_list_or_string(text, completer=None):
+def render_list_or_string(text, completer=None, **kwargs):
     if isinstance(text, list):
         return render_list(text, completer)
     return render_simple_strings(text, completer)
 
 
-def render_string_or_int(text, completer=None):
+def render_string_or_int(text, completer=None, **kwargs):
     if isinstance(text, int):
         return render_int(text, completer)
     return render_simple_strings(text, completer)
@@ -153,7 +153,7 @@ def render_error(error_msg):
     return FormattedText([("class:type", "(error) "), ("class:error", text)])
 
 
-def render_ok(text, completer):
+def render_ok(text, completer, **kwargs):
     """
     If response is b'OK', render ok with success color.
     else render message with Error color.
@@ -166,7 +166,7 @@ def render_ok(text, completer):
     return FormattedText([("class:success", text)])
 
 
-def render_transaction_queue(text, completer):
+def render_transaction_queue(text, completer, **kwargs):
     """
     Used when client session is in a transaction.
 
@@ -192,12 +192,54 @@ def _update_completer_then_render(items, completer, complter_name, style):
     return rendered
 
 
-def command_keys(items, completer):
+def _update_completer_then_render_withscores(items, completer):
+    if not items:
+        return EMPTY_LIST
+    complter_name = "member"
+    str_items = _ensure_str(items)
+
+    members = [item for item in str_items[::2]]
+    scores = [item for item in str_items[1::2]]
+    # update completers
+    if completer:
+        token_completer = completer.completers[complter_name]
+        token_completer.touch_words(members)
+        logger.debug(f"[Completer] {complter_name} completer updated.")
+    else:
+        logger.debug(f"[Completer] completer is None, not updated.")
+    double_quoted = _double_quotes(members)
+
+    index_width = len(str(len(double_quoted)))
+    rendered = []
+    for index, item in enumerate(str_items):
+        index_const_width = f"{index+1:{index_width}})"
+        rendered.append(("", index_const_width))
+        # add a space between index and member
+        rendered.append(("", " "))
+        # add score
+        rendered.append(("class:integer", scores[index]))
+        # add member
+        if item is None:
+            rendered.append(NIL_TUPLE)
+        else:
+            rendered.append(("class:member", item))
+
+        # add a newline for eachline
+        if index + 1 < len(str_items):
+            rendered.append(NEWLINE_TUPLE)
+    return FormattedText(rendered)
+
+
+def command_keys(items, completer, **kwargs):
     return _update_completer_then_render(items, completer, "key", "class:key")
 
 
-def render_members(items, completer):
-    return _update_completer_then_render(items, completer, "member", "class:member")
+def render_members(items, completer, **kwargs):
+    if not kwargs.get("withscores") or config.raw:
+        # if without scores, render like normal list
+        return _update_completer_then_render(items, completer, "member", "class:member")
+    # special render for score: member
+    return _update_completer_then_render_withscores(items, completer)
 
 
 def _render_scan(render_response, response, completer):
@@ -214,7 +256,7 @@ def _render_scan(render_response, response, completer):
     return FormattedText(rendered + rendered_keys)
 
 
-def command_scan(response, completer):
+def command_scan(response, completer, **kwargs):
     """
     Render Scan command result.
     see: https://redis.io/commands/scan
@@ -222,11 +264,11 @@ def command_scan(response, completer):
     return _render_scan(command_keys, response, completer)
 
 
-def command_sscan(response, completer):
+def command_sscan(response, completer, **kwargs):
     return _render_scan(render_members, response, completer)
 
 
-def command_zscan(response, completer, with_score):
+def command_zscan(response, completer, **kwargs):
     return _render_scan(render_members, response, completer)
 
 
