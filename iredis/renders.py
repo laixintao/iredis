@@ -228,7 +228,7 @@ def _update_completer_then_render_withscores(items, completer):
             rendered.append(("class:member", item))
 
         # add a newline for eachline
-        if index + 1 < len(str_items):
+        if index + 1 < len(double_quoted):
             rendered.append(NEWLINE_TUPLE)
     return FormattedText(rendered)
 
