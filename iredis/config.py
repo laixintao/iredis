@@ -26,6 +26,8 @@ class Config:
         self.queued_commands = []
         # show command hint?
         self.newbie_mode = False
+        # display zset withscores?
+        self.withscores = False
 
     def __setter__(self, name, value):
         # for every time start a transaction

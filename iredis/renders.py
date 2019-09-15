@@ -200,6 +200,8 @@ def _update_completer_then_render_withscores(items, completer):
 
     members = [item for item in str_items[::2]]
     scores = [item for item in str_items[1::2]]
+    logger.debug(f"[MEMBERS] {members}")
+    logger.debug(f"[SCORES] {scores}")
     # update completers
     if completer:
         token_completer = completer.completers[complter_name]
@@ -211,7 +213,7 @@ def _update_completer_then_render_withscores(items, completer):
 
     index_width = len(str(len(double_quoted)))
     rendered = []
-    for index, item in enumerate(str_items):
+    for index, item in enumerate(members):
         index_const_width = f"{index+1:{index_width}})"
         rendered.append(("", index_const_width))
         # add a space between index and member
@@ -235,7 +237,7 @@ def command_keys(items, completer, **kwargs):
 
 
 def render_members(items, completer, **kwargs):
-    if not kwargs.get("withscores") or config.raw:
+    if not config.withscores or config.raw:
         # if without scores, render like normal list
         return _update_completer_then_render(items, completer, "member", "class:member")
     # special render for score: member
