@@ -209,17 +209,18 @@ def _update_completer_then_render_withscores(items, completer):
         logger.debug(f"[Completer] {complter_name} completer updated.")
     else:
         logger.debug(f"[Completer] completer is None, not updated.")
+    # render display
     double_quoted = _double_quotes(members)
-
     index_width = len(str(len(double_quoted)))
+    score_width = max(len(score) for score in scores)
     rendered = []
-    for index, item in enumerate(members):
+    for index, item in enumerate(double_quoted):
         index_const_width = f"{index+1:{index_width}})"
         rendered.append(("", index_const_width))
         # add a space between index and member
         rendered.append(("", " "))
         # add score
-        rendered.append(("class:integer", scores[index]))
+        rendered.append(("class:integer", f"{scores[index]:{score_width}} "))
         # add member
         if item is None:
             rendered.append(NIL_TUPLE)
