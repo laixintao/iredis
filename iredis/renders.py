@@ -73,7 +73,7 @@ def _ensure_str(origin, decode=None):
         raise Exception(f"Unkown type: {type(origin)}, origin: {origin}")
 
 
-def render_simple_strings(value, completers=None, **kwargs):
+def render_simple_strings(value, completers=None):
     if config.raw:
         if value is None:
             return b""
@@ -83,7 +83,7 @@ def render_simple_strings(value, completers=None, **kwargs):
     return _double_quotes(_ensure_str(value))
 
 
-def render_int(value, completers=None, **kwargs):
+def render_int(value, completers=None):
     if config.raw:
         if value is None:
             return b""
@@ -119,7 +119,7 @@ def _render_list(byte_items, str_items, style=None):
     return FormattedText(rendered)
 
 
-def render_list(text, completer, **kwargs):
+def render_list(text, completer):
     """
     Render callback for redis Array Reply
     Note: Cloud be null in it.
@@ -135,13 +135,13 @@ def render_list(text, completer, **kwargs):
     return _render_list(text, str_items, "class:string")
 
 
-def render_list_or_string(text, completer=None, **kwargs):
+def render_list_or_string(text, completer=None):
     if isinstance(text, list):
         return render_list(text, completer)
     return render_simple_strings(text, completer)
 
 
-def render_string_or_int(text, completer=None, **kwargs):
+def render_string_or_int(text, completer=None):
     if isinstance(text, int):
         return render_int(text, completer)
     return render_simple_strings(text, completer)
@@ -153,7 +153,7 @@ def render_error(error_msg):
     return FormattedText([("class:type", "(error) "), ("class:error", text)])
 
 
-def render_ok(text, completer, **kwargs):
+def render_ok(text, completer):
     """
     If response is b'OK', render ok with success color.
     else render message with Error color.
@@ -166,7 +166,7 @@ def render_ok(text, completer, **kwargs):
     return FormattedText([("class:success", text)])
 
 
-def render_transaction_queue(text, completer, **kwargs):
+def render_transaction_queue(text, completer):
     """
     Used when client session is in a transaction.
 
@@ -233,11 +233,11 @@ def _update_completer_then_render_withscores(items, completer):
     return FormattedText(rendered)
 
 
-def command_keys(items, completer, **kwargs):
+def command_keys(items, completer):
     return _update_completer_then_render(items, completer, "key", "class:key")
 
 
-def render_members(items, completer, **kwargs):
+def render_members(items, completer):
     if not config.withscores or config.raw:
         # if without scores, render like normal list
         return _update_completer_then_render(items, completer, "member", "class:member")
@@ -259,7 +259,7 @@ def _render_scan(render_response, response, completer):
     return FormattedText(rendered + rendered_keys)
 
 
-def command_scan(response, completer, **kwargs):
+def command_scan(response, completer):
     """
     Render Scan command result.
     see: https://redis.io/commands/scan
@@ -267,11 +267,11 @@ def command_scan(response, completer, **kwargs):
     return _render_scan(command_keys, response, completer)
 
 
-def command_sscan(response, completer, **kwargs):
+def command_sscan(response, completer):
     return _render_scan(render_members, response, completer)
 
 
-def command_zscan(response, completer, **kwargs):
+def command_zscan(response, completer):
     return _render_scan(render_members, response, completer)
 
 
