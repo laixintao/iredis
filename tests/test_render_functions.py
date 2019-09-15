@@ -270,3 +270,35 @@ def test_command_sscan_config_raw(completer):
         "member:__rand_int__",
         "a",
     ]
+
+
+def test_render_members(completer):
+    completer.completers["members"].words = []
+    config.raw = False
+    config.withscores = True
+    rendered = renders.render_members([b"duck", b"667", b"camel", b"708"], completer)
+
+    assert rendered == FormattedText(
+        [
+            ("", "1)"),
+            ("", " "),
+            ("class:integer", "667 "),
+            ("class:member", '"duck"'),
+            ("", "\n"),
+            ("", "2)"),
+            ("", " "),
+            ("class:integer", "708 "),
+            ("class:member", '"camel"'),
+        ]
+    )
+    assert completer.completers["member"].words == ["camel", "duck"]
+
+
+def test_render_members_config_raw(completer):
+    completer.completers["members"].words = []
+    config.raw = True
+    config.withscores = True
+    rendered = renders.render_members([b"duck", b"667", b"camel", b"708"], completer)
+
+    assert rendered == b"duck\n667\ncamel\n708"
+    assert completer.completers["member"].words == ["camel", "duck"]
