@@ -178,12 +178,15 @@ def render_transaction_queue(text, completer):
     return FormattedText([("class:queued", text)])
 
 
-def _update_completer_then_render(items, completer, complter_name, style):
+def _update_completer_then_render(items, completer, complter_name, style, completer_iter_step=1):
+    """
+    :param completer_iter_step: every `completer_iter_step` items is used to update complters
+    """
     str_items = _ensure_str(items)
     # update completers
     if completer:
         token_completer = completer.completers[complter_name]
-        token_completer.touch_words(str_items)
+        token_completer.touch_words(str_items[::completer_iter_step])
         logger.debug(f"[Completer] {complter_name} completer updated.")
     else:
         logger.debug(f"[Completer] completer is None, not updated.")
@@ -238,11 +241,11 @@ def command_keys(items, completer):
 
 
 def render_members(items, completer):
-    if not config.withscores or config.raw:
-        # if without scores, render like normal list
-        return _update_completer_then_render(items, completer, "member", "class:member")
-    # special render for score: member
-    return _update_completer_then_render_withscores(items, completer)
+    if config.withscores:
+        if config.raw:
+            return _update_completer_then_render(items, completer, "member", "class:member", completer_iter_step=2)
+        return _update_completer_then_render_withscores(items, completer)
+    return _update_completer_then_render(items, completer, "member", "class:member", completer_iter_step=1)
 
 
 def _render_scan(render_response, response, completer):
