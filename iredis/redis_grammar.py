@@ -27,6 +27,7 @@ KEYS = fr"(?P<keys>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 DESTINATION = fr"(?P<destination>{VALID_TOKEN})"
 NEWKEY = fr"(?P<newkey>{VALID_TOKEN})"
 VALUE = fr"(?P<value>{VALID_TOKEN})"
+VALUES = fr"(?P<values>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 FIELDS = fr"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 MEMBER = fr"(?P<member>{VALID_TOKEN})"
 MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
@@ -150,6 +151,7 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {FLOAT}                      \s*)|
 (\s*  (?P<command_key_valuess>({t['command_key_valuess']}))
                                                        (\s+ {KEY}    \s+ {VALUE})+                    \s*)|
+(\s*  (?P<command_key_values>({t['command_key_values']}))  \s+ {KEY}  \s+ {VALUES}                    \s*)|
 (\s*  (?P<command_key_millisecond_value>({t['command_key_millisecond_value']}))
                                                        \s+ {KEY}     \s+ {MILLISECOND}   \s+ {VALUE}  \s*)|
 (\s*  (?P<command_operation_key_keys>({t['command_operation_key_keys']}))

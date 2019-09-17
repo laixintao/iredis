@@ -18,6 +18,7 @@ def get_lexer(command_groups, redis_grammar):
         "member": SimpleLexer("class:member"),
         "members": SimpleLexer("class:member"),
         "value": SimpleLexer("class:string"),
+        "values": SimpleLexer("class:string"),
         "lexmin": SimpleLexer("class:string"),
         "lexmax": SimpleLexer("class:string"),
         "bit": SimpleLexer("class:bit"),
