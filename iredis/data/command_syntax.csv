@@ -74,7 +74,7 @@ hash,HVALS,command_pass,
 hyperloglog,PFADD,command_pass,
 hyperloglog,PFCOUNT,command_pass,
 hyperloglog,PFMERGE,command_pass,
-list,BLPOP,command_pass,
+list,BLPOP,command_keys_timeout,render_list_or_string
 list,BRPOP,command_pass,
 list,BRPOPLPUSH,command_pass,
 list,LINDEX,command_pass,
