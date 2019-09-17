@@ -69,6 +69,8 @@ class Client:
         if command_name.upper() in ["EXEC", "DISCARD"]:
             logger.debug(f"[After hook] Command is {command_name}, unset transaction.")
             config.transaction = False
+        if command_name.upper() in ["ZSCAN", "ZPOPMAX", "ZPOPMIN"]:
+            config.withscores = True
 
         try:
             self.connection.send_command(command_name, *args)
@@ -154,17 +156,18 @@ class Client:
         input_command = ""
         try:
             input_command, args = split_command_args(command, all_commands)
-            self.patch_completers(command, completer)
+            self.pre_hook(command, completer)
             redis_resp = self.execute_command_and_read_response(
                 completer, input_command, *args
             )
         except Exception as e:
             logger.exception(e)
             return render_error(str(e))
-
+        finally:
+            config.withscores = False
         return redis_resp
 
-    def patch_completers(self, command, completer):
+    def pre_hook(self, command, completer):
         """
         Before execute command, patch completers first.
         Eg: When user run `GET foo`, key completer need to
@@ -181,6 +184,11 @@ class Client:
             # invalide command!
             return
         variables = m.variables()
+        # zset withscores
+        withscores = variables.get("withscores")
+        logger.debug(f"[PRE HOOK] withscores: {withscores}")
+        if withscores:
+            config.withscores = True
 
         # auto update LatestUsedFirstWordCompleter
         for _token, _completer in completer.completers.items():
