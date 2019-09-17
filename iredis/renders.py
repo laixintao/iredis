@@ -148,6 +148,7 @@ def render_string_or_int(text, completer=None):
 
 
 def render_error(error_msg):
+    # FIXME raw
     text = _ensure_str(error_msg)
     return FormattedText([("class:type", "(error) "), ("class:error", text)])
 
@@ -157,6 +158,7 @@ def render_ok(text, completer):
     If response is b'OK', render ok with success color.
     else render message with Error color.
     """
+    # FIXME raw
     if text is None:
         return NIL
     text = _ensure_str(text)
@@ -170,28 +172,110 @@ def render_transaction_queue(text, completer):
 
     Response message should be "QUEUE" or Error.
     """
+    # FIXME raw
     text = _ensure_str(text)
     assert text == "QUEUED"
     return FormattedText([("class:queued", text)])
 
 
-def command_keys(items, completer):
+def _update_completer_then_render(items, completer, complter_name, style, completer_iter_step=1):
+    """
+    :param completer_iter_step: every `completer_iter_step` items is used to update complters
+    """
     str_items = _ensure_str(items)
-
     # update completers
     if completer:
-        key_completer = completer.completers["key"]
-        key_completer.touch_words(str_items)
-        logger.debug(f"[Completer] key completer updated.")
+        token_completer = completer.completers[complter_name]
+        token_completer.touch_words(str_items[::completer_iter_step])
+        logger.debug(f"[Completer] {complter_name} completer updated.")
     else:
         logger.debug(f"[Completer] completer is None, not updated.")
-
-    # render is render, completer is completer
-    # render and completer are in same function but code are splitted.
-    # Give back to Ceasar what is Ceasar's and to God what is God's.
     double_quoted = _double_quotes(str_items)
-    rendered = _render_list(items, double_quoted, "class:key")
+    rendered = _render_list(items, double_quoted, style)
     return rendered
+
+
+def _update_completer_then_render_withscores(items, completer):
+    if not items:
+        return EMPTY_LIST
+    complter_name = "member"
+    str_items = _ensure_str(items)
+
+    members = [item for item in str_items[::2]]
+    scores = [item for item in str_items[1::2]]
+    logger.debug(f"[MEMBERS] {members}")
+    logger.debug(f"[SCORES] {scores}")
+    # update completers
+    if completer:
+        token_completer = completer.completers[complter_name]
+        token_completer.touch_words(members)
+        logger.debug(f"[Completer] {complter_name} completer updated.")
+    else:
+        logger.debug(f"[Completer] completer is None, not updated.")
+    # render display
+    double_quoted = _double_quotes(members)
+    index_width = len(str(len(double_quoted)))
+    score_width = max(len(score) for score in scores)
+    rendered = []
+    for index, item in enumerate(double_quoted):
+        index_const_width = f"{index+1:{index_width}})"
+        rendered.append(("", index_const_width))
+        # add a space between index and member
+        rendered.append(("", " "))
+        # add score
+        rendered.append(("class:integer", f"{scores[index]:{score_width}} "))
+        # add member
+        if item is None:
+            rendered.append(NIL_TUPLE)
+        else:
+            rendered.append(("class:member", item))
+
+        # add a newline for eachline
+        if index + 1 < len(double_quoted):
+            rendered.append(NEWLINE_TUPLE)
+    return FormattedText(rendered)
+
+
+def command_keys(items, completer):
+    return _update_completer_then_render(items, completer, "key", "class:key")
+
+
+def render_members(items, completer):
+    if config.withscores:
+        if config.raw:
+            return _update_completer_then_render(items, completer, "member", "class:member", completer_iter_step=2)
+        return _update_completer_then_render_withscores(items, completer)
+    return _update_completer_then_render(items, completer, "member", "class:member", completer_iter_step=1)
+
+
+def _render_scan(render_response, response, completer):
+    cursor, responses = response
+    if config.raw:
+        return b"\n".join([cursor, render_response(responses, completer)])
+
+    rendered = [
+        ("class:type", "(cursor) "),
+        ("class:integer", cursor.decode()),
+        ("", "\n"),
+    ]
+    rendered_keys = render_response(responses, completer)
+    return FormattedText(rendered + rendered_keys)
+
+
+def command_scan(response, completer):
+    """
+    Render Scan command result.
+    see: https://redis.io/commands/scan
+    """
+    return _render_scan(command_keys, response, completer)
+
+
+def command_sscan(response, completer):
+    return _render_scan(render_members, response, completer)
+
+
+def command_zscan(response, completer):
+    return _render_scan(render_members, response, completer)
 
 
 # TODO

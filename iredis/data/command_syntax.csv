@@ -43,11 +43,11 @@ generic,RANDOMKEY,command,
 generic,RENAME,command_key_newkey,
 generic,RENAMENX,command_key_newkey,
 generic,RESTORE,command_pass,
-generic,SCAN,command_pass,
+generic,SCAN,command_cursor_match_pattern_count_type,command_scan
 generic,SORT,command_pass,
 generic,TOUCH,command_keys,
 generic,TTL,command_key,
-generic,TYPE,command_key,
+generic,TYPE,command_key,render_simple_strings
 generic,UNLINK,command_keys,
 generic,WAIT,command_pass,
 geo,GEOADD,command_pass,
@@ -156,7 +156,7 @@ set,SMOVE,command_key_newkey_member,render_int
 set,SPOP,command_key_count_x,render_list_or_string
 set,SRANDMEMBER,command_key_count_x,render_list_or_string
 set,SREM,command_key_members,render_int
-set,SSCAN,command_pass,
+set,SSCAN,command_key_cursor_match_pattern_count,command_sscan
 set,SUNION,command_keys,render_list
 set,SUNIONSTORE,command_destination_keys,render_int
 sorted_set,BZPOPMAX,command_keys_timeout,render_list_or_string
@@ -167,11 +167,11 @@ sorted_set,ZCOUNT,command_key_min_max,render_int
 sorted_set,ZINCRBY,command_key_float_member,render_simple_strings
 sorted_set,ZINTERSTORE,command_pass,render_int
 sorted_set,ZLEXCOUNT,command_key_lexmin_lexmax,render_int
-sorted_set,ZPOPMAX,command_key_count_x,render_list
-sorted_set,ZPOPMIN,command_key_count_x,render_list
-sorted_set,ZRANGE,command_key_start_end_withscores_x,render_list
+sorted_set,ZPOPMAX,command_key_count_x,render_members
+sorted_set,ZPOPMIN,command_key_count_x,render_members
+sorted_set,ZRANGE,command_key_start_end_withscores_x,render_members
 sorted_set,ZRANGEBYLEX,command_key_lexmin_lexmax_limit_offset_count,render_list
-sorted_set,ZRANGEBYSCORE,command_key_min_max_withscore_x_limit_offset_count_x,render_list
+sorted_set,ZRANGEBYSCORE,command_key_min_max_withscore_x_limit_offset_count_x,render_members
 sorted_set,ZRANK,command_key_member,render_int
 sorted_set,ZREM,command_key_members,render_int
 sorted_set,ZREMRANGEBYLEX,command_key_lexmin_lexmax,render_int
@@ -181,7 +181,7 @@ sorted_set,ZREVRANGE,command_key_start_end_withscores_x,render_list
 sorted_set,ZREVRANGEBYLEX,command_key_lexmin_lexmax_limit_offset_count,render_list
 sorted_set,ZREVRANGEBYSCORE,command_key_min_max_withscore_x_limit_offset_count_x,render_list
 sorted_set,ZREVRANK,command_key_member,render_int
-sorted_set,ZSCAN,command_pass,
+sorted_set,ZSCAN,command_key_cursor_match_pattern_count,command_sscan
 sorted_set,ZSCORE,command_key_member,render_simple_strings
 sorted_set,ZUNIONSTORE,command_pass,render_int
 stream,XACK,command_pass,

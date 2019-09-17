@@ -89,3 +89,42 @@ def test_rename(judge_command):
         {"command_key_newkey": "rename", "key": "123", "newkey": "newkey"},
     )
     judge_command("rename 123 ", None)
+
+
+def test_scan(judge_command):
+    judge_command(
+        "SCAN 0 MATCH task* COUNT 15 TYPE string",
+        {
+            "command_cursor_match_pattern_count_type": "SCAN",
+            "cursor": "0",
+            "match": "MATCH",
+            "pattern": "task*",
+            "count_const": "COUNT",
+            "count": "15",
+            "type_const": "TYPE",
+            "type": "string",
+        },
+    )
+    judge_command(
+        "SCAN 0", {"command_cursor_match_pattern_count_type": "SCAN", "cursor": "0"}
+    )
+    judge_command(
+        "SCAN 0 MATCH task*",
+        {
+            "command_cursor_match_pattern_count_type": "SCAN",
+            "cursor": "0",
+            "match": "MATCH",
+            "pattern": "task*",
+        },
+    )
+    judge_command(
+        "SCAN 0 COUNT 15 TYPE string",
+        {
+            "command_cursor_match_pattern_count_type": "SCAN",
+            "cursor": "0",
+            "count_const": "COUNT",
+            "count": "15",
+            "type_const": "TYPE",
+            "type": "string",
+        },
+    )
