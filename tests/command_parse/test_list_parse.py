@@ -66,3 +66,24 @@ def test_brpoplpush(judge_command):
         },
     )
     judge_command("BRPOPLPUSH list1 list2 -1", None)
+
+
+def test_linsert(judge_command):
+    judge_command(
+        'LINSERT mylist BEFORE "World" "There"',
+        {
+            "command_key_positionchoice_pivot_value": "LINSERT",
+            "key": "mylist",
+            "position_choice": "BEFORE",
+            "value": ['"World"', '"There"'],
+        },
+    )
+    judge_command(
+        'LINSERT mylist after "World" "There"',
+        {
+            "command_key_positionchoice_pivot_value": "LINSERT",
+            "key": "mylist",
+            "position_choice": "after",
+            "value": ['"World"', '"There"'],
+        },
+    )
