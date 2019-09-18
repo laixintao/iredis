@@ -79,7 +79,7 @@ list,BRPOP,command_keys_timeout,render_list_or_string
 list,BRPOPLPUSH,command_pass,render_simple_strings
 list,LINDEX,command_key_float,render_simple_strings
 list,LINSERT,command_pass,
-list,LLEN,command_pass,
+list,LLEN,command_key,render_int
 list,LPOP,command_pass,
 list,LPUSH,command_key_values,render_int
 list,LPUSHX,command_key_value,render_int
