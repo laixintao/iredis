@@ -88,7 +88,7 @@ list,LREM,command_pass,
 list,LSET,command_key_position_value,render_ok
 list,LTRIM,command_pass,
 list,RPOP,command_key,render_simple_strings
-list,RPOPLPUSH,command_pass,
+list,RPOPLPUSH,command_key_newkey,render_simple_strings
 list,RPUSH,command_key_values,render_int
 list,RPUSHX,command_key_value,render_int
 pubsub,PSUBSCRIBE,command_pass,
