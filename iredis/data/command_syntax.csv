@@ -77,7 +77,7 @@ hyperloglog,PFMERGE,command_pass,
 list,BLPOP,command_keys_timeout,render_list_or_string
 list,BRPOP,command_keys_timeout,render_list_or_string
 list,BRPOPLPUSH,command_pass,render_simple_strings
-list,LINDEX,command_key_float,render_simple_strings
+list,LINDEX,command_key_position,render_simple_strings
 list,LINSERT,command_pass,
 list,LLEN,command_key,render_int
 list,LPOP,command_key,render_simple_strings

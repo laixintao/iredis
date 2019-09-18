@@ -58,9 +58,10 @@ ANY = r"(?P<any>.*)"  # TODO deleted
 START = fr"(?P<start>{NNUM})"
 END = fr"(?P<end>{NNUM})"
 DELTA = fr"(?P<delta>{NNUM})"
-OFFSET = fr"(?P<offset>{NUM})"
+OFFSET = fr"(?P<offset>{NUM})"  # string offset, can't be negative
 MIN = fr"(?P<min>{NNUM})"
 MAX = fr"(?P<max>{NNUM})"
+POSITION = fr"(?P<position>{NNUM})"
 TIMEOUT = fr"(?P<timeout>{NUM})"
 SCORE = fr"(?P<score>{_FLOAT})"
 LEXMIN = fr"(?P<lexmin>{LEXNUM})"
@@ -143,8 +144,8 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {OFFSET} \s+ {VALUE}         \s*)|
 (\s*  (?P<command_key_offset_bit>({t['command_key_offset_bit']}))
                                                        \s+ {KEY}     \s+ {OFFSET} \s+ {BIT}           \s*)|
-(\s*  (?P<command_key_offset>({t['command_key_offset']}))
-                                                       \s+ {KEY}     \s+ {OFFSET}                     \s*)|
+(\s*  (?P<command_key_offset>({t['command_key_offset']}))  \s+ {KEY}  \s+ {OFFSET}                    \s*)|
+(\s*  (?P<command_key_position>({t['command_key_position']}))  \s+ {KEY}  \s+ {POSITION}              \s*)|
 (\s*  (?P<command_key_second_value>({t['command_key_second_value']}))
                                                        \s+ {KEY}     \s+ {SECOND} \s+ {VALUE}         \s*)|
 (\s*  (?P<command_key_float>({t['command_key_float']}))
