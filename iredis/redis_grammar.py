@@ -146,6 +146,8 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {OFFSET} \s+ {BIT}           \s*)|
 (\s*  (?P<command_key_offset>({t['command_key_offset']}))  \s+ {KEY}  \s+ {OFFSET}                    \s*)|
 (\s*  (?P<command_key_position>({t['command_key_position']}))  \s+ {KEY}  \s+ {POSITION}              \s*)|
+(\s*  (?P<command_key_position_value>({t['command_key_position_value']}))
+      \s+ {KEY}  \s+ {POSITION}  \s+ {VALUE}                                                          \s*)|
 (\s*  (?P<command_key_second_value>({t['command_key_second_value']}))
                                                        \s+ {KEY}     \s+ {SECOND} \s+ {VALUE}         \s*)|
 (\s*  (?P<command_key_float>({t['command_key_float']}))
