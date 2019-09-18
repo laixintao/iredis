@@ -27,6 +27,7 @@ KEYS = fr"(?P<keys>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 DESTINATION = fr"(?P<destination>{VALID_TOKEN})"
 NEWKEY = fr"(?P<newkey>{VALID_TOKEN})"
 VALUE = fr"(?P<value>{VALID_TOKEN})"
+VALUES = fr"(?P<values>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 FIELDS = fr"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 MEMBER = fr"(?P<member>{VALID_TOKEN})"
 MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
@@ -57,9 +58,10 @@ ANY = r"(?P<any>.*)"  # TODO deleted
 START = fr"(?P<start>{NNUM})"
 END = fr"(?P<end>{NNUM})"
 DELTA = fr"(?P<delta>{NNUM})"
-OFFSET = fr"(?P<offset>{NUM})"
+OFFSET = fr"(?P<offset>{NUM})"  # string offset, can't be negative
 MIN = fr"(?P<min>{NNUM})"
 MAX = fr"(?P<max>{NNUM})"
+POSITION = fr"(?P<position>{NNUM})"
 TIMEOUT = fr"(?P<timeout>{NUM})"
 SCORE = fr"(?P<score>{_FLOAT})"
 LEXMIN = fr"(?P<lexmin>{LEXNUM})"
@@ -85,6 +87,8 @@ MATCH = r"(?P<match>(MATCH|match))"
 COUNT_CONST = r"(?P<count_const>(COUNT|count))"
 TYPE_CONST = r"(?P<type_const>(TYPE|type))"
 TYPE = r"(?P<type>(STRING|LIST|SET|ZSET|HASH|STREAM|string|list|set|zset|hash|stream))"
+POSITION_CHOICE = r"(?P<position_choice>(BEFORE|AFTER|before|after))"
+
 
 REDIS_COMMANDS = fr"""
 (\s*  (?P<command_slots>({t['command_slots']}))        \s+ {SLOTS}                                    \s*)|
@@ -124,10 +128,13 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {MILLISECOND}                \s*)|
 (\s*  (?P<command_key_timestampms>({t['command_key_timestampms']}))
                                                        \s+ {KEY}     \s+ {TIMESTAMPMS}                \s*)|
-(\s*  (?P<command_key_newkey>({t['command_key_newkey']}))
-                                                       \s+ {KEY}     \s+ {NEWKEY}                     \s*)|
+(\s*  (?P<command_key_newkey>({t['command_key_newkey']}))  \s+ {KEY}  \s+ {NEWKEY}                    \s*)|
+(\s*  (?P<command_key_newkey_timeout>({t['command_key_newkey_timeout']}))
+      \s+ {KEY}  \s+ {NEWKEY}  \s+ {TIMEOUT}                                                          \s*)|
 (\s*  (?P<command_keys_timeout>({t['command_keys_timeout']}))
-                                                       \s+ {KEYS}    \s+ {TIMEOUT}                     \s*)|
+                                                       \s+ {KEYS}    \s+ {TIMEOUT}                    \s*)|
+(\s*  (?P<command_key_positionchoice_pivot_value>({t['command_key_positionchoice_pivot_value']}))
+      \s+ {KEY}  \s+ {POSITION_CHOICE}  \s+ {VALUE}  \s+ {VALUE}                                      \s*)|
 (\s*  (?P<command_pass>({t['command_pass']}))          \s+ {ANY}                                      \s*)|
 (\s*  (?P<command_key_value_expiration_condition>({t['command_key_value_expiration_condition']}))
                                                        \s+ {KEY}     \s+ {VALUE}
@@ -142,14 +149,17 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {OFFSET} \s+ {VALUE}         \s*)|
 (\s*  (?P<command_key_offset_bit>({t['command_key_offset_bit']}))
                                                        \s+ {KEY}     \s+ {OFFSET} \s+ {BIT}           \s*)|
-(\s*  (?P<command_key_offset>({t['command_key_offset']}))
-                                                       \s+ {KEY}     \s+ {OFFSET}                     \s*)|
+(\s*  (?P<command_key_offset>({t['command_key_offset']}))  \s+ {KEY}  \s+ {OFFSET}                    \s*)|
+(\s*  (?P<command_key_position>({t['command_key_position']}))  \s+ {KEY}  \s+ {POSITION}              \s*)|
+(\s*  (?P<command_key_position_value>({t['command_key_position_value']}))
+      \s+ {KEY}  \s+ {POSITION}  \s+ {VALUE}                                                          \s*)|
 (\s*  (?P<command_key_second_value>({t['command_key_second_value']}))
                                                        \s+ {KEY}     \s+ {SECOND} \s+ {VALUE}         \s*)|
 (\s*  (?P<command_key_float>({t['command_key_float']}))
                                                        \s+ {KEY}     \s+ {FLOAT}                      \s*)|
 (\s*  (?P<command_key_valuess>({t['command_key_valuess']}))
                                                        (\s+ {KEY}    \s+ {VALUE})+                    \s*)|
+(\s*  (?P<command_key_values>({t['command_key_values']}))  \s+ {KEY}  \s+ {VALUES}                    \s*)|
 (\s*  (?P<command_key_millisecond_value>({t['command_key_millisecond_value']}))
                                                        \s+ {KEY}     \s+ {MILLISECOND}   \s+ {VALUE}  \s*)|
 (\s*  (?P<command_operation_key_keys>({t['command_operation_key_keys']}))
