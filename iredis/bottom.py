@@ -39,4 +39,4 @@ class BottomToolbar:
                 command_info = commands_summary[self.command_holder.command]
                 hint = command_syntax(self.command_holder.command, command_info)
                 return hint
-        return "Report bugs: https://github.com/laixintao/iredis/issues"
+        return "Report bugs: iredis.io/issues"
