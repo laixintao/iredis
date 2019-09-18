@@ -37,6 +37,7 @@ def get_lexer(command_groups, redis_grammar):
         "max": SimpleLexer("class:integer"),
         "score": SimpleLexer("class:integer"),
         "timeout": SimpleLexer("class:integer"),
+        "position": SimpleLexer("class:integer"),
         "cursor": SimpleLexer("class:integer"),
         "pattern": SimpleLexer("class:pattern"),
         "type": SimpleLexer("class:string"),
