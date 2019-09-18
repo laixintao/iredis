@@ -98,6 +98,7 @@ def get_completer(group2commands, redis_grammar):
         "count_const": "COUNT",
         "type_const": "TYPE",
         "type": "string list set zset hash stream",
+        "position_choice": "BEFORE AFTER",
     }
     completer_mapping.update(
         {

@@ -87,6 +87,8 @@ MATCH = r"(?P<match>(MATCH|match))"
 COUNT_CONST = r"(?P<count_const>(COUNT|count))"
 TYPE_CONST = r"(?P<type_const>(TYPE|type))"
 TYPE = r"(?P<type>(STRING|LIST|SET|ZSET|HASH|STREAM|string|list|set|zset|hash|stream))"
+POSITION_CHOICE = r"(?P<position_choice>(BEFORE|AFTER|before|after))"
+
 
 REDIS_COMMANDS = fr"""
 (\s*  (?P<command_slots>({t['command_slots']}))        \s+ {SLOTS}                                    \s*)|
@@ -130,7 +132,9 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_newkey_timeout>({t['command_key_newkey_timeout']}))
       \s+ {KEY}  \s+ {NEWKEY}  \s+ {TIMEOUT}                                                          \s*)|
 (\s*  (?P<command_keys_timeout>({t['command_keys_timeout']}))
-                                                       \s+ {KEYS}    \s+ {TIMEOUT}                     \s*)|
+                                                       \s+ {KEYS}    \s+ {TIMEOUT}                    \s*)|
+(\s*  (?P<command_key_positionchoice_pivot_value>({t['command_key_positionchoice_pivot_value']}))
+      \s+ {KEY}  \s+ {POSITION_CHOICE}  \s+ {VALUE}  \s+ {VALUE}                                      \s*)|
 (\s*  (?P<command_pass>({t['command_pass']}))          \s+ {ANY}                                      \s*)|
 (\s*  (?P<command_key_value_expiration_condition>({t['command_key_value_expiration_condition']}))
                                                        \s+ {KEY}     \s+ {VALUE}
