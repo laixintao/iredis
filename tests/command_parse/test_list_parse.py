@@ -44,3 +44,25 @@ def test_lset(judge_command):
             "value": "newbie",
         },
     )
+
+
+def test_brpoplpush(judge_command):
+    judge_command(
+        "BRPOPLPUSH list1 list2 10",
+        {
+            "command_key_newkey_timeout": "BRPOPLPUSH",
+            "key": "list1",
+            "newkey": "list2",
+            "timeout": "10",
+        },
+    )
+    judge_command(
+        "BRPOPLPUSH list1 list2 0",
+        {
+            "command_key_newkey_timeout": "BRPOPLPUSH",
+            "key": "list1",
+            "newkey": "list2",
+            "timeout": "0",
+        },
+    )
+    judge_command("BRPOPLPUSH list1 list2 -1", None)

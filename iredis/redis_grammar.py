@@ -126,8 +126,9 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {MILLISECOND}                \s*)|
 (\s*  (?P<command_key_timestampms>({t['command_key_timestampms']}))
                                                        \s+ {KEY}     \s+ {TIMESTAMPMS}                \s*)|
-(\s*  (?P<command_key_newkey>({t['command_key_newkey']}))
-                                                       \s+ {KEY}     \s+ {NEWKEY}                     \s*)|
+(\s*  (?P<command_key_newkey>({t['command_key_newkey']}))  \s+ {KEY}  \s+ {NEWKEY}                    \s*)|
+(\s*  (?P<command_key_newkey_timeout>({t['command_key_newkey_timeout']}))
+      \s+ {KEY}  \s+ {NEWKEY}  \s+ {TIMEOUT}                                                          \s*)|
 (\s*  (?P<command_keys_timeout>({t['command_keys_timeout']}))
                                                        \s+ {KEYS}    \s+ {TIMEOUT}                     \s*)|
 (\s*  (?P<command_pass>({t['command_pass']}))          \s+ {ANY}                                      \s*)|
