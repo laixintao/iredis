@@ -62,7 +62,7 @@ hash,HGET,command_pass,
 hash,HGETALL,command_pass,
 hash,HINCRBY,command_pass,
 hash,HINCRBYFLOAT,command_pass,
-hash,HKEYS,command_pass,
+hash,HKEYS,command_key,command_hkeys
 hash,HLEN,command_pass,
 hash,HMGET,command_key_fields,render_list
 hash,HMSET,command_key_fieldvalues,render_simple_strings

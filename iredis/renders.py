@@ -178,7 +178,9 @@ def render_transaction_queue(text, completer):
     return FormattedText([("class:queued", text)])
 
 
-def _update_completer_then_render(items, completer, complter_name, style, completer_iter_step=1):
+def _update_completer_then_render(
+    items, completer, complter_name, style, completer_iter_step=1
+):
     """
     :param completer_iter_step: every `completer_iter_step` items is used to update complters
     """
@@ -243,9 +245,13 @@ def command_keys(items, completer):
 def render_members(items, completer):
     if config.withscores:
         if config.raw:
-            return _update_completer_then_render(items, completer, "member", "class:member", completer_iter_step=2)
+            return _update_completer_then_render(
+                items, completer, "member", "class:member", completer_iter_step=2
+            )
         return _update_completer_then_render_withscores(items, completer)
-    return _update_completer_then_render(items, completer, "member", "class:member", completer_iter_step=1)
+    return _update_completer_then_render(
+        items, completer, "member", "class:member", completer_iter_step=1
+    )
 
 
 def _render_scan(render_response, response, completer):
@@ -276,6 +282,10 @@ def command_sscan(response, completer):
 
 def command_zscan(response, completer):
     return _render_scan(render_members, response, completer)
+
+
+def command_hkeys(response, completer):
+    return _update_completer_then_render(response, completer, "field", "class:field")
 
 
 # TODO
