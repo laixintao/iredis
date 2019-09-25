@@ -83,6 +83,7 @@ def get_completer(group2commands, redis_grammar):
 
     key_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     member_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+    field_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     const_completers = {
         "failoverchoice": "TAKEOVER FORCE",
         "withscores": "WITHSCORES",
@@ -116,6 +117,9 @@ def get_completer(group2commands, redis_grammar):
             # member
             "member": member_completer,
             "members": member_completer,
+            # hash fields
+            "field": field_completer,
+            "fields": field_completer,
         }
     )
     completer = RedisGrammarCompleter(redis_grammar, completer_mapping)
