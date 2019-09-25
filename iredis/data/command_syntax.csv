@@ -65,7 +65,7 @@ hash,HINCRBYFLOAT,command_pass,
 hash,HKEYS,command_pass,
 hash,HLEN,command_pass,
 hash,HMGET,command_pass,
-hash,HMSET,command_pass,
+hash,HMSET,command_key_fieldvalues,render_simple_strings
 hash,HSCAN,command_pass,
 hash,HSET,command_pass,
 hash,HSETNX,command_pass,

@@ -29,6 +29,7 @@ NEWKEY = fr"(?P<newkey>{VALID_TOKEN})"
 VALUE = fr"(?P<value>{VALID_TOKEN})"
 VALUES = fr"(?P<values>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 FIELDS = fr"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
+FIELD = fr"(?P<field>{VALID_TOKEN})"
 MEMBER = fr"(?P<member>{VALID_TOKEN})"
 MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 COUNT = fr"(?P<count>{NNUM})"
@@ -206,6 +207,8 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_cursor_match_pattern_count>({t['command_key_cursor_match_pattern_count']}))
       \s+ {KEY} \s+ {CURSOR}  (\s+ {MATCH}  \s+ {PATTERN})?  (\s+ {COUNT_CONST} \s+ {COUNT})?          s*)|
 (\s*  (?P<command_key_fields>({t['command_key_fields']}))  \s+ {KEY}  \s+ {FIELDS}                    \s*)|
+(\s*  (?P<command_key_fieldvalues>({t['command_key_fieldvalues']}))  \s+ {KEY}
+      (\s+ {FIELD}  \s+ {VALUE})+                                                                     \s*)|
 """
 
 
