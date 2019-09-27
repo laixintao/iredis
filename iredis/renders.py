@@ -288,5 +288,9 @@ def command_hkeys(response, completer):
     return _update_completer_then_render(response, completer, "field", "class:field")
 
 
+def render_hash_pairs(response, completer):
+    pass
+
+
 # TODO
 # special list render, bzpopmax, key-value pair
