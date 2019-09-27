@@ -27,3 +27,11 @@ def test_hmset(judge_command):
             "value": "value2",
         },
     )
+
+
+def test_hexists(judge_command):
+    judge_command(
+        "HEXISTS foo bar",
+        {"command_key_field": "HEXISTS", "key": "foo", "field": "bar"},
+    )
+    judge_command("HEXISTS foo bar hello-world", None)
