@@ -35,3 +35,15 @@ def test_hexists(judge_command):
         {"command_key_field": "HEXISTS", "key": "foo", "field": "bar"},
     )
     judge_command("HEXISTS foo bar hello-world", None)
+
+
+def test_hincrby(judge_command):
+    judge_command(
+        "HINCRBY foo bar 12",
+        {
+            "command_key_field_delta": "HINCRBY",
+            "key": "foo",
+            "field": "bar",
+            "delta": "12",
+        },
+    )
