@@ -207,6 +207,7 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_cursor_match_pattern_count>({t['command_key_cursor_match_pattern_count']}))
       \s+ {KEY} \s+ {CURSOR}  (\s+ {MATCH}  \s+ {PATTERN})?  (\s+ {COUNT_CONST} \s+ {COUNT})?          s*)|
 (\s*  (?P<command_key_fields>({t['command_key_fields']}))  \s+ {KEY}  \s+ {FIELDS}                    \s*)|
+(\s*  (?P<command_key_field>({t['command_key_field']}))  \s+ {KEY}  \s+ {FIELD}                    \s*)|
 (\s*  (?P<command_key_fieldvalues>({t['command_key_fieldvalues']}))  \s+ {KEY}
       (\s+ {FIELD}  \s+ {VALUE})+                                                                     \s*)|
 """
