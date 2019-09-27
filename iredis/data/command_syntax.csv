@@ -58,7 +58,7 @@ geo,GEORADIUS,command_pass,
 geo,GEORADIUSBYMEMBER,command_pass,
 hash,HDEL,command_key_fields,render_int
 hash,HEXISTS,command_key_field,render_int
-hash,HGET,command_pass,
+hash,HGET,command_key_field,render_simple_strings
 hash,HGETALL,command_pass,
 hash,HINCRBY,command_pass,
 hash,HINCRBYFLOAT,command_pass,
