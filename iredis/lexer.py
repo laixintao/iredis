@@ -41,6 +41,8 @@ def get_lexer(command_groups, redis_grammar):
         "cursor": SimpleLexer("class:integer"),
         "pattern": SimpleLexer("class:pattern"),
         "type": SimpleLexer("class:string"),
+        "fields": SimpleLexer("class:field"),
+        "field": SimpleLexer("class:field"),
         # const
         "condition": SimpleLexer("class:const"),
         "operation": SimpleLexer("class:const"),

@@ -17,6 +17,7 @@ style = REDIS_TOKEN = {
     "double": "#bb6688",
     "nil": "#808080",
     "bit": "#8541FF",
+    "field": "cyan",
 }
 
 GROUP = {

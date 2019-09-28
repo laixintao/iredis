@@ -178,7 +178,9 @@ def render_transaction_queue(text, completer):
     return FormattedText([("class:queued", text)])
 
 
-def _update_completer_then_render(items, completer, complter_name, style, completer_iter_step=1):
+def _update_completer_then_render(
+    items, completer, complter_name, style, completer_iter_step=1
+):
     """
     :param completer_iter_step: every `completer_iter_step` items is used to update complters
     """
@@ -243,9 +245,13 @@ def command_keys(items, completer):
 def render_members(items, completer):
     if config.withscores:
         if config.raw:
-            return _update_completer_then_render(items, completer, "member", "class:member", completer_iter_step=2)
+            return _update_completer_then_render(
+                items, completer, "member", "class:member", completer_iter_step=2
+            )
         return _update_completer_then_render_withscores(items, completer)
-    return _update_completer_then_render(items, completer, "member", "class:member", completer_iter_step=1)
+    return _update_completer_then_render(
+        items, completer, "member", "class:member", completer_iter_step=1
+    )
 
 
 def _render_scan(render_response, response, completer):
@@ -276,6 +282,57 @@ def command_sscan(response, completer):
 
 def command_zscan(response, completer):
     return _render_scan(render_members, response, completer)
+
+
+def command_hscan(response, completer):
+    return _render_scan(render_hash_pairs, response, completer)
+
+
+def command_hkeys(response, completer):
+    return _update_completer_then_render(response, completer, "field", "class:field")
+
+
+def render_hash_pairs(response, completer):
+    if config.raw:
+        return _update_completer_then_render(
+            response, completer, "field", "class:field", completer_iter_step=2
+        )
+    # render hash pairs
+    if not response:
+        return EMPTY_LIST
+    complter_name = "field"
+    str_items = _ensure_str(response)
+    fields = str_items[0::2]
+    values = str_items[1::2]
+    # update completers
+    if completer:
+        field_completer = completer.completers[complter_name]
+        field_completer.touch_words(fields)
+        logger.debug(f"[Completer] {complter_name} completer updated.")
+    else:
+        logger.debug(f"[Completer] completer is None, not updated.")
+    # render display
+    index_width = len(str(len(fields)))
+    values_quoted = _double_quotes(values)
+    fields_quoted = _double_quotes(fields)
+    rendered = []
+    for index, item in enumerate(fields_quoted):
+        index_const_width = f"{index+1:{index_width}})"
+        rendered.append(("", index_const_width))
+        rendered.append(("", " "))
+        rendered.append(("class:field", item))
+        rendered.append(NEWLINE_TUPLE)
+        rendered.append(("", " " * (len(index_const_width) + 1)))
+        value = values_quoted[index]
+        if value is None:
+            rendered.append(NIL_TUPLE)
+        else:
+            rendered.append(("class:string", value))
+
+        # add a newline for eachline
+        if index + 1 < len(fields):
+            rendered.append(NEWLINE_TUPLE)
+    return FormattedText(rendered)
 
 
 # TODO
