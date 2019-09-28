@@ -68,9 +68,9 @@ hash,HMGET,command_key_fields,render_list
 hash,HMSET,command_key_fieldvalues,render_simple_strings
 hash,HSCAN,command_key_cursor_match_pattern_count,command_hscan
 hash,HSET,command_key_field_value,render_int
-hash,HSETNX,command_pass,
-hash,HSTRLEN,command_pass,
-hash,HVALS,command_pass,
+hash,HSETNX,command_key_field_value,render_int
+hash,HSTRLEN,command_key_field,render_int
+hash,HVALS,command_key,render_list
 hyperloglog,PFADD,command_pass,
 hyperloglog,PFCOUNT,command_pass,
 hyperloglog,PFMERGE,command_pass,
