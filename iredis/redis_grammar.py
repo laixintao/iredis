@@ -210,6 +210,8 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_field>({t['command_key_field']}))  \s+ {KEY}  \s+ {FIELD}                       \s*)|
 (\s*  (?P<command_key_field_delta>({t['command_key_field_delta']}))
       \s+ {KEY}  \s+ {FIELD}  \s+ {DELTA}                                                             \s*)|
+(\s*  (?P<command_key_field_float>({t['command_key_field_float']}))
+      \s+ {KEY}  \s+ {FIELD}  \s+ {FLOAT}                                                             \s*)|
 (\s*  (?P<command_key_fieldvalues>({t['command_key_fieldvalues']}))  \s+ {KEY}
       (\s+ {FIELD}  \s+ {VALUE})+                                                                     \s*)|
 """

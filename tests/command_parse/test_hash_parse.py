@@ -47,3 +47,15 @@ def test_hincrby(judge_command):
             "delta": "12",
         },
     )
+
+
+def test_hincrbyfloat(judge_command):
+    judge_command(
+        "HINCRBYFLOAT foo bar 12.1",
+        {
+            "command_key_field_float": "HINCRBYFLOAT",
+            "key": "foo",
+            "field": "bar",
+            "float": "12.1",
+        },
+    )
