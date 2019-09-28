@@ -284,6 +284,10 @@ def command_zscan(response, completer):
     return _render_scan(render_members, response, completer)
 
 
+def command_hscan(response, completer):
+    return _render_scan(render_members, response, completer)
+
+
 def command_hkeys(response, completer):
     return _update_completer_then_render(response, completer, "field", "class:field")
 
