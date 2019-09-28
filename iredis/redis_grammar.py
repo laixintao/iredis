@@ -116,8 +116,7 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {INDEX}   \s+ {INDEX}                      \s*)|
 (\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
 (\s*  (?P<command_keys>({t['command_keys']}))          \s+ {KEYS}                                     \s*)|
-(\s*  (?P<command_key_value>({t['command_key_value']}))
-                                                       \s+ {KEY}     \s+ {VALUE}                      \s*)|
+(\s*  (?P<command_key_value>({t['command_key_value']}))   \s+ {KEY}  \s+ {VALUE}                      \s*)|
 (\s*  (?P<command_key_second>({t['command_key_second']}))
                                                        \s+ {KEY}     \s+ {SECOND}                     \s*)|
 (\s*  (?P<command_key_timestamp>({t['command_key_timestamp']}))
@@ -148,6 +147,8 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}     \s+ {DELTA}                      \s*)|
 (\s*  (?P<command_key_offset_value>({t['command_key_offset_value']}))
                                                        \s+ {KEY}     \s+ {OFFSET} \s+ {VALUE}         \s*)|
+(\s*  (?P<command_key_field_value>({t['command_key_field_value']}))
+                                                       \s+ {KEY}     \s+ {FIELD} \s+ {VALUE}         \s*)|
 (\s*  (?P<command_key_offset_bit>({t['command_key_offset_bit']}))
                                                        \s+ {KEY}     \s+ {OFFSET} \s+ {BIT}           \s*)|
 (\s*  (?P<command_key_offset>({t['command_key_offset']}))  \s+ {KEY}  \s+ {OFFSET}                    \s*)|
