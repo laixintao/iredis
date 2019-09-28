@@ -285,7 +285,7 @@ def command_zscan(response, completer):
 
 
 def command_hscan(response, completer):
-    return _render_scan(render_members, response, completer)
+    return _render_scan(render_hash_pairs, response, completer)
 
 
 def command_hkeys(response, completer):
@@ -293,7 +293,46 @@ def command_hkeys(response, completer):
 
 
 def render_hash_pairs(response, completer):
-    pass
+    if config.raw:
+        return _update_completer_then_render(
+            response, completer, "field", "class:field", completer_iter_step=2
+        )
+    # render hash pairs
+    if not response:
+        return EMPTY_LIST
+    complter_name = "field"
+    str_items = _ensure_str(response)
+    fields = str_items[0::2]
+    values = str_items[1::2]
+    # update completers
+    if completer:
+        field_completer = completer.completers[complter_name]
+        field_completer.touch_words(fields)
+        logger.debug(f"[Completer] {complter_name} completer updated.")
+    else:
+        logger.debug(f"[Completer] completer is None, not updated.")
+    # render display
+    index_width = len(str(len(fields)))
+    values_quoted = _double_quotes(values)
+    fields_quoted = _double_quotes(fields)
+    rendered = []
+    for index, item in enumerate(fields_quoted):
+        index_const_width = f"{index+1:{index_width}})"
+        rendered.append(("", index_const_width))
+        rendered.append(("", " "))
+        rendered.append(("class:field", item))
+        rendered.append(NEWLINE_TUPLE)
+        rendered.append(("", " " * (len(index_const_width) + 1)))
+        value = values_quoted[index]
+        if value is None:
+            rendered.append(NIL_TUPLE)
+        else:
+            rendered.append(("class:string", value))
+
+        # add a newline for eachline
+        if index + 1 < len(fields):
+            rendered.append(NEWLINE_TUPLE)
+    return FormattedText(rendered)
 
 
 # TODO
