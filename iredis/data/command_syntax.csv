@@ -221,8 +221,8 @@ string,SETEX,command_key_second_value,render_simple_strings
 string,SETNX,command_key_value,render_int
 string,SETRANGE,command_key_offset_value,render_int
 string,STRLEN,command_key,render_int
-transactions,DISCARD,command_pass,render_ok
-transactions,EXEC,command_pass,
-transactions,MULTI,command_pass,render_ok
-transactions,UNWATCH,command_pass,
-transactions,WATCH,command_pass,
+transactions,DISCARD,command,render_ok
+transactions,EXEC,command,render_list
+transactions,MULTI,command,render_ok
+transactions,UNWATCH,command,render_ok
+transactions,WATCH,command_keys,render_ok
