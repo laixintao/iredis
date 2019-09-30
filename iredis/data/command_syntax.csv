@@ -20,12 +20,12 @@ cluster,CLUSTER SLAVES,command_node,
 cluster,CLUSTER SLOTS,command,
 cluster,READONLY,command,
 cluster,READWRITE,command,
-connection,AUTH,command_password,
-connection,ECHO,command_message,
-connection,PING,command_messagex,
-connection,QUIT,command,
+connection,AUTH,command_password,render_ok
+connection,ECHO,command_message,render_simple_strings
+connection,PING,command_messagex,render_simple_strings
+connection,QUIT,command,render_ok
 connection,SELECT,command_index,render_ok
-connection,SWAPDB,command_index_index,
+connection,SWAPDB,command_index_index,render_ok
 generic,DEL,command_keys,
 generic,DUMP,command_key,
 generic,EXISTS,command_keys,
