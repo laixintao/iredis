@@ -72,7 +72,7 @@ hash,HSETNX,command_key_field_value,render_int
 hash,HSTRLEN,command_key_field,render_int
 hash,HVALS,command_key,render_list
 hyperloglog,PFADD,command_pass,
-hyperloglog,PFCOUNT,command_pass,
+hyperloglog,PFCOUNT,command_keys,
 hyperloglog,PFMERGE,command_pass,
 list,BLPOP,command_keys_timeout,render_list_or_string
 list,BRPOP,command_keys_timeout,render_list_or_string
