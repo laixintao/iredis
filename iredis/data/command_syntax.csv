@@ -18,8 +18,8 @@ cluster,CLUSTER SET-CONFIG-EPOCH,command_epoch,
 cluster,CLUSTER SETSLOT,command_slot_slotsubcmd_nodex,
 cluster,CLUSTER SLAVES,command_node,
 cluster,CLUSTER SLOTS,command,
-cluster,READONLY,command,
-cluster,READWRITE,command,
+cluster,READONLY,command,render_ok
+cluster,READWRITE,command,render_ok
 connection,AUTH,command_password,render_ok
 connection,ECHO,command_message,render_simple_strings
 connection,PING,command_messagex,render_simple_strings
