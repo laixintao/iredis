@@ -18,23 +18,23 @@ cluster,CLUSTER SET-CONFIG-EPOCH,command_epoch,
 cluster,CLUSTER SETSLOT,command_slot_slotsubcmd_nodex,
 cluster,CLUSTER SLAVES,command_node,
 cluster,CLUSTER SLOTS,command,
-cluster,READONLY,command,
-cluster,READWRITE,command,
-connection,AUTH,command_password,
-connection,ECHO,command_message,
-connection,PING,command_messagex,
-connection,QUIT,command,
+cluster,READONLY,command,render_ok
+cluster,READWRITE,command,render_ok
+connection,AUTH,command_password,render_ok
+connection,ECHO,command_message,render_simple_strings
+connection,PING,command_messagex,render_simple_strings
+connection,QUIT,command,render_ok
 connection,SELECT,command_index,render_ok
-connection,SWAPDB,command_index_index,
-generic,DEL,command_keys,
-generic,DUMP,command_key,
-generic,EXISTS,command_keys,
-generic,EXPIRE,command_key_second,
-generic,EXPIREAT,command_key_timestamp,
+connection,SWAPDB,command_index_index,render_ok
+generic,DEL,command_keys,render_int
+generic,DUMP,command_key,render_simple_strings
+generic,EXISTS,command_keys,render_int
+generic,EXPIRE,command_key_second,render_int
+generic,EXPIREAT,command_key_timestamp,render_int
 generic,KEYS,command_pattern,command_keys
 generic,MIGRATE,command_pass,
-generic,MOVE,command_key_index,
-generic,OBJECT,command_pass,
+generic,MOVE,command_key_index,render_int
+generic,OBJECT,command_pass,render_string_or_int
 generic,PERSIST,command_key,
 generic,PEXPIRE,command_key_millisecond,
 generic,PEXPIREAT,command_key_timestampms,
@@ -71,9 +71,9 @@ hash,HSET,command_key_field_value,render_int
 hash,HSETNX,command_key_field_value,render_int
 hash,HSTRLEN,command_key_field,render_int
 hash,HVALS,command_key,render_list
-hyperloglog,PFADD,command_pass,
-hyperloglog,PFCOUNT,command_pass,
-hyperloglog,PFMERGE,command_pass,
+hyperloglog,PFADD,command_key_values,render_int
+hyperloglog,PFCOUNT,command_keys,render_int
+hyperloglog,PFMERGE,command_newkey_keys,render_ok
 list,BLPOP,command_keys_timeout,render_list_or_string
 list,BRPOP,command_keys_timeout,render_list_or_string
 list,BRPOPLPUSH,command_key_newkey_timeout,render_simple_strings
