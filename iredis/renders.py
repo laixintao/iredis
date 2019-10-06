@@ -73,7 +73,7 @@ def _ensure_str(origin, decode=None):
         raise Exception(f"Unkown type: {type(origin)}, origin: {origin}")
 
 
-def render_simple_strings(value, completers=None):
+def render_bulk_string(value, completers=None):
     if config.raw:
         if value is None:
             return b""
@@ -138,13 +138,13 @@ def render_list(text, completer):
 def render_list_or_string(text, completer=None):
     if isinstance(text, list):
         return render_list(text, completer)
-    return render_simple_strings(text, completer)
+    return render_bulk_string(text, completer)
 
 
 def render_string_or_int(text, completer=None):
     if isinstance(text, int):
         return render_int(text, completer)
-    return render_simple_strings(text, completer)
+    return render_bulk_string(text, completer)
 
 
 def render_error(error_msg):
