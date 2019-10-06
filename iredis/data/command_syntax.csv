@@ -112,7 +112,7 @@ server,CLIENT KILL,command_pass,
 server,CLIENT LIST,command_pass,
 server,CLIENT PAUSE,command_pass,
 server,CLIENT REPLY,command_pass,
-server,CLIENT SETNAME,command_value,render_simple_strinsg
+server,CLIENT SETNAME,command_value,render_simple_string
 server,CLIENT UNBLOCK,command_pass,
 server,COMMAND,command_pass,
 server,COMMAND COUNT,command_pass,
@@ -138,7 +138,7 @@ server,MEMORY USAGE,command_pass,
 server,MONITOR,command_pass,
 server,REPLICAOF,command_pass,
 server,ROLE,command_pass,
-server,SAVE,command_pass,
+server,SAVE,command,render_simple_string
 server,SHUTDOWN,command_pass,
 server,SLAVEOF,command_pass,
 server,SLOWLOG,command_pass,
