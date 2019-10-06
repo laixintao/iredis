@@ -162,7 +162,6 @@ def render_ok(text, completer):
     if text is None:
         return NIL
     text = _ensure_str(text)
-    assert text == "OK"
     return FormattedText([("class:success", text)])
 
 

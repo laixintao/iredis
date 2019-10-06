@@ -105,7 +105,7 @@ scripting,SCRIPT FLUSH,command_pass,
 scripting,SCRIPT KILL,command_pass,
 scripting,SCRIPT LOAD,command_pass,
 server,BGREWRITEAOF,command_pass,
-server,BGSAVE,command_pass,
+server,BGSAVE,command,render_ok
 server,CLIENT GETNAME,command_pass,
 server,CLIENT ID,command_pass,
 server,CLIENT KILL,command_pass,
