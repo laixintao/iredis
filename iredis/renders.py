@@ -153,7 +153,7 @@ def render_error(error_msg):
     return FormattedText([("class:type", "(error) "), ("class:error", text)])
 
 
-def render_ok(text, completer):
+def render_simple_string(text, completer):
     """
     If response is b'OK', render ok with success color.
     else render message with Error color.

@@ -18,14 +18,14 @@ cluster,CLUSTER SET-CONFIG-EPOCH,command_epoch,
 cluster,CLUSTER SETSLOT,command_slot_slotsubcmd_nodex,
 cluster,CLUSTER SLAVES,command_node,
 cluster,CLUSTER SLOTS,command,
-cluster,READONLY,command,render_ok
-cluster,READWRITE,command,render_ok
-connection,AUTH,command_password,render_ok
+cluster,READONLY,command,render_simple_string
+cluster,READWRITE,command,render_simple_string
+connection,AUTH,command_password,render_simple_string
 connection,ECHO,command_message,render_bulk_string
 connection,PING,command_messagex,render_bulk_string
-connection,QUIT,command,render_ok
-connection,SELECT,command_index,render_ok
-connection,SWAPDB,command_index_index,render_ok
+connection,QUIT,command,render_simple_string
+connection,SELECT,command_index,render_simple_string
+connection,SWAPDB,command_index_index,render_simple_string
 generic,DEL,command_keys,render_int
 generic,DUMP,command_key,render_bulk_string
 generic,EXISTS,command_keys,render_int
@@ -73,7 +73,7 @@ hash,HSTRLEN,command_key_field,render_int
 hash,HVALS,command_key,render_list
 hyperloglog,PFADD,command_key_values,render_int
 hyperloglog,PFCOUNT,command_keys,render_int
-hyperloglog,PFMERGE,command_newkey_keys,render_ok
+hyperloglog,PFMERGE,command_newkey_keys,render_simple_string
 list,BLPOP,command_keys_timeout,render_list_or_string
 list,BRPOP,command_keys_timeout,render_list_or_string
 list,BRPOPLPUSH,command_key_newkey_timeout,render_bulk_string
@@ -85,8 +85,8 @@ list,LPUSH,command_key_values,render_int
 list,LPUSHX,command_key_value,render_int
 list,LRANGE,command_key_start_end,render_list
 list,LREM,command_key_position_value,render_int
-list,LSET,command_key_position_value,render_ok
-list,LTRIM,command_key_start_end,render_ok
+list,LSET,command_key_position_value,render_simple_string
+list,LTRIM,command_key_start_end,render_simple_string
 list,RPOP,command_key,render_bulk_string
 list,RPOPLPUSH,command_key_newkey,render_bulk_string
 list,RPUSH,command_key_values,render_int
@@ -105,7 +105,7 @@ scripting,SCRIPT FLUSH,command_pass,
 scripting,SCRIPT KILL,command_pass,
 scripting,SCRIPT LOAD,command_pass,
 server,BGREWRITEAOF,command_pass,
-server,BGSAVE,command,render_ok
+server,BGSAVE,command,render_simple_string
 server,CLIENT GETNAME,command_pass,
 server,CLIENT ID,command_pass,
 server,CLIENT KILL,command_pass,
@@ -212,17 +212,17 @@ string,INCR,command_key,render_int
 string,INCRBY,command_key_delta,render_int
 string,INCRBYFLOAT,command_key_float,render_bulk_string
 string,MGET,command_keys,render_list
-string,MSET,command_key_valuess,render_ok
+string,MSET,command_key_valuess,render_simple_string
 string,MSETNX,command_key_valuess,render_int
 string,PSETEX,command_key_millisecond_value,render_bulk_string
-string,SET,command_key_value_expiration_condition,render_ok
+string,SET,command_key_value_expiration_condition,render_simple_string
 string,SETBIT,command_key_offset_bit,render_int
 string,SETEX,command_key_second_value,render_bulk_string
 string,SETNX,command_key_value,render_int
 string,SETRANGE,command_key_offset_value,render_int
 string,STRLEN,command_key,render_int
-transactions,DISCARD,command,render_ok
+transactions,DISCARD,command,render_simple_string
 transactions,EXEC,command,render_list
-transactions,MULTI,command,render_ok
-transactions,UNWATCH,command,render_ok
-transactions,WATCH,command_keys,render_ok
+transactions,MULTI,command,render_simple_string
+transactions,UNWATCH,command,render_simple_string
+transactions,WATCH,command_keys,render_simple_string
