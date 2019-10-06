@@ -117,6 +117,7 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
 (\s*  (?P<command_keys>({t['command_keys']}))          \s+ {KEYS}                                     \s*)|
 (\s*  (?P<command_key_value>({t['command_key_value']}))   \s+ {KEY}  \s+ {VALUE}                      \s*)|
+(\s*  (?P<command_value>({t['command_value']}))   \s+ {VALUE}                                         \s*)|
 (\s*  (?P<command_key_second>({t['command_key_second']}))
                                                        \s+ {KEY}     \s+ {SECOND}                     \s*)|
 (\s*  (?P<command_key_timestamp>({t['command_key_timestamp']}))
