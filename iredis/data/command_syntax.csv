@@ -128,7 +128,7 @@ server,DEBUG SEGFAULT,command_pass,
 server,FLUSHALL,command_pass,
 server,FLUSHDB,command_pass,
 server,INFO,command_pass,
-server,LASTSAVE,command_pass,
+server,LASTSAVE,command,render_int
 server,MEMORY DOCTOR,command_pass,
 server,MEMORY HELP,command_pass,
 server,MEMORY MALLOC-STATS,command_pass,
