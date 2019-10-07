@@ -115,7 +115,7 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_messagex>({t['command_messagex']}))  (\s+{MESSAGE})?                                \s*)|
 (\s*  (?P<command_index>({t['command_index']}))        \s+ {INDEX}                                    \s*)|
 (\s*  (?P<command_index_index>({t['command_index_index']}))  \s+ {INDEX}  \s+ {INDEX}                 \s*)|
-(\s*  (?P<command_clientid_error>({t['command_clientid_error']}))  \s+ {CLIENTID}  \s+ {ERROR}        \s*)|
+(\s*  (?P<command_clientid_error>({t['command_clientid_error']}))  \s+ {CLIENTID}  (\s+ {ERROR})?     \s*)|
 (\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
 (\s*  (?P<command_keys>({t['command_keys']}))          \s+ {KEYS}                                     \s*)|
 (\s*  (?P<command_key_value>({t['command_key_value']}))   \s+ {KEY}  \s+ {VALUE}                      \s*)|
