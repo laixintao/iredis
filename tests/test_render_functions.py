@@ -302,3 +302,26 @@ def test_render_members_config_raw(completer):
 
     assert rendered == b"duck\n667\ncamel\n708"
     assert completer.completers["member"].words == ["camel", "duck"]
+
+
+def test_render_unixtime_config_raw(completer):
+    config.raw = False
+    rendered = renders.render_unixtime(1570469891)
+
+    assert rendered == FormattedText(
+        [
+            ("class:type", "(integer) "),
+            ("", "1570469891"),
+            ("", "\n"),
+            ("class:type", "(local time)"),
+            ("", " "),
+            ("", "2019-10-08 01:38:11"),
+        ]
+    )
+
+
+def test_render_unixtime(completer):
+    config.raw = True
+    rendered = renders.render_unixtime(1570469891)
+
+    assert rendered == b"1570469891"

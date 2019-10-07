@@ -4,6 +4,7 @@ This module will be auto loaded to callbacks.
 
 func(redis-response, completers: GrammarCompleter) -> formatted result(str)
 """
+import time
 import logging
 from prompt_toolkit.formatted_text import FormattedText
 
@@ -91,6 +92,17 @@ def render_int(value, completers=None):
     if value is None:
         return NIL
     return FormattedText([("class:type", "(integer) "), ("", str(value))])
+
+
+def render_unixtime(value, completers=None):
+    rendered_int = render_int(value, completers)
+    if config.raw:
+        return rendered_int
+    explained_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(value)))
+    rendered_int.extend(
+        [NEWLINE_TUPLE, ("class:type", "(local time)"), ("", " "), ("", explained_date)]
+    )
+    return rendered_int
 
 
 def _render_list(byte_items, str_items, style=None):
