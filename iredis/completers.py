@@ -100,6 +100,7 @@ def get_completer(group2commands, redis_grammar):
         "type_const": "TYPE",
         "type": "string list set zset hash stream",
         "position_choice": "BEFORE AFTER",
+        "error": "TIMEOUT ERROR",
     }
     completer_mapping.update(
         {
