@@ -54,6 +54,7 @@ def get_lexer(command_groups, redis_grammar):
         "type_const": SimpleLexer("class:const"),
         "position_choice": SimpleLexer("class:const"),
         "error": SimpleLexer("class:const"),
+        "async": SimpleLexer("class:const"),
     }
 
     lexers_dict.update({key: SimpleLexer("class:command") for key in command_groups})

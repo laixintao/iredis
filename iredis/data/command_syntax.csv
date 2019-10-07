@@ -125,8 +125,8 @@ server,CONFIG SET,command_pass,
 server,DBSIZE,command_pass,
 server,DEBUG OBJECT,command_pass,
 server,DEBUG SEGFAULT,command_pass,
-server,FLUSHALL,command_pass,
-server,FLUSHDB,command_pass,
+server,FLUSHALL,command_asyncx,render_simple_string
+server,FLUSHDB,command_asyncx,render_simple_string
 server,INFO,command_pass,
 server,LASTSAVE,command,render_unixtime
 server,MEMORY DOCTOR,command_pass,

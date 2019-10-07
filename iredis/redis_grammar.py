@@ -91,6 +91,7 @@ TYPE_CONST = r"(?P<type_const>(TYPE|type))"
 TYPE = r"(?P<type>(STRING|LIST|SET|ZSET|HASH|STREAM|string|list|set|zset|hash|stream))"
 POSITION_CHOICE = r"(?P<position_choice>(BEFORE|AFTER|before|after))"
 ERROR = r"(?P<error>(TIMEOUT|ERROR|timeout|error))"
+ASYNC = r"(?P<async>(ASYNC|async))"
 
 
 REDIS_COMMANDS = fr"""
@@ -106,6 +107,7 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command>({t['command']}))                                                                   \s*)|
 (\s*  (?P<command_ip_port>({t['command_ip_port']}))    \s+ {IP}      \s+ {PORT}                       \s*)|
 (\s*  (?P<command_epoch>({t['command_epoch']}))        \s+ {EPOCH}                                    \s*)|
+(\s*  (?P<command_asyncx>({t['command_asyncx']}))      (\s+ {ASYNC})?                                 \s*)|
 (\s*  (?P<command_slot_slotsubcmd_nodex>({t['command_slot_slotsubcmd_nodex']}))
                                                        \s+ {SLOT}    \s+ {SLOTSUBCMD}   (\s+ {NODE})? \s*)|
 (\s*  (?P<command_slot_slotsubcmd_nodex>({t['command_slot_slotsubcmd_nodex']}))
