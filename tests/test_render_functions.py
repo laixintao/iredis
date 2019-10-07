@@ -1,4 +1,5 @@
 import os
+import time
 from prompt_toolkit.formatted_text import FormattedText
 from iredis import renders
 from iredis.config import config
@@ -307,7 +308,9 @@ def test_render_members_config_raw(completer):
 
 def test_render_unixtime_config_raw(completer):
     config.raw = False
+    # fake the timezone and reload
     os.environ['TZ'] = 'Asia/Shanghai'
+    time.tzset()
     rendered = renders.render_unixtime(1570469891)
 
     assert rendered == FormattedText(
