@@ -7,8 +7,8 @@ def test_client_setname(judge_command):
 def test_client_unblock(judge_command):
     judge_command(
         "CLIENT UNBLOCK 33 TIMEOUT",
-        {"command_value": "CLIENT UNBLOCK", "clientid": "33", "error": "TIMEOUT"},
+        {"command_clientid_errorx": "CLIENT UNBLOCK", "clientid": "33", "error": "TIMEOUT"},
     )
     judge_command(
-        "CLIENT UNBLOCK 33", {"command_value": "CLIENT UNBLOCK", "clientid": "33"}
+        "CLIENT UNBLOCK 33", {"command_clientid_errorx": "CLIENT UNBLOCK", "clientid": "33"}
     )
