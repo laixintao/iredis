@@ -122,7 +122,7 @@ server,CONFIG GET,command_pass,
 server,CONFIG RESETSTAT,command_pass,
 server,CONFIG REWRITE,command_pass,
 server,CONFIG SET,command_pass,
-server,DBSIZE,command_pass,
+server,DBSIZE,command,render_int
 server,DEBUG OBJECT,command_pass,
 server,DEBUG SEGFAULT,command_pass,
 server,FLUSHALL,command_asyncx,render_simple_string
