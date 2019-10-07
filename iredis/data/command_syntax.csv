@@ -115,7 +115,7 @@ server,CLIENT REPLY,command_pass,
 server,CLIENT SETNAME,command_value,render_simple_string
 server,CLIENT UNBLOCK,command_clientid_errorx,render_int
 server,COMMAND,command_pass,
-server,COMMAND COUNT,command_pass,
+server,COMMAND COUNT,command,render_int
 server,COMMAND GETKEYS,command_pass,
 server,COMMAND INFO,command_pass,
 server,CONFIG GET,command_pass,
