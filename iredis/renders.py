@@ -81,11 +81,7 @@ def render_bulk_string(value, completers=None):
         return value
     if value is None:
         return NIL
-    return _ensure_str(value)
-
-
-def render_bulk_string_quoted(value, completers=None):
-    return _double_quotes(render_bulk_string(value))
+    return _double_quotes(_ensure_str(value))
 
 
 def render_int(value, completers=None):
@@ -154,13 +150,13 @@ def render_list(text, completer):
 def render_list_or_string(text, completer=None):
     if isinstance(text, list):
         return render_list(text, completer)
-    return render_bulk_string_quoted(text, completer)
+    return render_bulk_string(text, completer)
 
 
 def render_string_or_int(text, completer=None):
     if isinstance(text, int):
         return render_int(text, completer)
-    return render_bulk_string_quoted(text, completer)
+    return render_bulk_string(text, completer)
 
 
 def render_error(error_msg):

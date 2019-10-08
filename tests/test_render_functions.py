@@ -112,12 +112,12 @@ def test_double_quotes():
 
 def test_simple_string_reply():
     config.raw = False
-    assert renders.render_bulk_string_quoted(b"'\"") == '''"'\\""'''
+    assert renders.render_bulk_string(b"'\"") == '''"'\\""'''
 
 
 def test_simple_string_reply_raw():
     config.raw = True
-    assert renders.render_bulk_string_quoted(b"hello") == b"hello"
+    assert renders.render_bulk_string(b"hello") == b"hello"
 
 
 def test_render_int():
