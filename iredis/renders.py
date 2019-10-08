@@ -84,6 +84,12 @@ def render_bulk_string(value, completers=None):
     return _double_quotes(_ensure_str(value))
 
 
+def render_bulk_string_decode(value, completers=None):
+    decoded = value.decode()
+    splitted = "\n".join(decoded.splitlines())
+    return splitted
+
+
 def render_int(value, completers=None):
     if config.raw:
         if value is None:

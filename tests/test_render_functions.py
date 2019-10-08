@@ -309,7 +309,7 @@ def test_render_members_config_raw(completer):
 def test_render_unixtime_config_raw(completer):
     config.raw = False
     # fake the timezone and reload
-    os.environ['TZ'] = 'Asia/Shanghai'
+    os.environ["TZ"] = "Asia/Shanghai"
     time.tzset()
     rendered = renders.render_unixtime(1570469891)
 
@@ -330,3 +330,13 @@ def test_render_unixtime(completer):
     rendered = renders.render_unixtime(1570469891)
 
     assert rendered == b"1570469891"
+
+
+def test_render_bulk_string_decoded():
+    EXPECTED_RENDER = """# Server
+redis_version:5.0.5
+redis_git_sha1:00000000
+redis_git_dirty:0
+redis_build_id:31cd6e21ec924b46"""
+    _input = b"# Server\r\nredis_version:5.0.5\r\nredis_git_sha1:00000000\r\nredis_git_dirty:0\r\nredis_build_id:31cd6e21ec924b46"
+    assert renders.render_bulk_string_decode(_input) == EXPECTED_RENDER
