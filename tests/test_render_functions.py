@@ -333,10 +333,6 @@ def test_render_unixtime(completer):
 
 
 def test_render_bulk_string_decoded():
-    EXPECTED_RENDER = """# Server
-redis_version:5.0.5
-redis_git_sha1:00000000
-redis_git_dirty:0
-redis_build_id:31cd6e21ec924b46"""
-    _input = b"# Server\r\nredis_version:5.0.5\r\nredis_git_sha1:00000000\r\nredis_git_dirty:0\r\nredis_build_id:31cd6e21ec924b46"
+    EXPECTED_RENDER = """# Server\nredis_version:5.0.5\nredis_git_sha1:00000000\nredis_git_dirty:0\nredis_build_id:31cd6e21ec924b46"""  # noqa
+    _input = b"# Server\r\nredis_version:5.0.5\r\nredis_git_sha1:00000000\r\nredis_git_dirty:0\r\nredis_build_id:31cd6e21ec924b46"  # noqa
     assert renders.render_bulk_string_decode(_input) == EXPECTED_RENDER
