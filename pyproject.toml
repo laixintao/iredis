@@ -20,7 +20,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Intended Audience :: Developers",
 ]
-include = ["command_syntax.csv", "commands.json", "docs/assets/logo.png"]
+include = ["command_syntax.csv", "commands.json"]
 
 [tool.poetry.dependencies]
 python = "^3.7"

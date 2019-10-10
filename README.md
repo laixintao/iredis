@@ -1,6 +1,6 @@
 # IRedis (Interactive Redis)
 
-<img align="right" width="100" height="100" src="./docs/assets/logo.png" />
+<img align="right" width="100" height="100" src="https://raw.githubusercontent.com/laixintao/iredis/master/docs/assets/logo.png" />
 
 [![CircleCI](https://circleci.com/gh/laixintao/iredis.svg?style=svg)](https://circleci.com/gh/laixintao/iredis)
 [![PyPI version](https://badge.fury.io/py/iredis.svg)](https://badge.fury.io/py/iredis)
