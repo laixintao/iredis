@@ -32,6 +32,7 @@ def get_lexer(command_groups, redis_grammar):
         "offset": SimpleLexer("class:integer"),
         "count": SimpleLexer("class:integer"),
         "index": SimpleLexer("class:index"),
+        "clientid": SimpleLexer("class:integer"),
         "password": SimpleLexer("class:password"),
         "min": SimpleLexer("class:integer"),
         "max": SimpleLexer("class:integer"),
@@ -52,6 +53,8 @@ def get_lexer(command_groups, redis_grammar):
         "count_const": SimpleLexer("class:const"),
         "type_const": SimpleLexer("class:const"),
         "position_choice": SimpleLexer("class:const"),
+        "error": SimpleLexer("class:const"),
+        "async": SimpleLexer("class:const"),
     }
 
     lexers_dict.update({key: SimpleLexer("class:command") for key in command_groups})

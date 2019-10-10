@@ -1,3 +1,5 @@
+import os
+import time
 from prompt_toolkit.formatted_text import FormattedText
 from iredis import renders
 from iredis.config import config
@@ -110,12 +112,12 @@ def test_double_quotes():
 
 def test_simple_string_reply():
     config.raw = False
-    assert renders.render_simple_strings(b"'\"") == '''"'\\""'''
+    assert renders.render_bulk_string(b"'\"") == '''"'\\""'''
 
 
 def test_simple_string_reply_raw():
     config.raw = True
-    assert renders.render_simple_strings(b"hello") == b"hello"
+    assert renders.render_bulk_string(b"hello") == b"hello"
 
 
 def test_render_int():
@@ -302,3 +304,35 @@ def test_render_members_config_raw(completer):
 
     assert rendered == b"duck\n667\ncamel\n708"
     assert completer.completers["member"].words == ["camel", "duck"]
+
+
+def test_render_unixtime_config_raw(completer):
+    config.raw = False
+    # fake the timezone and reload
+    os.environ["TZ"] = "Asia/Shanghai"
+    time.tzset()
+    rendered = renders.render_unixtime(1570469891)
+
+    assert rendered == FormattedText(
+        [
+            ("class:type", "(integer) "),
+            ("", "1570469891"),
+            ("", "\n"),
+            ("class:type", "(local time)"),
+            ("", " "),
+            ("", "2019-10-08 01:38:11"),
+        ]
+    )
+
+
+def test_render_unixtime(completer):
+    config.raw = True
+    rendered = renders.render_unixtime(1570469891)
+
+    assert rendered == b"1570469891"
+
+
+def test_render_bulk_string_decoded():
+    EXPECTED_RENDER = """# Server\nredis_version:5.0.5\nredis_git_sha1:00000000\nredis_git_dirty:0\nredis_build_id:31cd6e21ec924b46"""  # noqa
+    _input = b"# Server\r\nredis_version:5.0.5\r\nredis_git_sha1:00000000\r\nredis_git_dirty:0\r\nredis_build_id:31cd6e21ec924b46"  # noqa
+    assert renders.render_bulk_string_decode(_input) == EXPECTED_RENDER

@@ -4,6 +4,7 @@ This module will be auto loaded to callbacks.
 
 func(redis-response, completers: GrammarCompleter) -> formatted result(str)
 """
+import time
 import logging
 from prompt_toolkit.formatted_text import FormattedText
 
@@ -73,7 +74,7 @@ def _ensure_str(origin, decode=None):
         raise Exception(f"Unkown type: {type(origin)}, origin: {origin}")
 
 
-def render_simple_strings(value, completers=None):
+def render_bulk_string(value, completers=None):
     if config.raw:
         if value is None:
             return b""
@@ -81,6 +82,12 @@ def render_simple_strings(value, completers=None):
     if value is None:
         return NIL
     return _double_quotes(_ensure_str(value))
+
+
+def render_bulk_string_decode(value, completers=None):
+    decoded = value.decode()
+    splitted = "\n".join(decoded.splitlines())
+    return splitted
 
 
 def render_int(value, completers=None):
@@ -91,6 +98,17 @@ def render_int(value, completers=None):
     if value is None:
         return NIL
     return FormattedText([("class:type", "(integer) "), ("", str(value))])
+
+
+def render_unixtime(value, completers=None):
+    rendered_int = render_int(value, completers)
+    if config.raw:
+        return rendered_int
+    explained_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(value)))
+    rendered_int.extend(
+        [NEWLINE_TUPLE, ("class:type", "(local time)"), ("", " "), ("", explained_date)]
+    )
+    return rendered_int
 
 
 def _render_list(byte_items, str_items, style=None):
@@ -138,13 +156,13 @@ def render_list(text, completer):
 def render_list_or_string(text, completer=None):
     if isinstance(text, list):
         return render_list(text, completer)
-    return render_simple_strings(text, completer)
+    return render_bulk_string(text, completer)
 
 
 def render_string_or_int(text, completer=None):
     if isinstance(text, int):
         return render_int(text, completer)
-    return render_simple_strings(text, completer)
+    return render_bulk_string(text, completer)
 
 
 def render_error(error_msg):
@@ -153,7 +171,7 @@ def render_error(error_msg):
     return FormattedText([("class:type", "(error) "), ("class:error", text)])
 
 
-def render_ok(text, completer):
+def render_simple_string(text, completer):
     """
     If response is b'OK', render ok with success color.
     else render message with Error color.
@@ -162,7 +180,6 @@ def render_ok(text, completer):
     if text is None:
         return NIL
     text = _ensure_str(text)
-    assert text == "OK"
     return FormattedText([("class:success", text)])
 
 

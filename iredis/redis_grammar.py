@@ -50,6 +50,7 @@ PORT = r"(?P<port>[1-9]|[1-5]?\d\d\d?\d?|6[1-4][0-9]\d\d\d|65[1-4]\d\d|655[1-2][
 EPOCH = fr"(?P<epoch>{NUM})"
 PASSWORD = fr"(?P<password>{VALID_TOKEN})"
 INDEX = r"(?P<index>(1[0-5]|\d))"
+CLIENTID = fr"(?P<clientid>{NUM})"
 SECOND = fr"(?P<second>{NUM})"
 TIMESTAMP = fr"(?P<timestamp>{NUM})"
 PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
@@ -89,6 +90,8 @@ COUNT_CONST = r"(?P<count_const>(COUNT|count))"
 TYPE_CONST = r"(?P<type_const>(TYPE|type))"
 TYPE = r"(?P<type>(STRING|LIST|SET|ZSET|HASH|STREAM|string|list|set|zset|hash|stream))"
 POSITION_CHOICE = r"(?P<position_choice>(BEFORE|AFTER|before|after))"
+ERROR = r"(?P<error>(TIMEOUT|ERROR|timeout|error))"
+ASYNC = r"(?P<async>(ASYNC|async))"
 
 
 REDIS_COMMANDS = fr"""
@@ -104,6 +107,7 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command>({t['command']}))                                                                   \s*)|
 (\s*  (?P<command_ip_port>({t['command_ip_port']}))    \s+ {IP}      \s+ {PORT}                       \s*)|
 (\s*  (?P<command_epoch>({t['command_epoch']}))        \s+ {EPOCH}                                    \s*)|
+(\s*  (?P<command_asyncx>({t['command_asyncx']}))      (\s+ {ASYNC})?                                 \s*)|
 (\s*  (?P<command_slot_slotsubcmd_nodex>({t['command_slot_slotsubcmd_nodex']}))
                                                        \s+ {SLOT}    \s+ {SLOTSUBCMD}   (\s+ {NODE})? \s*)|
 (\s*  (?P<command_slot_slotsubcmd_nodex>({t['command_slot_slotsubcmd_nodex']}))
@@ -112,11 +116,12 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_message>({t['command_message']}))    \s+ {MESSAGE}                                  \s*)|
 (\s*  (?P<command_messagex>({t['command_messagex']}))  (\s+{MESSAGE})?                                \s*)|
 (\s*  (?P<command_index>({t['command_index']}))        \s+ {INDEX}                                    \s*)|
-(\s*  (?P<command_index_index>({t['command_index_index']}))
-                                                       \s+ {INDEX}   \s+ {INDEX}                      \s*)|
+(\s*  (?P<command_index_index>({t['command_index_index']}))  \s+ {INDEX}  \s+ {INDEX}                 \s*)|
+(\s*  (?P<command_clientid_errorx>({t['command_clientid_errorx']}))  \s+ {CLIENTID}  (\s+ {ERROR})?     \s*)|
 (\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
 (\s*  (?P<command_keys>({t['command_keys']}))          \s+ {KEYS}                                     \s*)|
 (\s*  (?P<command_key_value>({t['command_key_value']}))   \s+ {KEY}  \s+ {VALUE}                      \s*)|
+(\s*  (?P<command_value>({t['command_value']}))   \s+ {VALUE}                                         \s*)|
 (\s*  (?P<command_key_second>({t['command_key_second']}))
                                                        \s+ {KEY}     \s+ {SECOND}                     \s*)|
 (\s*  (?P<command_key_timestamp>({t['command_key_timestamp']}))
