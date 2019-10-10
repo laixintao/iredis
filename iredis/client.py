@@ -15,7 +15,7 @@ from .commands_csv_loader import all_commands, command2callback
 from .utils import nativestr, split_command_args, _strip_quote_args
 from .renders import render_error
 from .completers import LatestUsedFirstWordCompleter
-from .markdown import markdown_render
+from . import markdown
 
 project_path = Path(os.path.dirname(os.path.abspath(__file__))) / "data"
 logger = logging.getLogger(__name__)
@@ -222,6 +222,6 @@ class Client:
         comand_docs_name = "-".join(args)
         with open(project_path / "docs" / "decr.md") as doc_file:
             doc = doc_file.read()
-            rendered = markdown_render(doc)
+            rendered = markdown.render(doc)
 
         return rendered
