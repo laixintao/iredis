@@ -1,6 +1,8 @@
 """
 IRedis client.
 """
+import os
+from pathlib import Path
 import logging
 
 import redis
@@ -13,8 +15,11 @@ from .commands_csv_loader import all_commands, command2callback
 from .utils import nativestr, split_command_args, _strip_quote_args
 from .renders import render_error
 from .completers import LatestUsedFirstWordCompleter
+from .markdown import markdown_render
 
+project_path = Path(os.path.dirname(os.path.abspath(__file__))) / "data"
 logger = logging.getLogger(__name__)
+CLIENT_COMMANDS = ["HELP"]
 
 
 class Client:
@@ -59,6 +64,11 @@ class Client:
         if self.db:
             return f"{self.host}:{self.port}[{self.db}]"
         return f"{self.host}:{self.port}"
+
+    def client_execute_command(self, command_name, *args):
+        command = command_name.upper()
+        if command == "HELP":
+            return self.do_help(*args)
 
     def execute_command_and_read_response(
         self, completer, command_name, *args, **options
@@ -156,6 +166,10 @@ class Client:
         input_command = ""
         try:
             input_command, args = split_command_args(command, all_commands)
+            # if command is not supposed to send to server
+            if input_command.upper() in CLIENT_COMMANDS:
+                redis_resp = self.client_execute_command(input_command, *args)
+                return redis_resp
             self.pre_hook(command, completer)
             redis_resp = self.execute_command_and_read_response(
                 completer, input_command, *args
@@ -203,3 +217,11 @@ class Client:
                 for single_token in _strip_quote_args(tokens_in_command):
                     _completer.touch(single_token)
             logger.debug(f"[Complter {_token} updated] Done: {_completer.words}")
+
+    def do_help(self, *args):
+        comand_docs_name = "-".join(args)
+        with open(project_path / "docs" / "decr.md") as doc_file:
+            doc = doc_file.read()
+            rendered = markdown_render(doc)
+
+        return rendered
