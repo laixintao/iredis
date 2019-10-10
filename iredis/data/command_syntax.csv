@@ -104,7 +104,7 @@ scripting,SCRIPT EXISTS,command_pass,
 scripting,SCRIPT FLUSH,command_pass,
 scripting,SCRIPT KILL,command_pass,
 scripting,SCRIPT LOAD,command_pass,
-server,BGREWRITEAOF,command_pass,
+server,BGREWRITEAOF,command,render_simple_string
 server,BGSAVE,command,render_simple_string
 server,CLIENT GETNAME,command,render_bulk_string
 server,CLIENT ID,command,render_int
