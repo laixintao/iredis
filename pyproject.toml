@@ -7,7 +7,7 @@ readme = 'README.md'
 license = "BSD-3-Clause"
 repository = 'https://github.com/laixintao/iredis'
 homepage = "https://github.com/laixintao/iredis"
-keywords=["Redis", "key-value store", "Commandline tools"]
+keywords=["Redis", "key-value store", "Commandline tools", "Redis Client"]
 classifiers = [
 # see https://pypi.org/pypi?%3Aaction=list_classifiers
     "Development Status :: 2 - Pre-Alpha",
@@ -20,7 +20,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Intended Audience :: Developers",
 ]
-include = ["command_syntax.csv", "commands.json"]
+include = ["command_syntax.csv", "commands.json", "docs/assets/logo.png"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
