@@ -17,6 +17,7 @@ from .utils import nativestr, split_command_args, _strip_quote_args
 from .renders import render_error
 from .completers import LatestUsedFirstWordCompleter
 from . import markdown
+from .utils import compose_command_syntax
 
 project_path = Path(os.path.dirname(os.path.abspath(__file__))) / "data"
 logger = logging.getLogger(__name__)
@@ -241,6 +242,10 @@ class Client:
             ("", "\n"),
             ("class:dockey", "  group: "),
             ("", summary_dict["group"]),
+            ("", "\n"),
+            ("class:dockey", "  syntax: "),
+            ("", command_summary_name),  # command
+            *compose_command_syntax(summary_dict, style_class=""),  # command args
             ("", "\n\n"),
         ]
 
