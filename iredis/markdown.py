@@ -6,9 +6,8 @@ use https://github.com/lepture/mistune render to html, then print with my style.
 
 import logging
 import mistune
-import copy, re
-from mistune import Renderer, InlineGrammar, BlockLexer, InlineLexer
-from prompt_toolkit import HTML
+import re
+from prompt_toolkit.formatted_text import to_formatted_text, HTML
 
 
 logger = logging.getLogger(__name__)
@@ -31,7 +30,7 @@ class TerminalRender(mistune.Renderer):
             return super().header(header_text, 2)
 
 
-class RedisDocLexer(BlockLexer):
+class RedisDocLexer(mistune.BlockLexer):
     def enable_at_title(self):
         self.rules.at_title = re.compile(r"^@(\w+) *(?:\n+|$)")  # @example
         self.default_rules.insert(0, "at_title")
@@ -51,4 +50,4 @@ def render(text):
     html_text = markdown_render(text)
     logger.debug("[Document] {}".format(html_text))
 
-    return HTML(html_text)
+    return to_formatted_text(HTML(html_text))

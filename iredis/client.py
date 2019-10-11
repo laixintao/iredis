@@ -8,10 +8,11 @@ import logging
 import redis
 from redis.connection import Connection
 from redis.exceptions import TimeoutError, ConnectionError
+from prompt_toolkit.formatted_text import FormattedText
 
 from . import renders
 from .config import config
-from .commands_csv_loader import all_commands, command2callback
+from .commands_csv_loader import all_commands, command2callback, commands_summary
 from .utils import nativestr, split_command_args, _strip_quote_args
 from .renders import render_error
 from .completers import LatestUsedFirstWordCompleter
@@ -219,9 +220,28 @@ class Client:
             logger.debug(f"[Complter {_token} updated] Done: {_completer.words}")
 
     def do_help(self, *args):
-        command_docs_name = "-".join(args)
+        command_docs_name = "-".join(args).lower()
+        command_summary_name = " ".join(args).upper()
         with open(project_path / "docs" / f"{command_docs_name}.md") as doc_file:
             doc = doc_file.read()
-            rendered = markdown.render(doc)
+            rendered_detail = markdown.render(doc)
+        summary_dict = commands_summary[command_summary_name]
+        summary = [
+            ("", "\n"),
+            ("class:doccommand", "  " + command_summary_name),
+            ("", "\n"),
+            ("class:dockey", "  summary: "),
+            ("", summary_dict["summary"]),
+            ("", "\n"),
+            ("class:dockey", "  complexity: "),
+            ("", summary_dict["complexity"]),
+            ("", "\n"),
+            ("class:dockey", "  since: "),
+            ("", summary_dict["since"]),
+            ("", "\n"),
+            ("class:dockey", "  group: "),
+            ("", summary_dict["group"]),
+            ("", "\n\n"),
+        ]
 
-        return rendered
+        return FormattedText(summary + rendered_detail)
