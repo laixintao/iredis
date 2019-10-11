@@ -37,6 +37,7 @@ lxml = "^4"
 pexpect = "^4.7"
 flake8 = "^3.7"
 ipython = "^7.8"
+ipdb = "^0.12.2"
 
 [tool.poetry.scripts]
 iredis = 'iredis.entry:main'

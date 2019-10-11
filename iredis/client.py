@@ -219,8 +219,8 @@ class Client:
             logger.debug(f"[Complter {_token} updated] Done: {_completer.words}")
 
     def do_help(self, *args):
-        comand_docs_name = "-".join(args)
-        with open(project_path / "docs" / "decr.md") as doc_file:
+        command_docs_name = "-".join(args)
+        with open(project_path / "docs" / f"{command_docs_name}.md") as doc_file:
             doc = doc_file.read()
             rendered = markdown.render(doc)
 
