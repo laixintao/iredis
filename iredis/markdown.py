@@ -30,9 +30,6 @@ class TerminalRender(mistune.Renderer):
             header_text = self._to_title(text)
             return super().header(header_text, 2)
 
-    def at_title(self, text):
-        return self._to_title(text)
-
 
 class RedisDocLexer(BlockLexer):
     def enable_at_title(self):
