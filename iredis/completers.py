@@ -74,7 +74,7 @@ def get_completer(group2commands, redis_grammar):
     for command_group, commands in group2commands.items():
         words = commands + [command.lower() for command in commands]
         if config.newbie_mode:
-            hint = {command: command_hint[command.upper()] for command in words}
+            hint = {command: command_hint.get(command.upper()) for command in words}
         else:
             hint = None
         completer_mapping[command_group] = WordCompleter(
