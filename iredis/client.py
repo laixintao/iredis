@@ -76,14 +76,6 @@ class Client:
         self, completer, command_name, *args, **options
     ):
         "Execute a command and return a parsed response"
-        # === pre hook ===
-        # TRANSATION state chage
-        if command_name.upper() in ["EXEC", "DISCARD"]:
-            logger.debug(f"[After hook] Command is {command_name}, unset transaction.")
-            config.transaction = False
-        if command_name.upper() in ["ZSCAN", "ZPOPMAX", "ZPOPMIN"]:
-            config.withscores = True
-
         try:
             self.connection.send_command(command_name, *args)
             resp = self.parse_response(
@@ -101,21 +93,6 @@ class Client:
         except redis.exceptions.ExecAbortError:
             config.transaction = False
             raise
-
-        # === After hook ===
-        # SELECT db on AUTH
-        if command_name.upper() == "AUTH" and self.db:
-            select_result = self.execute_command_and_read_response(
-                completer, "SELECT", self.db
-            )
-            if nativestr(select_result) != "OK":
-                raise ConnectionError("Invalid Database")
-        elif command_name.upper() == "SELECT":
-            logger.debug("[After hook] Command is SELECT, change self.db.")
-            self.db = int(args[0])
-        if command_name.upper() == "MULTI":
-            logger.debug("[After hook] Command is MULTI, start transaction.")
-            config.transaction = True
 
         return resp
 
@@ -156,26 +133,27 @@ class Client:
             rendered = self.render_command_result(command_name, response, completer)
         return rendered
 
-    def send_command(self, command, completer):
+    def send_command(self, raw_command, completer):
         """
-        Send command to redis-server, return parsed response.
+        Send raw_command to redis-server, return parsed response.
 
-        :param command: text command, not parsed
+        :param raw_command: text raw_command, not parsed
         :param completer: RedisGrammarCompleter will update completer
             based on redis response. eg: update key completer after ``keys``
-            command
+            raw_command
         """
-        input_command = ""
+        command_name = ""
         try:
-            input_command, args = split_command_args(command, all_commands)
-            # if command is not supposed to send to server
-            if input_command.upper() in CLIENT_COMMANDS:
-                redis_resp = self.client_execute_command(input_command, *args)
+            command_name, args = split_command_args(raw_command, all_commands)
+            # if raw_command is not supposed to send to server
+            if command_name.upper() in CLIENT_COMMANDS:
+                redis_resp = self.client_execute_command(command_name, *args)
                 return redis_resp
-            self.pre_hook(command, completer)
+            self.pre_hook(raw_command, command_name, args, completer)
             redis_resp = self.execute_command_and_read_response(
-                completer, input_command, *args
+                completer, command_name, *args
             )
+            self.after_hook(raw_command, command_name, args, completer)
         except Exception as e:
             logger.exception(e)
             return render_error(str(e))
@@ -183,7 +161,23 @@ class Client:
             config.withscores = False
         return redis_resp
 
-    def pre_hook(self, command, completer):
+    def after_hook(self, command, command_name, args, completer):
+        # === After hook ===
+        # SELECT db on AUTH
+        if command_name.upper() == "AUTH" and self.db:
+            select_result = self.execute_command_and_read_response(
+                completer, "SELECT", self.db
+            )
+            if nativestr(select_result) != "OK":
+                raise ConnectionError("Invalid Database")
+        elif command_name.upper() == "SELECT":
+            logger.debug("[After hook] Command is SELECT, change self.db.")
+            self.db = int(args[0])
+        if command_name.upper() == "MULTI":
+            logger.debug("[After hook] Command is MULTI, start transaction.")
+            config.transaction = True
+
+    def pre_hook(self, command, command_name, args, completer):
         """
         Before execute command, patch completers first.
         Eg: When user run `GET foo`, key completer need to
@@ -191,6 +185,15 @@ class Client:
 
         Only works when compile-grammar thread is done.
         """
+        # TRANSATION state chage
+        if command_name.upper() in ["EXEC", "DISCARD"]:
+            logger.debug(f"[After hook] Command is {command_name}, unset transaction.")
+            config.transaction = False
+        # score display for sorted set
+        if command_name.upper() in ["ZSCAN", "ZPOPMAX", "ZPOPMIN"]:
+            config.withscores = True
+
+        # patch completers
         if not completer:
             logger.warning("[Pre patch completer] Complter not ready, not patched...")
             return
