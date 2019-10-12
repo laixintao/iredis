@@ -65,11 +65,11 @@ jobs:
     steps:
       - checkout
 
-     - run:
-        name: "Pull Submodules"
-        command: |
-          git submodule init
-          git submodule update --remote
+      - run:
+         name: "Pull Submodules"
+         command: |
+           git submodule init
+           git submodule update --remote
 
       # Download and cache dependencies
       - restore_cache:
