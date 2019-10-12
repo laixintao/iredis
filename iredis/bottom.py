@@ -34,9 +34,12 @@ class BottomToolbar:
             )
             return [loading_text]
         else:
+            default_text = "Report bugs: iredis.io/issues"
             # add command help if valide
             if self.command_holder.command:
-                command_info = commands_summary[self.command_holder.command]
-                hint = command_syntax(self.command_holder.command, command_info)
-                return hint
-        return "Report bugs: iredis.io/issues"
+                try:
+                    command_info = commands_summary[self.command_holder.command]
+                    default_text = command_syntax(self.command_holder.command, command_info)
+                except KeyError:
+                    pass
+        return default_text

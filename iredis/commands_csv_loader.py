@@ -1,15 +1,12 @@
-import os
 import csv
 import json
 import copy
-from pathlib import Path
 from .utils import timer
-
-project_path = Path(os.path.dirname(os.path.abspath(__file__))) / "data"
+from . import project_path
 
 
 def load_command_summary():
-    commands_json_path = project_path / "commands.json"
+    commands_json_path = project_path / "redis-doc" / "commands.json"
 
     with open(commands_json_path) as jsonfile:
         commands_summary = json.load(jsonfile)
@@ -57,6 +54,10 @@ timer("[Loader] Start loading commands file...")
 group2commands, group2command_res, command2callback = load_command()
 # all redis command strings, in UPPER case
 # NOTE: Must sort by length, to match longest command first
-all_commands = sorted(command2callback.keys(), key=lambda x: len(x), reverse=True)
+all_commands = sorted(
+    list(command2callback.keys()) + ["HELP"] + ["HELP"],
+    key=lambda x: len(x),
+    reverse=True,
+)
 commands_summary = load_command_summary()
 timer("[Loader] Finished loading commands.")

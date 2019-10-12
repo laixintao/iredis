@@ -20,7 +20,17 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Intended Audience :: Developers",
 ]
-include = ["command_syntax.csv", "commands.json"]
+exclude=[
+    "iredis/data/redis-doc/*",
+    "iredis/data/redis-doc/.*",
+    "iredis/data/redis-doc/bin/*",
+    "iredis/data/redis-doc/topics/*",
+    "iredis/data/redis-doc/utils/*",
+]
+include = [
+    "iredis/data/redis-doc/commands.json",
+]
+
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -28,6 +38,7 @@ redis = "^3"
 prompt_toolkit = "^2"
 Pygments = "^2"
 click8 = "^8"
+mistune = "^0.8.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5"
@@ -36,6 +47,7 @@ lxml = "^4"
 pexpect = "^4.7"
 flake8 = "^3.7"
 ipython = "^7.8"
+ipdb = "^0.12.2"
 
 [tool.poetry.scripts]
 iredis = 'iredis.entry:main'

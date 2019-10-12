@@ -32,7 +32,7 @@ generic,EXISTS,key [key ...],Determine if a key exists,https://redis.io/commands
 generic,EXPIRE,key seconds,Set a key's time to live in seconds,https://redis.io/commands/expire
 generic,EXPIREAT,key timestamp,Set the expiration for a key as a UNIX timestamp,https://redis.io/commands/expireat
 generic,KEYS,pattern,Find all keys matching the given pattern,https://redis.io/commands/keys
-generic,MIGRATE,"host port key|"""" destination-db timeout [COPY] [REPLACE] [KEYS key [key ...]]",Atomically transfer a key from a Redis instance to another one.,https://redis.io/commands/migrate
+generic,MIGRATE,"host port key|"""" destination-db timeout [COPY] [REPLACE] [AUTH password] [KEYS key [key ...]]",Atomically transfer a key from a Redis instance to another one.,https://redis.io/commands/migrate
 generic,MOVE,key db,Move a key to another database,https://redis.io/commands/move
 generic,OBJECT,subcommand [arguments [arguments ...]],Inspect the internals of Redis objects,https://redis.io/commands/object
 generic,PERSIST,key,Remove the expiration from a key,https://redis.io/commands/persist
@@ -67,7 +67,7 @@ hash,HLEN,key,Get the number of fields in a hash,https://redis.io/commands/hlen
 hash,HMGET,key field [field ...],Get the values of all the given hash fields,https://redis.io/commands/hmget
 hash,HMSET,key field value [field value ...],Set multiple hash fields to multiple values,https://redis.io/commands/hmset
 hash,HSCAN,key cursor [MATCH pattern] [COUNT count],Incrementally iterate hash fields and associated values,https://redis.io/commands/hscan
-hash,HSET,key field value,Set the string value of a hash field,https://redis.io/commands/hset
+hash,HSET,key field value [field value ...],Set the string value of a hash field,https://redis.io/commands/hset
 hash,HSETNX,key field value,"Set the value of a hash field, only if the field does not exist",https://redis.io/commands/hsetnx
 hash,HSTRLEN,key field,Get the length of the value of a hash field,https://redis.io/commands/hstrlen
 hash,HVALS,key,Get all the values in a hash,https://redis.io/commands/hvals
@@ -129,6 +129,7 @@ server,FLUSHALL,[ASYNC],Remove all keys from all databases,https://redis.io/comm
 server,FLUSHDB,[ASYNC],Remove all keys from the current database,https://redis.io/commands/flushdb
 server,INFO,[section],Get information and statistics about the server,https://redis.io/commands/info
 server,LASTSAVE,,Get the UNIX time stamp of the last successful save to disk,https://redis.io/commands/lastsave
+server,LOLWUT,[VERSION version],Display some computer art and the Redis version,https://redis.io/commands/lolwut
 server,MEMORY DOCTOR,,Outputs memory problems report,https://redis.io/commands/memory-doctor
 server,MEMORY HELP,,Show helpful text about the different subcommands,https://redis.io/commands/memory-help
 server,MEMORY MALLOC-STATS,,Show allocator internal stats,https://redis.io/commands/memory-malloc-stats

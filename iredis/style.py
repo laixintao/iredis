@@ -20,6 +20,13 @@ style = REDIS_TOKEN = {
     "field": "cyan",
 }
 
+DOC = {
+    "doccommand": "bold",
+    "dockey": "#E6DB74",
+    "code": "#aaaaaa",
+    "h2": "bold #33aa33",
+}
+
 GROUP = {
     "group.cluster": "#E6DB74",
     "group.connection": "#E6DB74",
@@ -86,6 +93,7 @@ BOTTOM_TOOLBAR_TOKEN = {
 
 style.update(STYLE_DICT)
 style.update(BOTTOM_TOOLBAR_TOKEN)
+style.update(DOC)
 
 
 STYLE = merge_styles([override_style, Style.from_dict(style)])

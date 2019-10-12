@@ -119,23 +119,62 @@ def split_command_args(command, all_commands):
 type_convert = {"posix time": "time"}
 
 
-def parse_argument_to_formatted_text(name, _type, is_option):
+def parse_argument_to_formatted_text(
+    name, _type, is_option, style_class="bottom-toolbar"
+):
     result = []
     if isinstance(name, str):
         _type = type_convert.get(_type, _type)
-        result.append((f"class:bottom-toolbar.{_type}", " " + name))
+        result.append((f"class:{style_class}.{_type}", " " + name))
     elif isinstance(name, list):
         for inner_name, inner_type in zip(name, _type):
             inner_type = type_convert.get(inner_type, inner_type)
             if is_option:
-                result.append(
-                    (f"class:bottom-toolbar.{inner_type}", f" [{inner_name}]")
-                )
+                result.append((f"class:{style_class}.{inner_type}", f" [{inner_name}]"))
             else:
-                result.append((f"class:bottom-toolbar.{inner_type}", f" {inner_name}"))
+                result.append((f"class:{style_class}.{inner_type}", f" {inner_name}"))
     else:
         raise Exception()
     return result
+
+
+def compose_command_syntax(command_info, style_class="bottom-toolbar"):
+    command_style = f"class:{style_class}.command"
+    const_style = f"class:{style_class}.const"
+    args = []
+    if command_info.get("arguments"):
+        for argument in command_info["arguments"]:
+            if argument.get("command"):
+                # command [
+                args.append((command_style, " [" + argument["command"]))
+                if argument.get("enum"):
+                    enums = "|".join(argument["enum"])
+                    args.append((const_style, f" [{enums}]"))
+                elif argument.get("name"):
+                    args.extend(
+                        parse_argument_to_formatted_text(
+                            argument["name"],
+                            argument["type"],
+                            argument.get("optional"),
+                            style_class=style_class,
+                        )
+                    )
+                # ]
+                args.append((command_style, "]"))
+            elif argument.get("enum"):
+                enums = "|".join(argument["enum"])
+                args.append((const_style, f" [{enums}]"))
+
+            else:
+                args.extend(
+                    parse_argument_to_formatted_text(
+                        argument["name"],
+                        argument["type"],
+                        argument.get("optional"),
+                        style_class=style_class,
+                    )
+                )
+    return args
 
 
 def command_syntax(command, command_info):
@@ -152,34 +191,8 @@ def command_syntax(command, command_info):
         ("class:bottom-toolbar.command", f"{command}"),
     ]  # final display FormattedText
 
-    if command_info.get("arguments"):
-        for argument in command_info["arguments"]:
-            if argument.get("command"):
-                # command [
-                bottoms.append(
-                    (f"class:bottom-toolbar.command", " [" + argument["command"])
-                )
-                if argument.get("enum"):
-                    enums = "|".join(argument["enum"])
-                    bottoms.append((f"class:bottom-toolbar.const", f" [{enums}]"))
-                elif argument.get("name"):
-                    bottoms.extend(
-                        parse_argument_to_formatted_text(
-                            argument["name"], argument["type"], argument.get("optional")
-                        )
-                    )
-                # ]
-                bottoms.append((f"class:bottom-toolbar.command", "]"))
-            elif argument.get("enum"):
-                enums = "|".join(argument["enum"])
-                bottoms.append((f"class:bottom-toolbar.const", f" [{enums}]"))
+    bottoms += compose_command_syntax(command_info)
 
-            else:
-                bottoms.extend(
-                    parse_argument_to_formatted_text(
-                        argument["name"], argument["type"], argument.get("optional")
-                    )
-                )
     if "since" in command_info:
         since = command_info["since"]
         bottoms.append(("class:bottom-toolbar.since", f"   since: {since}"))
