@@ -25,6 +25,7 @@ A Terminal Client for Redis with AutoCompletion and Syntax Highlighting. It is a
 - Auto suggestions. (Like [fish shell](http://fishshell.com/).)
 - Support `--encode=utf-8`, to decode Redis' bytes responses.
 - Command hint on bottom, include command syntax, supported redis version, and time complexity.
+- Offcial docs build in `HELP` command, try `HELP SET`!
 
 ## Install
 
