@@ -1,15 +1,12 @@
-import os
 import csv
 import json
 import copy
-from pathlib import Path
 from .utils import timer
-
-project_path = Path(os.path.dirname(os.path.abspath(__file__))) / "data"
+from . import project_path
 
 
 def load_command_summary():
-    commands_json_path = project_path / "commands.json"
+    commands_json_path = project_path / "redis-doc" / "commands.json"
 
     with open(commands_json_path) as jsonfile:
         commands_summary = json.load(jsonfile)

@@ -223,7 +223,10 @@ class Client:
     def do_help(self, *args):
         command_docs_name = "-".join(args).lower()
         command_summary_name = " ".join(args).upper()
-        with open(project_path / "docs" / f"{command_docs_name}.md") as doc_file:
+        doc_file = open(
+            project_path / "redis-doc" / "commands" / f"{command_docs_name}.md"
+        )
+        with doc_file as doc_file:
             doc = doc_file.read()
             rendered_detail = markdown.render(doc)
         summary_dict = commands_summary[command_summary_name]
