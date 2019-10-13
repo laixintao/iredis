@@ -28,6 +28,10 @@ class Config:
         self.newbie_mode = False
         # display zset withscores?
         self.withscores = False
+        # TODO
+        # parse version
+        # https://github.com/python/cpython/blob/2fb2bc81c3f40d73945c6102569495140e1182c7/Lib/distutils/version.py#L2
+        self.version = ""
 
     def __setter__(self, name, value):
         # for every time start a transaction
