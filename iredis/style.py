@@ -20,7 +20,12 @@ style = REDIS_TOKEN = {
     "field": "cyan",
 }
 
-DOC = {"doccommand": "bold", "dockey": "cyan", "code": "#aaaaaa"}
+DOC = {
+    "doccommand": "bold",
+    "dockey": "#E6DB74",
+    "code": "#aaaaaa",
+    "h2": "bold #33aa33",
+}
 
 GROUP = {
     "group.cluster": "#E6DB74",
