@@ -1,4 +1,4 @@
-#!/bin/python3
+#!python3
 
 """
 Download all Reids commands from https://redis.io/commands.
