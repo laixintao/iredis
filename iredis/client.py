@@ -1,6 +1,7 @@
 """
 IRedis client.
 """
+import re
 import os
 from pathlib import Path
 import logging
@@ -61,6 +62,17 @@ class Client:
         # all command upper case
         self.answer_callbacks = command2callback
         self.callbacks = self.reder_funcname_mapping()
+        self.connection.connect()
+        try:
+            self.after_connection()
+        except Exception as e:
+            logger.warn(f"[After Connection] {str(e)}")
+
+    def after_connection(self):
+        info_resp = self.execute_command_and_read_response(None, "INFO")
+        version = re.findall(r"^redis_version:(.*)$", info_resp, re.MULTILINE)[0]
+        logger.debug(f"[Redis Version] {version}")
+        config.version = version
 
     def __str__(self):
         if self.db:
