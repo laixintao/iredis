@@ -37,7 +37,7 @@ class Client:
                 mapping[func_name] = func
         return mapping
 
-    def __init__(self, host, port, db, password=None, encoding=None):
+    def __init__(self, host, port, db, password=None, encoding=None, get_info=True):
         self.host = host
         self.port = port
         self.db = db
@@ -63,12 +63,16 @@ class Client:
         self.answer_callbacks = command2callback
         self.callbacks = self.reder_funcname_mapping()
         self.connection.connect()
-        try:
-            self.after_connection()
-        except Exception as e:
-            logger.warn(f"[After Connection] {str(e)}")
+        if get_info:
+            try:
+                self.get_server_info()
+            except Exception as e:
+                logger.warn(f"[After Connection] {str(e)}")
+                config.no_version_reason = str(e)
+        else:
+            config.no_version_reason = "--no-info flag activated"
 
-    def after_connection(self):
+    def get_server_info(self):
         info_resp = self.execute_command_and_read_response(None, "INFO")
         version = re.findall(r"^redis_version:(.*)$", info_resp, re.MULTILINE)[0]
         logger.debug(f"[Redis Version] {version}")

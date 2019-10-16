@@ -27,7 +27,12 @@ HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
 
 def greetings():
     iredis_version = f"iredis  {__version__}"
-    server_version = f"redis-server  {config.version}"
+    if config.no_version_reason:
+        reason = f"({config.no_version_reason})"
+    else:
+        reason = ""
+
+    server_version = f"redis-server  {config.version} {reason}"
     home_page = "Home:   https://iredis.io"
     issues = "Issues: https://iredis.io/issues"
     display = "\n".join([iredis_version, server_version, home_page, issues])
@@ -101,13 +106,16 @@ def repl(client, session, start_time):
 
 
 RAW_HELP = """
-Use raw formatting for replies (default when STDOUT is not a tty).
-However, you can use --no-raw to force formatted output even
+Use raw formatting for replies (default when STDOUT is not a tty). \
+However, you can use --no-raw to force formatted output even \
 when STDOUT is not a tty.
 """
 DECODE_HELP = (
     "decode response, defult is No decode, which will output all bytes literals."
 )
+NO_INFO = """
+By default iredis will fire a INFO command to get redis-server's \
+version, but you can use this flag to disable it."""
 
 
 # command line entry here...
@@ -118,6 +126,7 @@ DECODE_HELP = (
 @click.option("-n", help="Database number.", default=None)
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
 @click.option("--raw/--no-raw", default=False, is_flag=True, help=RAW_HELP)
+@click.option("--no-info", default=False, is_flag=True, help=NO_INFO)
 @click.option(
     "--newbie/--no-newbie",
     default=False,
@@ -127,7 +136,7 @@ DECODE_HELP = (
 @click.option("--decode", default=None, help=DECODE_HELP)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
-def gather_args(ctx, h, p, n, password, raw, cmd, decode, newbie):
+def gather_args(ctx, h, p, n, password, raw, cmd, decode, newbie, no_info):
     """
     IRedis: Interactive Redis
 
@@ -184,6 +193,7 @@ def main():
         ctx.params["n"],
         ctx.params["password"],
         config.decode,
+        get_info=not ctx.params['no_info'],
     )
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():
