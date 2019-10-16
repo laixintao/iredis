@@ -2,6 +2,8 @@ from .config import config, COMPILING_IN_PROGRESS, COMPILING_JUST_FINISH
 from .commands_csv_loader import commands_summary
 from .utils import command_syntax
 
+BUTTOM_TEXT = "Ctrl-D to exit;"
+
 
 class BottomToolbar:
     CHAR = "⣾⣷⣯⣟⡿⢿⣻⣽"
@@ -34,12 +36,12 @@ class BottomToolbar:
             )
             return [loading_text]
         else:
-            default_text = "Report bugs: iredis.io/issues"
+            text = BUTTOM_TEXT
             # add command help if valide
             if self.command_holder.command:
                 try:
                     command_info = commands_summary[self.command_holder.command]
-                    default_text = command_syntax(self.command_holder.command, command_info)
+                    text = command_syntax(self.command_holder.command, command_info)
                 except KeyError:
                     pass
-        return default_text
+        return text

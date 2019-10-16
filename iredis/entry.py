@@ -18,10 +18,20 @@ from .completers import compile_grammar_bg
 from .processors import UserInputCommand, GetCommandProcessor
 from .bottom import BottomToolbar
 from .utils import timer
+from . import __version__
 
 logger = logging.getLogger(__name__)
 
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
+
+
+def greetings():
+    iredis_version = f"iredis  {__version__}"
+    server_version = f"redis-server  {config.version}"
+    home_page = "Home:   https://iredis.io"
+    issues = "Issues: https://iredis.io/issues"
+    display = "\n".join([iredis_version, server_version, home_page, issues])
+    write_result(display)
 
 
 def print_help_msg(command):
@@ -61,7 +71,7 @@ def repl(client, session, start_time):
                 bottom_toolbar=BottomToolbar(command_holder).render,
                 refresh_interval=_interval,
                 input_processors=[GetCommandProcessor(command_holder)],
-                rprompt=lambda: '<transaction>' if config.transaction else None,
+                rprompt=lambda: "<transaction>" if config.transaction else None,
             )
 
         except KeyboardInterrupt:
@@ -108,7 +118,12 @@ DECODE_HELP = (
 @click.option("-n", help="Database number.", default=None)
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
 @click.option("--raw/--no-raw", default=False, is_flag=True, help=RAW_HELP)
-@click.option("--newbie/--no-newbie", default=False, is_flag=True, help="Show command hints and useful helps.")
+@click.option(
+    "--newbie/--no-newbie",
+    default=False,
+    is_flag=True,
+    help="Show command hints and useful helps.",
+)
 @click.option("--decode", default=None, help=DECODE_HELP)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
@@ -196,6 +211,8 @@ def main():
         auto_suggest=AutoSuggestFromHistory(),
         complete_while_typing=True,
     )
-
     compile_grammar_bg(session)
+
+    # print hello message
+    greetings()
     repl(client, session, enter_main_time)
