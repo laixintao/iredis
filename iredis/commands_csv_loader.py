@@ -43,7 +43,7 @@ def load_command():
         commands = group[syntax]
         lower_commands = [command.lower() for command in commands]
         commands += lower_commands
-        # Space in command cam be mutiple spaces
+        # Space in command cloud be mutiple spaces
         re_commands = [command.replace(" ", r"\s+") for command in commands]
         group2command_res[syntax] = "|".join(re_commands)
 
