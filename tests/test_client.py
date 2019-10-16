@@ -29,3 +29,14 @@ def test_patch_completer(completer):
     assert completer.completers["keys"].words == ["world", "hello", "bar", "foo"]
     client.pre_hook("GET bar", "GET", "bar", completer)
     assert completer.completers["keys"].words == ["bar", "world", "hello", "foo"]
+
+
+def test_get_server_verison_after_client():
+    from iredis.config import config
+
+    Client("127.0.0.1", "6379", None)
+    assert config.version.startswith("5.")
+
+    config.version = "Unknown"
+    Client("127.0.0.1", "6379", None, get_info=False)
+    assert config.version == "Unknown"
