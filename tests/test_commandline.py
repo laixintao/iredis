@@ -52,3 +52,16 @@ def test_short_help_option():
     c.expect("127.0.0.1:6379>")
 
     c.close()
+
+
+def test_server_version_in_starting():
+    c = pexpect.spawn("iredis", timeout=0.5)
+    c.expect("redis-server  5")
+    c.close()
+
+
+def test_server_version_with_no_info_flag():
+    c = pexpect.spawn("iredis --no-info")
+    c.expect("redis-server  Unknown")
+    c.expect("--no-info flag activated")
+    c.close()

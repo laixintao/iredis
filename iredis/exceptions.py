@@ -4,3 +4,7 @@ class UsageError(Exception):
 
 class InvalidArguments(UsageError):
     """Invalid argument(s)"""
+
+
+class NotRedisCommand(UsageError):
+    """Not a Redis command"""

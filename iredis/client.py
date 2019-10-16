@@ -1,9 +1,11 @@
 """
 IRedis client.
 """
+import re
 import os
 from pathlib import Path
 import logging
+from distutils.version import StrictVersion
 
 import redis
 from redis.connection import Connection
@@ -18,6 +20,7 @@ from .renders import render_error
 from .completers import LatestUsedFirstWordCompleter
 from . import markdown
 from .utils import compose_command_syntax
+from .exceptions import NotRedisCommand
 
 project_path = Path(os.path.dirname(os.path.abspath(__file__))) / "data"
 logger = logging.getLogger(__name__)
@@ -36,7 +39,7 @@ class Client:
                 mapping[func_name] = func
         return mapping
 
-    def __init__(self, host, port, db, password=None, encoding=None):
+    def __init__(self, host, port, db, password=None, encoding=None, get_info=True):
         self.host = host
         self.port = port
         self.db = db
@@ -61,6 +64,21 @@ class Client:
         # all command upper case
         self.answer_callbacks = command2callback
         self.callbacks = self.reder_funcname_mapping()
+        self.connection.connect()
+        if get_info:
+            try:
+                self.get_server_info()
+            except Exception as e:
+                logger.warn(f"[After Connection] {str(e)}")
+                config.no_version_reason = str(e)
+        else:
+            config.no_version_reason = "--no-info flag activated"
+
+    def get_server_info(self):
+        info_resp = self.execute_command_and_read_response(None, "INFO")
+        version = re.findall(r"^redis_version:(.*)$", info_resp, re.MULTILINE)[0]
+        logger.debug(f"[Redis Version] {version}")
+        config.version = version
 
     def __str__(self):
         if self.db:
@@ -226,13 +244,38 @@ class Client:
     def do_help(self, *args):
         command_docs_name = "-".join(args).lower()
         command_summary_name = " ".join(args).upper()
-        doc_file = open(
-            project_path / "redis-doc" / "commands" / f"{command_docs_name}.md"
-        )
+        try:
+            doc_file = open(
+                project_path / "redis-doc" / "commands" / f"{command_docs_name}.md"
+            )
+        except FileNotFoundError:
+            raise NotRedisCommand(
+                f"{command_summary_name} is not a valide Redis command."
+            )
+
         with doc_file as doc_file:
             doc = doc_file.read()
             rendered_detail = markdown.render(doc)
         summary_dict = commands_summary[command_summary_name]
+
+        avaiable_version = summary_dict.get("since", "?")
+        server_version = config.version
+        try:
+            is_avaiable = StrictVersion(server_version) > StrictVersion(
+                avaiable_version
+            )
+        except Exception as e:
+            logger.error(e)
+            is_avaiable = None
+
+        if is_avaiable:
+            avaiable_text = f"(Avaiable on your redis-server: {server_version})"
+        elif is_avaiable is False:
+            avaiable_text = f"(Not avaiable on your redis-server: {server_version})"
+        else:
+            avaiable_text = ""
+        since_text = f"{avaiable_version} {avaiable_text}"
+
         summary = [
             ("", "\n"),
             ("class:doccommand", "  " + command_summary_name),
@@ -244,7 +287,7 @@ class Client:
             ("", summary_dict.get("complexity", "?")),
             ("", "\n"),
             ("class:dockey", "  since: "),
-            ("", summary_dict.get("since", "?")),
+            ("", since_text),
             ("", "\n"),
             ("class:dockey", "  group: "),
             ("", summary_dict.get("group", "?")),

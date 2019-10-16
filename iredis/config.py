@@ -28,6 +28,8 @@ class Config:
         self.newbie_mode = False
         # display zset withscores?
         self.withscores = False
+        self.version = "Unknown"
+        self.no_version_reason = None
 
     def __setter__(self, name, value):
         # for every time start a transaction
