@@ -40,3 +40,15 @@ def test_get_server_verison_after_client():
     config.version = "Unknown"
     Client("127.0.0.1", "6379", None, get_info=False)
     assert config.version == "Unknown"
+
+
+def test_do_help():
+    from iredis.config import config
+
+    client = Client("127.0.0.1", "6379", None)
+    config.version = "5.0.0"
+    resp = client.do_help("SET")
+    assert resp[10] == ("", "1.0.0 (Avaiable, redis-server: 5.0.0)")
+    config.version = "2.0.0"
+    resp = client.do_help("cluster", "addslots")
+    assert resp[10] == ("", "3.0.0 (Not avaiable, redis-server: 2.0.0)")

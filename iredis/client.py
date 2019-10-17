@@ -271,7 +271,7 @@ class Client:
         if is_avaiable:
             avaiable_text = f"(Avaiable, redis-server: {server_version})"
         elif is_avaiable is False:
-            avaiable_text = f"(Not avaiable, redis-server: {server_version}"
+            avaiable_text = f"(Not avaiable, redis-server: {server_version})"
         else:
             avaiable_text = ""
         since_text = f"{avaiable_version} {avaiable_text}"
