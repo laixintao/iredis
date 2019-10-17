@@ -248,7 +248,7 @@ class Client:
             doc_file = open(
                 project_path / "redis-doc" / "commands" / f"{command_docs_name}.md"
             )
-        except FileNotFoundError as e:
+        except FileNotFoundError:
             raise NotRedisCommand(
                 f"{command_summary_name} is not a valide Redis command."
             )
