@@ -20,6 +20,7 @@ from .renders import render_error
 from .completers import LatestUsedFirstWordCompleter
 from . import markdown
 from .utils import compose_command_syntax
+from .exceptions import NotRedisCommand
 
 project_path = Path(os.path.dirname(os.path.abspath(__file__))) / "data"
 logger = logging.getLogger(__name__)
@@ -243,9 +244,15 @@ class Client:
     def do_help(self, *args):
         command_docs_name = "-".join(args).lower()
         command_summary_name = " ".join(args).upper()
-        doc_file = open(
-            project_path / "redis-doc" / "commands" / f"{command_docs_name}.md"
-        )
+        try:
+            doc_file = open(
+                project_path / "redis-doc" / "commands" / f"{command_docs_name}.md"
+            )
+        except FileNotFoundError as e:
+            raise NotRedisCommand(
+                f"{command_summary_name} is not a valide Redis command."
+            )
+
         with doc_file as doc_file:
             doc = doc_file.read()
             rendered_detail = markdown.render(doc)
@@ -254,7 +261,9 @@ class Client:
         avaiable_version = summary_dict.get("since", "?")
         server_version = config.version
         try:
-            is_avaiable = StrictVersion(server_version) > StrictVersion(avaiable_version)
+            is_avaiable = StrictVersion(server_version) > StrictVersion(
+                avaiable_version
+            )
         except Exception as e:
             logger.error(e)
             is_avaiable = None
