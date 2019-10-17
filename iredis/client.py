@@ -5,6 +5,7 @@ import re
 import os
 from pathlib import Path
 import logging
+from distutils.version import StrictVersion
 
 import redis
 from redis.connection import Connection
@@ -249,6 +250,23 @@ class Client:
             doc = doc_file.read()
             rendered_detail = markdown.render(doc)
         summary_dict = commands_summary[command_summary_name]
+
+        avaiable_version = summary_dict.get("since", "?")
+        server_version = config.version
+        try:
+            is_avaiable = StrictVersion(server_version) > StrictVersion(avaiable_version)
+        except Exception as e:
+            logger.error(e)
+            is_avaiable = None
+
+        if is_avaiable:
+            avaiable_text = f"(Avaiable, redis-server: {server_version})"
+        elif is_avaiable is False:
+            avaiable_text = f"(Not avaiable, redis-server: {server_version}"
+        else:
+            avaiable_text = ""
+        since_text = f"{avaiable_version} {avaiable_text}"
+
         summary = [
             ("", "\n"),
             ("class:doccommand", "  " + command_summary_name),
@@ -260,7 +278,7 @@ class Client:
             ("", summary_dict.get("complexity", "?")),
             ("", "\n"),
             ("class:dockey", "  since: "),
-            ("", summary_dict.get("since", "?")),
+            ("", since_text),
             ("", "\n"),
             ("class:dockey", "  group: "),
             ("", summary_dict.get("group", "?")),
