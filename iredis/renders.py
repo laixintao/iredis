@@ -159,7 +159,7 @@ def _render_list(byte_items, str_items, style=None):
     return FormattedText(rendered)
 
 
-def render_list(text, completer):
+def render_list(text, completer=None):
     """
     Render callback for redis Array Reply
     Note: Cloud be null in it.

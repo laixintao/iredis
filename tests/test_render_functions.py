@@ -325,7 +325,7 @@ def test_render_unixtime_config_raw(completer):
     )
 
 
-def test_render_unixtime(completer):
+def test_render_unixtime():
     config.raw = True
     rendered = renders.render_unixtime(1570469891)
 
@@ -336,3 +336,23 @@ def test_render_bulk_string_decoded():
     EXPECTED_RENDER = """# Server\nredis_version:5.0.5\nredis_git_sha1:00000000\nredis_git_dirty:0\nredis_build_id:31cd6e21ec924b46"""  # noqa
     _input = b"# Server\r\nredis_version:5.0.5\r\nredis_git_sha1:00000000\r\nredis_git_dirty:0\r\nredis_build_id:31cd6e21ec924b46"  # noqa
     assert renders.render_bulk_string_decode(_input) == EXPECTED_RENDER
+
+
+def test_render_time():
+    config.raw = False
+    value = [b"1571305643", b"765481"]
+    assert renders.render_time(value) == FormattedText(
+        [
+            ("class:type", "(unix timestamp) "),
+            ("", "1571305643"),
+            ("", "\n"),
+            ("class:type", "(millisecond) "),
+            ("", "765481"),
+            ("", "\n"),
+            ("class:type", "(convert to local timezone) "),
+            ("", "2019-10-17 17:47:23.765481"),
+        ]
+    )
+
+    config.raw = True
+    assert renders.render_time(value) == b"1571305643\n765481"
