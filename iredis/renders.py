@@ -85,6 +85,8 @@ def render_bulk_string(value, completers=None):
 
 
 def render_bulk_string_decode(value, completers=None):
+    """For server group commands, no double quoted,
+    \n displayed."""
     decoded = value.decode()
     splitted = "\n".join(decoded.splitlines())
     return splitted

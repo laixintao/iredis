@@ -109,7 +109,7 @@ server,BGSAVE,command,render_simple_string
 server,CLIENT GETNAME,command,render_bulk_string
 server,CLIENT ID,command,render_int
 server,CLIENT KILL,command_pass,
-server,CLIENT LIST,command_pass,
+server,CLIENT LIST,command_type_conntype,render_bulk_string_decode
 server,CLIENT PAUSE,command_pass,
 server,CLIENT REPLY,command_pass,
 server,CLIENT SETNAME,command_value,render_simple_string

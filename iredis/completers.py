@@ -102,6 +102,7 @@ def get_completer(group2commands, redis_grammar):
         "position_choice": "BEFORE AFTER",
         "error": "TIMEOUT ERROR",
         "async": "ASYNC",
+        "conntype": "NORMAL MASTER REPLICA PUBSUB",
     }
     completer_mapping.update(
         {
