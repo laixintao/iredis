@@ -143,7 +143,7 @@ server,SHUTDOWN,command_pass,
 server,SLAVEOF,command_pass,
 server,SLOWLOG,command_pass,
 server,SYNC,command_pass,
-server,TIME,command_pass,
+server,TIME,command,render_time
 set,SADD,command_key_members,render_int
 set,SCARD,command_key,render_int
 set,SDIFF,command_keys,render_list

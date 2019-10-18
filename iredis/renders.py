@@ -113,6 +113,26 @@ def render_unixtime(value, completers=None):
     return rendered_int
 
 
+def render_time(value, completers=None):
+    if config.raw:
+        return render_list(value)
+    unix_timestamp, millisecond = value[0].decode(), value[1].decode()
+    explained_date = time.strftime(
+        "%Y-%m-%d %H:%M:%S", time.localtime(int(unix_timestamp))
+    )
+    rendered = [
+        ("class:type", "(unix timestamp) "),
+        ("", unix_timestamp),
+        NEWLINE_TUPLE,
+        ("class:type", "(millisecond) "),
+        ("", millisecond),
+        NEWLINE_TUPLE,
+        ("class:type", "(convert to local timezone) "),
+        ("", f"{explained_date}.{millisecond}"),
+    ]
+    return FormattedText(rendered)
+
+
 def _render_list(byte_items, str_items, style=None):
     """Complute the newline/number-width/lineno,
     render list to FormattedText
