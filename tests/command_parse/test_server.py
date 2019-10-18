@@ -24,3 +24,24 @@ def test_flushdb(judge_command):
     judge_command("FLUSHDB async", {"command_asyncx": "FLUSHDB", "async": "async"})
     judge_command("FLUSHDB ASYNC", {"command_asyncx": "FLUSHDB", "async": "ASYNC"})
     judge_command("FLUSHALL ASYNC", {"command_asyncx": "FLUSHALL", "async": "ASYNC"})
+
+
+def test_client_list(judge_command):
+    judge_command("client list", {"command_type_conntype_x": "client list"})
+    judge_command("client list TYPE REPLICA1", None)
+    judge_command(
+        "client list type master",
+        {
+            "command_type_conntype_x": "client list",
+            "type_const": "type",
+            "conntype": "master",
+        },
+    )
+    judge_command(
+        "client list TYPE REPLICA",
+        {
+            "command_type_conntype_x": "client list",
+            "type_const": "TYPE",
+            "conntype": "REPLICA",
+        },
+    )

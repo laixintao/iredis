@@ -118,7 +118,8 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_messagex>({t['command_messagex']}))  (\s+{MESSAGE})?                                \s*)|
 (\s*  (?P<command_index>({t['command_index']}))        \s+ {INDEX}                                    \s*)|
 (\s*  (?P<command_index_index>({t['command_index_index']}))  \s+ {INDEX}  \s+ {INDEX}                 \s*)|
-(\s*  (?P<command_type_conntype>({t['command_type_conntype']}))  \s+ {TYPE_CONST}  \s+ {CONNTYPE}     \s*)|
+(\s*  (?P<command_type_conntype_x>({t['command_type_conntype_x']}))
+    (\s+ {TYPE_CONST}  \s+ {CONNTYPE})?                                                               \s*)|
 (\s*  (?P<command_clientid_errorx>({t['command_clientid_errorx']}))  \s+ {CLIENTID}  (\s+ {ERROR})?   \s*)|
 (\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
 (\s*  (?P<command_keys>({t['command_keys']}))          \s+ {KEYS}                                     \s*)|
