@@ -75,7 +75,9 @@ class Client:
             config.no_version_reason = "--no-info flag activated"
 
     def get_server_info(self):
-        info_resp = self.execute_command_and_read_response(None, "INFO")
+        self.connection.send_command("INFO")
+        # safe to decode Redis's INFO response
+        info_resp = self.connection.read_response().decode()
         version = re.findall(r"^redis_version:(.*)$", info_resp, re.MULTILINE)[0]
         logger.debug(f"[Redis Version] {version}")
         config.version = version
@@ -96,23 +98,18 @@ class Client:
         "Execute a command and return a parsed response"
         try:
             self.connection.send_command(command_name, *args)
-            resp = self.parse_response(
-                self.connection, completer, command_name, **options
-            )
+            response = self.connection.read_response()
         # retry on timeout
         except (ConnectionError, TimeoutError) as e:
             self.connection.disconnect()
             if not (self.connection.retry_on_timeout and isinstance(e, TimeoutError)):
                 raise
             self.connection.send_command(command_name, *args)
-            resp = self.parse_response(
-                self.connection, completer, command_name, **options
-            )
+            response = self.connection.read_response()
         except redis.exceptions.ExecAbortError:
             config.transaction = False
             raise
-
-        return resp
+        return self.render_response(response, completer, command_name, **options)
 
     def render_command_result(self, command_name, response, completer):
         """
@@ -139,9 +136,8 @@ class Client:
         logger.info(f"[rendered] {rendered}")
         return rendered
 
-    def parse_response(self, connection, completer, command_name, **options):
+    def render_response(self, response, completer, command_name, **options):
         "Parses a response from the Redis server"
-        response = connection.read_response()
         logger.info(f"[Redis-Server] Response: {response}")
         # if in transaction, use queue render first
         if config.transaction:
