@@ -78,7 +78,7 @@ class Client:
         self.connection.send_command("INFO")
         # safe to decode Redis's INFO response
         info_resp = self.connection.read_response().decode()
-        version = re.findall(r"^redis_version:(.*)$", info_resp, re.MULTILINE)[0]
+        version = re.findall(r"^redis_version:([\d\.]+)\r\n", info_resp, re.MULTILINE)[0]
         logger.debug(f"[Redis Version] {version}")
         config.version = version
 
@@ -256,12 +256,14 @@ class Client:
 
         avaiable_version = summary_dict.get("since", "?")
         server_version = config.version
+        # FIXME anything strange with single quotes?
+        logger.debug(f"[--version--] '{server_version}'")
         try:
             is_avaiable = StrictVersion(server_version) > StrictVersion(
                 avaiable_version
             )
         except Exception as e:
-            logger.error(e)
+            logger.exception(e)
             is_avaiable = None
 
         if is_avaiable:
