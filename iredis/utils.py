@@ -201,3 +201,9 @@ def command_syntax(command, command_info):
         bottoms.append(("class:bottom-toolbar.complexity", f" complexity:{complexity}"))
 
     return FormattedText(bottoms)
+
+
+def ensure_str(x):
+    if isinstance(x, bytes):
+        return x.decode()
+    return x

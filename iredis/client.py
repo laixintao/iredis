@@ -21,6 +21,7 @@ from .completers import LatestUsedFirstWordCompleter
 from . import markdown
 from .utils import compose_command_syntax
 from .exceptions import NotRedisCommand
+from . import utils
 
 project_path = Path(os.path.dirname(os.path.abspath(__file__))) / "data"
 logger = logging.getLogger(__name__)
@@ -77,7 +78,8 @@ class Client:
     def get_server_info(self):
         self.connection.send_command("INFO")
         # safe to decode Redis's INFO response
-        info_resp = self.connection.read_response().decode()
+        info_resp = utils.ensure_str(self.connection.read_response())
+
         version = re.findall(r"^redis_version:([\d\.]+)\r\n", info_resp, re.MULTILINE)[0]
         logger.debug(f"[Redis Version] {version}")
         config.version = version

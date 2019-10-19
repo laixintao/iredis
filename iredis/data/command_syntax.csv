@@ -132,8 +132,8 @@ server,LASTSAVE,command,render_unixtime
 server,MEMORY DOCTOR,command,render_bulk_string_decode
 server,MEMORY HELP,command,render_list
 server,MEMORY MALLOC-STATS,command_pass,
-server,MEMORY PURGE,command_pass,
-server,MEMORY STATS,command_pass,
+server,MEMORY PURGE,command,render_simple_string
+server,MEMORY STATS,command,render_list_decode
 server,MEMORY USAGE,command_pass,
 server,MONITOR,command_pass,
 server,REPLICAOF,command_pass,

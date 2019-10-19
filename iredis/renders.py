@@ -93,6 +93,10 @@ def render_bulk_string_decode(value, completers=None):
     return splitted
 
 
+def render_list_decode(value, completers=None):
+    pass
+
+
 def render_int(value, completers=None):
     if config.raw:
         if value is None:
