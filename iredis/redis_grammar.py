@@ -54,6 +54,7 @@ CLIENTID = fr"(?P<clientid>{NUM})"
 SECOND = fr"(?P<second>{NUM})"
 TIMESTAMP = fr"(?P<timestamp>{NUM})"
 PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
+COMMANDNAME = fr"(?P<commandname>[\w -]+)"
 MILLISECOND = fr"(?P<millisecond>{NUM})"
 TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
 ANY = r"(?P<any>.*)"  # TODO deleted
@@ -96,6 +97,7 @@ CONNTYPE = r"(?P<conntype>(NORMAL|MASTER|REPLICA|PUBSUB|normal|master|replica|pu
 
 
 REDIS_COMMANDS = fr"""
+(\s*  (?P<command_commandname>({t['command_commandname']}))        \s+ {COMMANDNAME}                  \s*)|
 (\s*  (?P<command_slots>({t['command_slots']}))        \s+ {SLOTS}                                    \s*)|
 (\s*  (?P<command_node>({t['command_node']}))          \s+ {NODE}                                     \s*)|
 (\s*  (?P<command_slot>({t['command_slot']}))          \s+ {SLOT}                                     \s*)|
