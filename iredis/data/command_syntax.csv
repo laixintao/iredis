@@ -129,8 +129,8 @@ server,FLUSHALL,command_asyncx,render_simple_string
 server,FLUSHDB,command_asyncx,render_simple_string
 server,INFO,command,render_bulk_string_decode
 server,LASTSAVE,command,render_unixtime
-server,MEMORY DOCTOR,command_pass,
-server,MEMORY HELP,command_pass,
+server,MEMORY DOCTOR,command,render_bulk_string_decode
+server,MEMORY HELP,command,render_list
 server,MEMORY MALLOC-STATS,command_pass,
 server,MEMORY PURGE,command_pass,
 server,MEMORY STATS,command_pass,
