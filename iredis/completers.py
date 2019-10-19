@@ -5,20 +5,20 @@ import logging
 from typing import Iterable
 from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 from prompt_toolkit.contrib.regular_languages.compiler import compile
-from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.completion import WordCompleter, FuzzyWordCompleter
 from prompt_toolkit.document import Document
 from prompt_toolkit.completion import Completion, CompleteEvent
 
 from .config import config, COMPILING_DONE, COMPILING_JUST_FINISH
 from .redis_grammar import REDIS_COMMANDS
 from .lexer import get_lexer
-from .commands_csv_loader import group2commands, commands_summary,all_commands
+from .commands_csv_loader import group2commands, commands_summary, all_commands
 
 
 logger = logging.getLogger(__name__)
 
 
-class LatestUsedFirstWordCompleter(WordCompleter):
+class LatestUsedFirstWordCompleter(FuzzyWordCompleter):
     """
     Not thread safe.
     """
@@ -125,7 +125,7 @@ def get_completer(group2commands, redis_grammar):
             "fields": field_completer,
         }
     )
-    completer_mapping['commandname'] = WordCompleter(all_commands, ignore_case=True)
+    completer_mapping["commandname"] = WordCompleter(all_commands, ignore_case=True)
     completer = RedisGrammarCompleter(redis_grammar, completer_mapping)
     return completer
 
