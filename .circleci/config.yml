@@ -204,6 +204,7 @@ jobs:
     <<: *unit-template
     docker:
       - image: circleci/python:3.8.0
+      - image: circleci/redis:5
 workflows:
   version: 2
   test-n-release:
