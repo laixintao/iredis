@@ -158,15 +158,9 @@ jobs:
             . venv/bin/activate
             flake8 .
 
-  unittest:
+  unittest-python3.7: &unit-template
     docker:
-      # specify the version you desire here
-      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
       - image: circleci/python:3.7.1
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
       - image: circleci/redis:5
 
     working_directory: ~/repo
@@ -206,6 +200,10 @@ jobs:
             . venv/bin/activate
             pytest
 
+  unittest-python3.8:
+    <<: *unit-template
+    docker:
+      - image: circleci/python:3.8.0
 workflows:
   version: 2
   test-n-release:
