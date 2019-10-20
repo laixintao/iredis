@@ -16,6 +16,7 @@ classifiers = [
     "Environment :: MacOS X",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
     "Topic :: Database",
     "License :: OSI Approved :: MIT License",
     "Intended Audience :: Developers",
