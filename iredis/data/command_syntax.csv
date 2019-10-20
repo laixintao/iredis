@@ -137,7 +137,7 @@ server,MEMORY STATS,command,render_list_decode
 server,MEMORY USAGE,command_pass,
 server,MONITOR,command_pass,
 server,REPLICAOF,command_pass,
-server,ROLE,command_pass,
+server,ROLE,command,
 server,SAVE,command,render_simple_string
 server,SHUTDOWN,command_pass,
 server,SLAVEOF,command_pass,
