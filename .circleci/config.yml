@@ -227,7 +227,8 @@ workflows:
       - build-release:
           requires:
             - black-check
-            - unittest
+            - unittest-python3.7
+            - unittest-python3.8
             - flake8-check
           filters:
             tags:
