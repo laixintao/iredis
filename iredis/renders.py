@@ -94,6 +94,11 @@ def render_bulk_string_decode(value, completers=None):
 
 
 def render_list_decode(value, completers=None):
+    """
+    For redis responses.
+    Always decode with utf-8
+    Render nested list
+    """
     pass
 
 
