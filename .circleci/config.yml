@@ -216,7 +216,11 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - unittest:
+      - unittest-python3.7:
+          filters:
+            tags:
+              only: /.*/
+      - unittest-python3.8:
           filters:
             tags:
               only: /.*/
