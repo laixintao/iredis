@@ -102,8 +102,9 @@ WEIGHTS = fr"(?P<weights>{_FLOAT}(\s+{_FLOAT})*)"
 # const choices
 FAILOVERCHOICE = fr"(?P<failoverchoice>{c('failoverchoice')})"
 WITHSCORES = r"(?P<withscores>{c('withscores')})"
-EXPIRATION = fr"(?P<expiration>(EX|PX|ex|px)\s+{NUM})"
-CONDITION = r"(?P<condition>(NX|XX|nx|xx))"
+LIMIT = r"(?P<limit>{c('limit')})"
+EXPIRATION = fr"(?P<expiration>{c('expiration')})"
+CONDITION = r"(?P<condition>{c('condition')})"
 OPERATION = r"(?P<operation>(AND|OR|XOR|NOT))"
 CHANGED = r"(?P<changed>(CH|ch))"
 INCR = r"(?P<incr>(INCR|incr))"
@@ -113,7 +114,6 @@ SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
 WEIGHTS_CONST = r"(?P<weights_const>(WEIGHTS|weights))"
 AGGREGATE_CONST = r"(?P<aggregate_const>(AGGREGATE|aggregate))"
 AGGREGATE = r"(?P<aggregate>(SUM|MIN|MAX|sum|min|max))"
-LIMIT = r"(?P<limit>(LIMIT|limit))"
 MATCH = r"(?P<match>(MATCH|match))"
 COUNT_CONST = r"(?P<count_const>(COUNT|count))"
 TYPE_CONST = r"(?P<type_const>(TYPE|type))"
@@ -179,7 +179,8 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_pass>({t['command_pass']}))          \s+ {ANY}                                      \s*)|
 (\s*  (?P<command_key_value_expiration_condition>({t['command_key_value_expiration_condition']}))
                                                        \s+ {KEY}     \s+ {VALUE}
-                                                       (\s+ {EXPIRATION})?    (\s+ {CONDITION})?      \s*)|
+                                                       (\s+ {EXPIRATION} \s+ {NUM})?
+                                                       (\s+ {CONDITION})?                             \s*)|
 (\s*  (?P<command_key_start_end_x>({t['command_key_start_end_x']}))
                                                        \s+ {KEY}     (\s+ {START} \s+ {END})?         \s*)|
 (\s*  (?P<command_key_start_end>({t['command_key_start_end']}))
