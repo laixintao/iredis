@@ -6,6 +6,34 @@ import logging
 from .commands_csv_loader import group2command_res as t
 
 logger = logging.getLogger(__name__)
+CONST = {
+    "failoverchoice": "TAKEOVER FORCE",
+    "withscores": "WITHSCORES",
+    "limit": "LIMIT",
+    "expiration": "EX PX",
+    "condition": "NX XX",
+    "operation": "AND OR XOR NOT",
+    "changed": "CHANGED",
+    "incr": "INCR",
+    "resetchoise": "HARD SOFT",
+    "match": "MATCH",
+    "count_const": "COUNT",
+    "type_const": "TYPE",
+    "type": "string list set zset hash stream",
+    "position_choice": "BEFORE AFTER",
+    "error": "TIMEOUT ERROR",
+    "async": "ASYNC",
+    "conntype": "NORMAL MASTER REPLICA PUBSUB",
+    "samples": "SAMPLES",
+}
+
+
+def c(const_name):
+    const_values = CONST[const_name].split()
+    uppers = [x.lower() for x in const_values]
+    const_values.extend(uppers)
+    return "|".join(const_values)
+
 
 VALID_TOKEN = r"""(
 ("([^"]|\\")*?")     |# with double quotes
@@ -72,13 +100,13 @@ LEXMAX = fr"(?P<lexmax>{LEXNUM})"
 WEIGHTS = fr"(?P<weights>{_FLOAT}(\s+{_FLOAT})*)"
 
 # const choices
+FAILOVERCHOICE = fr"(?P<failoverchoice>{c('failoverchoice')})"
+WITHSCORES = r"(?P<withscores>{c('withscores')})"
 EXPIRATION = fr"(?P<expiration>(EX|PX|ex|px)\s+{NUM})"
 CONDITION = r"(?P<condition>(NX|XX|nx|xx))"
 OPERATION = r"(?P<operation>(AND|OR|XOR|NOT))"
 CHANGED = r"(?P<changed>(CH|ch))"
 INCR = r"(?P<incr>(INCR|incr))"
-WITHSCORES = r"(?P<withscores>(WITHSCORES|withscores))"
-FAILOVERCHOICE = r"(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
 RESETCHOICE = r"(?P<resetchoice>(HARD|SOFT|hard|soft))"
 SLOTSUBCMD = r"(?P<slotsubcmd>(IMPORTING|MIGRATING|NODE|importing|migrating|node))"
 SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
