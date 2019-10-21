@@ -25,6 +25,11 @@ CONST = {
     "async": "ASYNC",
     "conntype": "NORMAL MASTER REPLICA PUBSUB",
     "samples": "SAMPLES",
+    "slotsubcmd": "IMPORTING MIGRATING NODE",
+    "slotsubcmdbare": "STABLE",
+    "weights_const": "WEIGHTS",
+    "aggregate_const": "AGGREGATE",
+    "aggregate": "SUM MIN MAX",
 }
 
 
@@ -105,24 +110,24 @@ WITHSCORES = fr"(?P<withscores>{c('withscores')})"
 LIMIT = fr"(?P<limit>{c('limit')})"
 EXPIRATION = fr"(?P<expiration>{c('expiration')})"
 CONDITION = fr"(?P<condition>{c('condition')})"
-OPERATION = r"(?P<operation>(AND|OR|XOR|NOT))"
-CHANGED = r"(?P<changed>(CH|ch))"
-INCR = r"(?P<incr>(INCR|incr))"
-RESETCHOICE = r"(?P<resetchoice>(HARD|SOFT|hard|soft))"
-SLOTSUBCMD = r"(?P<slotsubcmd>(IMPORTING|MIGRATING|NODE|importing|migrating|node))"
-SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
-WEIGHTS_CONST = r"(?P<weights_const>(WEIGHTS|weights))"
-AGGREGATE_CONST = r"(?P<aggregate_const>(AGGREGATE|aggregate))"
-AGGREGATE = r"(?P<aggregate>(SUM|MIN|MAX|sum|min|max))"
-MATCH = r"(?P<match>(MATCH|match))"
-COUNT_CONST = r"(?P<count_const>(COUNT|count))"
-TYPE_CONST = r"(?P<type_const>(TYPE|type))"
-TYPE = r"(?P<type>(STRING|LIST|SET|ZSET|HASH|STREAM|string|list|set|zset|hash|stream))"
-POSITION_CHOICE = r"(?P<position_choice>(BEFORE|AFTER|before|after))"
-ERROR = r"(?P<error>(TIMEOUT|ERROR|timeout|error))"
-ASYNC = r"(?P<async>(ASYNC|async))"
-SAMPLES = r"(?P<samples>(SAMPLES|samples))"
-CONNTYPE = r"(?P<conntype>(NORMAL|MASTER|REPLICA|PUBSUB|normal|master|replica|pubsub))"
+OPERATION = fr"(?P<operation>{c('operation')})"
+CHANGED = fr"(?P<changed>{c('changed')})"
+INCR = fr"(?P<incr>{c('incr')})"
+RESETCHOICE = fr"(?P<resetchoice>{c('resetchoice')})"
+MATCH = fr"(?P<match>{c('match')})"
+COUNT_CONST = fr"(?P<count_const>{c('const_const')})"
+TYPE_CONST = fr"(?P<type_const>{c('type_const')})"
+TYPE = fr"(?P<type>{c('type')})"
+POSITION_CHOICE = fr"(?P<position_choice>{c('position_choice')})"
+ERROR = fr"(?P<error>{c('error')})"
+ASYNC = fr"(?P<async>{c('async')})"
+CONNTYPE = fr"(?P<conntype>{c('conntype')})"
+SAMPLES = fr"(?P<samples>{c('samples')})"
+SLOTSUBCMD = r"(?P<slotsubcmd>{c('slotsubcmd')})"
+SLOTSUBCMDBARE = r"(?P<slotsubcmd>{c('slotsubcmdbare')})"
+WEIGHTS_CONST = r"(?P<weights_const>{c('weights_const')})"
+AGGREGATE_CONST = r"(?P<aggregate_const>{c('aggregate_const')})"
+AGGREGATE = r"(?P<aggregate>{c('aggregate')})"
 
 
 REDIS_COMMANDS = fr"""
