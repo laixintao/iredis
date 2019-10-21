@@ -134,7 +134,7 @@ server,MEMORY HELP,command,render_list
 server,MEMORY MALLOC-STATS,command_pass,
 server,MEMORY PURGE,command,render_simple_string
 server,MEMORY STATS,command,render_nested_pair
-server,MEMORY USAGE,command_pass,
+server,MEMORY USAGE,command_key_samples_count,render_int
 server,MONITOR,command_pass,
 server,REPLICAOF,command_pass,
 server,ROLE,command,

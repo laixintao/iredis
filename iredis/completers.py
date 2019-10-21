@@ -93,7 +93,6 @@ def get_completer(group2commands, redis_grammar):
         "operation": "AND OR XOR NOT",
         "changed": "CHANGED",
         "incr": "INCR",
-        "withscores": "WITHSCORES",
         "resetchoise": "HARD SOFT",
         "match": "MATCH",
         "count_const": "COUNT",
@@ -103,6 +102,7 @@ def get_completer(group2commands, redis_grammar):
         "error": "TIMEOUT ERROR",
         "async": "ASYNC",
         "conntype": "NORMAL MASTER REPLICA PUBSUB",
+        "samples": "SAMPLES",
     }
     completer_mapping.update(
         {

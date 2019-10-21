@@ -93,6 +93,7 @@ TYPE = r"(?P<type>(STRING|LIST|SET|ZSET|HASH|STREAM|string|list|set|zset|hash|st
 POSITION_CHOICE = r"(?P<position_choice>(BEFORE|AFTER|before|after))"
 ERROR = r"(?P<error>(TIMEOUT|ERROR|timeout|error))"
 ASYNC = r"(?P<async>(ASYNC|async))"
+SAMPLES = r"(?P<samples>(SAMPLES|samples))"
 CONNTYPE = r"(?P<conntype>(NORMAL|MASTER|REPLICA|PUBSUB|normal|master|replica|pubsub))"
 
 
@@ -105,8 +106,9 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {FAILOVERCHOICE}                           \s*)|
 (\s*  (?P<command_resetchoice>({t['command_resetchoice']}))
                                                        \s+ {RESETCHOICE}                              \s*)|
-(\s*  (?P<command_slot_count>({t['command_slot_count']}))
-                                                       \s+ {SLOT}    \s+ {COUNT}                      \s*)|
+(\s*  (?P<command_slot_count>({t['command_slot_count']}))   \s+ {SLOT}  \s+ {COUNT}                   \s*)|
+(\s*  (?P<command_key_samples_count>({t['command_key_samples_count']}))
+    \s+ {KEY}  \s+ {SAMPLES}  \s+ {COUNT}                                                             \s*)|
 (\s*  (?P<command>({t['command']}))                                                                   \s*)|
 (\s*  (?P<command_ip_port>({t['command_ip_port']}))    \s+ {IP}      \s+ {PORT}                       \s*)|
 (\s*  (?P<command_epoch>({t['command_epoch']}))        \s+ {EPOCH}                                    \s*)|
