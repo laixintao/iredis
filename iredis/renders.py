@@ -66,9 +66,13 @@ def _ensure_str(origin, decode=None):
     """
     if isinstance(origin, str):
         return origin
+    if isinstance(origin, int):
+        return str(origin)
     elif isinstance(origin, list):
         return [_ensure_str(b) for b in origin]
     elif isinstance(origin, bytes):
+        if decode:
+            return origin.decode(decode)
         return _literal_bytes(origin)
     else:
         raise Exception(f"Unkown type: {type(origin)}, origin: {origin}")
@@ -93,13 +97,31 @@ def render_bulk_string_decode(value, completers=None):
     return splitted
 
 
-def render_list_decode(value, completers=None):
+def _render_pair(pairs, indent):
+    keys = [item for item in pairs[::2]]
+    values = [item for item in pairs[1::2]]
+    rendered = []
+    for key, value in zip(keys, values):
+        key = _ensure_str(key, decode="utf-8")
+        value = _ensure_str(value, decode="utf-8")
+        rendered.append(("class:string", f"{' '*4*indent}{key}: "))
+        if isinstance(value, list):
+            rendered.append(NEWLINE_TUPLE)
+            rendered.extend(_render_pair(value, indent + 1))
+        else:
+            rendered.append(("class:value", value))
+        rendered.append(NEWLINE_TUPLE)
+    return rendered[:-1]  # remove last newline
+
+
+def render_nested_pair(value, completers=None):
     """
-    For redis responses.
+    For redis internel responses.
     Always decode with utf-8
-    Render nested list
+    Render nested list.
+    Items come as pairs.
     """
-    pass
+    return FormattedText(_render_pair(value, 0))
 
 
 def render_int(value, completers=None):
