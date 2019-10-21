@@ -101,10 +101,10 @@ WEIGHTS = fr"(?P<weights>{_FLOAT}(\s+{_FLOAT})*)"
 
 # const choices
 FAILOVERCHOICE = fr"(?P<failoverchoice>{c('failoverchoice')})"
-WITHSCORES = r"(?P<withscores>{c('withscores')})"
-LIMIT = r"(?P<limit>{c('limit')})"
+WITHSCORES = fr"(?P<withscores>{c('withscores')})"
+LIMIT = fr"(?P<limit>{c('limit')})"
 EXPIRATION = fr"(?P<expiration>{c('expiration')})"
-CONDITION = r"(?P<condition>{c('condition')})"
+CONDITION = fr"(?P<condition>{c('condition')})"
 OPERATION = r"(?P<operation>(AND|OR|XOR|NOT))"
 CHANGED = r"(?P<changed>(CH|ch))"
 INCR = r"(?P<incr>(INCR|incr))"
@@ -179,7 +179,7 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_pass>({t['command_pass']}))          \s+ {ANY}                                      \s*)|
 (\s*  (?P<command_key_value_expiration_condition>({t['command_key_value_expiration_condition']}))
                                                        \s+ {KEY}     \s+ {VALUE}
-                                                       (\s+ {EXPIRATION} \s+ {NUM})?
+                                                       (\s+ {EXPIRATION} \s+ {MILLISECOND})?
                                                        (\s+ {CONDITION})?                             \s*)|
 (\s*  (?P<command_key_start_end_x>({t['command_key_start_end_x']}))
                                                        \s+ {KEY}     (\s+ {START} \s+ {END})?         \s*)|
