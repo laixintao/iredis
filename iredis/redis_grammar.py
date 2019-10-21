@@ -15,7 +15,7 @@ CONST = {
     "operation": "AND OR XOR NOT",
     "changed": "CHANGED",
     "incr": "INCR",
-    "resetchoise": "HARD SOFT",
+    "resetchoice": "HARD SOFT",
     "match": "MATCH",
     "count_const": "COUNT",
     "type_const": "TYPE",
@@ -115,7 +115,7 @@ CHANGED = fr"(?P<changed>{c('changed')})"
 INCR = fr"(?P<incr>{c('incr')})"
 RESETCHOICE = fr"(?P<resetchoice>{c('resetchoice')})"
 MATCH = fr"(?P<match>{c('match')})"
-COUNT_CONST = fr"(?P<count_const>{c('const_const')})"
+COUNT_CONST = fr"(?P<count_const>{c('count_const')})"
 TYPE_CONST = fr"(?P<type_const>{c('type_const')})"
 TYPE = fr"(?P<type>{c('type')})"
 POSITION_CHOICE = fr"(?P<position_choice>{c('position_choice')})"
@@ -123,11 +123,11 @@ ERROR = fr"(?P<error>{c('error')})"
 ASYNC = fr"(?P<async>{c('async')})"
 CONNTYPE = fr"(?P<conntype>{c('conntype')})"
 SAMPLES = fr"(?P<samples>{c('samples')})"
-SLOTSUBCMD = r"(?P<slotsubcmd>{c('slotsubcmd')})"
-SLOTSUBCMDBARE = r"(?P<slotsubcmd>{c('slotsubcmdbare')})"
-WEIGHTS_CONST = r"(?P<weights_const>{c('weights_const')})"
-AGGREGATE_CONST = r"(?P<aggregate_const>{c('aggregate_const')})"
-AGGREGATE = r"(?P<aggregate>{c('aggregate')})"
+SLOTSUBCMD = fr"(?P<slotsubcmd>{c('slotsubcmd')})"
+SLOTSUBCMDBARE = fr"(?P<slotsubcmd>{c('slotsubcmdbare')})"
+WEIGHTS_CONST = fr"(?P<weights_const>{c('weights_const')})"
+AGGREGATE_CONST = fr"(?P<aggregate_const>{c('aggregate_const')})"
+AGGREGATE = fr"(?P<aggregate>{c('aggregate')})"
 
 
 REDIS_COMMANDS = fr"""

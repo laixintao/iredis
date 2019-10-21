@@ -10,7 +10,7 @@ from prompt_toolkit.document import Document
 from prompt_toolkit.completion import Completion, CompleteEvent
 
 from .config import config, COMPILING_DONE, COMPILING_JUST_FINISH
-from .redis_grammar import REDIS_COMMANDS
+from .redis_grammar import REDIS_COMMANDS, CONST
 from .lexer import get_lexer
 from .commands_csv_loader import group2commands, commands_summary, all_commands
 
@@ -84,30 +84,10 @@ def get_completer(group2commands, redis_grammar):
     key_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     member_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     field_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
-    const_completers = {
-        "failoverchoice": "TAKEOVER FORCE",
-        "withscores": "WITHSCORES",
-        "limit": "LIMIT",
-        "expiration": "EX PX",
-        "condition": "NX XX",
-        "operation": "AND OR XOR NOT",
-        "changed": "CHANGED",
-        "incr": "INCR",
-        "resetchoise": "HARD SOFT",
-        "match": "MATCH",
-        "count_const": "COUNT",
-        "type_const": "TYPE",
-        "type": "string list set zset hash stream",
-        "position_choice": "BEFORE AFTER",
-        "error": "TIMEOUT ERROR",
-        "async": "ASYNC",
-        "conntype": "NORMAL MASTER REPLICA PUBSUB",
-        "samples": "SAMPLES",
-    }
     completer_mapping.update(
         {
             key: WordCompleter(tokens.split(" "), ignore_case=True)
-            for key, tokens in const_completers.items()
+            for key, tokens in CONST.items()
         }
     )
     completer_mapping.update(
