@@ -200,11 +200,47 @@ jobs:
             . venv/bin/activate
             pytest
 
-  unittest-python3.8:
-    <<: *unit-template
+  unittest-python3.8: &unit-template
     docker:
       - image: circleci/python:3.8.0
       - image: circleci/redis:5
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run:
+         name: "Pull Submodules"
+         command: |
+           git submodule init
+           git submodule update --remote
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v4-dependencies-3.8.0-{{ checksum "pyproject.toml" }}
+            # fallback to using the latest cache if no exact match is found
+            - v4-dependencies-3.8.0-
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install poetry pip==19
+            poetry install --develop=DEVELOP
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v4-dependencies-3.8.0-{{ checksum "pyproject.toml" }}
+
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            pytest
 workflows:
   version: 2
   test-n-release:

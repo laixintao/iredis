@@ -6,6 +6,39 @@ import logging
 from .commands_csv_loader import group2command_res as t
 
 logger = logging.getLogger(__name__)
+CONST = {
+    "failoverchoice": "TAKEOVER FORCE",
+    "withscores": "WITHSCORES",
+    "limit": "LIMIT",
+    "expiration": "EX PX",
+    "condition": "NX XX",
+    "operation": "AND OR XOR NOT",
+    "changed": "CH",
+    "incr": "INCR",
+    "resetchoice": "HARD SOFT",
+    "match": "MATCH",
+    "count_const": "COUNT",
+    "type_const": "TYPE",
+    "type": "string list set zset hash stream",
+    "position_choice": "BEFORE AFTER",
+    "error": "TIMEOUT ERROR",
+    "async": "ASYNC",
+    "conntype": "NORMAL MASTER REPLICA PUBSUB",
+    "samples": "SAMPLES",
+    "slotsubcmd": "IMPORTING MIGRATING NODE",
+    "slotsubcmdbare": "STABLE",
+    "weights_const": "WEIGHTS",
+    "aggregate_const": "AGGREGATE",
+    "aggregate": "SUM MIN MAX",
+}
+
+
+def c(const_name):
+    const_values = CONST[const_name].split()
+    uppers = [x.lower() for x in const_values]
+    const_values.extend(uppers)
+    return "|".join(const_values)
+
 
 VALID_TOKEN = r"""(
 ("([^"]|\\")*?")     |# with double quotes
@@ -54,6 +87,7 @@ CLIENTID = fr"(?P<clientid>{NUM})"
 SECOND = fr"(?P<second>{NUM})"
 TIMESTAMP = fr"(?P<timestamp>{NUM})"
 PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
+COMMANDNAME = fr"(?P<commandname>[\w -]+)"
 MILLISECOND = fr"(?P<millisecond>{NUM})"
 TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
 ANY = r"(?P<any>.*)"  # TODO deleted
@@ -71,30 +105,33 @@ LEXMAX = fr"(?P<lexmax>{LEXNUM})"
 WEIGHTS = fr"(?P<weights>{_FLOAT}(\s+{_FLOAT})*)"
 
 # const choices
-EXPIRATION = fr"(?P<expiration>(EX|PX|ex|px)\s+{NUM})"
-CONDITION = r"(?P<condition>(NX|XX|nx|xx))"
-OPERATION = r"(?P<operation>(AND|OR|XOR|NOT))"
-CHANGED = r"(?P<changed>(CH|ch))"
-INCR = r"(?P<incr>(INCR|incr))"
-WITHSCORES = r"(?P<withscores>(WITHSCORES|withscores))"
-FAILOVERCHOICE = r"(?P<failoverchoice>(FORCE|TAKEOVER|force|takeover))"
-RESETCHOICE = r"(?P<resetchoice>(HARD|SOFT|hard|soft))"
-SLOTSUBCMD = r"(?P<slotsubcmd>(IMPORTING|MIGRATING|NODE|importing|migrating|node))"
-SLOTSUBCMDBARE = r"(?P<slotsubcmd>(STABLE|stable))"
-WEIGHTS_CONST = r"(?P<weights_const>(WEIGHTS|weights))"
-AGGREGATE_CONST = r"(?P<aggregate_const>(AGGREGATE|aggregate))"
-AGGREGATE = r"(?P<aggregate>(SUM|MIN|MAX|sum|min|max))"
-LIMIT = r"(?P<limit>(LIMIT|limit))"
-MATCH = r"(?P<match>(MATCH|match))"
-COUNT_CONST = r"(?P<count_const>(COUNT|count))"
-TYPE_CONST = r"(?P<type_const>(TYPE|type))"
-TYPE = r"(?P<type>(STRING|LIST|SET|ZSET|HASH|STREAM|string|list|set|zset|hash|stream))"
-POSITION_CHOICE = r"(?P<position_choice>(BEFORE|AFTER|before|after))"
-ERROR = r"(?P<error>(TIMEOUT|ERROR|timeout|error))"
-ASYNC = r"(?P<async>(ASYNC|async))"
+FAILOVERCHOICE = fr"(?P<failoverchoice>{c('failoverchoice')})"
+WITHSCORES = fr"(?P<withscores>{c('withscores')})"
+LIMIT = fr"(?P<limit>{c('limit')})"
+EXPIRATION = fr"(?P<expiration>{c('expiration')})"
+CONDITION = fr"(?P<condition>{c('condition')})"
+OPERATION = fr"(?P<operation>{c('operation')})"
+CHANGED = fr"(?P<changed>{c('changed')})"
+INCR = fr"(?P<incr>{c('incr')})"
+RESETCHOICE = fr"(?P<resetchoice>{c('resetchoice')})"
+MATCH = fr"(?P<match>{c('match')})"
+COUNT_CONST = fr"(?P<count_const>{c('count_const')})"
+TYPE_CONST = fr"(?P<type_const>{c('type_const')})"
+TYPE = fr"(?P<type>{c('type')})"
+POSITION_CHOICE = fr"(?P<position_choice>{c('position_choice')})"
+ERROR = fr"(?P<error>{c('error')})"
+ASYNC = fr"(?P<async>{c('async')})"
+CONNTYPE = fr"(?P<conntype>{c('conntype')})"
+SAMPLES = fr"(?P<samples>{c('samples')})"
+SLOTSUBCMD = fr"(?P<slotsubcmd>{c('slotsubcmd')})"
+SLOTSUBCMDBARE = fr"(?P<slotsubcmd>{c('slotsubcmdbare')})"
+WEIGHTS_CONST = fr"(?P<weights_const>{c('weights_const')})"
+AGGREGATE_CONST = fr"(?P<aggregate_const>{c('aggregate_const')})"
+AGGREGATE = fr"(?P<aggregate>{c('aggregate')})"
 
 
 REDIS_COMMANDS = fr"""
+(\s*  (?P<command_commandname>({t['command_commandname']}))        \s+ {COMMANDNAME}                  \s*)|
 (\s*  (?P<command_slots>({t['command_slots']}))        \s+ {SLOTS}                                    \s*)|
 (\s*  (?P<command_node>({t['command_node']}))          \s+ {NODE}                                     \s*)|
 (\s*  (?P<command_slot>({t['command_slot']}))          \s+ {SLOT}                                     \s*)|
@@ -102,8 +139,9 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {FAILOVERCHOICE}                           \s*)|
 (\s*  (?P<command_resetchoice>({t['command_resetchoice']}))
                                                        \s+ {RESETCHOICE}                              \s*)|
-(\s*  (?P<command_slot_count>({t['command_slot_count']}))
-                                                       \s+ {SLOT}    \s+ {COUNT}                      \s*)|
+(\s*  (?P<command_slot_count>({t['command_slot_count']}))   \s+ {SLOT}  \s+ {COUNT}                   \s*)|
+(\s*  (?P<command_key_samples_count>({t['command_key_samples_count']}))
+    \s+ {KEY}  \s+ {SAMPLES}  \s+ {COUNT}                                                             \s*)|
 (\s*  (?P<command>({t['command']}))                                                                   \s*)|
 (\s*  (?P<command_ip_port>({t['command_ip_port']}))    \s+ {IP}      \s+ {PORT}                       \s*)|
 (\s*  (?P<command_epoch>({t['command_epoch']}))        \s+ {EPOCH}                                    \s*)|
@@ -117,7 +155,9 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_messagex>({t['command_messagex']}))  (\s+{MESSAGE})?                                \s*)|
 (\s*  (?P<command_index>({t['command_index']}))        \s+ {INDEX}                                    \s*)|
 (\s*  (?P<command_index_index>({t['command_index_index']}))  \s+ {INDEX}  \s+ {INDEX}                 \s*)|
-(\s*  (?P<command_clientid_errorx>({t['command_clientid_errorx']}))  \s+ {CLIENTID}  (\s+ {ERROR})?     \s*)|
+(\s*  (?P<command_type_conntype_x>({t['command_type_conntype_x']}))
+    (\s+ {TYPE_CONST}  \s+ {CONNTYPE})?                                                               \s*)|
+(\s*  (?P<command_clientid_errorx>({t['command_clientid_errorx']}))  \s+ {CLIENTID}  (\s+ {ERROR})?   \s*)|
 (\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
 (\s*  (?P<command_keys>({t['command_keys']}))          \s+ {KEYS}                                     \s*)|
 (\s*  (?P<command_key_value>({t['command_key_value']}))   \s+ {KEY}  \s+ {VALUE}                      \s*)|
@@ -144,7 +184,8 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_pass>({t['command_pass']}))          \s+ {ANY}                                      \s*)|
 (\s*  (?P<command_key_value_expiration_condition>({t['command_key_value_expiration_condition']}))
                                                        \s+ {KEY}     \s+ {VALUE}
-                                                       (\s+ {EXPIRATION})?    (\s+ {CONDITION})?      \s*)|
+                                                       (\s+ {EXPIRATION} \s+ {MILLISECOND})?
+                                                       (\s+ {CONDITION})?                             \s*)|
 (\s*  (?P<command_key_start_end_x>({t['command_key_start_end_x']}))
                                                        \s+ {KEY}     (\s+ {START} \s+ {END})?         \s*)|
 (\s*  (?P<command_key_start_end>({t['command_key_start_end']}))
@@ -187,12 +228,9 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}    (\s+ {COUNT})?                    \s*)|
 (\s*  (?P<command_key_min_max>({t['command_key_min_max']}))
                                                        \s+ {KEY}    \s+ {MIN}      \s+ {MAX}          \s*)|
-(\s*  (?P<command_key_condition_changed_incr_score_members>({t['command_key_condition_changed_incr_score_members']}))
-                                                       \s+ {KEY}
-                                                       (\s+ {CONDITION})?
-                                                       (\s+ {CHANGED})?
-                                                       (\s+ {INCR})?
-                                                       (\s+ {SCORE}   \s+ {MEMBER})+                  \s*)|
+(\s*  (?P<command_key_condition_changed_incr_score_members>
+    ({t['command_key_condition_changed_incr_score_members']}))  \s+ {KEY}  (\s+ {CONDITION})?
+    (\s+ {CHANGED})?  (\s+ {INCR})?  (\s+ {SCORE}   \s+ {MEMBER})+                                    \s*)|
 (\s*  (?P<command_key_float_member>({t['command_key_float_member']}))
                                                        \s+ {KEY}    \s+ {FLOAT}      \s+ {MEMBER}     \s*)|
 (\s*  (?P<command_key_lexmin_lexmax>({t['command_key_lexmin_lexmax']}))

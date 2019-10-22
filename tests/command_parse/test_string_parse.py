@@ -9,7 +9,8 @@ def test_set(judge_command):
             "command_key_value_expiration_condition": "SET",
             "key": "abc",
             "value": "bar",
-            "expiration": "EX 10",
+            "expiration": "EX",
+            "millisecond": "10",
         },
     )
     judge_command(
@@ -18,7 +19,8 @@ def test_set(judge_command):
             "command_key_value_expiration_condition": "SET",
             "key": "abc",
             "value": "bar",
-            "expiration": "px 10000",
+            "expiration": "px",
+            "millisecond": "10000",
         },
     )
     judge_command(
@@ -27,7 +29,8 @@ def test_set(judge_command):
             "command_key_value_expiration_condition": "SET",
             "key": "abc",
             "value": "bar",
-            "expiration": "px 10000",
+            "expiration": "px",
+            "millisecond": "10000",
             "condition": "nx",
         },
     )
@@ -37,7 +40,8 @@ def test_set(judge_command):
             "command_key_value_expiration_condition": "SET",
             "key": "abc",
             "value": "bar",
-            "expiration": "px 10000",
+            "expiration": "px",
+            "millisecond": "10000",
             "condition": "XX",
         },
     )
@@ -71,11 +75,21 @@ def test_bitcount(judge_command):
     )
     judge_command(
         "bitcount foo 1 -5",
-        {"command_key_start_end_x": "bitcount", "key": "foo", "start": "1", "end": "-5"},
+        {
+            "command_key_start_end_x": "bitcount",
+            "key": "foo",
+            "start": "1",
+            "end": "-5",
+        },
     )
     judge_command(
         "bitcount foo -2 -1",
-        {"command_key_start_end_x": "bitcount", "key": "foo", "start": "-2", "end": "-1"},
+        {
+            "command_key_start_end_x": "bitcount",
+            "key": "foo",
+            "start": "-2",
+            "end": "-1",
+        },
     )
     judge_command("bitcount foo -2", None)
 

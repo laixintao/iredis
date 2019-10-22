@@ -21,6 +21,7 @@ from .completers import LatestUsedFirstWordCompleter
 from . import markdown
 from .utils import compose_command_syntax
 from .exceptions import NotRedisCommand
+from . import utils
 
 project_path = Path(os.path.dirname(os.path.abspath(__file__))) / "data"
 logger = logging.getLogger(__name__)
@@ -75,8 +76,11 @@ class Client:
             config.no_version_reason = "--no-info flag activated"
 
     def get_server_info(self):
-        info_resp = self.execute_command_and_read_response(None, "INFO")
-        version = re.findall(r"^redis_version:(.*)$", info_resp, re.MULTILINE)[0]
+        self.connection.send_command("INFO")
+        # safe to decode Redis's INFO response
+        info_resp = utils.ensure_str(self.connection.read_response())
+
+        version = re.findall(r"^redis_version:([\d\.]+)\r\n", info_resp, re.MULTILINE)[0]
         logger.debug(f"[Redis Version] {version}")
         config.version = version
 
@@ -96,23 +100,18 @@ class Client:
         "Execute a command and return a parsed response"
         try:
             self.connection.send_command(command_name, *args)
-            resp = self.parse_response(
-                self.connection, completer, command_name, **options
-            )
+            response = self.connection.read_response()
         # retry on timeout
         except (ConnectionError, TimeoutError) as e:
             self.connection.disconnect()
             if not (self.connection.retry_on_timeout and isinstance(e, TimeoutError)):
                 raise
             self.connection.send_command(command_name, *args)
-            resp = self.parse_response(
-                self.connection, completer, command_name, **options
-            )
+            response = self.connection.read_response()
         except redis.exceptions.ExecAbortError:
             config.transaction = False
             raise
-
-        return resp
+        return self.render_response(response, completer, command_name, **options)
 
     def render_command_result(self, command_name, response, completer):
         """
@@ -139,9 +138,8 @@ class Client:
         logger.info(f"[rendered] {rendered}")
         return rendered
 
-    def parse_response(self, connection, completer, command_name, **options):
+    def render_response(self, response, completer, command_name, **options):
         "Parses a response from the Redis server"
-        response = connection.read_response()
         logger.info(f"[Redis-Server] Response: {response}")
         # if in transaction, use queue render first
         if config.transaction:
@@ -260,12 +258,14 @@ class Client:
 
         avaiable_version = summary_dict.get("since", "?")
         server_version = config.version
+        # FIXME anything strange with single quotes?
+        logger.debug(f"[--version--] '{server_version}'")
         try:
             is_avaiable = StrictVersion(server_version) > StrictVersion(
                 avaiable_version
             )
         except Exception as e:
-            logger.error(e)
+            logger.exception(e)
             is_avaiable = None
 
         if is_avaiable:

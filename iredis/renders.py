@@ -66,9 +66,13 @@ def _ensure_str(origin, decode=None):
     """
     if isinstance(origin, str):
         return origin
+    if isinstance(origin, int):
+        return str(origin)
     elif isinstance(origin, list):
         return [_ensure_str(b) for b in origin]
     elif isinstance(origin, bytes):
+        if decode:
+            return origin.decode(decode)
         return _literal_bytes(origin)
     else:
         raise Exception(f"Unkown type: {type(origin)}, origin: {origin}")
@@ -85,9 +89,41 @@ def render_bulk_string(value, completers=None):
 
 
 def render_bulk_string_decode(value, completers=None):
+    """Only for server group commands, no double quoted,  displayed.
+    Display use UTF-8.
+    """
     decoded = value.decode()
     splitted = "\n".join(decoded.splitlines())
     return splitted
+
+
+def _render_pair(pairs, indent):
+    keys = [item for item in pairs[::2]]
+    values = [item for item in pairs[1::2]]
+    rendered = []
+    for key, value in zip(keys, values):
+        key = _ensure_str(key, decode="utf-8")
+        value = _ensure_str(value, decode="utf-8")
+        rendered.append(("class:string", f"{' '*4*indent}{key}: "))
+        if isinstance(value, list):
+            rendered.append(NEWLINE_TUPLE)
+            rendered.extend(_render_pair(value, indent + 1))
+        else:
+            rendered.append(("class:value", value))
+        rendered.append(NEWLINE_TUPLE)
+    return rendered[:-1]  # remove last newline
+
+
+def render_nested_pair(value, completers=None):
+    """
+    For redis internel responses.
+    Always decode with utf-8
+    Render nested list.
+    Items come as pairs.
+    """
+    if config.raw:
+        return render_list(value)
+    return FormattedText(_render_pair(value, 0))
 
 
 def render_int(value, completers=None):
@@ -111,12 +147,46 @@ def render_unixtime(value, completers=None):
     return rendered_int
 
 
+def render_time(value, completers=None):
+    if config.raw:
+        return render_list(value)
+    unix_timestamp, millisecond = value[0].decode(), value[1].decode()
+    explained_date = time.strftime(
+        "%Y-%m-%d %H:%M:%S", time.localtime(int(unix_timestamp))
+    )
+    rendered = [
+        ("class:type", "(unix timestamp) "),
+        ("", unix_timestamp),
+        NEWLINE_TUPLE,
+        ("class:type", "(millisecond) "),
+        ("", millisecond),
+        NEWLINE_TUPLE,
+        ("class:type", "(convert to local timezone) "),
+        ("", f"{explained_date}.{millisecond}"),
+    ]
+    return FormattedText(rendered)
+
+
+def _render_raw_list(bytes_items):
+    flatten_items = []
+    for item in bytes_items:
+        if item is None:
+            flatten_items.append(b"")
+        elif isinstance(item, bytes):
+            flatten_items.append(item)
+        elif isinstance(item, int):
+            flatten_items.append(str(item).encode())
+        elif isinstance(item, list):
+            flatten_items.append(_render_raw_list(item))
+    return b"\n".join(flatten_items)
+
+
 def _render_list(byte_items, str_items, style=None):
     """Complute the newline/number-width/lineno,
     render list to FormattedText
     """
     if config.raw:
-        return b"\n".join(text if text else b"" for text in byte_items)
+        return _render_raw_list(byte_items)
     index_width = len(str(len(str_items)))
     rendered = []
     if not str_items:
@@ -137,7 +207,7 @@ def _render_list(byte_items, str_items, style=None):
     return FormattedText(rendered)
 
 
-def render_list(text, completer):
+def render_list(text, completer=None):
     """
     Render callback for redis Array Reply
     Note: Cloud be null in it.

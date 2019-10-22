@@ -325,7 +325,7 @@ def test_render_unixtime_config_raw(completer):
     )
 
 
-def test_render_unixtime(completer):
+def test_render_unixtime():
     config.raw = True
     rendered = renders.render_unixtime(1570469891)
 
@@ -336,3 +336,81 @@ def test_render_bulk_string_decoded():
     EXPECTED_RENDER = """# Server\nredis_version:5.0.5\nredis_git_sha1:00000000\nredis_git_dirty:0\nredis_build_id:31cd6e21ec924b46"""  # noqa
     _input = b"# Server\r\nredis_version:5.0.5\r\nredis_git_sha1:00000000\r\nredis_git_dirty:0\r\nredis_build_id:31cd6e21ec924b46"  # noqa
     assert renders.render_bulk_string_decode(_input) == EXPECTED_RENDER
+
+
+def test_render_time():
+    config.raw = False
+    value = [b"1571305643", b"765481"]
+    assert renders.render_time(value) == FormattedText(
+        [
+            ("class:type", "(unix timestamp) "),
+            ("", "1571305643"),
+            ("", "\n"),
+            ("class:type", "(millisecond) "),
+            ("", "765481"),
+            ("", "\n"),
+            ("class:type", "(convert to local timezone) "),
+            ("", "2019-10-17 17:47:23.765481"),
+        ]
+    )
+
+    config.raw = True
+    assert renders.render_time(value) == b"1571305643\n765481"
+
+
+def test_render_nested_pairs():
+    text = [
+        b"peak.allocated",
+        10160336,
+        b"lua.caches",
+        0,
+        b"db.0",
+        [b"overhead.hashtable.main", 648, b"overhead.hashtable.expires", 32],
+        b"db.1",
+        [b"overhead.hashtable.main", 112, b"overhead.hashtable.expires", 32],
+        b"fragmentation",
+        b"0.062980629503726959",
+        b"fragmentation.bytes",
+        -9445680,
+    ]
+
+    config.raw = True
+    assert renders.render_nested_pair(text) == (
+        b"peak.allocated\n10160336\nlua.caches\n0\ndb.0\noverhead.hashtable.main\n64"
+        b"8\noverhead.hashtable.expires\n32\ndb.1\noverhead.hashtable.main\n112\nove"
+        b"rhead.hashtable.expires\n32\nfragmentation\n0.062980629503726959\nfragmentat"
+        b"ion.bytes\n-9445680"
+    )
+
+    config.raw = False
+    assert renders.render_nested_pair(text) == FormattedText(
+        [
+            ("class:string", "peak.allocated: "),
+            ("class:value", "10160336"),
+            ("", "\n"),
+            ("class:string", "lua.caches: "),
+            ("class:value", "0"),
+            ("", "\n"),
+            ("class:string", "db.0: "),
+            ("", "\n"),
+            ("class:string", "    overhead.hashtable.main: "),
+            ("class:value", "648"),
+            ("", "\n"),
+            ("class:string", "    overhead.hashtable.expires: "),
+            ("class:value", "32"),
+            ("", "\n"),
+            ("class:string", "db.1: "),
+            ("", "\n"),
+            ("class:string", "    overhead.hashtable.main: "),
+            ("class:value", "112"),
+            ("", "\n"),
+            ("class:string", "    overhead.hashtable.expires: "),
+            ("class:value", "32"),
+            ("", "\n"),
+            ("class:string", "fragmentation: "),
+            ("class:value", "0.062980629503726959"),
+            ("", "\n"),
+            ("class:string", "fragmentation.bytes: "),
+            ("class:value", "-9445680"),
+        ]
+    )
