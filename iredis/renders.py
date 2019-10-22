@@ -121,6 +121,8 @@ def render_nested_pair(value, completers=None):
     Render nested list.
     Items come as pairs.
     """
+    if config.raw:
+        return render_list(value)
     return FormattedText(_render_pair(value, 0))
 
 
@@ -165,12 +167,26 @@ def render_time(value, completers=None):
     return FormattedText(rendered)
 
 
+def _render_raw_list(bytes_items):
+    flatten_items = []
+    for item in bytes_items:
+        if item is None:
+            flatten_items.append(b"")
+        elif isinstance(item, bytes):
+            flatten_items.append(item)
+        elif isinstance(item, int):
+            flatten_items.append(str(item).encode())
+        elif isinstance(item, list):
+            flatten_items.append(_render_raw_list(item))
+    return b"\n".join(flatten_items)
+
+
 def _render_list(byte_items, str_items, style=None):
     """Complute the newline/number-width/lineno,
     render list to FormattedText
     """
     if config.raw:
-        return b"\n".join(text if text else b"" for text in byte_items)
+        return _render_raw_list(byte_items)
     index_width = len(str(len(str_items)))
     rendered = []
     if not str_items:
