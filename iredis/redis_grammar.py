@@ -13,7 +13,7 @@ CONST = {
     "expiration": "EX PX",
     "condition": "NX XX",
     "operation": "AND OR XOR NOT",
-    "changed": "CHANGED",
+    "changed": "CH",
     "incr": "INCR",
     "resetchoice": "HARD SOFT",
     "match": "MATCH",
@@ -228,12 +228,9 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}    (\s+ {COUNT})?                    \s*)|
 (\s*  (?P<command_key_min_max>({t['command_key_min_max']}))
                                                        \s+ {KEY}    \s+ {MIN}      \s+ {MAX}          \s*)|
-(\s*  (?P<command_key_condition_changed_incr_score_members>({t['command_key_condition_changed_incr_score_members']}))
-                                                       \s+ {KEY}
-                                                       (\s+ {CONDITION})?
-                                                       (\s+ {CHANGED})?
-                                                       (\s+ {INCR})?
-                                                       (\s+ {SCORE}   \s+ {MEMBER})+                  \s*)|
+(\s*  (?P<command_key_condition_changed_incr_score_members>
+    ({t['command_key_condition_changed_incr_score_members']}))  \s+ {KEY}  (\s+ {CONDITION})?
+    (\s+ {CHANGED})?  (\s+ {INCR})?  (\s+ {SCORE}   \s+ {MEMBER})+                                    \s*)|
 (\s*  (?P<command_key_float_member>({t['command_key_float_member']}))
                                                        \s+ {KEY}    \s+ {FLOAT}      \s+ {MEMBER}     \s*)|
 (\s*  (?P<command_key_lexmin_lexmax>({t['command_key_lexmin_lexmax']}))
