@@ -45,6 +45,7 @@ def get_lexer(command_groups, redis_grammar):
         "type": SimpleLexer("class:string"),
         "fields": SimpleLexer("class:field"),
         "field": SimpleLexer("class:field"),
+        "parameter": SimpleLexer("class:field"),
     }
 
     lexers_dict.update({key: SimpleLexer("class:const") for key in CONST})
