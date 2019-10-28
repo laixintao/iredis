@@ -118,7 +118,7 @@ server,COMMAND,command_pass,
 server,COMMAND COUNT,command,render_int
 server,COMMAND GETKEYS,command_pass,
 server,COMMAND INFO,command_pass,
-server,CONFIG GET,command_parameter,render_list
+server,CONFIG GET,command_parameter,render_nested_pair
 server,CONFIG RESETSTAT,command_pass,
 server,CONFIG REWRITE,command_pass,
 server,CONFIG SET,command_parameter_value,render_simple_string
