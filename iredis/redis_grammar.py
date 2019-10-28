@@ -70,6 +70,7 @@ MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 BIT = r"(?P<bit>0|1)"
 FLOAT = fr"(?P<float>{_FLOAT})"
 CURSOR = fr"(?P<cursor>{NUM})"
+PARAMETER = fr"(?P<parameter>{VALID_TOKEN})"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
 IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
@@ -161,6 +162,8 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key>({t['command_key']}))            \s+ {KEY}                                      \s*)|
 (\s*  (?P<command_keys>({t['command_keys']}))          \s+ {KEYS}                                     \s*)|
 (\s*  (?P<command_key_value>({t['command_key_value']}))   \s+ {KEY}  \s+ {VALUE}                      \s*)|
+(\s*  (?P<command_parameter_value>({t['command_parameter_value']}))   \s+ {PARAMETER}  \s+ {VALUE}    \s*)|
+(\s*  (?P<command_parameter>({t['command_parameter']}))   \s+ {PARAMETER}  \s+ {VALUE}    \s*)|
 (\s*  (?P<command_value>({t['command_value']}))   \s+ {VALUE}                                         \s*)|
 (\s*  (?P<command_key_second>({t['command_key_second']}))
                                                        \s+ {KEY}     \s+ {SECOND}                     \s*)|

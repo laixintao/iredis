@@ -118,10 +118,10 @@ server,COMMAND,command_pass,
 server,COMMAND COUNT,command,render_int
 server,COMMAND GETKEYS,command_pass,
 server,COMMAND INFO,command_pass,
-server,CONFIG GET,command_pass,
+server,CONFIG GET,command_parameter,render_nested_pair
 server,CONFIG RESETSTAT,command_pass,
 server,CONFIG REWRITE,command_pass,
-server,CONFIG SET,command_pass,
+server,CONFIG SET,command_parameter_value,render_simple_string
 server,DBSIZE,command,render_int
 server,DEBUG OBJECT,command_pass,
 server,DEBUG SEGFAULT,command_pass,

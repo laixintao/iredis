@@ -45,3 +45,18 @@ def test_client_list(judge_command):
             "conntype": "REPLICA",
         },
     )
+
+
+def test_configset(judge_command):
+    judge_command(
+        "config set foo bar",
+        {"command_parameter_value": "config set", "parameter": "foo", "value": "bar"},
+    )
+    judge_command(
+        "config set requirepass ''",
+        {
+            "command_parameter_value": "config set",
+            "parameter": "requirepass",
+            "value": "''",
+        },
+    )
