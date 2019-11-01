@@ -193,7 +193,7 @@ def main():
         ctx.params["n"],
         ctx.params["password"],
         config.decode,
-        get_info=not ctx.params['no_info'],
+        get_info=not ctx.params["no_info"],
     )
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():

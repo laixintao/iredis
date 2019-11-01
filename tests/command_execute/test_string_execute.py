@@ -20,7 +20,7 @@ def test_get(local_process):
     local_process.expect('"bar"')
 
     local_process.sendline("del foo")
-    local_process.expect('1')
+    local_process.expect("1")
 
     local_process.sendline("get foo")
-    local_process.expect('(nil)')
+    local_process.expect("(nil)")

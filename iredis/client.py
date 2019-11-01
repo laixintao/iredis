@@ -80,7 +80,9 @@ class Client:
         # safe to decode Redis's INFO response
         info_resp = utils.ensure_str(self.connection.read_response())
 
-        version = re.findall(r"^redis_version:([\d\.]+)\r\n", info_resp, re.MULTILINE)[0]
+        version = re.findall(r"^redis_version:([\d\.]+)\r\n", info_resp, re.MULTILINE)[
+            0
+        ]
         logger.debug(f"[Redis Version] {version}")
         config.version = version
 
