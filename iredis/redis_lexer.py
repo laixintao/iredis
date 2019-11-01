@@ -1,5 +1,8 @@
 from pygments.lexer import RegexLexer
 from pygments.token import Keyword, Name, Whitespace
+from prompt_toolkit.shortcuts import prompt
+from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
+from prompt_toolkit.lexers import PygmentsLexer
 
 
 class RedisLexer(RegexLexer):
@@ -12,11 +15,17 @@ class RedisLexer(RegexLexer):
 
 
 r = RedisLexer()
-result = list(r.get_tokens_unprocessed("GET foo"))
-print(result)
+# result = list(r.get_tokens_unprocessed("GET foo"))
+# print(result)
 
-result = list(r.get_tokens_unprocessed("get foo"))
-print(result)
+# result = list(r.get_tokens_unprocessed("get foo"))
+# print(result)
 
-result = list(r.get_tokens_unprocessed(" get foo"))
-print(result)
+# result = list(r.get_tokens_unprocessed(" get foo"))
+# print(result)
+
+
+completer = GrammarCompleter
+
+text = prompt('Enter HTML: ', lexer=PygmentsLexer(RedisLexer))
+print('You said: %s' % text)
