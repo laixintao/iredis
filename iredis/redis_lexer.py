@@ -1,7 +1,7 @@
 import logging
 from typing import Iterable
 
-from pygments.lexer import RegexLexer
+from pygments.lexer import RegexLexer, LexerContext
 from pygments.token import Keyword, Name, Whitespace
 from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.completion import (
@@ -53,21 +53,14 @@ class RedisCompleter(Completer):
 
 
 r = RedisLexer()
-result = list(r.get_tokens_unprocessed("GET foo"))
+
+
+def current_lexer(text):
+    context = LexerContext(text, 0)
+    result = r.get_tokens_unprocessed(text, context)
+    return result, context
+
+
+result, context = current_lexer("set foo bar")
 print(result)
-result = list(r.get_tokens_unprocessed("GET "))
-print(result)
-
-result = list(r.get_tokens_unprocessed("Set abc bar  hello world"))
-print(result)
-# result = list(r.get_tokens_unprocessed("get foo"))
-# print(result)
-
-# result = list(r.get_tokens_unprocessed(" get foo"))
-# print(result)
-
-
-completer = RedisCompleter()
-
-text = prompt("Enter HTML: ", lexer=PygmentsLexer(RedisLexer), completer=completer)
-print("You said: %s" % text)
+print(context)
