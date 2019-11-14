@@ -15,17 +15,13 @@ from prompt_toolkit.document import Document
 
 logger = logging.getLogger(__name__)
 
-#
-#
-#
-
 
 class RedisLexer(RegexLexer):
     """
     Some details:
     - space should be included in the later state
-    - multi choice commands, like https://redis.io/commands/scan, redis can accept
-        duplicate, like scan myset 0 count 1 count 2                                
+    - multi choice commands, like https://redis.io/commands/scan,
+        redis can accept duplicate, like scan myset 0 count 1 count 2
     """
 
     name = "redis lexer"
