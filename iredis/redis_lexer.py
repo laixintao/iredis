@@ -15,13 +15,19 @@ from prompt_toolkit.document import Document
 
 logger = logging.getLogger(__name__)
 
-
+# space should be included in the later state
 class RedisLexer(RegexLexer):
     name = "redis lexer"
 
     tokens = {
-        "root": [(r"\s+", Whitespace), (r"(?i)GET", Keyword, "get")],
-        "get": [(r"\s+", Whitespace), (r"\w+", Name, "#pop")],
+        "root": [
+            (r"\s+", Whitespace),
+            (r"(?i)GET", Keyword, "key"),
+            (r"(?i)SET", Keyword, "key value"),
+        ],
+        "key value": [(r"\s+", Whitespace), (r"\w+", Name, ("#pop", "value"))],
+        "value": [(r"\s+", Whitespace), (r"\w+", Name, "#pop")],
+        "key": [(r"\s+", Whitespace), (r"\w+", Name, "#pop")],
     }
 
 
@@ -40,9 +46,13 @@ class RedisCompleter(Completer):
 
 
 r = RedisLexer()
-# result = list(r.get_tokens_unprocessed("GET foo"))
-# print(result)
+result = list(r.get_tokens_unprocessed("GET foo"))
+print(result)
+result = list(r.get_tokens_unprocessed("GET "))
+print(result)
 
+result = list(r.get_tokens_unprocessed("Set abc bar  hello world"))
+print(result)
 # result = list(r.get_tokens_unprocessed("get foo"))
 # print(result)
 
