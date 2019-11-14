@@ -4,7 +4,12 @@ from typing import Iterable
 from pygments.lexer import RegexLexer
 from pygments.token import Keyword, Name, Whitespace
 from prompt_toolkit.shortcuts import prompt
-from prompt_toolkit.completion import Completer, CompleteEvent, Completion
+from prompt_toolkit.completion import (
+    Completer,
+    CompleteEvent,
+    Completion,
+    WordCompleter,
+)
 from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.document import Document
 
@@ -29,7 +34,9 @@ class RedisCompleter(Completer):
         Get all avaiable tokens for last word;
         return WordCompleter, with last word
         """
-        return ["hello", "world"]
+        yield from WordCompleter(["helo", "world"]).get_completions(
+            document, complete_event
+        )
 
 
 r = RedisLexer()
