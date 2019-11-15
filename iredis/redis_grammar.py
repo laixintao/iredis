@@ -266,11 +266,3 @@ REDIS_COMMANDS = fr"""
       (\s+ {FIELD}  \s+ {VALUE})+                                                                     \s*)|
 (\s*  (?P<command_slowlog>({t['command_slowlog']}))  \s+ {SLOWLOGSUB} \s+ {NUM}                       \s*)
 """
-
-
-# command_destination_count_keys_weights_x_aggregate_x  can not parse with key numbers.
-# (\s*  (?P<command_destination_count_keys_weights_x_aggregate_x>
-# ({t['command_destination_count_keys_weights_x_aggregate_x']}))
-#                                                        \s+ {DESTINATION}        \s+ {COUNT} \s+ {KEYS}
-#                                                        (\s+ {WEIGHTS_CONST}     \s+ {WEIGHTS})?
-#                                                        (\s+ {AGGREGATE_CONST}   \s+ {AGGREGATE})?   \s*)|
