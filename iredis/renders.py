@@ -209,7 +209,7 @@ def _render_list(byte_items, str_items, style=None):
 
 def render_list(text, completer=None):
     """
-    Render callback for redis Array Reply
+    Render callback for redis Array Reply, can't render nested list
     Note: Cloud be null in it.
     """
     str_items = []
@@ -420,6 +420,11 @@ def render_hash_pairs(response, completer):
         if index + 1 < len(fields):
             rendered.append(NEWLINE_TUPLE)
     return FormattedText(rendered)
+
+
+def render_slowlog(raw, completers=None):
+    if config.raw:
+        return _render_raw_list(raw)
 
 
 # TODO
