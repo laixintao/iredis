@@ -7,6 +7,7 @@ func(redis-response, completers: GrammarCompleter) -> formatted result(str)
 import time
 import logging
 from prompt_toolkit.formatted_text import FormattedText
+from distutils.version import StrictVersion
 
 from .config import config
 
@@ -425,6 +426,30 @@ def render_hash_pairs(response, completer):
 def render_slowlog(raw, completers=None):
     if config.raw:
         return _render_raw_list(raw)
+    # FIXME version >4 has client and ip-port
+    fields = ["Slow log id", "Start at", "Running time(ms)", "Command"]
+    if StrictVersion(config.version) > StrictVersion("4.0"):
+        fields.extend(["Client IP and port", "Client name"])
+
+    rendered = []
+    text = _ensure_str(raw)
+    index_width = len(str(len(text)))
+    for index, slowlog in enumerate(text):
+        index_str = f"{index+1:{index_width}}) "
+        rendered.append(("", index_str))
+        for field, value in zip(fields, slowlog):
+            if field == "Command":
+                value = " ".join(value)
+            if field != "Slow log id":
+                display_field = " " * len(index_str) + field
+            else:
+                display_field = field
+            logger.debug(f"field: {field}, value: {value}")
+            rendered.extend(
+                [("class:field", f"{display_field}: "), ("class:string", value), NEWLINE_TUPLE]
+            )
+
+    return FormattedText(rendered[:-1])
 
 
 # TODO
