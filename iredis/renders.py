@@ -426,7 +426,6 @@ def render_hash_pairs(response, completer):
 def render_slowlog(raw, completers=None):
     if config.raw:
         return _render_raw_list(raw)
-    # FIXME version >4 has client and ip-port
     fields = ["Slow log id", "Start at", "Running time(ms)", "Command"]
     if StrictVersion(config.version) > StrictVersion("4.0"):
         fields.extend(["Client IP and port", "Client name"])
@@ -446,7 +445,11 @@ def render_slowlog(raw, completers=None):
                 display_field = field
             logger.debug(f"field: {field}, value: {value}")
             rendered.extend(
-                [("class:field", f"{display_field}: "), ("class:string", value), NEWLINE_TUPLE]
+                [
+                    ("class:field", f"{display_field}: "),
+                    ("class:string", value),
+                    NEWLINE_TUPLE,
+                ]
             )
 
     return FormattedText(rendered[:-1])

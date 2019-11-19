@@ -25,8 +25,7 @@ CONST = {
     "async": "ASYNC",
     "conntype": "NORMAL MASTER REPLICA PUBSUB",
     "samples": "SAMPLES",
-    "slotsubcmd": "IMPORTING MIGRATING NODE",
-    "slotsubcmdbare": "STABLE",
+    "slotsubcmd": "IMPORTING MIGRATING NODE STABLE",
     "weights_const": "WEIGHTS",
     "aggregate_const": "AGGREGATE",
     "aggregate": "SUM MIN MAX",
@@ -126,7 +125,6 @@ ASYNC = fr"(?P<async>{c('async')})"
 CONNTYPE = fr"(?P<conntype>{c('conntype')})"
 SAMPLES = fr"(?P<samples>{c('samples')})"
 SLOTSUBCMD = fr"(?P<slotsubcmd>{c('slotsubcmd')})"
-SLOTSUBCMDBARE = fr"(?P<slotsubcmd>{c('slotsubcmdbare')})"
 WEIGHTS_CONST = fr"(?P<weights_const>{c('weights_const')})"
 AGGREGATE_CONST = fr"(?P<aggregate_const>{c('aggregate_const')})"
 AGGREGATE = fr"(?P<aggregate>{c('aggregate')})"
@@ -151,8 +149,6 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_asyncx>({t['command_asyncx']}))      (\s+ {ASYNC})?                                 \s*)|
 (\s*  (?P<command_slot_slotsubcmd_nodex>({t['command_slot_slotsubcmd_nodex']}))
                                                        \s+ {SLOT}    \s+ {SLOTSUBCMD}   (\s+ {NODE})? \s*)|
-(\s*  (?P<command_slot_slotsubcmd_nodex>({t['command_slot_slotsubcmd_nodex']}))
-                                                       \s+ {SLOT}    \s+ {SLOTSUBCMDBARE}             \s*)|
 (\s*  (?P<command_password>({t['command_password']}))  \s+ {PASSWORD}                                 \s*)|
 (\s*  (?P<command_message>({t['command_message']}))    \s+ {MESSAGE}                                  \s*)|
 (\s*  (?P<command_messagex>({t['command_messagex']}))  (\s+{MESSAGE})?                                \s*)|

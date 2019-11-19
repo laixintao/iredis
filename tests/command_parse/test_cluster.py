@@ -254,4 +254,3 @@ def test_command_cluster_set_slot(judge_command):
             "slotsubcmd": "STABLE",
         },
     )
-    judge_command("cluster setslot 123 STABLE 123123", None)
