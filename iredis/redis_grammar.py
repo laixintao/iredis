@@ -91,6 +91,8 @@ LONGITUDE = fr"(?P<longitude>{_FLOAT})"
 LATITUDE = fr"(?P<latitude>{_FLOAT})"
 CURSOR = fr"(?P<cursor>{NUM})"
 PARAMETER = fr"(?P<parameter>{VALID_TOKEN})"
+DOUBLE_LUA = fr'(?P<double_lua>[^"]*)'
+SINGLE_LUA = fr"(?P<single_lua>[^']*)"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
 IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
@@ -340,5 +342,7 @@ REDIS_COMMANDS = fr"""
     \s+ {PUBSUBCMD} (\s+ {CHANNEL})+                                                                 \s*)|
 (\s*  (?P<command_channel_message>({t['command_channel_message']})) \s+ {CHANNEL} \s+  {MESSAGE}     \s*)|
 (\s*  (?P<command_channels>({t['command_channels']})) (\s+ {CHANNEL})+                               \s*)|
+(\s*  (?P<command_lua_any>({t['command_lua_any']})) (\s+"{DOUBLE_LUA}")? (\s+'{SINGLE_LUA}')?
+    \s+  {ANY}                    \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
 """
