@@ -126,7 +126,7 @@ jobs:
           name: black format
           command: |
             . venv/bin/activate
-            black --check iredis/
+            black --check iredis/ tests/ scripts/
 
   flake8-check:
     docker:
