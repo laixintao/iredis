@@ -17,4 +17,4 @@ def test_set_command_with_shash(clean_redis, local_process):
     local_process.expect("OK")
 
     local_process.sendline("get a")
-    local_process.expect(r'hello')
+    local_process.expect(r"hello")

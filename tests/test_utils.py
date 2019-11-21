@@ -50,11 +50,10 @@ def test_timer():
         (r""" "hello'world" """, ["hello'world"]),
         (r""" 'hello\'world'""", ["hello'world"]),
         (r""" "hello\"world" """, ['hello"world']),
-        (r"''", ['']),  # set foo "" is a legal command
-        (r'""', ['']),  # set foo "" is a legal command
-        (r'\\', ['\\\\']),  # blackslash are legal
-        ('\\hello\\', ['\\hello\\']),  # blackslash are legal
-
+        (r"''", [""]),  # set foo "" is a legal command
+        (r'""', [""]),  # set foo "" is a legal command
+        (r"\\", ["\\\\"]),  # blackslash are legal
+        ("\\hello\\", ["\\hello\\"]),  # blackslash are legal
     ],
 )
 def test_stipe_quote_escaple_in_quote(test_input, expected):
