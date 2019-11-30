@@ -139,7 +139,7 @@ server,MONITOR,command_pass,
 server,REPLICAOF,command_pass,
 server,ROLE,command,
 server,SAVE,command,render_simple_string
-server,SHUTDOWN,command_pass,
+server,SHUTDOWN,command_shutdown,render_simple_string
 server,SLAVEOF,command_pass,
 server,SLOWLOG,command_slowlog,render_slowlog
 server,SYNC,command,
