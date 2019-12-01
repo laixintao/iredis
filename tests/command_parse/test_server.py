@@ -60,3 +60,8 @@ def test_configset(judge_command):
             "value": "''",
         },
     )
+
+
+def test_shutdown(judge_command):
+    judge_command("shutdown save", {"command_shutdown": "shutdown", "shutdown": "save"})
+    judge_command("shutdown NOSAVE", {"command_shutdown": "shutdown", "shutdown": "NOSAVE"})
