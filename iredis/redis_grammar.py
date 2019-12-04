@@ -25,11 +25,11 @@ CONST = {
     "async": "ASYNC",
     "conntype": "NORMAL MASTER REPLICA PUBSUB",
     "samples": "SAMPLES",
-    "slotsubcmd": "IMPORTING MIGRATING NODE",
-    "slotsubcmdbare": "STABLE",
+    "slotsubcmd": "IMPORTING MIGRATING NODE STABLE",
     "weights_const": "WEIGHTS",
     "aggregate_const": "AGGREGATE",
     "aggregate": "SUM MIN MAX",
+    "slowlogsub": "LEN RESET GET",
 }
 
 
@@ -125,10 +125,10 @@ ASYNC = fr"(?P<async>{c('async')})"
 CONNTYPE = fr"(?P<conntype>{c('conntype')})"
 SAMPLES = fr"(?P<samples>{c('samples')})"
 SLOTSUBCMD = fr"(?P<slotsubcmd>{c('slotsubcmd')})"
-SLOTSUBCMDBARE = fr"(?P<slotsubcmd>{c('slotsubcmdbare')})"
 WEIGHTS_CONST = fr"(?P<weights_const>{c('weights_const')})"
 AGGREGATE_CONST = fr"(?P<aggregate_const>{c('aggregate_const')})"
 AGGREGATE = fr"(?P<aggregate>{c('aggregate')})"
+SLOWLOGSUB = fr"(?P<slowlogsub>{c('slowlogsub')})"
 
 
 REDIS_COMMANDS = fr"""
@@ -149,8 +149,6 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_asyncx>({t['command_asyncx']}))      (\s+ {ASYNC})?                                 \s*)|
 (\s*  (?P<command_slot_slotsubcmd_nodex>({t['command_slot_slotsubcmd_nodex']}))
                                                        \s+ {SLOT}    \s+ {SLOTSUBCMD}   (\s+ {NODE})? \s*)|
-(\s*  (?P<command_slot_slotsubcmd_nodex>({t['command_slot_slotsubcmd_nodex']}))
-                                                       \s+ {SLOT}    \s+ {SLOTSUBCMDBARE}             \s*)|
 (\s*  (?P<command_password>({t['command_password']}))  \s+ {PASSWORD}                                 \s*)|
 (\s*  (?P<command_message>({t['command_message']}))    \s+ {MESSAGE}                                  \s*)|
 (\s*  (?P<command_messagex>({t['command_messagex']}))  (\s+{MESSAGE})?                                \s*)|
@@ -262,12 +260,5 @@ REDIS_COMMANDS = fr"""
       \s+ {KEY}  \s+ {FIELD}  \s+ {FLOAT}                                                             \s*)|
 (\s*  (?P<command_key_fieldvalues>({t['command_key_fieldvalues']}))  \s+ {KEY}
       (\s+ {FIELD}  \s+ {VALUE})+                                                                     \s*)|
+(\s*  (?P<command_slowlog>({t['command_slowlog']}))  \s+ {SLOWLOGSUB} \s+ {NUM}                       \s*)
 """
-
-
-# command_destination_count_keys_weights_x_aggregate_x  can not parse with key numbers.
-# (\s*  (?P<command_destination_count_keys_weights_x_aggregate_x>
-# ({t['command_destination_count_keys_weights_x_aggregate_x']}))
-#                                                        \s+ {DESTINATION}        \s+ {COUNT} \s+ {KEYS}
-#                                                        (\s+ {WEIGHTS_CONST}     \s+ {WEIGHTS})?
-#                                                        (\s+ {AGGREGATE_CONST}   \s+ {AGGREGATE})?   \s*)|
