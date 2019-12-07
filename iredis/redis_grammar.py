@@ -180,8 +180,7 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_newkey_keys>({t['command_newkey_keys']}))  \s+ {NEWKEY}  \s+ {KEYS}                 \s*)|
 (\s*  (?P<command_key_newkey_timeout>({t['command_key_newkey_timeout']}))
       \s+ {KEY}  \s+ {NEWKEY}  \s+ {TIMEOUT}                                                          \s*)|
-(\s*  (?P<command_keys_timeout>({t['command_keys_timeout']}))
-                                                       \s+ {KEYS}    \s+ {TIMEOUT}                    \s*)|
+(\s*  (?P<command_keys_timeout>({t['command_keys_timeout']}))  \s+ {KEYS}  \s+ {TIMEOUT}              \s*)|
 (\s*  (?P<command_key_positionchoice_pivot_value>({t['command_key_positionchoice_pivot_value']}))
       \s+ {KEY}  \s+ {POSITION_CHOICE}  \s+ {VALUE}  \s+ {VALUE}                                      \s*)|
 (\s*  (?P<command_pass>({t['command_pass']}))          \s+ {ANY}                                      \s*)|
