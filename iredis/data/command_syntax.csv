@@ -116,7 +116,7 @@ server,CLIENT SETNAME,command_value,render_simple_string
 server,CLIENT UNBLOCK,command_clientid_errorx,render_int
 server,COMMAND,command,
 server,COMMAND COUNT,command,render_int
-server,COMMAND GETKEYS,command_pass,
+server,COMMAND GETKEYS,command_any,render_list
 server,COMMAND INFO,command_pass,
 server,CONFIG GET,command_parameter,render_nested_pair
 server,CONFIG RESETSTAT,command_pass,
