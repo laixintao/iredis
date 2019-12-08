@@ -31,6 +31,7 @@ CONST = {
     "aggregate": "SUM MIN MAX",
     "slowlogsub": "LEN RESET GET",
     "shutdown": "SAVE NOSAVE",
+    "switch": "ON OFF SKIP",
 }
 
 
@@ -131,6 +132,7 @@ AGGREGATE_CONST = fr"(?P<aggregate_const>{c('aggregate_const')})"
 AGGREGATE = fr"(?P<aggregate>{c('aggregate')})"
 SLOWLOGSUB = fr"(?P<slowlogsub>{c('slowlogsub')})"
 SHUTDOWN = fr"(?P<shutdown>{c('shutdown')})"
+SWITCH = fr"(?P<switch>{c('switch')})"
 
 
 REDIS_COMMANDS = fr"""
@@ -264,5 +266,6 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_fieldvalues>({t['command_key_fieldvalues']}))  \s+ {KEY}
       (\s+ {FIELD}  \s+ {VALUE})+                                                                     \s*)|
 (\s*  (?P<command_slowlog>({t['command_slowlog']}))  \s+ {SLOWLOGSUB} \s+ {NUM}                       \s*)|
+(\s*  (?P<command_switch>({t['command_switch']}))  \s+ {SWITCH}                                       \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
 """
