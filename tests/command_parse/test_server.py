@@ -64,4 +64,12 @@ def test_configset(judge_command):
 
 def test_shutdown(judge_command):
     judge_command("shutdown save", {"command_shutdown": "shutdown", "shutdown": "save"})
-    judge_command("shutdown NOSAVE", {"command_shutdown": "shutdown", "shutdown": "NOSAVE"})
+    judge_command(
+        "shutdown NOSAVE", {"command_shutdown": "shutdown", "shutdown": "NOSAVE"}
+    )
+
+
+def test_clientpause(judge_command):
+    judge_command(
+        "client pause 3000", {"command_timeout": "client pause", "timeout": "3000"}
+    )
