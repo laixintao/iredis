@@ -30,6 +30,8 @@ CONST = {
     "aggregate_const": "AGGREGATE",
     "aggregate": "SUM MIN MAX",
     "slowlogsub": "LEN RESET GET",
+    "shutdown": "SAVE NOSAVE",
+    "switch": "ON OFF SKIP",
 }
 
 
@@ -129,6 +131,8 @@ WEIGHTS_CONST = fr"(?P<weights_const>{c('weights_const')})"
 AGGREGATE_CONST = fr"(?P<aggregate_const>{c('aggregate_const')})"
 AGGREGATE = fr"(?P<aggregate>{c('aggregate')})"
 SLOWLOGSUB = fr"(?P<slowlogsub>{c('slowlogsub')})"
+SHUTDOWN = fr"(?P<shutdown>{c('shutdown')})"
+SWITCH = fr"(?P<switch>{c('switch')})"
 
 
 REDIS_COMMANDS = fr"""
@@ -178,11 +182,12 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_newkey_keys>({t['command_newkey_keys']}))  \s+ {NEWKEY}  \s+ {KEYS}                 \s*)|
 (\s*  (?P<command_key_newkey_timeout>({t['command_key_newkey_timeout']}))
       \s+ {KEY}  \s+ {NEWKEY}  \s+ {TIMEOUT}                                                          \s*)|
-(\s*  (?P<command_keys_timeout>({t['command_keys_timeout']}))
-                                                       \s+ {KEYS}    \s+ {TIMEOUT}                    \s*)|
+(\s*  (?P<command_keys_timeout>({t['command_keys_timeout']}))  \s+ {KEYS}  \s+ {TIMEOUT}              \s*)|
+(\s*  (?P<command_timeout>({t['command_timeout']}))   \s+ {TIMEOUT}                                   \s*)|
 (\s*  (?P<command_key_positionchoice_pivot_value>({t['command_key_positionchoice_pivot_value']}))
       \s+ {KEY}  \s+ {POSITION_CHOICE}  \s+ {VALUE}  \s+ {VALUE}                                      \s*)|
 (\s*  (?P<command_pass>({t['command_pass']}))          \s+ {ANY}                                      \s*)|
+(\s*  (?P<command_any>({t['command_any']}))          \s+ {ANY}                                      \s*)|
 (\s*  (?P<command_key_value_expiration_condition>({t['command_key_value_expiration_condition']}))
                                                        \s+ {KEY}     \s+ {VALUE}
                                                        (\s+ {EXPIRATION} \s+ {MILLISECOND})?
@@ -260,5 +265,7 @@ REDIS_COMMANDS = fr"""
       \s+ {KEY}  \s+ {FIELD}  \s+ {FLOAT}                                                             \s*)|
 (\s*  (?P<command_key_fieldvalues>({t['command_key_fieldvalues']}))  \s+ {KEY}
       (\s+ {FIELD}  \s+ {VALUE})+                                                                     \s*)|
-(\s*  (?P<command_slowlog>({t['command_slowlog']}))  \s+ {SLOWLOGSUB} \s+ {NUM}                       \s*)
+(\s*  (?P<command_slowlog>({t['command_slowlog']}))  \s+ {SLOWLOGSUB} \s+ {NUM}                       \s*)|
+(\s*  (?P<command_switch>({t['command_switch']}))  \s+ {SWITCH}                                       \s*)|
+(\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
 """

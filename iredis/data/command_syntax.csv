@@ -110,13 +110,13 @@ server,CLIENT GETNAME,command,render_bulk_string
 server,CLIENT ID,command,render_int
 server,CLIENT KILL,command_pass,
 server,CLIENT LIST,command_type_conntype_x,render_bulk_string_decode
-server,CLIENT PAUSE,command_pass,
-server,CLIENT REPLY,command_pass,
+server,CLIENT PAUSE,command_timeout,render_simple_string
+server,CLIENT REPLY,command_switch,render_simple_string
 server,CLIENT SETNAME,command_value,render_simple_string
 server,CLIENT UNBLOCK,command_clientid_errorx,render_int
-server,COMMAND,command_pass,
+server,COMMAND,command,
 server,COMMAND COUNT,command,render_int
-server,COMMAND GETKEYS,command_pass,
+server,COMMAND GETKEYS,command_any,render_list
 server,COMMAND INFO,command_pass,
 server,CONFIG GET,command_parameter,render_nested_pair
 server,CONFIG RESETSTAT,command_pass,
@@ -136,11 +136,11 @@ server,MEMORY PURGE,command,render_simple_string
 server,MEMORY STATS,command,render_nested_pair
 server,MEMORY USAGE,command_key_samples_count,render_int
 server,MONITOR,command_pass,
-server,REPLICAOF,command_pass,
+server,REPLICAOF,command_any,render_simple_string
 server,ROLE,command,
 server,SAVE,command,render_simple_string
-server,SHUTDOWN,command_pass,
-server,SLAVEOF,command_pass,
+server,SHUTDOWN,command_shutdown,render_simple_string
+server,SLAVEOF,command_any,render_simple_string
 server,SLOWLOG,command_slowlog,render_slowlog
 server,SYNC,command,
 server,TIME,command,render_time
@@ -165,7 +165,7 @@ sorted_set,ZADD,command_key_condition_changed_incr_score_members,render_string_o
 sorted_set,ZCARD,command_key,render_int
 sorted_set,ZCOUNT,command_key_min_max,render_int
 sorted_set,ZINCRBY,command_key_float_member,render_bulk_string
-sorted_set,ZINTERSTORE,command_pass,render_int
+sorted_set,ZINTERSTORE,command_any,render_int
 sorted_set,ZLEXCOUNT,command_key_lexmin_lexmax,render_int
 sorted_set,ZPOPMAX,command_key_count_x,render_members
 sorted_set,ZPOPMIN,command_key_count_x,render_members
@@ -183,7 +183,7 @@ sorted_set,ZREVRANGEBYSCORE,command_key_min_max_withscore_x_limit_offset_count_x
 sorted_set,ZREVRANK,command_key_member,render_int
 sorted_set,ZSCAN,command_key_cursor_match_pattern_count,command_sscan
 sorted_set,ZSCORE,command_key_member,render_bulk_string
-sorted_set,ZUNIONSTORE,command_pass,render_int
+sorted_set,ZUNIONSTORE,command_any,render_int
 stream,XACK,command_pass,
 stream,XADD,command_pass,
 stream,XCLAIM,command_pass,
