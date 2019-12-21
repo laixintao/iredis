@@ -196,7 +196,8 @@ def _render_list(byte_items, str_items, style=None, pre_space=0):
     rendered = []
     for index, item in enumerate(str_items):
         indent_spaces = (index + 1 != 1) * pre_space * " "
-        rendered.append(("", indent_spaces))  # add a space before item
+        if indent_spaces:
+            rendered.append(("", indent_spaces))  # add a space before item
 
         index_const_width = f"{index+1:{index_width}})"
         rendered.append(("", index_const_width))
@@ -204,12 +205,12 @@ def _render_list(byte_items, str_items, style=None, pre_space=0):
         rendered.append(("", " "))  # add a space before item
         if item is None:
             rendered.append(NIL_TUPLE)
-        elif isinstance(item, list):
+        elif isinstance(item, str):
+            rendered.append((style, item))
+        else:  # it's a nested list
             # if config.raw == True, never will get there
             sublist = _render_list(None, item, style, pre_space + index_width + 2)
             rendered.extend(sublist)
-        else:
-            rendered.append((style, item))
 
         # add a newline for eachline
         if index + 1 < len(str_items):
@@ -230,7 +231,10 @@ def render_list(text, completer=None):
             str_item = _ensure_str(item)
             double_quoted = _double_quotes(str_item)
             str_items.append(double_quoted)
-    return FormattedText(_render_list(text, str_items, "class:string"))
+    rendered = _render_list(text, str_items, "class:string")
+    if config.raw:
+        return rendered
+    return FormattedText(rendered)
 
 
 def render_list_or_string(text, completer=None):
@@ -290,8 +294,10 @@ def _update_completer_then_render(
     else:
         logger.debug(f"[Completer] completer is None, not updated.")
     double_quoted = _double_quotes(str_items)
-    rendered = FormattedText(_render_list(items, double_quoted, style))
-    return rendered
+    rendered = _render_list(items, double_quoted, style)
+    if config.raw:
+        return rendered
+    return FormattedText(rendered)
 
 
 def _update_completer_then_render_withscores(items, completer):

@@ -414,3 +414,49 @@ def test_render_nested_pairs():
             ("class:value", "-9445680"),
         ]
     )
+
+
+def test_render_nested_list():
+    text = [[b"get", 2, [b"readonly", b"fast"], 1, 1, 1]]
+    config.raw = False
+    assert renders.render_list(text, None) == FormattedText(
+        [
+            ("", "1)"),
+            ("", " "),
+            ("", "1)"),
+            ("", " "),
+            ("class:string", '"get"'),
+            ("", "\n"),
+            ("", "   "),
+            ("", "2)"),
+            ("", " "),
+            ("class:string", '"2"'),
+            ("", "\n"),
+            ("", "   "),
+            ("", "3)"),
+            ("", " "),
+            ("", "1)"),
+            ("", " "),
+            ("class:string", '"readonly"'),
+            ("", "\n"),
+            ("", "      "),
+            ("", "2)"),
+            ("", " "),
+            ("class:string", '"fast"'),
+            ("", "\n"),
+            ("", "   "),
+            ("", "4)"),
+            ("", " "),
+            ("class:string", '"1"'),
+            ("", "\n"),
+            ("", "   "),
+            ("", "5)"),
+            ("", " "),
+            ("class:string", '"1"'),
+            ("", "\n"),
+            ("", "   "),
+            ("", "6)"),
+            ("", " "),
+            ("class:string", '"1"'),
+        ]
+    )
