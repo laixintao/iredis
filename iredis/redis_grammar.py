@@ -35,7 +35,7 @@ CONST = {
     "const_id": "ID",
     "addr": "ADDR",
     "skipme": "SKIPME",
-    "yes": "YES NO"
+    "yes": "YES NO",
 }
 
 
