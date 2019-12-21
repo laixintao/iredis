@@ -119,7 +119,7 @@ server,COMMAND COUNT,command,render_int
 server,COMMAND GETKEYS,command_any,render_list
 server,COMMAND INFO,command_commandname,render_list
 server,CONFIG GET,command_parameter,render_nested_pair
-server,CONFIG RESETSTAT,command_pass,
+server,CONFIG RESETSTAT,command,render_simple_string
 server,CONFIG REWRITE,command_pass,
 server,CONFIG SET,command_parameter_value,render_simple_string
 server,DBSIZE,command,render_int
