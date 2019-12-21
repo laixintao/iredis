@@ -117,7 +117,7 @@ server,CLIENT UNBLOCK,command_clientid_errorx,render_int
 server,COMMAND,command,
 server,COMMAND COUNT,command,render_int
 server,COMMAND GETKEYS,command_any,render_list
-server,COMMAND INFO,command_commandname,render_nested_list
+server,COMMAND INFO,command_commandname,render_list
 server,CONFIG GET,command_parameter,render_nested_pair
 server,CONFIG RESETSTAT,command_pass,
 server,CONFIG REWRITE,command_pass,

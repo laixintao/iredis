@@ -182,30 +182,39 @@ def _render_raw_list(bytes_items):
     return b"\n".join(flatten_items)
 
 
-def _render_list(byte_items, str_items, style=None):
+def _render_list(byte_items, str_items, style=None, pre_space=0):
     """Complute the newline/number-width/lineno,
     render list to FormattedText
     """
     if config.raw:
         return _render_raw_list(byte_items)
-    index_width = len(str(len(str_items)))
-    rendered = []
+
     if not str_items:
         return EMPTY_LIST
+
+    index_width = len(str(len(str_items)))
+    rendered = []
     for index, item in enumerate(str_items):
+        indent_spaces = (index + 1 != 1) * pre_space * " "
+        rendered.append(("", indent_spaces))  # add a space before item
+
         index_const_width = f"{index+1:{index_width}})"
         rendered.append(("", index_const_width))
         # list item
         rendered.append(("", " "))  # add a space before item
         if item is None:
             rendered.append(NIL_TUPLE)
+        elif isinstance(item, list):
+            # if config.raw == True, never will get there
+            sublist = _render_list(None, item, style, pre_space + index_width + 2)
+            rendered.extend(sublist)
         else:
             rendered.append((style, item))
 
         # add a newline for eachline
         if index + 1 < len(str_items):
             rendered.append(NEWLINE_TUPLE)
-    return FormattedText(rendered)
+    return rendered
 
 
 def render_list(text, completer=None):
@@ -221,7 +230,7 @@ def render_list(text, completer=None):
             str_item = _ensure_str(item)
             double_quoted = _double_quotes(str_item)
             str_items.append(double_quoted)
-    return _render_list(text, str_items, "class:string")
+    return FormattedText(_render_list(text, str_items, "class:string"))
 
 
 def render_list_or_string(text, completer=None):
@@ -281,7 +290,7 @@ def _update_completer_then_render(
     else:
         logger.debug(f"[Completer] completer is None, not updated.")
     double_quoted = _double_quotes(str_items)
-    rendered = _render_list(items, double_quoted, style)
+    rendered = FormattedText(_render_list(items, double_quoted, style))
     return rendered
 
 
@@ -453,11 +462,6 @@ def render_slowlog(raw, completers=None):
             )
 
     return FormattedText(rendered[:-1])
-
-
-def render_nested_list(raw, completers=None):
-    if config.raw:
-        return _render_raw_list(raw)
 
 
 # TODO
