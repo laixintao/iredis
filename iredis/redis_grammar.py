@@ -32,6 +32,10 @@ CONST = {
     "slowlogsub": "LEN RESET GET",
     "shutdown": "SAVE NOSAVE",
     "switch": "ON OFF SKIP",
+    "const_id": "ID",
+    "addr": "ADDR",
+    "skipme": "SKIPME",
+    "yes": "YES NO",
 }
 
 
@@ -106,6 +110,7 @@ SCORE = fr"(?P<score>{_FLOAT})"
 LEXMIN = fr"(?P<lexmin>{LEXNUM})"
 LEXMAX = fr"(?P<lexmax>{LEXNUM})"
 WEIGHTS = fr"(?P<weights>{_FLOAT}(\s+{_FLOAT})*)"
+IP_PORT = fr"(?P<ip_port>{IP}:{PORT})"
 
 # const choices
 FAILOVERCHOICE = fr"(?P<failoverchoice>{c('failoverchoice')})"
@@ -133,7 +138,10 @@ AGGREGATE = fr"(?P<aggregate>{c('aggregate')})"
 SLOWLOGSUB = fr"(?P<slowlogsub>{c('slowlogsub')})"
 SHUTDOWN = fr"(?P<shutdown>{c('shutdown')})"
 SWITCH = fr"(?P<switch>{c('switch')})"
-
+CONST_ID = fr"(?P<const_id>{c('const_id')})"
+ADDR = fr"(?P<addr>{c('addr')})"
+SKIPME = fr"(?P<skipme>{c('skipme')})"
+YES = fr"(?P<yes>{c('yes')})"
 
 REDIS_COMMANDS = fr"""
 (\s*  (?P<command_commandname>({t['command_commandname']}))        \s+ {COMMANDNAME}                  \s*)|
@@ -267,5 +275,11 @@ REDIS_COMMANDS = fr"""
       (\s+ {FIELD}  \s+ {VALUE})+                                                                     \s*)|
 (\s*  (?P<command_slowlog>({t['command_slowlog']}))  \s+ {SLOWLOGSUB} \s+ {NUM}                       \s*)|
 (\s*  (?P<command_switch>({t['command_switch']}))  \s+ {SWITCH}                                       \s*)|
+(\s*  (?P<command_clientkill>({t['command_clientkill']}))
+    (\s+ {IP_PORT})?
+    (\s+ {ADDR} \s+ {IP_PORT})?
+    (\s+ {CONST_ID} \s+ {CLIENTID})?
+    (\s+ {TYPE_CONST} \s+ {CONNTYPE})?
+    (\s+ {SKIPME} \s+ {YES})?  \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
 """

@@ -2,8 +2,6 @@
 IRedis client.
 """
 import re
-import os
-from pathlib import Path
 import logging
 from distutils.version import StrictVersion
 
@@ -21,9 +19,8 @@ from .completers import LatestUsedFirstWordCompleter
 from . import markdown
 from .utils import compose_command_syntax
 from .exceptions import NotRedisCommand
-from . import utils
+from . import utils, project_path
 
-project_path = Path(os.path.dirname(os.path.abspath(__file__))) / "data"
 logger = logging.getLogger(__name__)
 CLIENT_COMMANDS = ["HELP"]
 

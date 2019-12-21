@@ -1,3 +1,6 @@
+import pytest
+
+
 def test_client_setname(judge_command):
     judge_command(
         "CLIENT SETNAME foobar", {"command_value": "CLIENT SETNAME", "value": "foobar"}
@@ -77,3 +80,46 @@ def test_clientpause(judge_command):
 
 def test_client_reply(judge_command):
     judge_command("client reply on", {"command_switch": "client reply", "switch": "on"})
+
+
+def test_client_kill(judge_command):
+    judge_command(
+        "CLIENT KILL addr 127.0.0.1:12345 type pubsub",
+        {
+            "command_clientkill": "CLIENT KILL",
+            "addr": "addr",
+            "ip_port": "127.0.0.1:12345",
+            "type_const": "type",
+            "conntype": "pubsub",
+        },
+    )
+    judge_command(
+        "CLIENT KILL 127.0.0.1:12345 ",
+        {"command_clientkill": "CLIENT KILL", "ip_port": "127.0.0.1:12345"},
+    )
+    judge_command(
+        "CLIENT KILL id 123455 type pubsub skipme no",
+        {
+            "command_clientkill": "CLIENT KILL",
+            "const_id": "id",
+            "clientid": "123455",
+            "type_const": "type",
+            "conntype": "pubsub",
+            "skipme": "skipme",
+            "yes": "no",
+        },
+    )
+
+
+@pytest.mark.xfail(reason="currently no support arbitrary ordered command args")
+def test_client_kill_unordered_arguments(judge_command):
+    judge_command(
+        "CLIENT KILL type pubsub addr 127.0.0.1:12345",
+        {
+            "command_clientkill": "CLIENT KILL",
+            "addr": "addr",
+            "ip_port": "127.0.0.1:12345",
+            "type_const": "type",
+            "conntype": "pubsub",
+        },
+    )
