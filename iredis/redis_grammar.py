@@ -277,9 +277,9 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_switch>({t['command_switch']}))  \s+ {SWITCH}                                       \s*)|
 (\s*  (?P<command_clientkill>({t['command_clientkill']}))
     (\s+ {IP_PORT})?
+    (\s+ {ADDR} \s+ {IP_PORT})?
     (\s+ {CONST_ID} \s+ {CLIENTID})?
     (\s+ {TYPE_CONST} \s+ {CONNTYPE})?
-    (\s+ {ADDR} \s+ {IP_PORT})?
     (\s+ {SKIPME} \s+ {YES})?  \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
 """
