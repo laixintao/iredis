@@ -2,8 +2,6 @@
 IRedis client.
 """
 import re
-import os
-from pathlib import Path
 import logging
 from distutils.version import StrictVersion
 
