@@ -35,9 +35,6 @@ jobs:
       - image: circleci/python:3.7.1
     working_directory: ~/repo
     steps:
-      - restore_cache:
-          keys:
-            - v4-dependencies-pexpect
       - attach_workspace:
           at: /tmp/workspace
       - run:
@@ -47,10 +44,6 @@ jobs:
             . venv/bin/activate
             pip install pip==19
             pip install /tmp/workspace/dist/*.whl
-      - save_cache:
-          paths:
-            - ./venv
-          key: v4-dependencies-pexpect
 
       - run:
           name: test built release
