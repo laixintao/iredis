@@ -28,9 +28,6 @@ exclude=[
     "iredis/data/redis-doc/topics/*",
     "iredis/data/redis-doc/utils/*",
 ]
-include = [
-    "iredis/data/redis-doc/commands.json",
-]
 
 
 [tool.poetry.dependencies]

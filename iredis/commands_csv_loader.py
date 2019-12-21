@@ -6,7 +6,7 @@ from . import project_path
 
 
 def load_command_summary():
-    commands_json_path = project_path / "redis-doc" / "commands.json"
+    commands_json_path = project_path / "commands.json"
 
     with open(commands_json_path) as jsonfile:
         commands_summary = json.load(jsonfile)
