@@ -187,7 +187,7 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install poetry pip==19
-            poetry install --develop=DEVELOP
+            poetry install
 
       - save_cache:
           paths:
@@ -229,7 +229,7 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install poetry pip==19
-            poetry install --develop=DEVELOP
+            poetry install
 
       - save_cache:
           paths:
