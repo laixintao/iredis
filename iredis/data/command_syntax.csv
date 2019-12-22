@@ -49,7 +49,7 @@ generic,TOUCH,command_keys,
 generic,TTL,command_key,
 generic,TYPE,command_key,render_bulk_string
 generic,UNLINK,command_keys,
-generic,WAIT,command_pass,
+generic,WAIT,command_count_timeout,render_int
 geo,GEOADD,command_pass,
 geo,GEODIST,command_pass,
 geo,GEOHASH,command_pass,
