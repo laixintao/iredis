@@ -123,7 +123,7 @@ server,CONFIG RESETSTAT,command,render_simple_string
 server,CONFIG REWRITE,command,render_simple_string
 server,CONFIG SET,command_parameter_value,render_simple_string
 server,DBSIZE,command,render_int
-server,DEBUG OBJECT,command_pass,
+server,DEBUG OBJECT,command_key,render_simple_string
 server,DEBUG SEGFAULT,command_pass,
 server,FLUSHALL,command_asyncx,render_simple_string
 server,FLUSHDB,command_asyncx,render_simple_string
