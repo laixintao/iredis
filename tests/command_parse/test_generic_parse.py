@@ -151,3 +151,9 @@ def test_object(judge_command):
         "object refcount mylist",
         {"command_object_key": "object", "object": "refcount", "key": "mylist"},
     )
+
+
+def test_wait(judge_command):
+    judge_command(
+        "WAIT 3 100", {"command_count_timeout": "WAIT", "count": "3", "timeout": "100"}
+    )
