@@ -32,7 +32,7 @@ generic,EXISTS,command_keys,render_int
 generic,EXPIRE,command_key_second,render_int
 generic,EXPIREAT,command_key_timestamp,render_int
 generic,KEYS,command_pattern,command_keys
-generic,MIGRATE,command_pass,
+generic,MIGRATE,command_migrate,render_simple_string
 generic,MOVE,command_key_index,render_int
 generic,OBJECT,command_pass,render_string_or_int
 generic,PERSIST,command_key,

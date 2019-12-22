@@ -36,6 +36,9 @@ CONST = {
     "addr": "ADDR",
     "skipme": "SKIPME",
     "yes": "YES NO",
+    "migratechoice": "COPY REPLACE",
+    "auth": "AUTH",
+    "const_keys": "KEYS"
 }
 
 
@@ -111,6 +114,7 @@ LEXMIN = fr"(?P<lexmin>{LEXNUM})"
 LEXMAX = fr"(?P<lexmax>{LEXNUM})"
 WEIGHTS = fr"(?P<weights>{_FLOAT}(\s+{_FLOAT})*)"
 IP_PORT = fr"(?P<ip_port>{IP}:{PORT})"
+HOST = fr"(?P<host>{VALID_TOKEN})"
 
 # const choices
 FAILOVERCHOICE = fr"(?P<failoverchoice>{c('failoverchoice')})"
@@ -142,6 +146,9 @@ CONST_ID = fr"(?P<const_id>{c('const_id')})"
 ADDR = fr"(?P<addr>{c('addr')})"
 SKIPME = fr"(?P<skipme>{c('skipme')})"
 YES = fr"(?P<yes>{c('yes')})"
+MIGRATECHOICE = fr"(?P<migratechoice>{c('migratechoice')})"
+AUTH = fr"(?P<auth>{c('auth')})"
+CONST_KEYS = fr"(?P<const_keys>{c('const_keys')})"
 
 REDIS_COMMANDS = fr"""
 (\s*  (?P<command_commandname>({t['command_commandname']}))        \s+ {COMMANDNAME}                  \s*)|
@@ -280,6 +287,11 @@ REDIS_COMMANDS = fr"""
     (\s+ {ADDR} \s+ {IP_PORT})?
     (\s+ {CONST_ID} \s+ {CLIENTID})?
     (\s+ {TYPE_CONST} \s+ {CONNTYPE})?
-    (\s+ {SKIPME} \s+ {YES})?  \s*)|
+    (\s+ {SKIPME} \s+ {YES})?                                                                        \s*)|
+(\s*  (?P<command_migrate>({t['command_migrate']})) \s+ {HOST} \s+  {PORT} \s+ {KEY}
+    \s+ {INDEX} \s+ {TIMEOUT}
+    (\s+ {MIGRATECHOICE})?
+    (\s+ {AUTH} \s+ {PASSWORD})?
+    (\s+ {CONST_KEYS} \s+ {KEYS})?                                                                   \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
 """
