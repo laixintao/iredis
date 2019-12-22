@@ -144,3 +144,10 @@ def test_migrate(judge_command):
             "keys": "key1 key2 key3",
         },
     )
+
+
+def test_object(judge_command):
+    judge_command(
+        "object refcount mylist",
+        {"command_object_key": "object", "object": "refcount", "key": "mylist"},
+    )
