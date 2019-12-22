@@ -34,7 +34,7 @@ generic,EXPIREAT,command_key_timestamp,render_int
 generic,KEYS,command_pattern,command_keys
 generic,MIGRATE,command_migrate,render_simple_string
 generic,MOVE,command_key_index,render_int
-generic,OBJECT,command_pass,render_string_or_int
+generic,OBJECT,command_object_keys,render_string_or_int
 generic,PERSIST,command_key,
 generic,PEXPIRE,command_key_millisecond,
 generic,PEXPIREAT,command_key_timestampms,

@@ -39,6 +39,7 @@ CONST = {
     "migratechoice": "COPY REPLACE",
     "auth": "AUTH",
     "const_keys": "KEYS",
+    "object": "REFCOUNT ENCODING IDLETIME FREQ HELP",
 }
 
 
@@ -149,6 +150,7 @@ YES = fr"(?P<yes>{c('yes')})"
 MIGRATECHOICE = fr"(?P<migratechoice>{c('migratechoice')})"
 AUTH = fr"(?P<auth>{c('auth')})"
 CONST_KEYS = fr"(?P<const_keys>{c('const_keys')})"
+OBJECT= fr"(?P<object>{c('object')})"
 
 REDIS_COMMANDS = fr"""
 (\s*  (?P<command_commandname>({t['command_commandname']}))        \s+ {COMMANDNAME}                  \s*)|
@@ -241,6 +243,8 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}    \s+ {MEMBERS}                     \s*)|
 (\s*  (?P<command_destination_keys>({t['command_destination_keys']}))
                                                        \s+ {DESTINATION}    \s+ {KEYS}                \s*)|
+(\s*  (?P<command_object_keys>({t['command_object_keys']}))
+                                                       \s+ {OBJECT}    \s+ {KEYS}                     \s*)|
 (\s*  (?P<command_key_member>({t['command_key_member']}))
                                                        \s+ {KEY}    \s+ {MEMBER}                      \s*)|
 (\s*  (?P<command_key_newkey_member>({t['command_key_newkey_member']}))
