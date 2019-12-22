@@ -156,6 +156,8 @@ class Client:
         This command need to read from a stream resp, so
         it's different
         """
+        # FIXME maybe need to make this a generator, use yield
+        # for pubsub and stream
         while 1:
             response = self.connection.read_response()
             print(response)
