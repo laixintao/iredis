@@ -40,6 +40,7 @@ CONST = {
     "auth": "AUTH",
     "const_keys": "KEYS",
     "object": "REFCOUNT ENCODING IDLETIME FREQ HELP",
+    "subrestore": "REPLACE ABSTTL IDLETIME FREQ",
 }
 
 
@@ -151,6 +152,7 @@ MIGRATECHOICE = fr"(?P<migratechoice>{c('migratechoice')})"
 AUTH = fr"(?P<auth>{c('auth')})"
 CONST_KEYS = fr"(?P<const_keys>{c('const_keys')})"
 OBJECT = fr"(?P<object>{c('object')})"
+SUBRESTORE = fr"(?P<subrestore>{c('subrestore')})"
 
 REDIS_COMMANDS = fr"""
 (\s*  (?P<command_commandname>({t['command_commandname']}))        \s+ {COMMANDNAME}                  \s*)|
@@ -298,5 +300,7 @@ REDIS_COMMANDS = fr"""
     (\s+ {MIGRATECHOICE})?
     (\s+ {AUTH} \s+ {PASSWORD})?
     (\s+ {CONST_KEYS} \s+ {KEYS})?                                                                   \s*)|
+(\s*  (?P<command_restore>({t['command_restore']})) \s+ {KEY} \s+  {TIMEOUT} \s+ {VALUE}
+    (\s+ {SUBRESTORE} \s+ {SECOND})                                                                 \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
 """
