@@ -157,3 +157,15 @@ def test_wait(judge_command):
     judge_command(
         "WAIT 3 100", {"command_count_timeout": "WAIT", "count": "3", "timeout": "100"}
     )
+
+
+def test_restore(judge_command):
+    judge_command(
+        'RESTORE mykey 0 "\n\x17\x17\x00\x00\x00\x12\x00\x00\x00\x03\x00\x00\xc0\x01\x00\x04\xc0\x02\x00\x04\xc0\x03\x00\xff\x04\x00u#<\xc0;.\xe9\xdd"',
+        {
+            "command_restore": "RESTORE",
+            "key": "mykey",
+            "timeout": "0",
+            "value": '"\n\x17\x17\x00\x00\x00\x12\x00\x00\x00\x03\x00\x00\xc0\x01\x00\x04\xc0\x02\x00\x04\xc0\x03\x00\xff\x04\x00u#<\xc0;.\xe9\xdd"',
+        },
+    )

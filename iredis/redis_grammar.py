@@ -301,6 +301,6 @@ REDIS_COMMANDS = fr"""
     (\s+ {AUTH} \s+ {PASSWORD})?
     (\s+ {CONST_KEYS} \s+ {KEYS})?                                                                   \s*)|
 (\s*  (?P<command_restore>({t['command_restore']})) \s+ {KEY} \s+  {TIMEOUT} \s+ {VALUE}
-    (\s+ {SUBRESTORE} \s+ {SECOND})                                                                 \s*)|
+    (\s+ {SUBRESTORE} \s+ {SECOND})?                                                                 \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
 """
