@@ -1,23 +1,23 @@
 Group,Command,Syntax,Callback
-cluster,CLUSTER ADDSLOTS,command_slots,
-cluster,CLUSTER COUNT-FAILURE-REPORTS,command_node,
-cluster,CLUSTER COUNTKEYSINSLOT,command_slot,
-cluster,CLUSTER DELSLOTS,command_slots,
-cluster,CLUSTER FAILOVER,command_failoverchoice,
-cluster,CLUSTER FORGET,command_node,
-cluster,CLUSTER GETKEYSINSLOT,command_slot_count,
-cluster,CLUSTER INFO,command,
-cluster,CLUSTER KEYSLOT,command_key,
-cluster,CLUSTER MEET,command_ip_port,
-cluster,CLUSTER NODES,command,
-cluster,CLUSTER REPLICAS,command_node,
-cluster,CLUSTER REPLICATE,command_node,
-cluster,CLUSTER RESET,command_resetchoice,
-cluster,CLUSTER SAVECONFIG,command,
-cluster,CLUSTER SET-CONFIG-EPOCH,command_epoch,
-cluster,CLUSTER SETSLOT,command_slot_slotsubcmd_nodex,
-cluster,CLUSTER SLAVES,command_node,
-cluster,CLUSTER SLOTS,command,
+cluster,CLUSTER ADDSLOTS,command_slots,render_simple_string
+cluster,CLUSTER COUNT-FAILURE-REPORTS,command_node,render_int
+cluster,CLUSTER COUNTKEYSINSLOT,command_slot,render_int
+cluster,CLUSTER DELSLOTS,command_slots,render_simple_string
+cluster,CLUSTER FAILOVER,command_failoverchoice,render_simple_string
+cluster,CLUSTER FORGET,command_node,render_simple_string
+cluster,CLUSTER GETKEYSINSLOT,command_slot_count,render_list
+cluster,CLUSTER INFO,command,render_bulk_string_decode
+cluster,CLUSTER KEYSLOT,command_key,render_int
+cluster,CLUSTER MEET,command_ip_port,render_simple_string
+cluster,CLUSTER NODES,command,render_bulk_string_decode
+cluster,CLUSTER REPLICAS,command_node,render_bulk_string_decode
+cluster,CLUSTER REPLICATE,command_node,render_simple_string
+cluster,CLUSTER RESET,command_resetchoice,render_simple_string
+cluster,CLUSTER SAVECONFIG,command,render_simple_string
+cluster,CLUSTER SET-CONFIG-EPOCH,command_epoch,render_simple_string
+cluster,CLUSTER SETSLOT,command_slot_slotsubcmd_nodex,render_simple_string
+cluster,CLUSTER SLAVES,command_node,render_bulk_string_decode
+cluster,CLUSTER SLOTS,command,render_list
 cluster,READONLY,command,render_simple_string
 cluster,READWRITE,command,render_simple_string
 connection,AUTH,command_password,render_simple_string

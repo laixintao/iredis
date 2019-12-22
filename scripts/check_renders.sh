@@ -1,0 +1,1 @@
+rg -vw render_int iredis/data/command_syntax.csv | rg -vw render_simple_string | rg -wv render_bulk_string | rg -vw render_list | rg -vw render_members | rg -vw render_bulk_string_decode | rg -vw render_string_or_int | rg -wv render_list_or_string
