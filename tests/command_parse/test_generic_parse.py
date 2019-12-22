@@ -128,3 +128,44 @@ def test_scan(judge_command):
             "type": "string",
         },
     )
+
+
+def test_migrate(judge_command):
+    judge_command(
+        'MIGRATE 192.168.1.34 6379 " " 0 5000 KEYS key1 key2 key3',
+        {
+            "command_migrate": "MIGRATE",
+            "host": "192.168.1.34",
+            "port": "6379",
+            "key": '" "',
+            "index": "0",
+            "timeout": "5000",
+            "const_keys": "KEYS",
+            "keys": "key1 key2 key3",
+        },
+    )
+
+
+def test_object(judge_command):
+    judge_command(
+        "object refcount mylist",
+        {"command_object_key": "object", "object": "refcount", "key": "mylist"},
+    )
+
+
+def test_wait(judge_command):
+    judge_command(
+        "WAIT 3 100", {"command_count_timeout": "WAIT", "count": "3", "timeout": "100"}
+    )
+
+
+def test_restore(judge_command):
+    judge_command(
+        'RESTORE mykey 0 "\n\x17\x17\x00\x00\x00\x12\x00\x00\x00\x03\x00\x00\xc0\x01\x00\x04\xc0\x02\x00\x04\xc0\x03\x00\xff\x04\x00u#<\xc0;.\xe9\xdd"',  # noqa
+        {
+            "command_restore": "RESTORE",
+            "key": "mykey",
+            "timeout": "0",
+            "value": '"\n\x17\x17\x00\x00\x00\x12\x00\x00\x00\x03\x00\x00\xc0\x01\x00\x04\xc0\x02\x00\x04\xc0\x03\x00\xff\x04\x00u#<\xc0;.\xe9\xdd"',  # noqa
+        },
+    )

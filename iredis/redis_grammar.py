@@ -36,6 +36,11 @@ CONST = {
     "addr": "ADDR",
     "skipme": "SKIPME",
     "yes": "YES NO",
+    "migratechoice": "COPY REPLACE",
+    "auth": "AUTH",
+    "const_keys": "KEYS",
+    "object": "REFCOUNT ENCODING IDLETIME FREQ HELP",
+    "subrestore": "REPLACE ABSTTL IDLETIME FREQ",
 }
 
 
@@ -111,6 +116,7 @@ LEXMIN = fr"(?P<lexmin>{LEXNUM})"
 LEXMAX = fr"(?P<lexmax>{LEXNUM})"
 WEIGHTS = fr"(?P<weights>{_FLOAT}(\s+{_FLOAT})*)"
 IP_PORT = fr"(?P<ip_port>{IP}:{PORT})"
+HOST = fr"(?P<host>{VALID_TOKEN})"
 
 # const choices
 FAILOVERCHOICE = fr"(?P<failoverchoice>{c('failoverchoice')})"
@@ -142,6 +148,11 @@ CONST_ID = fr"(?P<const_id>{c('const_id')})"
 ADDR = fr"(?P<addr>{c('addr')})"
 SKIPME = fr"(?P<skipme>{c('skipme')})"
 YES = fr"(?P<yes>{c('yes')})"
+MIGRATECHOICE = fr"(?P<migratechoice>{c('migratechoice')})"
+AUTH = fr"(?P<auth>{c('auth')})"
+CONST_KEYS = fr"(?P<const_keys>{c('const_keys')})"
+OBJECT = fr"(?P<object>{c('object')})"
+SUBRESTORE = fr"(?P<subrestore>{c('subrestore')})"
 
 REDIS_COMMANDS = fr"""
 (\s*  (?P<command_commandname>({t['command_commandname']}))        \s+ {COMMANDNAME}                  \s*)|
@@ -191,6 +202,7 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_newkey_timeout>({t['command_key_newkey_timeout']}))
       \s+ {KEY}  \s+ {NEWKEY}  \s+ {TIMEOUT}                                                          \s*)|
 (\s*  (?P<command_keys_timeout>({t['command_keys_timeout']}))  \s+ {KEYS}  \s+ {TIMEOUT}              \s*)|
+(\s*  (?P<command_count_timeout>({t['command_count_timeout']}))  \s+ {COUNT}  \s+ {TIMEOUT}           \s*)|
 (\s*  (?P<command_timeout>({t['command_timeout']}))   \s+ {TIMEOUT}                                   \s*)|
 (\s*  (?P<command_key_positionchoice_pivot_value>({t['command_key_positionchoice_pivot_value']}))
       \s+ {KEY}  \s+ {POSITION_CHOICE}  \s+ {VALUE}  \s+ {VALUE}                                      \s*)|
@@ -234,6 +246,8 @@ REDIS_COMMANDS = fr"""
                                                        \s+ {KEY}    \s+ {MEMBERS}                     \s*)|
 (\s*  (?P<command_destination_keys>({t['command_destination_keys']}))
                                                        \s+ {DESTINATION}    \s+ {KEYS}                \s*)|
+(\s*  (?P<command_object_key>({t['command_object_key']}))
+                                                       \s+ {OBJECT}    \s+ {KEY}                      \s*)|
 (\s*  (?P<command_key_member>({t['command_key_member']}))
                                                        \s+ {KEY}    \s+ {MEMBER}                      \s*)|
 (\s*  (?P<command_key_newkey_member>({t['command_key_newkey_member']}))
@@ -280,6 +294,13 @@ REDIS_COMMANDS = fr"""
     (\s+ {ADDR} \s+ {IP_PORT})?
     (\s+ {CONST_ID} \s+ {CLIENTID})?
     (\s+ {TYPE_CONST} \s+ {CONNTYPE})?
-    (\s+ {SKIPME} \s+ {YES})?  \s*)|
+    (\s+ {SKIPME} \s+ {YES})?                                                                        \s*)|
+(\s*  (?P<command_migrate>({t['command_migrate']})) \s+ {HOST} \s+  {PORT} \s+ {KEY}
+    \s+ {INDEX} \s+ {TIMEOUT}
+    (\s+ {MIGRATECHOICE})?
+    (\s+ {AUTH} \s+ {PASSWORD})?
+    (\s+ {CONST_KEYS} \s+ {KEYS})?                                                                   \s*)|
+(\s*  (?P<command_restore>({t['command_restore']})) \s+ {KEY} \s+  {TIMEOUT} \s+ {VALUE}
+    (\s+ {SUBRESTORE} \s+ {SECOND})?                                                                 \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
 """
