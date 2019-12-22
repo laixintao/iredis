@@ -44,7 +44,7 @@ generic,RENAME,command_key_newkey,
 generic,RENAMENX,command_key_newkey,
 generic,RESTORE,command_restore,render_simple_string
 generic,SCAN,command_cursor_match_pattern_count_type,command_scan
-generic,SORT,command_pass,
+generic,SORT,command_any,render_list_or_string
 generic,TOUCH,command_keys,
 generic,TTL,command_key,
 generic,TYPE,command_key,render_bulk_string
