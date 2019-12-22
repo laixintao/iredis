@@ -9,17 +9,19 @@ import redis
 from redis.connection import Connection
 from redis.exceptions import TimeoutError, ConnectionError
 from prompt_toolkit.formatted_text import FormattedText
+from prompt_toolkit import print_formatted_text
 
 from . import renders
+from . import markdown
+from . import utils, project_path
 from .config import config
 from .commands_csv_loader import all_commands, command2callback, commands_summary
 from .utils import nativestr, split_command_args, _strip_quote_args
+from .utils import compose_command_syntax
 from .renders import render_error
 from .completers import LatestUsedFirstWordCompleter
-from . import markdown
-from .utils import compose_command_syntax
 from .exceptions import NotRedisCommand
-from . import utils, project_path
+from .style import STYLE
 
 logger = logging.getLogger(__name__)
 CLIENT_COMMANDS = ["HELP"]
@@ -148,6 +150,18 @@ class Client:
             rendered = self.render_command_result(command_name, response, completer)
         return rendered
 
+    def monitor(self):
+        """Redis' MONITOR command:
+        https://redis.io/commands/monitor
+        This command need to read from a stream resp, so
+        it's different
+        """
+        # FIXME maybe need to make this a generator, use yield
+        # for pubsub and stream
+        while 1:
+            response = self.connection.read_response()
+            print(response)
+
     def send_command(self, raw_command, completer):
         """
         Send raw_command to redis-server, return parsed response.
@@ -169,6 +183,13 @@ class Client:
                 completer, command_name, *args
             )
             self.after_hook(raw_command, command_name, args, completer)
+            if command_name.upper() == "MONITOR":
+                logger.info("monitor")
+                print_formatted_text(redis_resp, style=STYLE)
+                try:
+                    self.monitor()
+                except KeyboardInterrupt:
+                    return
         except Exception as e:
             logger.exception(e)
             return render_error(str(e))

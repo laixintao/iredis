@@ -119,23 +119,23 @@ server,COMMAND COUNT,command,render_int
 server,COMMAND GETKEYS,command_any,render_list
 server,COMMAND INFO,command_commandname,render_list
 server,CONFIG GET,command_parameter,render_nested_pair
-server,CONFIG RESETSTAT,command_pass,
-server,CONFIG REWRITE,command_pass,
+server,CONFIG RESETSTAT,command,render_simple_string
+server,CONFIG REWRITE,command,render_simple_string
 server,CONFIG SET,command_parameter_value,render_simple_string
 server,DBSIZE,command,render_int
-server,DEBUG OBJECT,command_pass,
-server,DEBUG SEGFAULT,command_pass,
+server,DEBUG OBJECT,command_key,render_simple_string
+server,DEBUG SEGFAULT,command,render_simple_string
 server,FLUSHALL,command_asyncx,render_simple_string
 server,FLUSHDB,command_asyncx,render_simple_string
 server,INFO,command,render_bulk_string_decode
 server,LASTSAVE,command,render_unixtime
 server,MEMORY DOCTOR,command,render_bulk_string_decode
 server,MEMORY HELP,command,render_list
-server,MEMORY MALLOC-STATS,command_pass,
+server,MEMORY MALLOC-STATS,command,render_bulk_string_decode
 server,MEMORY PURGE,command,render_simple_string
 server,MEMORY STATS,command,render_nested_pair
 server,MEMORY USAGE,command_key_samples_count,render_int
-server,MONITOR,command_pass,
+server,MONITOR,command,render_simple_string
 server,REPLICAOF,command_any,render_simple_string
 server,ROLE,command,
 server,SAVE,command,render_simple_string
