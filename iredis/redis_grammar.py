@@ -38,7 +38,7 @@ CONST = {
     "yes": "YES NO",
     "migratechoice": "COPY REPLACE",
     "auth": "AUTH",
-    "const_keys": "KEYS"
+    "const_keys": "KEYS",
 }
 
 

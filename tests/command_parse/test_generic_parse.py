@@ -132,7 +132,7 @@ def test_scan(judge_command):
 
 def test_migrate(judge_command):
     judge_command(
-        "MIGRATE 192.168.1.34 6379 \" \" 0 5000 KEYS key1 key2 key3",
+        'MIGRATE 192.168.1.34 6379 " " 0 5000 KEYS key1 key2 key3',
         {
             "command_migrate": "MIGRATE",
             "host": "192.168.1.34",
