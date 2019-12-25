@@ -221,7 +221,7 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_offset_value>({t['command_key_offset_value']}))
                                                        \s+ {KEY}     \s+ {OFFSET} \s+ {VALUE}         \s*)|
 (\s*  (?P<command_key_field_value>({t['command_key_field_value']}))
-                                                       \s+ {KEY}     \s+ {FIELD} \s+ {VALUE}         \s*)|
+                                                       \s+ {KEY}     (\s+ {FIELD} \s+ {VALUE})+       \s*)|
 (\s*  (?P<command_key_offset_bit>({t['command_key_offset_bit']}))
                                                        \s+ {KEY}     \s+ {OFFSET} \s+ {BIT}           \s*)|
 (\s*  (?P<command_key_offset>({t['command_key_offset']}))  \s+ {KEY}  \s+ {OFFSET}                    \s*)|
