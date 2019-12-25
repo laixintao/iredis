@@ -18,6 +18,8 @@ CONST = {
     "resetchoice": "HARD SOFT",
     "match": "MATCH",
     "count_const": "COUNT",
+    "const_store": "STORE",
+    "const_storedist": "STOREDIST",
     "type_const": "TYPE",
     "type": "string list set zset hash stream",
     "position_choice": "BEFORE AFTER",
@@ -41,6 +43,9 @@ CONST = {
     "const_keys": "KEYS",
     "object": "REFCOUNT ENCODING IDLETIME FREQ HELP",
     "subrestore": "REPLACE ABSTTL IDLETIME FREQ",
+    "distunit": "m km ft mi",
+    "geochoice": "WITHCOORD WITHDIST WITHHASH",
+    "order": "ASC DESC",
 }
 
 
@@ -80,6 +85,8 @@ COUNT = fr"(?P<count>{NNUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 BIT = r"(?P<bit>0|1)"
 FLOAT = fr"(?P<float>{_FLOAT})"
+LONGITUDE = fr"(?P<longitude>{_FLOAT})"
+LATITUDE = fr"(?P<latitude>{_FLOAT})"
 CURSOR = fr"(?P<cursor>{NUM})"
 PARAMETER = fr"(?P<parameter>{VALID_TOKEN})"
 # IP re copied from:
@@ -153,6 +160,12 @@ AUTH = fr"(?P<auth>{c('auth')})"
 CONST_KEYS = fr"(?P<const_keys>{c('const_keys')})"
 OBJECT = fr"(?P<object>{c('object')})"
 SUBRESTORE = fr"(?P<subrestore>{c('subrestore')})"
+DISTUNIT = fr"(?P<distunit>{c('distunit')})"
+GEOCHOICE = fr"(?P<geochoice>{c('geochoice')})"
+ORDER = fr"(?P<order>{c('order')})"
+CONST_STORE = fr"(?P<const_store>{c('const_store')})"
+CONST_STOREDIST = fr"(?P<const_storedist>{c('const_storedist')})"
+
 
 REDIS_COMMANDS = fr"""
 (\s*  (?P<command_commandname>({t['command_commandname']}))        \s+ {COMMANDNAME}                  \s*)|
@@ -221,7 +234,7 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_key_offset_value>({t['command_key_offset_value']}))
                                                        \s+ {KEY}     \s+ {OFFSET} \s+ {VALUE}         \s*)|
 (\s*  (?P<command_key_field_value>({t['command_key_field_value']}))
-                                                       \s+ {KEY}     \s+ {FIELD} \s+ {VALUE}         \s*)|
+                                                       \s+ {KEY}     (\s+ {FIELD} \s+ {VALUE})+       \s*)|
 (\s*  (?P<command_key_offset_bit>({t['command_key_offset_bit']}))
                                                        \s+ {KEY}     \s+ {OFFSET} \s+ {BIT}           \s*)|
 (\s*  (?P<command_key_offset>({t['command_key_offset']}))  \s+ {KEY}  \s+ {OFFSET}                    \s*)|
@@ -244,6 +257,10 @@ REDIS_COMMANDS = fr"""
                                                        (\s+ {START})?         (\s+ {END})?            \s*)|
 (\s*  (?P<command_key_members>({t['command_key_members']}))
                                                        \s+ {KEY}    \s+ {MEMBERS}                     \s*)|
+(\s*  (?P<command_geodist>({t['command_geodist']}))
+      \s+ {KEY}    \s+ {MEMBER} \s+ {MEMBER} (\s+ {DISTUNIT})?                                        \s*)|
+(\s*  (?P<command_key_longitude_latitude_members>({t['command_key_longitude_latitude_members']}))
+      \s+ {KEY}    (\s+ {LONGITUDE} \s+ {LATITUDE} \s {MEMBER})+                                      \s*)|
 (\s*  (?P<command_destination_keys>({t['command_destination_keys']}))
                                                        \s+ {DESTINATION}    \s+ {KEYS}                \s*)|
 (\s*  (?P<command_object_key>({t['command_object_key']}))
@@ -300,6 +317,20 @@ REDIS_COMMANDS = fr"""
     (\s+ {MIGRATECHOICE})?
     (\s+ {AUTH} \s+ {PASSWORD})?
     (\s+ {CONST_KEYS} \s+ {KEYS})?                                                                   \s*)|
+(\s*  (?P<command_radius>({t['command_radius']})) \s+ {KEY} \s+  {LONGITUDE} \s+ {LATITUDE}
+    \s+ {FLOAT} \s+ {DISTUNIT}
+    (\s+ {GEOCHOICE})*
+    (\s+ {COUNT_CONST} \s+ {COUNT})?
+    (\s+ {ORDER})?
+    (\s+ {CONST_STORE} \s+ {KEY})?
+    (\s+ {CONST_STOREDIST} \s+ {KEY})?  \s*)|
+(\s*  (?P<command_georadiusbymember>({t['command_georadiusbymember']})) \s+ {KEY} \s+ {MEMBER}
+    \s+ {FLOAT} \s+ {DISTUNIT}
+    (\s+ {GEOCHOICE})*
+    (\s+ {COUNT_CONST} \s+ {COUNT})?
+    (\s+ {ORDER})?
+    (\s+ {CONST_STORE} \s+ {KEY})?
+    (\s+ {CONST_STOREDIST} \s+ {KEY})?  \s*)|
 (\s*  (?P<command_restore>({t['command_restore']})) \s+ {KEY} \s+  {TIMEOUT} \s+ {VALUE}
     (\s+ {SUBRESTORE} \s+ {SECOND})?                                                                 \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
