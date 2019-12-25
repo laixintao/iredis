@@ -41,6 +41,7 @@ CONST = {
     "const_keys": "KEYS",
     "object": "REFCOUNT ENCODING IDLETIME FREQ HELP",
     "subrestore": "REPLACE ABSTTL IDLETIME FREQ",
+    "distunit": "m km ft mi",
 }
 
 
@@ -155,6 +156,7 @@ AUTH = fr"(?P<auth>{c('auth')})"
 CONST_KEYS = fr"(?P<const_keys>{c('const_keys')})"
 OBJECT = fr"(?P<object>{c('object')})"
 SUBRESTORE = fr"(?P<subrestore>{c('subrestore')})"
+DISTUNIT = fr"(?P<distunit>{c('distunit')})"
 
 REDIS_COMMANDS = fr"""
 (\s*  (?P<command_commandname>({t['command_commandname']}))        \s+ {COMMANDNAME}                  \s*)|
@@ -246,6 +248,8 @@ REDIS_COMMANDS = fr"""
                                                        (\s+ {START})?         (\s+ {END})?            \s*)|
 (\s*  (?P<command_key_members>({t['command_key_members']}))
                                                        \s+ {KEY}    \s+ {MEMBERS}                     \s*)|
+(\s*  (?P<command_geodist>({t['command_geodist']}))
+      \s+ {KEY}    \s+ {MEMBER} \s+ {MEMBER} (\s+ {DISTUNIT})?                                        \s*)|
 (\s*  (?P<command_key_longitude_latitude_members>({t['command_key_longitude_latitude_members']}))
       \s+ {KEY}    (\s+ {LONGITUDE} \s+ {LATITUDE} \s {MEMBER})+                                      \s*)|
 (\s*  (?P<command_destination_keys>({t['command_destination_keys']}))
