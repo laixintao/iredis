@@ -136,7 +136,7 @@ def compile_grammar_bg(session):
         time.sleep(1)
         config.compiling = COMPILING_DONE
 
-    # set daemon=True, when main thread exit, this compiling thread should 
+    # set daemon=True, when main thread exit, this compiling thread should
     # exit as well.
     compiling_thread = threading.Thread(
         target=compile_and_patch, args=(session,), daemon=True
