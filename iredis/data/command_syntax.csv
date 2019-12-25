@@ -50,7 +50,7 @@ generic,TTL,command_key,render_int
 generic,TYPE,command_key,render_bulk_string
 generic,UNLINK,command_keys,render_int
 generic,WAIT,command_count_timeout,render_int
-geo,GEOADD,command_pass,
+geo,GEOADD,command_key_longitude_latitude_members,render_int
 geo,GEODIST,command_pass,
 geo,GEOHASH,command_pass,
 geo,GEOPOS,command_pass,

@@ -80,6 +80,8 @@ COUNT = fr"(?P<count>{NNUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 BIT = r"(?P<bit>0|1)"
 FLOAT = fr"(?P<float>{_FLOAT})"
+LONGITUDE = fr"(?P<longitude>{_FLOAT})"
+LATITUDE = fr"(?P<latitude>{_FLOAT})"
 CURSOR = fr"(?P<cursor>{NUM})"
 PARAMETER = fr"(?P<parameter>{VALID_TOKEN})"
 # IP re copied from:
@@ -244,6 +246,8 @@ REDIS_COMMANDS = fr"""
                                                        (\s+ {START})?         (\s+ {END})?            \s*)|
 (\s*  (?P<command_key_members>({t['command_key_members']}))
                                                        \s+ {KEY}    \s+ {MEMBERS}                     \s*)|
+(\s*  (?P<command_key_longitude_latitude_members>({t['command_key_longitude_latitude_members']}))
+      \s+ {KEY}    (\s+ {LONGITUDE} \s+ {LATITUDE} \s {MEMBER})+                                      \s*)|
 (\s*  (?P<command_destination_keys>({t['command_destination_keys']}))
                                                        \s+ {DESTINATION}    \s+ {KEYS}                \s*)|
 (\s*  (?P<command_object_key>({t['command_object_key']}))
