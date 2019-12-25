@@ -84,7 +84,7 @@ def repl(client, session, start_time):
             continue
         except EOFError:
             print("Goodbye!")
-            os._exit(0)
+            sys.exit()
         command = command.strip()
         logger.info(f"[Command] {command}")
 
