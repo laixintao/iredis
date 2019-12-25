@@ -324,7 +324,13 @@ REDIS_COMMANDS = fr"""
     (\s+ {ORDER})?
     (\s+ {CONST_STORE} \s+ {KEY})?
     (\s+ {CONST_STOREDIST} \s+ {KEY})?  \s*)|
-
+(\s*  (?P<command_georadiusbymember>({t['command_georadiusbymember']})) \s+ {KEY} \s+ {MEMBER}
+    \s+ {FLOAT} \s+ {DISTUNIT}
+    (\s+ {GEOCHOICE})*
+    (\s+ {COUNT_CONST} \s+ {COUNT})?
+    (\s+ {ORDER})?
+    (\s+ {CONST_STORE} \s+ {KEY})?
+    (\s+ {CONST_STOREDIST} \s+ {KEY})?  \s*)|
 (\s*  (?P<command_restore>({t['command_restore']})) \s+ {KEY} \s+  {TIMEOUT} \s+ {VALUE}
     (\s+ {SUBRESTORE} \s+ {SECOND})?                                                                 \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
