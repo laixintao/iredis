@@ -54,6 +54,7 @@ geo,GEOADD,command_key_longitude_latitude_members,render_int
 geo,GEODIST,command_geodist,render_bulk_string
 geo,GEOHASH,command_key_members,render_list
 geo,GEOPOS,command_key_members,render_list
+geo,GEORADIUS,command_radius,render_list_or_string
 geo,GEORADIUSBYMEMBER,command_pass,
 hash,HDEL,command_key_fields,render_int
 hash,HEXISTS,command_key_field,render_int

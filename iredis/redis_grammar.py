@@ -317,6 +317,14 @@ REDIS_COMMANDS = fr"""
     (\s+ {MIGRATECHOICE})?
     (\s+ {AUTH} \s+ {PASSWORD})?
     (\s+ {CONST_KEYS} \s+ {KEYS})?                                                                   \s*)|
+(\s*  (?P<command_radius>({t['command_radius']})) \s+ {KEY} \s+  {LONGITUDE} \s+ {LATITUDE}
+    \s+ {FLOAT} \s+ {DISTUNIT}
+    (\s+ {GEOCHOICE})*
+    (\s+ {COUNT_CONST} \s+ {COUNT})?
+    (\s+ {ORDER})?
+    (\s+ {CONST_STORE} \s+ {KEY})?
+    (\s+ {CONST_STOREDIST} \s+ {KEY})?  \s*)|
+
 (\s*  (?P<command_restore>({t['command_restore']})) \s+ {KEY} \s+  {TIMEOUT} \s+ {VALUE}
     (\s+ {SUBRESTORE} \s+ {SECOND})?                                                                 \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
