@@ -18,6 +18,8 @@ CONST = {
     "resetchoice": "HARD SOFT",
     "match": "MATCH",
     "count_const": "COUNT",
+    "const_store": "STORE",
+    "const_storedist": "STOREDIST",
     "type_const": "TYPE",
     "type": "string list set zset hash stream",
     "position_choice": "BEFORE AFTER",
@@ -42,6 +44,8 @@ CONST = {
     "object": "REFCOUNT ENCODING IDLETIME FREQ HELP",
     "subrestore": "REPLACE ABSTTL IDLETIME FREQ",
     "distunit": "m km ft mi",
+    "geochoice": "WITHCOORD WITHDIST WITHHASH",
+    "order": "ASC DESC",
 }
 
 
@@ -157,6 +161,11 @@ CONST_KEYS = fr"(?P<const_keys>{c('const_keys')})"
 OBJECT = fr"(?P<object>{c('object')})"
 SUBRESTORE = fr"(?P<subrestore>{c('subrestore')})"
 DISTUNIT = fr"(?P<distunit>{c('distunit')})"
+GEOCHOICE = fr"(?P<geochoice>{c('geochoice')})"
+ORDER = fr"(?P<order>{c('order')})"
+CONST_STORE = fr"(?P<const_store>{c('const_store')})"
+CONST_STOREDIST = fr"(?P<const_storedist>{c('const_storedist')})"
+
 
 REDIS_COMMANDS = fr"""
 (\s*  (?P<command_commandname>({t['command_commandname']}))        \s+ {COMMANDNAME}                  \s*)|
@@ -308,6 +317,14 @@ REDIS_COMMANDS = fr"""
     (\s+ {MIGRATECHOICE})?
     (\s+ {AUTH} \s+ {PASSWORD})?
     (\s+ {CONST_KEYS} \s+ {KEYS})?                                                                   \s*)|
+(\s*  (?P<command_radius>({t['command_radius']})) \s+ {KEY} \s+  {LONGITUDE} \s+ {LATITUDE}
+    \s+ {FLOAT} \s+ {DISTUNIT}
+    (\s+ {GEOCHOICE})*
+    (\s+ {COUNT_CONST} \s+ {COUNT})?
+    (\s+ {ORDER})?
+    (\s+ {CONST_STORE} \s+ {KEY})?
+    (\s+ {CONST_STOREDIST} \s+ {KEY})?  \s*)|
+
 (\s*  (?P<command_restore>({t['command_restore']})) \s+ {KEY} \s+  {TIMEOUT} \s+ {VALUE}
     (\s+ {SUBRESTORE} \s+ {SECOND})?                                                                 \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
