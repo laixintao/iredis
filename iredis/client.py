@@ -167,6 +167,7 @@ class Client:
             based on redis response. eg: update key completer after ``keys``
             raw_command
         """
+        logger.info("sendcommand....")
         command_name = ""
         try:
             command_name, args = split_command_args(raw_command, all_commands)
@@ -174,22 +175,25 @@ class Client:
             if command_name.upper() in CLIENT_COMMANDS:
                 redis_resp = self.client_execute_command(command_name, *args)
                 yield redis_resp
+                logger.info("is client")
                 return
+            logger.info("now hook")
             self.pre_hook(raw_command, command_name, args, completer)
+            logger.info("now execute")
             redis_resp = self.execute_command_and_read_response(
                 completer, command_name, *args
             )
             self.after_hook(raw_command, command_name, args, completer)
+            logger.info("done")
             yield redis_resp
             if command_name.upper() == "MONITOR":
                 try:
                     yield from self.monitor()
                 except KeyboardInterrupt:
-                    return
+                    pass
         except Exception as e:
             logger.exception(e)
             yield render_error(str(e))
-            return
         finally:
             config.withscores = False
 
