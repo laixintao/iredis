@@ -156,11 +156,9 @@ class Client:
         This command need to read from a stream resp, so
         it's different
         """
-        # FIXME maybe need to make this a generator, use yield
-        # for pubsub and stream
         while 1:
             response = self.connection.read_response()
-            print(response)
+            yield response
 
     def send_command(self, raw_command, completer):
         """
@@ -177,7 +175,8 @@ class Client:
             # if raw_command is not supposed to send to server
             if command_name.upper() in CLIENT_COMMANDS:
                 redis_resp = self.client_execute_command(command_name, *args)
-                return redis_resp
+                yield redis_resp
+                return
             self.pre_hook(raw_command, command_name, args, completer)
             redis_resp = self.execute_command_and_read_response(
                 completer, command_name, *args
@@ -187,15 +186,17 @@ class Client:
                 logger.info("monitor")
                 print_formatted_text(redis_resp, style=STYLE)
                 try:
-                    self.monitor()
+                    yield from self.monitor()
                 except KeyboardInterrupt:
                     return
         except Exception as e:
             logger.exception(e)
-            return render_error(str(e))
+            yield render_error(str(e))
+            return
         finally:
             config.withscores = False
-        return redis_resp
+        yield redis_resp
+        return
 
     def after_hook(self, command, command_name, args, completer):
         # === After hook ===

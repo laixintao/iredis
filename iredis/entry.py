@@ -93,16 +93,14 @@ def repl(client, session, start_time):
             continue
 
         try:
-            answer = client.send_command(command, session.completer)
+            answers = client.send_command(command, session.completer)
+            for answer in answers:
+                write_result(answer)
         # Error with previous command or exception
         except Exception as e:
             logger.exception(e)
             # TODO red error color
             print("(error)", str(e))
-
-        # Fine with answer
-        else:
-            write_result(answer)
 
 
 RAW_HELP = """
