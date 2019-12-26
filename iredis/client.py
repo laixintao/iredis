@@ -9,7 +9,6 @@ import redis
 from redis.connection import Connection
 from redis.exceptions import TimeoutError, ConnectionError
 from prompt_toolkit.formatted_text import FormattedText
-from prompt_toolkit import print_formatted_text
 
 from . import renders
 from . import markdown
@@ -21,7 +20,6 @@ from .utils import compose_command_syntax
 from .renders import render_error
 from .completers import LatestUsedFirstWordCompleter
 from .exceptions import NotRedisCommand
-from .style import STYLE
 
 logger = logging.getLogger(__name__)
 CLIENT_COMMANDS = ["HELP"]
@@ -182,9 +180,8 @@ class Client:
                 completer, command_name, *args
             )
             self.after_hook(raw_command, command_name, args, completer)
+            yield redis_resp
             if command_name.upper() == "MONITOR":
-                logger.info("monitor")
-                print_formatted_text(redis_resp, style=STYLE)
                 try:
                     yield from self.monitor()
                 except KeyboardInterrupt:
@@ -195,8 +192,6 @@ class Client:
             return
         finally:
             config.withscores = False
-        yield redis_resp
-        return
 
     def after_hook(self, command, command_name, args, completer):
         # === After hook ===
