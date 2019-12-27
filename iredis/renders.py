@@ -250,7 +250,8 @@ def render_string_or_int(text, completer=None):
 
 
 def render_error(error_msg):
-    # FIXME raw
+    if config.raw:
+        return error_msg
     text = _ensure_str(error_msg)
     return FormattedText([("class:type", "(error) "), ("class:error", text)])
 
@@ -260,7 +261,8 @@ def render_simple_string(text, completer):
     If response is b'OK', render ok with success color.
     else render message with Error color.
     """
-    # FIXME raw
+    if config.raw:
+        return text
     if text is None:
         return NIL
     text = _ensure_str(text)

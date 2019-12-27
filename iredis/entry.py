@@ -36,7 +36,7 @@ def greetings():
     home_page = "Home:   https://iredis.io"
     issues = "Issues: https://iredis.io/issues"
     display = "\n".join([iredis_version, server_version, home_page, issues])
-    write_result(display)
+    write_result(display.encode())
 
 
 def print_help_msg(command):
@@ -49,6 +49,7 @@ def write_result(text):
     :param text: is_raw: bytes, not raw: FormattedText
     :is_raw: bool
     """
+    logger.info(f"write: {text}")
     if config.raw:
         sys.stdout.buffer.write(text)
         sys.stdout.write("\n")
