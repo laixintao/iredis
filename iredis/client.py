@@ -182,6 +182,7 @@ class Client:
             self.after_hook(raw_command, command_name, args, completer)
             yield redis_resp
             if command_name.upper() == "MONITOR":
+                # TODO special render for monitor
                 try:
                     yield from self.monitor()
                 except KeyboardInterrupt:

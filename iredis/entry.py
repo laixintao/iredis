@@ -36,7 +36,9 @@ def greetings():
     home_page = "Home:   https://iredis.io"
     issues = "Issues: https://iredis.io/issues"
     display = "\n".join([iredis_version, server_version, home_page, issues])
-    write_result(display.encode())
+    if config.raw:
+        display = display.encode()
+    write_result(display)
 
 
 def print_help_msg(command):
