@@ -175,16 +175,12 @@ class Client:
             if command_name.upper() in CLIENT_COMMANDS:
                 redis_resp = self.client_execute_command(command_name, *args)
                 yield redis_resp
-                logger.info("is client")
                 return
-            logger.info("now hook")
             self.pre_hook(raw_command, command_name, args, completer)
-            logger.info("now execute")
             redis_resp = self.execute_command_and_read_response(
                 completer, command_name, *args
             )
             self.after_hook(raw_command, command_name, args, completer)
-            logger.info("done")
             yield redis_resp
             if command_name.upper() == "MONITOR":
                 try:
