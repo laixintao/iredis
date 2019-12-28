@@ -17,7 +17,7 @@ from .config import config
 from .commands_csv_loader import all_commands, command2callback, commands_summary
 from .utils import nativestr, split_command_args, _strip_quote_args
 from .utils import compose_command_syntax
-from .renders import render_error
+from .renders import render_error, render_bulk_string_decode
 from .completers import LatestUsedFirstWordCompleter
 from .exceptions import NotRedisCommand
 
@@ -130,7 +130,7 @@ class Client:
             callback = self.callbacks[callback_name]
             rendered = callback(response, completer)
         # FIXME
-        # not implemented command, use no transaction
+        # not implemented command, use no conversion
         # this `else` should be deleted finally
         else:
             rendered = response
@@ -156,7 +156,7 @@ class Client:
         """
         while 1:
             response = self.connection.read_response()
-            yield response
+            yield render_bulk_string_decode(response)
 
     def send_command(self, raw_command, completer):
         """
@@ -167,7 +167,6 @@ class Client:
             based on redis response. eg: update key completer after ``keys``
             raw_command
         """
-        logger.info("sendcommand....")
         command_name = ""
         try:
             command_name, args = split_command_args(raw_command, all_commands)
