@@ -196,13 +196,14 @@ def main():
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():
             logger.debug(f"[Command stdin] {line}")
-            answer = client.send_command(line, None)
-            write_result(answer)
+            for answer in client.send_command(line, None):
+                write_result(answer)
         return
 
     if ctx.params["cmd"]:  # no interactive mode
-        answer = client.send_command(" ".join(ctx.params["cmd"]), None)
-        write_result(answer)
+        answers = client.send_command(" ".join(ctx.params["cmd"]), None)
+        for answer in answers:
+            write_result(answer)
         logger.warning("[OVER] command executed, exit...")
         return
 
