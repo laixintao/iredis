@@ -15,7 +15,7 @@ from iredis.client import Client
 def test_send_command(_input, command_name, expect_args):
     client = Client("127.0.0.1", "6379", None)
     client.execute_command_and_read_response = MagicMock()
-    client.send_command(_input, None)
+    next(client.send_command(_input, None))
     args, kwargs = client.execute_command_and_read_response.call_args
     assert args == (None, command_name, *expect_args)
 
