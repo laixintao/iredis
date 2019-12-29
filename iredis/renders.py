@@ -471,6 +471,8 @@ def render_slowlog(raw, completers=None):
 
     return FormattedText(rendered[:-1])
 
+def render_subscribe(raw, completers=None):
+    return render_list(raw)
 
 # TODO
 # special list render, bzpopmax, key-value pair

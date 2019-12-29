@@ -95,8 +95,8 @@ pubsub,PSUBSCRIBE,command_pass,
 pubsub,PUBLISH,command_channel_message,render_int
 pubsub,PUBSUB,command_pass,
 pubsub,PUNSUBSCRIBE,command_pass,
-pubsub,SUBSCRIBE,command_pass,
-pubsub,UNSUBSCRIBE,command_pass,
+pubsub,SUBSCRIBE,command_channels,render_subscribe
+pubsub,UNSUBSCRIBE,command_channels,render_subscribe
 scripting,EVAL,command_pass,
 scripting,EVALSHA,command_pass,
 scripting,SCRIPT DEBUG,command_pass,

@@ -17,7 +17,7 @@ from .config import config
 from .commands_csv_loader import all_commands, command2callback, commands_summary
 from .utils import nativestr, split_command_args, _strip_quote_args
 from .utils import compose_command_syntax
-from .renders import render_error, render_bulk_string_decode
+from .renders import render_error, render_bulk_string_decode, render_subscribe
 from .completers import LatestUsedFirstWordCompleter
 from .exceptions import NotRedisCommand
 
@@ -158,7 +158,18 @@ class Client:
             response = self.connection.read_response()
             yield render_bulk_string_decode(response)
 
-    def send_command(self, raw_command, completer):
+    def subscribing(self):
+        while 1:
+            response = self.connection.read_response()
+            yield render_subscribe(response)
+
+    def unsubscribing(self):
+        "unsubscribe from all channels"
+        self.connection.send_command("UNSUBSCRIBE")
+        response = self.connection.read_response()
+        yield render_subscribe(response)
+
+    def send_command(self, raw_command, completer=None):
         """
         Send raw_command to redis-server, return parsed response.
 
@@ -187,6 +198,11 @@ class Client:
                     yield from self.monitor()
                 except KeyboardInterrupt:
                     pass
+            elif command_name.upper() == "SUBSCRIBE":  # enter subscribe mode
+                try:
+                    yield from self.subscribing()
+                except KeyboardInterrupt:
+                    yield from self.unsubscribing()
         except Exception as e:
             logger.exception(e)
             yield render_error(str(e))

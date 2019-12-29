@@ -335,5 +335,6 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_restore>({t['command_restore']})) \s+ {KEY} \s+  {TIMEOUT} \s+ {VALUE}
     (\s+ {SUBRESTORE} \s+ {SECOND})?                                                                 \s*)|
 (\s*  (?P<command_channel_message>({t['command_channel_message']})) \s+ {CHANNEL} \s+  {MESSAGE}     \s*)|
+(\s*  (?P<command_channels>({t['command_channels']})) (\s+ {CHANNEL})+                               \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
 """
