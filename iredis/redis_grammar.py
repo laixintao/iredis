@@ -83,6 +83,7 @@ MEMBER = fr"(?P<member>{VALID_TOKEN})"
 MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 COUNT = fr"(?P<count>{NNUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
+CHANNEL = fr"(?P<channel>{VALID_TOKEN})"
 BIT = r"(?P<bit>0|1)"
 FLOAT = fr"(?P<float>{_FLOAT})"
 LONGITUDE = fr"(?P<longitude>{_FLOAT})"
@@ -333,5 +334,6 @@ REDIS_COMMANDS = fr"""
     (\s+ {CONST_STOREDIST} \s+ {KEY})?  \s*)|
 (\s*  (?P<command_restore>({t['command_restore']})) \s+ {KEY} \s+  {TIMEOUT} \s+ {VALUE}
     (\s+ {SUBRESTORE} \s+ {SECOND})?                                                                 \s*)|
+(\s*  (?P<command_channel_message>({t['command_channel_message']})) \s+ {CHANNEL} \s+  {MESSAGE}     \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
 """

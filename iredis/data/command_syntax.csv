@@ -92,7 +92,7 @@ list,RPOPLPUSH,command_key_newkey,render_bulk_string
 list,RPUSH,command_key_values,render_int
 list,RPUSHX,command_key_value,render_int
 pubsub,PSUBSCRIBE,command_pass,
-pubsub,PUBLISH,command_pass,
+pubsub,PUBLISH,command_channel_message,render_int
 pubsub,PUBSUB,command_pass,
 pubsub,PUNSUBSCRIBE,command_pass,
 pubsub,SUBSCRIBE,command_pass,
