@@ -46,6 +46,7 @@ CONST = {
     "distunit": "m km ft mi",
     "geochoice": "WITHCOORD WITHDIST WITHHASH",
     "order": "ASC DESC",
+    "pubsubcmd": "CHANNELS NUMSUB NUMPAT",
 }
 
 
@@ -166,6 +167,7 @@ GEOCHOICE = fr"(?P<geochoice>{c('geochoice')})"
 ORDER = fr"(?P<order>{c('order')})"
 CONST_STORE = fr"(?P<const_store>{c('const_store')})"
 CONST_STOREDIST = fr"(?P<const_storedist>{c('const_storedist')})"
+PUBSUBCMD = fr"(?P<pubsubcmd>{c('pubsubcmd')})"
 
 
 REDIS_COMMANDS = fr"""
@@ -334,6 +336,8 @@ REDIS_COMMANDS = fr"""
     (\s+ {CONST_STOREDIST} \s+ {KEY})?  \s*)|
 (\s*  (?P<command_restore>({t['command_restore']})) \s+ {KEY} \s+  {TIMEOUT} \s+ {VALUE}
     (\s+ {SUBRESTORE} \s+ {SECOND})?                                                                 \s*)|
+(\s*  (?P<command_pubsubcmd_channels>({t['command_pubsubcmd_channels']}))
+    \s+ {PUBSUBCMD} (\s+ {CHANNEL})+                                                                 \s*)|
 (\s*  (?P<command_channel_message>({t['command_channel_message']})) \s+ {CHANNEL} \s+  {MESSAGE}     \s*)|
 (\s*  (?P<command_channels>({t['command_channels']})) (\s+ {CHANNEL})+                               \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)

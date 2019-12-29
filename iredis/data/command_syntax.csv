@@ -91,10 +91,10 @@ list,RPOP,command_key,render_bulk_string
 list,RPOPLPUSH,command_key_newkey,render_bulk_string
 list,RPUSH,command_key_values,render_int
 list,RPUSHX,command_key_value,render_int
-pubsub,PSUBSCRIBE,command_pass,
+pubsub,PSUBSCRIBE,command_channels,render_subscribe
 pubsub,PUBLISH,command_channel_message,render_int
-pubsub,PUBSUB,command_pass,
-pubsub,PUNSUBSCRIBE,command_pass,
+pubsub,PUBSUB,command_pubsubcmd_channels,render_list_or_string
+pubsub,PUNSUBSCRIBE,command_channels,render_subscribe
 pubsub,SUBSCRIBE,command_channels,render_subscribe
 pubsub,UNSUBSCRIBE,command_channels,render_subscribe
 scripting,EVAL,command_pass,

@@ -471,8 +471,31 @@ def render_slowlog(raw, completers=None):
 
     return FormattedText(rendered[:-1])
 
+
 def render_subscribe(raw, completers=None):
-    return render_list(raw)
+    """
+    message type;
+    channel;
+    message;
+    see: https://redis.io/topics/pubsub#format-of-pushed-messages
+    """
+    logger.info(raw)
+    if config.raw:
+        return render_list(raw)
+    if raw[1] is None:
+        raw[1] = "all"
+    mtype, *channel, message = _ensure_str(raw)
+    # PUNSUBSCRIBE, 4 args
+    channel = ":".join(channel)
+    return FormattedText(
+        [
+            ("", f"{mtype:<9} from "),  # 9 is len("subscribe")
+            ("class:channel", channel),
+            ("", ": "),  # 9 is len("subscribe")
+            ("class:string", f"{message}"),
+        ]
+    )
+
 
 # TODO
 # special list render, bzpopmax, key-value pair
