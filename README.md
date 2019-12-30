@@ -65,7 +65,7 @@ You can `tail -f iredis.log` to see logs, the log is pretty clear, you can see w
 
 ### Command Reference
 
-There is a full Redis command list in [commands.csv](commands.csv) file, downloaded by:
+There is a full Redis command list in [commands.csv](docs/commands.csv) file, downloaded by:
 
 ```
 python scripts/download_redis_commands.py > data/commands.csv
@@ -73,7 +73,7 @@ python scripts/download_redis_commands.py > data/commands.csv
 
 `commands.csv` is here only for test if redis.io was updated, do not package it into release.
 
-Current implemented commands: [command_syntax.csv](command_syntax.csv).
+Current implemented commands: [command_syntax.csv](iredis/data/command_syntax.csv).
 
 ## Planned Features
 
