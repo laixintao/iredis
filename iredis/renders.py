@@ -250,7 +250,8 @@ def render_string_or_int(text, completer=None):
 
 
 def render_error(error_msg):
-    # FIXME raw
+    if config.raw:
+        return error_msg
     text = _ensure_str(error_msg)
     return FormattedText([("class:type", "(error) "), ("class:error", text)])
 
@@ -260,7 +261,8 @@ def render_simple_string(text, completer):
     If response is b'OK', render ok with success color.
     else render message with Error color.
     """
-    # FIXME raw
+    if config.raw:
+        return text
     if text is None:
         return NIL
     text = _ensure_str(text)
@@ -468,6 +470,31 @@ def render_slowlog(raw, completers=None):
             )
 
     return FormattedText(rendered[:-1])
+
+
+def render_subscribe(raw, completers=None):
+    """
+    message type;
+    channel;
+    message;
+    see: https://redis.io/topics/pubsub#format-of-pushed-messages
+    """
+    logger.info(raw)
+    if config.raw:
+        return render_list(raw)
+    if raw[1] is None:
+        raw[1] = "all"
+    mtype, *channel, message = _ensure_str(raw)
+    # PUNSUBSCRIBE, 4 args
+    channel = ":".join(channel)
+    return FormattedText(
+        [
+            ("", f"{mtype:<9} from "),  # 9 is len("subscribe")
+            ("class:channel", channel),
+            ("", ": "),  # 9 is len("subscribe")
+            ("class:string", f"{message}"),
+        ]
+    )
 
 
 # TODO

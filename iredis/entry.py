@@ -36,6 +36,8 @@ def greetings():
     home_page = "Home:   https://iredis.io"
     issues = "Issues: https://iredis.io/issues"
     display = "\n".join([iredis_version, server_version, home_page, issues])
+    if config.raw:
+        display = display.encode()
     write_result(display)
 
 
@@ -49,6 +51,7 @@ def write_result(text):
     :param text: is_raw: bytes, not raw: FormattedText
     :is_raw: bool
     """
+    logger.info(f"write: {text}")
     if config.raw:
         sys.stdout.buffer.write(text)
         sys.stdout.write("\n")
@@ -93,16 +96,14 @@ def repl(client, session, start_time):
             continue
 
         try:
-            answer = client.send_command(command, session.completer)
+            answers = client.send_command(command, session.completer)
+            for answer in answers:
+                write_result(answer)
         # Error with previous command or exception
         except Exception as e:
             logger.exception(e)
             # TODO red error color
             print("(error)", str(e))
-
-        # Fine with answer
-        else:
-            write_result(answer)
 
 
 RAW_HELP = """
@@ -198,13 +199,14 @@ def main():
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():
             logger.debug(f"[Command stdin] {line}")
-            answer = client.send_command(line, None)
-            write_result(answer)
+            for answer in client.send_command(line, None):
+                write_result(answer)
         return
 
     if ctx.params["cmd"]:  # no interactive mode
-        answer = client.send_command(" ".join(ctx.params["cmd"]), None)
-        write_result(answer)
+        answers = client.send_command(" ".join(ctx.params["cmd"]), None)
+        for answer in answers:
+            write_result(answer)
         logger.warning("[OVER] command executed, exit...")
         return
 

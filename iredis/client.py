@@ -9,7 +9,6 @@ import redis
 from redis.connection import Connection
 from redis.exceptions import TimeoutError, ConnectionError
 from prompt_toolkit.formatted_text import FormattedText
-from prompt_toolkit import print_formatted_text
 
 from . import renders
 from . import markdown
@@ -18,10 +17,9 @@ from .config import config
 from .commands_csv_loader import all_commands, command2callback, commands_summary
 from .utils import nativestr, split_command_args, _strip_quote_args
 from .utils import compose_command_syntax
-from .renders import render_error
+from .renders import render_error, render_bulk_string_decode, render_subscribe
 from .completers import LatestUsedFirstWordCompleter
 from .exceptions import NotRedisCommand
-from .style import STYLE
 
 logger = logging.getLogger(__name__)
 CLIENT_COMMANDS = ["HELP"]
@@ -132,7 +130,7 @@ class Client:
             callback = self.callbacks[callback_name]
             rendered = callback(response, completer)
         # FIXME
-        # not implemented command, use no transaction
+        # not implemented command, use no conversion
         # this `else` should be deleted finally
         else:
             rendered = response
@@ -156,13 +154,22 @@ class Client:
         This command need to read from a stream resp, so
         it's different
         """
-        # FIXME maybe need to make this a generator, use yield
-        # for pubsub and stream
         while 1:
             response = self.connection.read_response()
-            print(response)
+            yield render_bulk_string_decode(response)
 
-    def send_command(self, raw_command, completer):
+    def subscribing(self):
+        while 1:
+            response = self.connection.read_response()
+            yield render_subscribe(response)
+
+    def unsubscribing(self):
+        "unsubscribe from all channels"
+        self.connection.send_command("UNSUBSCRIBE")
+        response = self.connection.read_response()
+        yield render_subscribe(response)
+
+    def send_command(self, raw_command, completer=None):
         """
         Send raw_command to redis-server, return parsed response.
 
@@ -177,25 +184,33 @@ class Client:
             # if raw_command is not supposed to send to server
             if command_name.upper() in CLIENT_COMMANDS:
                 redis_resp = self.client_execute_command(command_name, *args)
-                return redis_resp
+                yield redis_resp
+                return
             self.pre_hook(raw_command, command_name, args, completer)
             redis_resp = self.execute_command_and_read_response(
                 completer, command_name, *args
             )
             self.after_hook(raw_command, command_name, args, completer)
+            yield redis_resp
             if command_name.upper() == "MONITOR":
-                logger.info("monitor")
-                print_formatted_text(redis_resp, style=STYLE)
+                # TODO special render for monitor
                 try:
-                    self.monitor()
+                    yield from self.monitor()
                 except KeyboardInterrupt:
-                    return
+                    pass
+            elif command_name.upper() in [
+                "SUBSCRIBE",
+                "PSUBSCRIBE",
+            ]:  # enter subscribe mode
+                try:
+                    yield from self.subscribing()
+                except KeyboardInterrupt:
+                    yield from self.unsubscribing()
         except Exception as e:
             logger.exception(e)
-            return render_error(str(e))
+            yield render_error(str(e))
         finally:
             config.withscores = False
-        return redis_resp
 
     def after_hook(self, command, command_name, args, completer):
         # === After hook ===

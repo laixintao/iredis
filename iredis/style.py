@@ -58,6 +58,7 @@ STYLE_DICT = {
     "queued": "#32CD32 bold",
     "error": "#ff005f bold",
     "type": "#888",
+    "channel": "#888",  # FIXME
     # colors below copied from mycli project, ~~love~~
     # bottom-toolbar
     "bottom-toolbar": "bg:#222222 #aaaaaa",
