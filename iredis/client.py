@@ -198,7 +198,10 @@ class Client:
                     yield from self.monitor()
                 except KeyboardInterrupt:
                     pass
-            elif command_name.upper() in ["SUBSCRIBE", "PSUBSCRIBE"]:  # enter subscribe mode
+            elif command_name.upper() in [
+                "SUBSCRIBE",
+                "PSUBSCRIBE",
+            ]:  # enter subscribe mode
                 try:
                     yield from self.subscribing()
                 except KeyboardInterrupt:
