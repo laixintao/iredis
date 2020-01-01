@@ -98,7 +98,7 @@ pubsub,PUNSUBSCRIBE,command_channels,render_subscribe
 pubsub,SUBSCRIBE,command_channels,render_subscribe
 pubsub,UNSUBSCRIBE,command_channels,render_subscribe
 scripting,EVAL,command_lua_any,render_list_or_string
-scripting,EVALSHA,command_pass,
+scripting,EVALSHA,command_any,render_list_or_string
 scripting,SCRIPT DEBUG,command_pass,
 scripting,SCRIPT EXISTS,command_pass,
 scripting,SCRIPT FLUSH,command_pass,
