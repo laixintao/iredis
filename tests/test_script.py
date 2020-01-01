@@ -15,3 +15,12 @@ def test_eval(judge_command):
             "any": "2 key1 key2 first second",
         },
     )
+
+
+def test_scriptdebug(judge_command):
+    judge_command(
+        "SCRIPT DEBUG YES", {"command_scriptdebug": "SCRIPT DEBUG", "scriptdebug": "YES"}
+    )
+    judge_command(
+        "SCRIPT DEBUG no", {"command_scriptdebug": "SCRIPT DEBUG", "scriptdebug": "no"}
+    )
