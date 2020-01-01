@@ -1,5 +1,7 @@
 from prompt_toolkit.lexers import SimpleLexer
+from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
+from pygments.lexers.scripting import LuaLexer
 from .redis_grammar import CONST
 
 
@@ -47,6 +49,8 @@ def get_lexer(command_groups, redis_grammar):
         "field": SimpleLexer("class:field"),
         "parameter": SimpleLexer("class:field"),
         "channel": SimpleLexer("class:channel"),
+        "double_lua": PygmentsLexer(LuaLexer),
+        "single_lua": PygmentsLexer(LuaLexer),
     }
 
     lexers_dict.update({key: SimpleLexer("class:const") for key in CONST})

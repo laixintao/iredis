@@ -97,13 +97,13 @@ pubsub,PUBSUB,command_pubsubcmd_channels,render_list_or_string
 pubsub,PUNSUBSCRIBE,command_channels,render_subscribe
 pubsub,SUBSCRIBE,command_channels,render_subscribe
 pubsub,UNSUBSCRIBE,command_channels,render_subscribe
-scripting,EVAL,command_pass,
-scripting,EVALSHA,command_pass,
-scripting,SCRIPT DEBUG,command_pass,
-scripting,SCRIPT EXISTS,command_pass,
-scripting,SCRIPT FLUSH,command_pass,
-scripting,SCRIPT KILL,command_pass,
-scripting,SCRIPT LOAD,command_pass,
+scripting,EVAL,command_lua_any,render_list_or_string
+scripting,EVALSHA,command_any,render_list_or_string
+scripting,SCRIPT DEBUG,command_scriptdebug,render_simple_string
+scripting,SCRIPT EXISTS,command_any,render_list
+scripting,SCRIPT FLUSH,command,render_simple_string
+scripting,SCRIPT KILL,command,render_simple_string
+scripting,SCRIPT LOAD,command_lua_any,render_bulk_string_decode
 server,BGREWRITEAOF,command,render_simple_string
 server,BGSAVE,command,render_simple_string
 server,CLIENT GETNAME,command,render_bulk_string
