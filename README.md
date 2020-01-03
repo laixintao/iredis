@@ -4,7 +4,7 @@
 
 [![CircleCI](https://circleci.com/gh/laixintao/iredis.svg?style=svg)](https://circleci.com/gh/laixintao/iredis)
 [![PyPI version](https://badge.fury.io/py/iredis.svg)](https://badge.fury.io/py/iredis)
-[![Chat on telegram](https://badgen.net/badge/icon/join?icon=telegram&label=telegram usergroup)](https://t.me/iredis_users)
+[![Chat on telegram](https://badgen.net/badge/icon/join?icon=telegram&label=usergroup)](https://t.me/iredis_users)
 [![Open in Cloud Shell](https://badgen.net/badge/run/GoogleCloudShell/blue?icon=terminal)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/laixintao/iredis&cloudshell_print=docs/cloudshell/run-in-docker.txt)
 
 
