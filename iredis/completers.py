@@ -62,6 +62,7 @@ class RedisGrammarCompleter(GrammarCompleter):
         stripped = FakeDocument()
         stripped.text_before_cursor = origin_text.lstrip()
         # Do not complete on spaces, too slow
+        # TODO delete this after using just-in-time compile 
         if not origin_text.strip():
             return []
         return super().get_completions(stripped, complete_event)
