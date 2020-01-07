@@ -78,7 +78,7 @@ def repl(client, session, start_time):
                 "{hostname}> ".format(hostname=str(client)),
                 bottom_toolbar=BottomToolbar(command_holder).render,
                 refresh_interval=_interval,
-                input_processors=[GetCommandProcessor(command_holder)],
+                input_processors=[GetCommandProcessor(command_holder,session)],
                 rprompt=lambda: "<transaction>" if config.transaction else None,
             )
 

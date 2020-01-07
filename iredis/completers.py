@@ -119,21 +119,14 @@ def compile_grammar_bg(session):
     def compile_and_patch(session):
         start_time = time.time()
         logger.debug("[compile] start compile grammer...")
-        redis_grammar = compile(REDIS_COMMANDS)
+        # redis_grammar = compile(REDIS_COMMANDS)
         end_time = time.time()
         logger.debug(f"[compile] Compile finished! Cost: {end_time - start_time}")
 
-        # get lexer
-        lexer = get_lexer(group2commands.keys(), redis_grammar)
-        # get completer
-        completer = get_completer(group2commands, redis_grammar)
-
-        session.completer = completer
-        session.lexer = lexer
         logger.debug("[compile] Patch finished!")
 
-        config.compiling = COMPILING_JUST_FINISH
-        time.sleep(1)
+        # config.compiling = COMPILING_JUST_FINISH
+        # time.sleep(1)
         config.compiling = COMPILING_DONE
 
     # set daemon=True, when main thread exit, this compiling thread should

@@ -4,6 +4,7 @@ command_nodex: x means node?
 import logging
 
 from .commands_csv_loader import group2command_res as t
+from .commands_csv_loader import all_commands
 
 logger = logging.getLogger(__name__)
 CONST = {
@@ -48,6 +49,7 @@ CONST = {
     "order": "ASC DESC",
     "pubsubcmd": "CHANNELS NUMSUB NUMPAT",
     "scriptdebug": "YES NO SYNC",
+    "command": " ".join(all_commands),
 }
 
 
@@ -63,6 +65,7 @@ VALID_TOKEN = r"""(
 ('([^']|\\')*?')     |# with single quotes
 ([^\s"]+)            # without quotes
 )"""
+PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
 VALID_SLOT = r"\d+"  # TODO add range? max value:16384
 VALID_NODE = r"\d+"
 NUM = r"\d+"
@@ -110,7 +113,6 @@ INDEX = r"(?P<index>(1[0-5]|\d))"
 CLIENTID = fr"(?P<clientid>{NUM})"
 SECOND = fr"(?P<second>{NUM})"
 TIMESTAMP = fr"(?P<timestamp>{NUM})"
-PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
 COMMANDNAME = fr"(?P<commandname>[\w -]+)"
 MILLISECOND = fr"(?P<millisecond>{NUM})"
 TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
@@ -173,6 +175,11 @@ CONST_STOREDIST = fr"(?P<const_storedist>{c('const_storedist')})"
 PUBSUBCMD = fr"(?P<pubsubcmd>{c('pubsubcmd')})"
 SCRIPTDEBUG = fr"(?P<scriptdebug>{c('scriptdebug')})"
 
+all_command = "(\s*  (?P<command>([\w -]+))  \s*)"
+NEW_GRAMMAR = {
+    "command_pattern": "(\s*  (?P<command_pattern>({t['command_pattern']}))    \s+ {PATTERN}  \s*)",
+    "command_key": "(\s*  (?P<command_key>({t['command_key']})) \s+ {KEY} \s*)",
+}
 
 REDIS_COMMANDS = fr"""
 (\s*  (?P<command_commandname>({t['command_commandname']}))        \s+ {COMMANDNAME}                  \s*)|
