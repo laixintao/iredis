@@ -67,6 +67,9 @@ class RedisGrammarCompleter(GrammarCompleter):
         return super().get_completions(stripped, complete_event)
 
 
+key_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+member_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+field_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
 def get_completer(group2commands, redis_grammar):
     completer_mapping = {}
     # patch command completer with hint
@@ -81,9 +84,7 @@ def get_completer(group2commands, redis_grammar):
             words, sentence=True, meta_dict=hint
         )
 
-    key_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
-    member_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
-    field_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+
     completer_mapping.update(
         {
             key: WordCompleter(tokens.split(" "), ignore_case=True)

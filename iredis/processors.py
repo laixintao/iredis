@@ -47,9 +47,6 @@ class GetCommandProcessor(Processor):
     def apply_transformation(
         self, transformation_input: TransformationInput
     ) -> Transformation:
-        # 如果能match到一个command，就用特定 command的 syntax
-        # 如果match不到，就用command本身的Enum
-
         input_text = transformation_input.document.text
         if input_text != self.last_text:
             try:
@@ -63,11 +60,11 @@ class GetCommandProcessor(Processor):
                 KEY = fr"(?P<key>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
                 if command == "GET":
                     grammar = compile(
-                        fr"(\s*  (?P<command_pattern>(GET))    \s+ {PATTERN}  \s*)"
+                        fr"(\s*  (?P<command_pattern>(GET))    \s+ {KEY}  \s*)"
                     )
                 else:
                     grammar = compile(
-                        fr"(\s*  (?P<command_key>(KEYS)) \s+ {KEY} \s*)"
+                        fr"(\s*  (?P<command_key>(KEYS)) \s+ {PATTERN} \s*)"
                     )
 
             except InvalidArguments:
