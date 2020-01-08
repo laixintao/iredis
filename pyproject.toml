@@ -33,10 +33,10 @@ exclude=[
 [tool.poetry.dependencies]
 python = "^3.7"
 redis = "^3"
-prompt_toolkit = "^2"
 Pygments = "^2"
 click8 = "^8"
 mistune = "^0.8.4"
+prompt_toolkit = ">=3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5"
