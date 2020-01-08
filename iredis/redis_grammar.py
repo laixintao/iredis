@@ -181,9 +181,18 @@ SCRIPTDEBUG = fr"(?P<scriptdebug>{c('scriptdebug')})"
 COMMAND = "(\s*  (?P<command_pending>[\w -]+))"
 command_grammar = compile(COMMAND)
 
+# xxin is a placeholder, when compile to grammar, it will
+# be replaced to user typed command
 NEW_GRAMMAR = {
-    "command_pattern": fr"(\s*  (?P<command>(<command_name>)) \s+ {PATTERN} \s*)",
-    "command_key": fr"(\s*  (?P<command>(<command_name>)) \s+ {KEY} \s*)",
+    "command_pattern": fr"\s* (?P<command>xxin) \s+ {PATTERN} \s*",
+    "command_key": fr"\s* (?P<command>xxin) \s+ {KEY} \s*",
+    "command_georadiusbymember": fr"""\s* (?P<command>xxin) \s+ {KEY} \s+ {MEMBER}
+        \s+ {FLOAT} \s+ {DISTUNIT}
+        (\s+ {GEOCHOICE})*
+        (\s+ {COUNT_CONST} \s+ {COUNT})?
+        (\s+ {ORDER})?
+        (\s+ {CONST_STORE} \s+ {KEY})?
+        (\s+ {CONST_STOREDIST} \s+ {KEY})?  \s*"""
 }
 compiled_grammar = {}
 
@@ -344,13 +353,6 @@ REDIS_COMMANDS = r"""
     (\s+ {ORDER})?
     (\s+ {CONST_STORE} \s+ {KEY})?
     (\s+ {CONST_STOREDIST} \s+ {KEY})?  \s*)|
-(\s*  (?P<command_georadiusbymember>({t['command_georadiusbymember']})) \s+ {KEY} \s+ {MEMBER}
-    \s+ {FLOAT} \s+ {DISTUNIT}
-    (\s+ {GEOCHOICE})*
-    (\s+ {COUNT_CONST} \s+ {COUNT})?
-    (\s+ {ORDER})?
-    (\s+ {CONST_STORE} \s+ {KEY})?
-    (\s+ {CONST_STOREDIST} \s+ {KEY})?  \s*)|
 (\s*  (?P<command_restore>({t['command_restore']})) \s+ {KEY} \s+  {TIMEOUT} \s+ {VALUE}
     (\s+ {SUBRESTORE} \s+ {SECOND})?                                                                 \s*)|
 (\s*  (?P<command_pubsubcmd_channels>({t['command_pubsubcmd_channels']}))
@@ -375,7 +377,7 @@ def get_command_grammar(command):
     # TODO this should be deleted
     if syntax is None:
         return command_grammar
-    syntax = syntax.replace(r"<command_name>", command)
+    syntax = syntax.replace(r"xxin", command)
 
     logger.info(f"syxtax: {syntax}")
 
