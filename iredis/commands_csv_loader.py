@@ -1,6 +1,6 @@
 import csv
 import json
-import copy
+
 from .utils import timer
 from . import project_path
 
@@ -43,9 +43,7 @@ command2callback, command2syntax = load_command()
 # all redis command strings, in UPPER case
 # NOTE: Must sort by length, to match longest command first
 all_commands = sorted(
-    list(command2callback.keys()) + ["HELP"],
-    key=lambda x: len(x),
-    reverse=True,
+    list(command2callback.keys()) + ["HELP"], key=lambda x: len(x), reverse=True
 )
 commands_summary = load_command_summary()
 timer("[Loader] Finished loading commands.")
