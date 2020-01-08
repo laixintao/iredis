@@ -4,14 +4,16 @@ from prompt_toolkit.layout.processors import (
     Transformation,
     TransformationInput,
 )
+from prompt_toolkit.contrib.regular_languages.compiler import compile
+from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
+from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
+
 from .utils import split_command_args
 from .exceptions import InvalidArguments
 from .commands_csv_loader import all_commands
-from prompt_toolkit.contrib.regular_languages.compiler import compile
-from . import redis_grammar
-from .lexer import get_lexer
-from .commands_csv_loader import group2commands
-from .completers import get_completer
+from .lexer import lexers_mapping
+from .completers import completer_mapping
+from .redis_grammar import get_command_grammar
 
 logger = logging.getLogger(__name__)
 
@@ -28,20 +30,20 @@ class UserInputCommand:
         self.command = None
 
 
-default_grammar = compile(redis_grammar.COMMAND)
-
-
 class GetCommandProcessor(Processor):
     """
     Update Footer display text while user input.
     """
 
     def __init__(self, command_holder, session):
+        # processor will call for internal_refresh, when input_text didn't
+        # change, don't run
         self.last_text = None
         self.session = session
         self.command_holder = command_holder
+        self.default_lexer = session.lexer
+        self.default_completer = session.completer
 
-    # TODO my vim completion has problems with enter choose vim-lsp
     def apply_transformation(
         self, transformation_input: TransformationInput
     ) -> Transformation:
@@ -54,29 +56,27 @@ class GetCommandProcessor(Processor):
                 ('([^']|\\')*?')     |# with single quotes
                 ([^\s"]+)            # without quotes
                 )"""
-                PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
                 KEY = fr"(?P<key>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
                 logger.info(f"command is {command}")
                 if command == "GET":
                     grammar = compile(
                         fr"(\s*  (?P<command_pattern>(GET))    \s+ {KEY}  \s*)"
                     )
-                else:
-                    grammar = default_grammar
 
             except InvalidArguments:
                 self.command_holder.command = None
-                grammar = default_grammar
+                self.session.completer = self.default_completer
+                self.session.lexer = self.default_lexer
 
             else:
                 self.command_holder.command = command.upper()
-            # get lexer
-            lexer = get_lexer(group2commands.keys(), grammar)
-            # get completer
-            completer = get_completer(group2commands, grammar)
+                # compile grammar for this command
+                grammar = get_command_grammar(self.command_holder.command)
+                lexer = GrammarLexer(grammar, lexers=lexers_mapping)
+                completer = GrammarCompleter(grammar, completer_mapping)
 
-            self.session.completer = completer
-            self.session.lexer = lexer
+                self.session.completer = completer
+                self.session.lexer = lexer
 
             self.last_text = input_text
         return Transformation(transformation_input.fragments)

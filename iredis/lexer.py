@@ -1,11 +1,10 @@
 from prompt_toolkit.lexers import SimpleLexer
 from prompt_toolkit.lexers import PygmentsLexer
-from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
 from pygments.lexers.scripting import LuaLexer
 from .redis_grammar import CONST
 
 
-def get_lexer(command_groups, redis_grammar):
+def get_lexer_mapping():
     """
     Input command render color with lexer mapping below
 
@@ -51,9 +50,11 @@ def get_lexer(command_groups, redis_grammar):
         "channel": SimpleLexer("class:channel"),
         "double_lua": PygmentsLexer(LuaLexer),
         "single_lua": PygmentsLexer(LuaLexer),
+        "command": SimpleLexer("class:command"),
     }
 
     lexers_dict.update({key: SimpleLexer("class:const") for key in CONST})
-    lexers_dict.update({key: SimpleLexer("class:command") for key in command_groups})
-    lexer = GrammarLexer(redis_grammar, lexers=lexers_dict)
-    return lexer
+    return lexers_dict
+
+
+lexers_mapping = get_lexer_mapping()

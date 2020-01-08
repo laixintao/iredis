@@ -1,17 +1,9 @@
-import time
-import threading
 import logging
 
-from typing import Iterable
-from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
-from prompt_toolkit.contrib.regular_languages.compiler import compile
 from prompt_toolkit.completion import WordCompleter, FuzzyWordCompleter
-from prompt_toolkit.document import Document
-from prompt_toolkit.completion import Completion, CompleteEvent
 
 from .config import config
-from .redis_grammar import REDIS_COMMANDS, CONST
-from .lexer import get_lexer
+from .redis_grammar import CONST
 from .commands_csv_loader import group2commands, commands_summary, all_commands
 
 
@@ -45,34 +37,7 @@ class LatestUsedFirstWordCompleter(FuzzyWordCompleter):
             self.touch(word)
 
 
-class FakeDocument:
-    pass
-
-
-class RedisGrammarCompleter(GrammarCompleter):
-    """
-    This disable Completer on blank characters, blank char will cause
-    performance issues.
-    """
-
-    def get_completions(
-        self, document: Document, complete_event: CompleteEvent
-    ) -> Iterable[Completion]:
-        origin_text = document.text_before_cursor
-        stripped = FakeDocument()
-        stripped.text_before_cursor = origin_text.lstrip()
-        # Do not complete on spaces, too slow
-        # TODO delete this after using just-in-time compile 
-        if not origin_text.strip():
-            return []
-        return super().get_completions(stripped, complete_event)
-
-
-key_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
-member_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
-field_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
-
-def get_completer(group2commands, redis_grammar):
+def get_completer_mapping():
     completer_mapping = {}
     # patch command completer with hint
     command_hint = {key: info["summary"] for key, info in commands_summary.items()}
@@ -86,13 +51,16 @@ def get_completer(group2commands, redis_grammar):
             words, sentence=True, meta_dict=hint
         )
 
-
     completer_mapping.update(
         {
             key: WordCompleter(tokens.split(" "), ignore_case=True)
             for key, tokens in CONST.items()
         }
     )
+    key_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+    member_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+    field_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+
     completer_mapping.update(
         {
             # all key related completers share the same completer
@@ -108,6 +76,10 @@ def get_completer(group2commands, redis_grammar):
             "fields": field_completer,
         }
     )
-    completer_mapping["command"] = WordCompleter(all_commands, ignore_case=True, sentence=True)
-    completer = RedisGrammarCompleter(redis_grammar, completer_mapping)
-    return completer
+    completer_mapping["command"] = WordCompleter(
+        all_commands, ignore_case=True, sentence=True
+    )
+    return completer_mapping
+
+
+completer_mapping = get_completer_mapping()

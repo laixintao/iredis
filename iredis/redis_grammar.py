@@ -3,8 +3,9 @@ command_nodex: x means node?
 """
 import logging
 
+from prompt_toolkit.contrib.regular_languages.compiler import compile
+from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 from .commands_csv_loader import group2command_res as t
-from .commands_csv_loader import all_commands
 
 logger = logging.getLogger(__name__)
 CONST = {
@@ -174,7 +175,10 @@ CONST_STOREDIST = fr"(?P<const_storedist>{c('const_storedist')})"
 PUBSUBCMD = fr"(?P<pubsubcmd>{c('pubsubcmd')})"
 SCRIPTDEBUG = fr"(?P<scriptdebug>{c('scriptdebug')})"
 
+# TODO test lexer & completer for multi spaces in command
 COMMAND = "(\s*  (?P<command>[\w -]+))"
+command_grammar = compile(COMMAND)
+
 NEW_GRAMMAR = {
     r"command_pattern": "(\s*  (?P<command_pattern>({t['command_pattern']}))    \s+ {PATTERN}  \s*)",
     r"command_key": "(\s*  (?P<command_key>({t['command_key']})) \s+ {KEY} \s*)",
@@ -355,3 +359,10 @@ REDIS_COMMANDS = fr"""
 (\s*  (?P<command_scriptdebug>({t['command_scriptdebug']})) \s+ {SCRIPTDEBUG}                        \s*)|
 (\s*  (?P<command_shutdown>({t['command_shutdown']}))  \s+ {SHUTDOWN}                                 \s*)
 """
+
+
+def get_command_grammar(commmand):
+    """
+    :param command: command name in upper case.
+    """
+    return command_grammar
