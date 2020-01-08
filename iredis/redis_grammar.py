@@ -178,7 +178,7 @@ SCRIPTDEBUG = fr"(?P<scriptdebug>{c('scriptdebug')})"
 # FIXME invalid command like "aaa bbb ccc"
 # redis command can have one space at most
 # FIXME inital value should be command, not blob, user can type anything...
-COMMAND = "(\s*  (?P<command>[\w -]+))"
+COMMAND = "(\s*  (?P<command_pending>[\w -]+))"
 command_grammar = compile(COMMAND)
 
 NEW_GRAMMAR = {
