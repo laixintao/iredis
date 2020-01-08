@@ -4,15 +4,14 @@ from prompt_toolkit.layout.processors import (
     Transformation,
     TransformationInput,
 )
-from prompt_toolkit.contrib.regular_languages.compiler import compile
 from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
 from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 
 from .utils import split_command_args
 from .exceptions import InvalidArguments
 from .commands_csv_loader import all_commands
-from .lexer import lexers_mapping
-from .completers import completer_mapping
+from .lexer import lexers_mapping,default_lexer
+from .completers import completer_mapping,default_completer
 from .redis_grammar import get_command_grammar
 
 logger = logging.getLogger(__name__)
@@ -41,8 +40,6 @@ class GetCommandProcessor(Processor):
         self.last_text = None
         self.session = session
         self.command_holder = command_holder
-        self.default_lexer = session.lexer
-        self.default_completer = session.completer
 
     def apply_transformation(
         self, transformation_input: TransformationInput
@@ -51,23 +48,11 @@ class GetCommandProcessor(Processor):
         if input_text != self.last_text and input_text:
             try:
                 command, _ = split_command_args(input_text, all_commands)
-                VALID_TOKEN = r"""(
-                ("([^"]|\\")*?")     |# with double quotes
-                ('([^']|\\')*?')     |# with single quotes
-                ([^\s"]+)            # without quotes
-                )"""
-                KEY = fr"(?P<key>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
-                logger.info(f"command is {command}")
-                if command == "GET":
-                    grammar = compile(
-                        fr"(\s*  (?P<command_pattern>(GET))    \s+ {KEY}  \s*)"
-                    )
-
             except InvalidArguments:
                 self.command_holder.command = None
-                self.session.completer = self.default_completer
-                self.session.lexer = self.default_lexer
-
+                self.session.completer = default_completer
+                self.session.lexer = default_lexer
+                logger.info(f"[current grammar] default")
             else:
                 self.command_holder.command = command.upper()
                 # compile grammar for this command
@@ -77,6 +62,7 @@ class GetCommandProcessor(Processor):
 
                 self.session.completer = completer
                 self.session.lexer = lexer
+                logger.info(f"[current grammar] {grammar}")
 
             self.last_text = input_text
         return Transformation(transformation_input.fragments)

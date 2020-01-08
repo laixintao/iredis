@@ -4,7 +4,7 @@ command_nodex: x means node?
 import logging
 
 from prompt_toolkit.contrib.regular_languages.compiler import compile
-from .commands_csv_loader import group2command_res as t
+from .commands_csv_loader import command2syntax
 
 logger = logging.getLogger(__name__)
 CONST = {
@@ -177,15 +177,17 @@ SCRIPTDEBUG = fr"(?P<scriptdebug>{c('scriptdebug')})"
 # TODO test lexer & completer for multi spaces in command
 # FIXME invalid command like "aaa bbb ccc"
 # redis command can have one space at most
+# FIXME inital value should be command, not blob, user can type anything...
 COMMAND = "(\s*  (?P<command>[\w -]+))"
 command_grammar = compile(COMMAND)
 
 NEW_GRAMMAR = {
-    r"command_pattern": "(\s*  (?P<command_pattern>({t['command_pattern']}))    \s+ {PATTERN}  \s*)",
-    r"command_key": "(\s*  (?P<command_key>({t['command_key']})) \s+ {KEY} \s*)",
+    "command_pattern": fr"(\s*  (?P<command>(<command_name>)) \s+ {PATTERN} \s*)",
+    "command_key": fr"(\s*  (?P<command>(<command_name>)) \s+ {KEY} \s*)",
 }
+compiled_grammar = {}
 
-REDIS_COMMANDS = fr"""
+REDIS_COMMANDS = r"""
 (\s*  (?P<command_commandname>({t['command_commandname']}))        \s+ {COMMANDNAME}                  \s*)|
 (\s*  (?P<command_slots>({t['command_slots']}))        \s+ {SLOTS}                                    \s*)|
 (\s*  (?P<command_node>({t['command_node']}))          \s+ {NODE}                                     \s*)|
@@ -362,8 +364,18 @@ REDIS_COMMANDS = fr"""
 """
 
 
-def get_command_grammar(commmand):
+def get_command_grammar(command):
     """
     :param command: command name in upper case.
     """
-    return command_grammar
+    syntax_name = command2syntax[command]
+    syntax = NEW_GRAMMAR.get(syntax_name)
+
+    # TODO this should be deleted
+    if syntax is None:
+        return command_grammar
+    syntax = syntax.replace(r"<command_name>", command)
+
+    logger.info(f"syxtax: {syntax}")
+
+    return compile(syntax)

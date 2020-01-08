@@ -10,8 +10,6 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit import print_formatted_text
-from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
-from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 
 from .client import Client
 from .style import STYLE
@@ -20,8 +18,8 @@ from .processors import UserInputCommand, GetCommandProcessor
 from .bottom import BottomToolbar
 from .utils import timer
 from .redis_grammar import command_grammar
-from .completers import completer_mapping
-from .lexer import lexers_mapping
+from .completers import default_completer
+from .lexer import default_lexer
 from . import __version__
 
 logger = logging.getLogger(__name__)
@@ -220,8 +218,8 @@ def main():
         style=STYLE,
         auto_suggest=AutoSuggestFromHistory(),
         complete_while_typing=True,
-        lexer=GrammarLexer(command_grammar, lexers=lexers_mapping),
-        completer=GrammarCompleter(command_grammar, completer_mapping),
+        lexer=default_lexer,
+        completer=default_completer,
     )
 
     # print hello message

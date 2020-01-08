@@ -22,40 +22,28 @@ def load_command():
     """
     syntax_path = project_path / "command_syntax.csv"
 
-    group = {}
     first_line = True
     command2callback = {}
+    command2syntax = {}
     with open(syntax_path) as command_syntax:
         csvreader = csv.reader(command_syntax)
         for line in csvreader:
             if first_line:
                 first_line = False
                 continue
-            syntax, command, syntax, func_name = line
-            group.setdefault(syntax, []).append(command)
+            group, command, syntax, func_name = line
             command2callback[command] = func_name
+            command2syntax[command] = syntax
 
-    group2commands = copy.deepcopy(group)
-
-    # add lowercase commands
-    group2command_res = {}
-    for syntax in group.keys():
-        commands = group[syntax]
-        lower_commands = [command.lower() for command in commands]
-        commands += lower_commands
-        # Space in command cloud be mutiple spaces
-        re_commands = [command.replace(" ", r"\s+") for command in commands]
-        group2command_res[syntax] = "|".join(re_commands)
-
-    return group2commands, group2command_res, command2callback
+    return command2callback, command2syntax
 
 
 timer("[Loader] Start loading commands file...")
-group2commands, group2command_res, command2callback = load_command()
+command2callback, command2syntax = load_command()
 # all redis command strings, in UPPER case
 # NOTE: Must sort by length, to match longest command first
 all_commands = sorted(
-    list(command2callback.keys()) + ["HELP"] + ["HELP"],
+    list(command2callback.keys()) + ["HELP"],
     key=lambda x: len(x),
     reverse=True,
 )

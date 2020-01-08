@@ -1,10 +1,10 @@
 import logging
-
 from prompt_toolkit.completion import WordCompleter, FuzzyWordCompleter
+from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 
 from .config import config
-from .redis_grammar import CONST
-from .commands_csv_loader import group2commands, commands_summary, all_commands
+from .redis_grammar import CONST, command_grammar
+from .commands_csv_loader import commands_summary, all_commands
 
 
 logger = logging.getLogger(__name__)
@@ -39,18 +39,6 @@ class LatestUsedFirstWordCompleter(FuzzyWordCompleter):
 
 def get_completer_mapping():
     completer_mapping = {}
-    # patch command completer with hint
-    command_hint = {key: info["summary"] for key, info in commands_summary.items()}
-    for command_group, commands in group2commands.items():
-        words = commands + [command.lower() for command in commands]
-        if config.newbie_mode:
-            hint = {command: command_hint.get(command.upper()) for command in words}
-        else:
-            hint = None
-        completer_mapping[command_group] = WordCompleter(
-            words, sentence=True, meta_dict=hint
-        )
-
     completer_mapping.update(
         {
             key: WordCompleter(tokens.split(" "), ignore_case=True)
@@ -76,10 +64,15 @@ def get_completer_mapping():
             "fields": field_completer,
         }
     )
+    # patch command completer with hint
+    command_hint = {key: info["summary"] for key, info in commands_summary.items()}
+    hint = {command: command_hint.get(command.upper()) for command in all_commands}
+
     completer_mapping["command"] = WordCompleter(
-        all_commands, ignore_case=True, sentence=True
+        all_commands[::-1], ignore_case=True, sentence=True, meta_dict=hint
     )
     return completer_mapping
 
 
 completer_mapping = get_completer_mapping()
+default_completer = GrammarCompleter(command_grammar, completer_mapping)

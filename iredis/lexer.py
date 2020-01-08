@@ -1,7 +1,9 @@
 from prompt_toolkit.lexers import SimpleLexer
 from prompt_toolkit.lexers import PygmentsLexer
+from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
 from pygments.lexers.scripting import LuaLexer
-from .redis_grammar import CONST
+
+from .redis_grammar import CONST, command_grammar
 
 
 def get_lexer_mapping():
@@ -58,3 +60,4 @@ def get_lexer_mapping():
 
 
 lexers_mapping = get_lexer_mapping()
+default_lexer = GrammarLexer(command_grammar, lexers=lexers_mapping)
