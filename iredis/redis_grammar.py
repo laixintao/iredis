@@ -366,9 +366,10 @@ REDIS_COMMANDS = r"""
 
 def get_command_grammar(command):
     """
-    :param command: command name in upper case.
+    :param command: command name in upper case. This command must be raw user
+        input, otherwise can't match in lexer, cause this command to be invalid;
     """
-    syntax_name = command2syntax[command]
+    syntax_name = command2syntax[command.upper()]
     syntax = NEW_GRAMMAR.get(syntax_name)
 
     # TODO this should be deleted

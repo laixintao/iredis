@@ -56,7 +56,7 @@ class GetCommandProcessor(Processor):
             else:
                 self.command_holder.command = command.upper()
                 # compile grammar for this command
-                grammar = get_command_grammar(self.command_holder.command)
+                grammar = get_command_grammar(command)
                 lexer = GrammarLexer(grammar, lexers=lexers_mapping)
                 completer = GrammarCompleter(grammar, completer_mapping)
 
