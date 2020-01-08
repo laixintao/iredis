@@ -4,7 +4,6 @@ command_nodex: x means node?
 import logging
 
 from prompt_toolkit.contrib.regular_languages.compiler import compile
-from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 from .commands_csv_loader import group2command_res as t
 
 logger = logging.getLogger(__name__)
@@ -176,6 +175,8 @@ PUBSUBCMD = fr"(?P<pubsubcmd>{c('pubsubcmd')})"
 SCRIPTDEBUG = fr"(?P<scriptdebug>{c('scriptdebug')})"
 
 # TODO test lexer & completer for multi spaces in command
+# FIXME invalid command like "aaa bbb ccc"
+# redis command can have one space at most
 COMMAND = "(\s*  (?P<command>[\w -]+))"
 command_grammar = compile(COMMAND)
 
