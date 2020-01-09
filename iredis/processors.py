@@ -30,7 +30,7 @@ class UserInputCommand:
         self.command = None
 
 
-default_grammar = compile(redis_grammar.all_command)
+default_grammar = compile(redis_grammar.COMMAND)
 
 
 class GetCommandProcessor(Processor):
@@ -58,14 +58,13 @@ class GetCommandProcessor(Processor):
                 )"""
                 PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
                 KEY = fr"(?P<key>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
+                logger.info(f"command is {command}")
                 if command == "GET":
                     grammar = compile(
                         fr"(\s*  (?P<command_pattern>(GET))    \s+ {KEY}  \s*)"
                     )
                 else:
-                    grammar = compile(
-                        fr"(\s*  (?P<command_key>(KEYS)) \s+ {PATTERN} \s*)"
-                    )
+                    grammar = default_grammar
 
             except InvalidArguments:
                 self.command_holder.command = None

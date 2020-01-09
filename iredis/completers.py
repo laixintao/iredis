@@ -71,6 +71,7 @@ class RedisGrammarCompleter(GrammarCompleter):
 key_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
 member_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
 field_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+
 def get_completer(group2commands, redis_grammar):
     completer_mapping = {}
     # patch command completer with hint
@@ -107,7 +108,7 @@ def get_completer(group2commands, redis_grammar):
             "fields": field_completer,
         }
     )
-    completer_mapping["commandname"] = WordCompleter(all_commands, ignore_case=True)
+    completer_mapping["command"] = WordCompleter(all_commands, ignore_case=True, sentence=True)
     completer = RedisGrammarCompleter(redis_grammar, completer_mapping)
     return completer
 

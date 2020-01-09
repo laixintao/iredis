@@ -49,7 +49,6 @@ CONST = {
     "order": "ASC DESC",
     "pubsubcmd": "CHANNELS NUMSUB NUMPAT",
     "scriptdebug": "YES NO SYNC",
-    "command": " ".join(all_commands),
 }
 
 
@@ -175,10 +174,10 @@ CONST_STOREDIST = fr"(?P<const_storedist>{c('const_storedist')})"
 PUBSUBCMD = fr"(?P<pubsubcmd>{c('pubsubcmd')})"
 SCRIPTDEBUG = fr"(?P<scriptdebug>{c('scriptdebug')})"
 
-all_command = "(\s*  (?P<command>([\w -]+))  \s*)"
+COMMAND = "(\s*  (?P<command>[\w -]+))"
 NEW_GRAMMAR = {
-    "command_pattern": "(\s*  (?P<command_pattern>({t['command_pattern']}))    \s+ {PATTERN}  \s*)",
-    "command_key": "(\s*  (?P<command_key>({t['command_key']})) \s+ {KEY} \s*)",
+    r"command_pattern": "(\s*  (?P<command_pattern>({t['command_pattern']}))    \s+ {PATTERN}  \s*)",
+    r"command_key": "(\s*  (?P<command_key>({t['command_key']})) \s+ {KEY} \s*)",
 }
 
 REDIS_COMMANDS = fr"""
