@@ -6,7 +6,7 @@ __version__ = "0.7.0"
 
 
 logging.basicConfig(
-    filename="iredis.log",
+    filename=os.path.join(os.getenv("HOME"), ".iredis.log"),
     filemode="a",
     format="%(levelname)5s %(message)s",
     level="DEBUG",
