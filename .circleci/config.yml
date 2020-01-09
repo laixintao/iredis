@@ -287,7 +287,11 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - unittest-python3.7:
+      - unittest-python3.7.0:
+          filters:
+            tags:
+              only: /.*/
+      - unittest-python3.7.5:
           filters:
             tags:
               only: /.*/
@@ -298,7 +302,8 @@ workflows:
       - build-release:
           requires:
             - black-check
-            - unittest-python3.7
+            - unittest-python3.7.0
+            - unittest-python3.7.5
             - unittest-python3.8
             - flake8-check
           filters:
