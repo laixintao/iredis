@@ -1,6 +1,5 @@
-import pytest
-
 from unittest.mock import MagicMock
+from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 
 from iredis.completers import LatestUsedFirstWordCompleter
@@ -37,12 +36,27 @@ def test_newbie_mode_complete_without_meta_dict():
     assert [word.text for word in completions] == ["GEORADIUS", "GEORADIUSBYMEMBER"]
 
 
-@pytest.mark.xfail(reason="meta info not work, but in real use it's ok, fix later")
 def test_newbie_mode_complete_with_meta_dict():
     fake_document = MagicMock()
     fake_document.text_before_cursor = "GEOR"
     completer = GrammarCompleter(command_grammar, completer_mapping)
     completions = list(completer.get_completions(fake_document, None))
-    print(completions[0])
 
-    assert completions[:2] is None
+    assert [completion.display_meta for completion in completions] == [
+        FormattedText(
+            [
+                (
+                    "",
+                    "Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point",  # noqa
+                )
+            ]
+        ),
+        FormattedText(
+            [
+                (
+                    "",
+                    "Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a member", # noqa
+                )
+            ]
+        ),
+    ]
