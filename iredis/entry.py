@@ -13,8 +13,7 @@ from prompt_toolkit import print_formatted_text
 
 from .client import Client
 from .style import STYLE
-from .config import config, COMPILING_DONE
-from .completers import compile_grammar_bg
+from .config import config
 from .processors import UserInputCommand, GetCommandProcessor
 from .bottom import BottomToolbar
 from .utils import timer
@@ -67,18 +66,12 @@ def repl(client, session, start_time):
     while True:
         logger.info("↓↓↓↓" * 10)
         logger.info("REPL waiting for command...")
-        if config.compiling != COMPILING_DONE:
-            # auto refresh to display animation...
-            _interval = 0.1
-        else:
-            _interval = None
 
         try:
             command = session.prompt(
                 "{hostname}> ".format(hostname=str(client)),
                 bottom_toolbar=BottomToolbar(command_holder).render,
-                refresh_interval=_interval,
-                input_processors=[GetCommandProcessor(command_holder,session)],
+                input_processors=[GetCommandProcessor(command_holder, session)],
                 rprompt=lambda: "<transaction>" if config.transaction else None,
             )
 
@@ -223,7 +216,6 @@ def main():
         auto_suggest=AutoSuggestFromHistory(),
         complete_while_typing=True,
     )
-    compile_grammar_bg(session)
 
     # print hello message
     greetings()

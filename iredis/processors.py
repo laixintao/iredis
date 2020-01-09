@@ -9,7 +9,7 @@ from .exceptions import InvalidArguments
 from .commands_csv_loader import all_commands
 from prompt_toolkit.contrib.regular_languages.compiler import compile
 from . import redis_grammar
-from .config import config, COMPILING_DONE, COMPILING_JUST_FINISH
+from .config import config
 from .redis_grammar import REDIS_COMMANDS, CONST
 from .lexer import get_lexer
 from .commands_csv_loader import group2commands, commands_summary

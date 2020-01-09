@@ -9,7 +9,7 @@ from prompt_toolkit.completion import WordCompleter, FuzzyWordCompleter
 from prompt_toolkit.document import Document
 from prompt_toolkit.completion import Completion, CompleteEvent
 
-from .config import config, COMPILING_DONE, COMPILING_JUST_FINISH
+from .config import config
 from .redis_grammar import REDIS_COMMANDS, CONST
 from .lexer import get_lexer
 from .commands_csv_loader import group2commands, commands_summary, all_commands
@@ -111,30 +111,3 @@ def get_completer(group2commands, redis_grammar):
     completer_mapping["command"] = WordCompleter(all_commands, ignore_case=True, sentence=True)
     completer = RedisGrammarCompleter(redis_grammar, completer_mapping)
     return completer
-
-
-def compile_grammar_bg(session):
-    """
-    compile redis grammar in a thread, and patch session's lexer
-    and completer.
-    """
-
-    def compile_and_patch(session):
-        start_time = time.time()
-        logger.debug("[compile] start compile grammer...")
-        # redis_grammar = compile(REDIS_COMMANDS)
-        end_time = time.time()
-        logger.debug(f"[compile] Compile finished! Cost: {end_time - start_time}")
-
-        logger.debug("[compile] Patch finished!")
-
-        # config.compiling = COMPILING_JUST_FINISH
-        # time.sleep(1)
-        config.compiling = COMPILING_DONE
-
-    # set daemon=True, when main thread exit, this compiling thread should
-    # exit as well.
-    compiling_thread = threading.Thread(
-        target=compile_and_patch, args=(session,), daemon=True
-    )
-    compiling_thread.start()
