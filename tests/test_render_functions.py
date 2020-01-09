@@ -3,6 +3,7 @@ import time
 from prompt_toolkit.formatted_text import FormattedText
 from iredis import renders
 from iredis.config import config
+from iredis.completers import default_completer as completer
 
 
 def strip_formatted_text(formatted_text):
@@ -166,7 +167,7 @@ def test_list_or_string():
     )
 
 
-def test_command_keys(completer):
+def test_command_keys():
     completer.completers["key"].words = []
     config.raw = False
     rendered = renders.command_keys([b"cat", b"dog", b"banana"], completer)
@@ -189,7 +190,7 @@ def test_command_keys(completer):
     assert completer.completers["keys"].words == ["banana", "dog", "cat"]
 
 
-def test_command_scan(completer):
+def test_command_scan():
     completer.completers["key"].words = []
     config.raw = False
     rendered = renders.command_scan(
@@ -221,7 +222,7 @@ def test_command_scan(completer):
     assert completer.completers["keys"].words == [" a", "dest", "key:__rand_int__", "a"]
 
 
-def test_command_sscan(completer):
+def test_command_sscan():
     completer.completers["member"].words = []
     config.raw = False
     rendered = renders.command_sscan(
@@ -258,7 +259,7 @@ def test_command_sscan(completer):
     ]
 
 
-def test_command_sscan_config_raw(completer):
+def test_command_sscan_config_raw():
     completer.completers["member"].words = []
     config.raw = True
     rendered = renders.command_sscan(
@@ -274,7 +275,7 @@ def test_command_sscan_config_raw(completer):
     ]
 
 
-def test_render_members(completer):
+def test_render_members():
     completer.completers["members"].words = []
     config.raw = False
     config.withscores = True
@@ -296,7 +297,7 @@ def test_render_members(completer):
     assert completer.completers["member"].words == ["camel", "duck"]
 
 
-def test_render_members_config_raw(completer):
+def test_render_members_config_raw():
     completer.completers["members"].words = []
     config.raw = True
     config.withscores = True
@@ -306,7 +307,7 @@ def test_render_members_config_raw(completer):
     assert completer.completers["member"].words == ["camel", "duck"]
 
 
-def test_render_unixtime_config_raw(completer):
+def test_render_unixtime_config_raw():
     config.raw = False
     # fake the timezone and reload
     os.environ["TZ"] = "Asia/Shanghai"

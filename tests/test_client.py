@@ -1,6 +1,9 @@
 import pytest
 from unittest.mock import MagicMock
 from iredis.client import Client
+from iredis.completers import completer_mapping
+from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
+from iredis.redis_grammar import get_command_grammar
 
 
 @pytest.mark.parametrize(
@@ -20,13 +23,18 @@ def test_send_command(_input, command_name, expect_args):
     assert args == (None, command_name, *expect_args)
 
 
-def test_patch_completer(completer):
+def test_patch_completer():
     client = Client("127.0.0.1", "6379", None)
+    grammar = get_command_grammar("MGET")
+    completer = GrammarCompleter(grammar, completer_mapping)
     client.pre_hook(
         "MGET foo bar hello world", "MGET", "foo bar hello world", completer
     )
     assert completer.completers["key"].words == ["world", "hello", "bar", "foo"]
     assert completer.completers["keys"].words == ["world", "hello", "bar", "foo"]
+
+    grammar = get_command_grammar("GET")
+    completer = GrammarCompleter(grammar, completer_mapping)
     client.pre_hook("GET bar", "GET", "bar", completer)
     assert completer.completers["keys"].words == ["bar", "world", "hello", "foo"]
 
