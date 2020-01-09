@@ -9,10 +9,8 @@ from .exceptions import InvalidArguments
 from .commands_csv_loader import all_commands
 from prompt_toolkit.contrib.regular_languages.compiler import compile
 from . import redis_grammar
-from .config import config
-from .redis_grammar import REDIS_COMMANDS, CONST
 from .lexer import get_lexer
-from .commands_csv_loader import group2commands, commands_summary
+from .commands_csv_loader import group2commands
 from .completers import get_completer
 
 logger = logging.getLogger(__name__)
@@ -48,7 +46,7 @@ class GetCommandProcessor(Processor):
         self, transformation_input: TransformationInput
     ) -> Transformation:
         input_text = transformation_input.document.text
-        if input_text != self.last_text:
+        if input_text != self.last_text and input_text:
             try:
                 command, _ = split_command_args(input_text, all_commands)
                 VALID_TOKEN = r"""(
