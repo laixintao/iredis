@@ -3,7 +3,7 @@ def test_ip_match(judge_command):
         if valid:
             judge_command(
                 f"cluster meet {ip} 6379",
-                {"command_ip_port": "cluster meet", "ip": ip, "port": "6379"},
+                {"command": "cluster meet", "ip": ip, "port": "6379"},
             )
         else:
             judge_command(f"cluster meet {ip} 6379", None)
@@ -23,7 +23,7 @@ def test_port_match(judge_command):
         if valid:
             judge_command(
                 f"cluster meet 192.168.0.1 {port}",
-                {"command_ip_port": "cluster meet", "ip": "192.168.0.1", "port": port},
+                {"command": "cluster meet", "ip": "192.168.0.1", "port": port},
             )
         else:
             judge_command(f"cluster meet 192.168.0.1 {port}", None)
@@ -45,13 +45,12 @@ def test_port_match(judge_command):
 
 def test_command_with_key_in_quotes(judge_command):
     judge_command(
-        'cluster keyslot "mykey"', {"command_key": "cluster keyslot", "key": '"mykey"'}
+        'cluster keyslot "mykey"', {"command": "cluster keyslot", "key": '"mykey"'}
     )
     judge_command(
         'cluster keyslot "\\"mykey"',
-        {"command_key": "cluster keyslot", "key": '"\\"mykey"'},
+        {"command": "cluster keyslot", "key": '"\\"mykey"'},
     )
     judge_command(
-        'cluster keyslot "mykey "',
-        {"command_key": "cluster keyslot", "key": '"mykey "'},
+        'cluster keyslot "mykey "', {"command": "cluster keyslot", "key": '"mykey "'}
     )

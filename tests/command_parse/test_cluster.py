@@ -4,15 +4,10 @@ redis command in `cluster` group parse test.
 
 
 def test_command_cluster_addslots(judge_command):
+    judge_command("cluster addslots 1", {"command": "cluster addslots", "slots": "1"})
+    judge_command("CLUSTER ADDSLOTS 1", {"command": "CLUSTER ADDSLOTS", "slots": "1"})
     judge_command(
-        "cluster addslots 1", {"command_slots": "cluster addslots", "slots": "1"}
-    )
-    judge_command(
-        "CLUSTER ADDSLOTS 1", {"command_slots": "CLUSTER ADDSLOTS", "slots": "1"}
-    )
-    judge_command(
-        "cluster addslots 1 2 3 4",
-        {"command_slots": "cluster addslots", "slots": "1 2 3 4"},
+        "cluster addslots 1 2 3 4", {"command": "cluster addslots", "slots": "1 2 3 4"}
     )
     judge_command("cluster addslots 1 a", None)
     judge_command("cluster addslots a", None)
@@ -23,11 +18,11 @@ def test_command_cluster_addslots(judge_command):
 def test_command_cluster_count_failure_reports(judge_command):
     judge_command(
         "cluster count-failure-reports 1",
-        {"command_node": "cluster count-failure-reports", "node": "1"},
+        {"command": "cluster count-failure-reports", "node": "1"},
     )
     judge_command(
         "CLUSTER COUNT-FAILURE-REPORTS 1",
-        {"command_node": "CLUSTER COUNT-FAILURE-REPORTS", "node": "1"},
+        {"command": "CLUSTER COUNT-FAILURE-REPORTS", "node": "1"},
     )
     judge_command("cluster count-failure-reports 1 2 3 4", None)
     judge_command("cluster count-failure-reports 1 a", None)
@@ -38,12 +33,10 @@ def test_command_cluster_count_failure_reports(judge_command):
 
 def test_command_cluster_countkeysinslot(judge_command):
     judge_command(
-        "cluster countkeysinslot 1",
-        {"command_slot": "cluster countkeysinslot", "slot": "1"},
+        "cluster countkeysinslot 1", {"command": "cluster countkeysinslot", "slot": "1"}
     )
     judge_command(
-        "CLUSTER COUNTKEYSINSLOT 1",
-        {"command_slot": "CLUSTER COUNTKEYSINSLOT", "slot": "1"},
+        "CLUSTER COUNTKEYSINSLOT 1", {"command": "CLUSTER COUNTKEYSINSLOT", "slot": "1"}
     )
     judge_command("cluster countkeysinslot 1 2 3 4", None)
     judge_command("cluster countkeysinslot 1 a", None)
@@ -53,15 +46,10 @@ def test_command_cluster_countkeysinslot(judge_command):
 
 
 def test_command_cluster_delslots(judge_command):
+    judge_command("cluster delslots 1", {"command": "cluster delslots", "slots": "1"})
+    judge_command("CLUSTER DELSLOTS 1", {"command": "CLUSTER DELSLOTS", "slots": "1"})
     judge_command(
-        "cluster delslots 1", {"command_slots": "cluster delslots", "slots": "1"}
-    )
-    judge_command(
-        "CLUSTER DELSLOTS 1", {"command_slots": "CLUSTER DELSLOTS", "slots": "1"}
-    )
-    judge_command(
-        "cluster delslots 1 2 3 4",
-        {"command_slots": "cluster delslots", "slots": "1 2 3 4"},
+        "cluster delslots 1 2 3 4", {"command": "cluster delslots", "slots": "1 2 3 4"}
     )
     judge_command("cluster delslots 1 a", None)
     judge_command("cluster delslots a", None)
@@ -72,31 +60,31 @@ def test_command_cluster_delslots(judge_command):
 def test_command_cluster_failover(judge_command):
     judge_command(
         "cluster failover force",
-        {"command_failoverchoice": "cluster failover", "failoverchoice": "force"},
+        {"command": "cluster failover", "failoverchoice": "force"},
     )
     judge_command(
         "cluster failover takeover",
-        {"command_failoverchoice": "cluster failover", "failoverchoice": "takeover"},
+        {"command": "cluster failover", "failoverchoice": "takeover"},
     )
     judge_command(
         "CLUSTER FAILOVER FORCE",
-        {"command_failoverchoice": "CLUSTER FAILOVER", "failoverchoice": "FORCE"},
+        {"command": "CLUSTER FAILOVER", "failoverchoice": "FORCE"},
     )
     judge_command(
         "CLUSTER FAILOVER takeover",
-        {"command_failoverchoice": "CLUSTER FAILOVER", "failoverchoice": "takeover"},
+        {"command": "CLUSTER FAILOVER", "failoverchoice": "takeover"},
     )
     judge_command(
         "CLUSTER FAILOVER TAKEOVER",
-        {"command_failoverchoice": "CLUSTER FAILOVER", "failoverchoice": "TAKEOVER"},
+        {"command": "CLUSTER FAILOVER", "failoverchoice": "TAKEOVER"},
     )
 
 
 def test_command_cluster_forget(judge_command):
-    judge_command("cluster forget 1", {"command_node": "cluster forget", "node": "1"})
+    judge_command("cluster forget 1", {"command": "cluster forget", "node": "1"})
     judge_command(
         "CLUSTER COUNT-FAILURE-REPORTS 1",
-        {"command_node": "CLUSTER COUNT-FAILURE-REPORTS", "node": "1"},
+        {"command": "CLUSTER COUNT-FAILURE-REPORTS", "node": "1"},
     )
     judge_command("cluster forget 1 2 3 4", None)
     judge_command("cluster forget 1 a", None)
@@ -108,19 +96,15 @@ def test_command_cluster_forget(judge_command):
 def test_command_cluster_getkeysinslot(judge_command):
     judge_command(
         "cluster getkeysinslot 1 1",
-        {"command_slot_count": "cluster getkeysinslot", "slot": "1", "count": "1"},
+        {"command": "cluster getkeysinslot", "slot": "1", "count": "1"},
     )
     judge_command(
         "CLUSTER GETKEYSINSLOT 1 1",
-        {"command_slot_count": "CLUSTER GETKEYSINSLOT", "slot": "1", "count": "1"},
+        {"command": "CLUSTER GETKEYSINSLOT", "slot": "1", "count": "1"},
     )
     judge_command(
         "cluster getkeysinslot 1123 1121",
-        {
-            "command_slot_count": "cluster getkeysinslot",
-            "slot": "1123",
-            "count": "1121",
-        },
+        {"command": "cluster getkeysinslot", "slot": "1123", "count": "1121"},
     )
     judge_command("cluster getkeysinslot 1 2 3 4", None)
     judge_command("cluster getkeysinslot 1 a", None)
@@ -133,29 +117,29 @@ def test_command_cluster_info(judge_command):
     judge_command("cluster info", {"command": "cluster info"})
     judge_command("CLUSTER INFO", {"command": "CLUSTER INFO"})
     judge_command("CLUSTER INFO 1", None)
-    judge_command("Acluster info", None)
+    judge_command("Acluster info", "invalid")
 
 
 def test_command_cluster_keyslot(judge_command):
     judge_command(
-        "cluster keyslot mykey", {"command_key": "cluster keyslot", "key": "mykey"}
+        "cluster keyslot mykey", {"command": "cluster keyslot", "key": "mykey"}
     )
     judge_command(
-        "cluster keyslot MYKEY", {"command_key": "cluster keyslot", "key": "MYKEY"}
+        "cluster keyslot MYKEY", {"command": "cluster keyslot", "key": "MYKEY"}
     )
     judge_command(
-        "CLUSTER KEYSLOT MYKEY", {"command_key": "CLUSTER KEYSLOT", "key": "MYKEY"}
+        "CLUSTER KEYSLOT MYKEY", {"command": "CLUSTER KEYSLOT", "key": "MYKEY"}
     )
 
 
 def test_command_cluster_meet(judge_command):
     judge_command(
         "cluster meet 192.168.0.1 12200",
-        {"command_ip_port": "cluster meet", "ip": "192.168.0.1", "port": "12200"},
+        {"command": "cluster meet", "ip": "192.168.0.1", "port": "12200"},
     )
     judge_command(
         "CLUSTER MEET 192.168.0.1 12200",
-        {"command_ip_port": "CLUSTER MEET", "ip": "192.168.0.1", "port": "12200"},
+        {"command": "CLUSTER MEET", "ip": "192.168.0.1", "port": "12200"},
     )
 
 
@@ -166,24 +150,19 @@ def test_command_cluster_nodes(judge_command):
 
 def test_command_cluster_reset(judge_command):
     judge_command(
-        "cluster reset hard",
-        {"command_resetchoice": "cluster reset", "resetchoice": "hard"},
+        "cluster reset hard", {"command": "cluster reset", "resetchoice": "hard"}
     )
     judge_command(
-        "cluster reset soft",
-        {"command_resetchoice": "cluster reset", "resetchoice": "soft"},
+        "cluster reset soft", {"command": "cluster reset", "resetchoice": "soft"}
     )
     judge_command(
-        "CLUSTER RESET HARD",
-        {"command_resetchoice": "CLUSTER RESET", "resetchoice": "HARD"},
+        "CLUSTER RESET HARD", {"command": "CLUSTER RESET", "resetchoice": "HARD"}
     )
     judge_command(
-        "CLUSTER RESET soft",
-        {"command_resetchoice": "CLUSTER RESET", "resetchoice": "soft"},
+        "CLUSTER RESET soft", {"command": "CLUSTER RESET", "resetchoice": "soft"}
     )
     judge_command(
-        "CLUSTER RESET SOFT",
-        {"command_resetchoice": "CLUSTER RESET", "resetchoice": "SOFT"},
+        "CLUSTER RESET SOFT", {"command": "CLUSTER RESET", "resetchoice": "SOFT"}
     )
     judge_command("CLUSTER RESET SOFT1", None)
     judge_command("CLUSTER RESET SAOFT", None)
@@ -193,11 +172,11 @@ def test_command_cluster_set_config_epoch(judge_command):
     judge_command("cluster set-config-epoch 123123 ad", None)
     judge_command(
         "cluster set-config-epoch 0 ",
-        {"command_epoch": "cluster set-config-epoch", "epoch": "0"},
+        {"command": "cluster set-config-epoch", "epoch": "0"},
     )
     judge_command(
         "cluster set-config-epoch 123123 ",
-        {"command_epoch": "cluster set-config-epoch", "epoch": "123123"},
+        {"command": "cluster set-config-epoch", "epoch": "123123"},
     )
 
 
@@ -205,7 +184,7 @@ def test_command_cluster_set_slot(judge_command):
     judge_command(
         "cluster setslot 123 importing 123123",
         {
-            "command_slot_slotsubcmd_nodex": "cluster setslot",
+            "command": "cluster setslot",
             "slot": "123",
             "slotsubcmd": "importing",
             "node": "123123",
@@ -214,7 +193,7 @@ def test_command_cluster_set_slot(judge_command):
     judge_command(
         "cluster setslot 123 migrating 123123",
         {
-            "command_slot_slotsubcmd_nodex": "cluster setslot",
+            "command": "cluster setslot",
             "slot": "123",
             "slotsubcmd": "migrating",
             "node": "123123",
@@ -223,7 +202,7 @@ def test_command_cluster_set_slot(judge_command):
     judge_command(
         "cluster setslot 123 node 123123",
         {
-            "command_slot_slotsubcmd_nodex": "cluster setslot",
+            "command": "cluster setslot",
             "slot": "123",
             "slotsubcmd": "node",
             "node": "123123",
@@ -232,7 +211,7 @@ def test_command_cluster_set_slot(judge_command):
     judge_command(
         "cluster setslot 123 MIGRATING 123123",
         {
-            "command_slot_slotsubcmd_nodex": "cluster setslot",
+            "command": "cluster setslot",
             "slot": "123",
             "slotsubcmd": "MIGRATING",
             "node": "123123",
@@ -240,17 +219,9 @@ def test_command_cluster_set_slot(judge_command):
     )
     judge_command(
         "cluster setslot 123 stable",
-        {
-            "command_slot_slotsubcmd_nodex": "cluster setslot",
-            "slot": "123",
-            "slotsubcmd": "stable",
-        },
+        {"command": "cluster setslot", "slot": "123", "slotsubcmd": "stable"},
     )
     judge_command(
         "cluster setslot 123 STABLE",
-        {
-            "command_slot_slotsubcmd_nodex": "cluster setslot",
-            "slot": "123",
-            "slotsubcmd": "STABLE",
-        },
+        {"command": "cluster setslot", "slot": "123", "slotsubcmd": "STABLE"},
     )

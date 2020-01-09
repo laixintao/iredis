@@ -1,4 +1,3 @@
-from .config import config, COMPILING_IN_PROGRESS, COMPILING_JUST_FINISH
 from .commands_csv_loader import commands_summary
 from .utils import command_syntax
 
@@ -22,26 +21,12 @@ class BottomToolbar:
         return animation
 
     def render(self):
-        if config.compiling == COMPILING_IN_PROGRESS:
-            anim = self.get_animation_char()
-            loading_text = (
-                "class:bottom-toolbar.off",
-                f"Loading Redis commands {anim}",
-            )
-            return [loading_text]
-        elif config.compiling == COMPILING_JUST_FINISH:
-            loading_text = (
-                "class:bottom-toolbar.loaded",
-                f"Redis commands loaded! Auto Completer activated!",
-            )
-            return [loading_text]
-        else:
-            text = BUTTOM_TEXT
-            # add command help if valide
-            if self.command_holder.command:
-                try:
-                    command_info = commands_summary[self.command_holder.command]
-                    text = command_syntax(self.command_holder.command, command_info)
-                except KeyError:
-                    pass
+        text = BUTTOM_TEXT
+        # add command help if valide
+        if self.command_holder.command:
+            try:
+                command_info = commands_summary[self.command_holder.command]
+                text = command_syntax(self.command_holder.command, command_info)
+            except KeyError:
+                pass
         return text
