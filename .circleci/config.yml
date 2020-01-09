@@ -191,7 +191,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            pytest
+            pytest -v
 
   unittest-python3.8: &unit-template
     docker:
