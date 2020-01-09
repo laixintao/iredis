@@ -42,12 +42,12 @@ def test_newbie_mode_complete_with_meta_dict():
     completer = GrammarCompleter(command_grammar, completer_mapping)
     completions = list(completer.get_completions(fake_document, None))
 
-    assert [completion.display_meta for completion in completions] == [
+    assert sorted([completion.display_meta for completion in completions]) == [
         FormattedText(
             [
                 (
                     "",
-                    "Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point",  # noqa
+                    "Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a member",  # noqa
                 )
             ]
         ),
@@ -55,7 +55,7 @@ def test_newbie_mode_complete_with_meta_dict():
             [
                 (
                     "",
-                    "Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a member", # noqa
+                    "Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point",  # noqa
                 )
             ]
         ),
