@@ -24,6 +24,7 @@ class Config:
         self.withscores = False
         self.version = "Unknown"
         self.no_version_reason = None
+        self.rainbow = False
 
     def __setter__(self, name, value):
         # for every time start a transaction

@@ -61,6 +61,53 @@ def write_result(text):
         print_formatted_text()
 
 
+class Rainbow:
+    color = [
+        ("#cc2244"),
+        ("#bb4444"),
+        ("#996644"),
+        ("#cc8844"),
+        ("#ccaa44"),
+        ("#bbaa44"),
+        ("#99aa44"),
+        ("#778844"),
+        ("#55aa44"),
+        ("#33aa44"),
+        ("#11aa44"),
+        ("#11aa66"),
+        ("#11aa88"),
+        ("#11aaaa"),
+        ("#11aacc"),
+        ("#11aaee"),
+    ]
+
+    def __init__(self):
+        self.current = -1
+        self.forword = 1
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        self.current += self.forword
+        if 0 <= self.current < len(self.color):
+            # not to the end
+            return self.color[self.current]
+        else:
+            self.forword = -self.forword
+            self.current += 2 * self.forword
+            return self.color[self.current]
+
+
+def prompt_message(client):
+    # TODO custome prompt
+    text = "{hostname}> ".format(hostname=str(client))
+    logger.info("[Prompt message] rainbow={0}".format(config.rainbow))
+    if config.rainbow:
+        return list(zip(Rainbow(), text))
+    return text
+
+
 def repl(client, session, start_time):
     command_holder = UserInputCommand()
     timer(f"First REPL command enter, time cost: {time.time() - start_time}")
@@ -71,7 +118,7 @@ def repl(client, session, start_time):
 
         try:
             command = session.prompt(
-                "{hostname}> ".format(hostname=str(client)),
+                prompt_message(client),
                 bottom_toolbar=BottomToolbar(command_holder).render,
                 input_processors=[GetCommandProcessor(command_holder, session)],
                 rprompt=lambda: "<transaction>" if config.transaction else None,
@@ -112,6 +159,7 @@ DECODE_HELP = (
 NO_INFO = """
 By default iredis will fire a INFO command to get redis-server's \
 version, but you can use this flag to disable it."""
+RAINBOW = "Display colorful prompt"
 
 
 # command line entry here...
@@ -122,6 +170,7 @@ version, but you can use this flag to disable it."""
 @click.option("-n", help="Database number.", default=None)
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
 @click.option("--raw/--no-raw", default=False, is_flag=True, help=RAW_HELP)
+@click.option("--rainbow/--no-rainbow", default=False, is_flag=True, help=RAINBOW)
 @click.option("--no-info", default=False, is_flag=True, help=NO_INFO)
 @click.option(
     "--newbie/--no-newbie",
@@ -132,7 +181,7 @@ version, but you can use this flag to disable it."""
 @click.option("--decode", default=None, help=DECODE_HELP)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
-def gather_args(ctx, h, p, n, password, raw, cmd, decode, newbie, no_info):
+def gather_args(ctx, h, p, n, password, raw, cmd, decode, newbie, rainbow, no_info):
     """
     IRedis: Interactive Redis
 
@@ -164,6 +213,11 @@ def gather_args(ctx, h, p, n, password, raw, cmd, decode, newbie, no_info):
     if not config.newbie_mode:
         # cancel hints in meta_dict
         completer_mapping["command_pending"].meta_dict = {}
+
+    config.rainbow = rainbow
+
+    # TODO read config from file
+    # default config file < system < user < pwd/config < commandline args
 
     return ctx
 
