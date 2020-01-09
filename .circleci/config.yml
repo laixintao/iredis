@@ -151,9 +151,9 @@ jobs:
             . venv/bin/activate
             flake8 .
 
-  unittest-python3.7: &unit-template
+  unittest-python3.7.0: &unit-template
     docker:
-      - image: circleci/python:3.7.1
+      - image: circleci/python:3.7.0
       - image: circleci/redis:5
 
     working_directory: ~/repo
@@ -193,7 +193,7 @@ jobs:
             . venv/bin/activate
             pytest
 
-  unittest-python3.7: &unit-template
+  unittest-python3.7.5: &unit-template
     docker:
       - image: circleci/python:3.7.5
       - image: circleci/redis:5
