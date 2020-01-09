@@ -10,16 +10,9 @@ def test_client_setname(judge_command):
 def test_client_unblock(judge_command):
     judge_command(
         "CLIENT UNBLOCK 33 TIMEOUT",
-        {
-            "command": "CLIENT UNBLOCK",
-            "clientid": "33",
-            "error": "TIMEOUT",
-        },
+        {"command": "CLIENT UNBLOCK", "clientid": "33", "error": "TIMEOUT"},
     )
-    judge_command(
-        "CLIENT UNBLOCK 33",
-        {"command": "CLIENT UNBLOCK", "clientid": "33"},
-    )
+    judge_command("CLIENT UNBLOCK 33", {"command": "CLIENT UNBLOCK", "clientid": "33"})
 
 
 def test_flushdb(judge_command):
@@ -34,19 +27,11 @@ def test_client_list(judge_command):
     judge_command("client list TYPE REPLICA1", None)
     judge_command(
         "client list type master",
-        {
-            "command": "client list",
-            "type_const": "type",
-            "conntype": "master",
-        },
+        {"command": "client list", "type_const": "type", "conntype": "master"},
     )
     judge_command(
         "client list TYPE REPLICA",
-        {
-            "command": "client list",
-            "type_const": "TYPE",
-            "conntype": "REPLICA",
-        },
+        {"command": "client list", "type_const": "TYPE", "conntype": "REPLICA"},
     )
 
 
@@ -57,25 +42,17 @@ def test_configset(judge_command):
     )
     judge_command(
         "config set requirepass ''",
-        {
-            "command": "config set",
-            "parameter": "requirepass",
-            "value": "''",
-        },
+        {"command": "config set", "parameter": "requirepass", "value": "''"},
     )
 
 
 def test_shutdown(judge_command):
     judge_command("shutdown save", {"command": "shutdown", "shutdown": "save"})
-    judge_command(
-        "shutdown NOSAVE", {"command": "shutdown", "shutdown": "NOSAVE"}
-    )
+    judge_command("shutdown NOSAVE", {"command": "shutdown", "shutdown": "NOSAVE"})
 
 
 def test_clientpause(judge_command):
-    judge_command(
-        "client pause 3000", {"command": "client pause", "timeout": "3000"}
-    )
+    judge_command("client pause 3000", {"command": "client pause", "timeout": "3000"})
 
 
 def test_client_reply(judge_command):

@@ -282,8 +282,11 @@ NEW_GRAMMAR = {
     "command_key_min_max_withscore_x_limit_offset_count_x": fr"""\s* (?P<command>xxin)
         \s+ {KEY} \s+ {MIN} \s+ {MAX} (\s+ {WITHSCORES})?
         (\s+ {LIMIT} \s+ {OFFSET} \s+ {COUNT})? \s*""",
-    "command_cursor_match_pattern_count_type": fr"\s* (?P<command>xxin) \s+ {CURSOR} (\s+ {MATCH} \s+ {PATTERN})? (\s+ {COUNT_CONST} \s+ {COUNT})? (\s+ {TYPE_CONST} \s+ {TYPE})? \s*",
-    "command_key_cursor_match_pattern_count": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {CURSOR} (\s+ {MATCH} \s+ {PATTERN})? (\s+ {COUNT_CONST} \s+ {COUNT})? \s*",
+    "command_cursor_match_pattern_count_type": fr"""\s* (?P<command>xxin)
+        \s+ {CURSOR} (\s+ {MATCH} \s+ {PATTERN})?
+        (\s+ {COUNT_CONST} \s+ {COUNT})? (\s+ {TYPE_CONST} \s+ {TYPE})? \s*""",
+    "command_key_cursor_match_pattern_count": fr"""\s* (?P<command>xxin) \s+ {KEY}
+        \s+ {CURSOR} (\s+ {MATCH} \s+ {PATTERN})? (\s+ {COUNT_CONST} \s+ {COUNT})? \s*""",
     "command_key_fields": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {FIELDS} \s*",
     "command_key_field": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {FIELD} \s*",
     "command_key_field_delta": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {FIELD} \s+ {DELTA} \s*",
@@ -291,10 +294,22 @@ NEW_GRAMMAR = {
     "command_key_fieldvalues": fr"\s* (?P<command>xxin) \s+ {KEY} (\s+ {FIELD} \s+ {VALUE})+ \s*",
     "command_slowlog": fr"\s* (?P<command>xxin) \s+ {SLOWLOGSUB} \s+ {NUM} \s*",
     "command_switch": fr"\s* (?P<command>xxin) \s+ {SWITCH} \s*",
-    "command_clientkill": fr"\s* (?P<command>xxin) (\s+ {IP_PORT})? (\s+ {ADDR} \s+ {IP_PORT})? (\s+ {CONST_ID} \s+ {CLIENTID})? (\s+ {TYPE_CONST} \s+ {CONNTYPE})? (\s+ {SKIPME} \s+ {YES})? \s*",
-    "command_migrate": fr"\s* (?P<command>xxin) \s+ {HOST} \s+ {PORT} \s+ {KEY} \s+ {INDEX} \s+ {TIMEOUT} (\s+ {MIGRATECHOICE})? (\s+ {AUTH} \s+ {PASSWORD})? (\s+ {CONST_KEYS} \s+ {KEYS})? \s*",
-    "command_radius": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {LONGITUDE} \s+ {LATITUDE} \s+ {FLOAT} \s+ {DISTUNIT} (\s+ {GEOCHOICE})* (\s+ {COUNT_CONST} \s+ {COUNT})? (\s+ {ORDER})? (\s+ {CONST_STORE} \s+ {KEY})? (\s+ {CONST_STOREDIST} \s+ {KEY})? \s*",
-    "command_restore": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {TIMEOUT} \s+ {VALUE} (\s+ {SUBRESTORE} \s+ {SECOND})? \s*",
+    "command_clientkill": fr"""\s* (?P<command>xxin) (\s+ {IP_PORT})?
+        (\s+ {ADDR} \s+ {IP_PORT})?
+        (\s+ {CONST_ID} \s+ {CLIENTID})?
+        (\s+ {TYPE_CONST} \s+ {CONNTYPE})?
+        (\s+ {SKIPME} \s+ {YES})? \s*""",
+    "command_migrate": fr"""\s* (?P<command>xxin) \s+ {HOST} \s+ {PORT}
+        \s+ {KEY} \s+ {INDEX} \s+ {TIMEOUT} (\s+ {MIGRATECHOICE})?
+        (\s+ {AUTH} \s+ {PASSWORD})? (\s+ {CONST_KEYS} \s+ {KEYS})? \s*""",
+    "command_radius": fr"""\s* (?P<command>xxin) \s+ {KEY}
+        \s+ {LONGITUDE} \s+ {LATITUDE} \s+ {FLOAT} \s+ {DISTUNIT}
+        (\s+ {GEOCHOICE})* (\s+ {COUNT_CONST} \s+ {COUNT})?
+        (\s+ {ORDER})?
+        (\s+ {CONST_STORE} \s+ {KEY})?
+        (\s+ {CONST_STOREDIST} \s+ {KEY})? \s*""",
+    "command_restore": fr"""\s* (?P<command>xxin) \s+ {KEY}
+        \s+ {TIMEOUT} \s+ {VALUE} (\s+ {SUBRESTORE} \s+ {SECOND})? \s*""",
     "command_pubsubcmd_channels": fr"\s* (?P<command>xxin) \s+ {PUBSUBCMD} (\s+ {CHANNEL})+ \s*",
     "command_channel_message": fr"\s* (?P<command>xxin) \s+ {CHANNEL} \s+ {MESSAGE} \s*",
     "command_channels": fr"\s* (?P<command>xxin) (\s+ {CHANNEL})+ \s*",

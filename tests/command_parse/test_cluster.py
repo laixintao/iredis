@@ -4,15 +4,10 @@ redis command in `cluster` group parse test.
 
 
 def test_command_cluster_addslots(judge_command):
+    judge_command("cluster addslots 1", {"command": "cluster addslots", "slots": "1"})
+    judge_command("CLUSTER ADDSLOTS 1", {"command": "CLUSTER ADDSLOTS", "slots": "1"})
     judge_command(
-        "cluster addslots 1", {"command": "cluster addslots", "slots": "1"}
-    )
-    judge_command(
-        "CLUSTER ADDSLOTS 1", {"command": "CLUSTER ADDSLOTS", "slots": "1"}
-    )
-    judge_command(
-        "cluster addslots 1 2 3 4",
-        {"command": "cluster addslots", "slots": "1 2 3 4"},
+        "cluster addslots 1 2 3 4", {"command": "cluster addslots", "slots": "1 2 3 4"}
     )
     judge_command("cluster addslots 1 a", None)
     judge_command("cluster addslots a", None)
@@ -38,12 +33,10 @@ def test_command_cluster_count_failure_reports(judge_command):
 
 def test_command_cluster_countkeysinslot(judge_command):
     judge_command(
-        "cluster countkeysinslot 1",
-        {"command": "cluster countkeysinslot", "slot": "1"},
+        "cluster countkeysinslot 1", {"command": "cluster countkeysinslot", "slot": "1"}
     )
     judge_command(
-        "CLUSTER COUNTKEYSINSLOT 1",
-        {"command": "CLUSTER COUNTKEYSINSLOT", "slot": "1"},
+        "CLUSTER COUNTKEYSINSLOT 1", {"command": "CLUSTER COUNTKEYSINSLOT", "slot": "1"}
     )
     judge_command("cluster countkeysinslot 1 2 3 4", None)
     judge_command("cluster countkeysinslot 1 a", None)
@@ -53,15 +46,10 @@ def test_command_cluster_countkeysinslot(judge_command):
 
 
 def test_command_cluster_delslots(judge_command):
+    judge_command("cluster delslots 1", {"command": "cluster delslots", "slots": "1"})
+    judge_command("CLUSTER DELSLOTS 1", {"command": "CLUSTER DELSLOTS", "slots": "1"})
     judge_command(
-        "cluster delslots 1", {"command": "cluster delslots", "slots": "1"}
-    )
-    judge_command(
-        "CLUSTER DELSLOTS 1", {"command": "CLUSTER DELSLOTS", "slots": "1"}
-    )
-    judge_command(
-        "cluster delslots 1 2 3 4",
-        {"command": "cluster delslots", "slots": "1 2 3 4"},
+        "cluster delslots 1 2 3 4", {"command": "cluster delslots", "slots": "1 2 3 4"}
     )
     judge_command("cluster delslots 1 a", None)
     judge_command("cluster delslots a", None)
@@ -116,11 +104,7 @@ def test_command_cluster_getkeysinslot(judge_command):
     )
     judge_command(
         "cluster getkeysinslot 1123 1121",
-        {
-            "command": "cluster getkeysinslot",
-            "slot": "1123",
-            "count": "1121",
-        },
+        {"command": "cluster getkeysinslot", "slot": "1123", "count": "1121"},
     )
     judge_command("cluster getkeysinslot 1 2 3 4", None)
     judge_command("cluster getkeysinslot 1 a", None)
@@ -166,24 +150,19 @@ def test_command_cluster_nodes(judge_command):
 
 def test_command_cluster_reset(judge_command):
     judge_command(
-        "cluster reset hard",
-        {"command": "cluster reset", "resetchoice": "hard"},
+        "cluster reset hard", {"command": "cluster reset", "resetchoice": "hard"}
     )
     judge_command(
-        "cluster reset soft",
-        {"command": "cluster reset", "resetchoice": "soft"},
+        "cluster reset soft", {"command": "cluster reset", "resetchoice": "soft"}
     )
     judge_command(
-        "CLUSTER RESET HARD",
-        {"command": "CLUSTER RESET", "resetchoice": "HARD"},
+        "CLUSTER RESET HARD", {"command": "CLUSTER RESET", "resetchoice": "HARD"}
     )
     judge_command(
-        "CLUSTER RESET soft",
-        {"command": "CLUSTER RESET", "resetchoice": "soft"},
+        "CLUSTER RESET soft", {"command": "CLUSTER RESET", "resetchoice": "soft"}
     )
     judge_command(
-        "CLUSTER RESET SOFT",
-        {"command": "CLUSTER RESET", "resetchoice": "SOFT"},
+        "CLUSTER RESET SOFT", {"command": "CLUSTER RESET", "resetchoice": "SOFT"}
     )
     judge_command("CLUSTER RESET SOFT1", None)
     judge_command("CLUSTER RESET SAOFT", None)
@@ -240,17 +219,9 @@ def test_command_cluster_set_slot(judge_command):
     )
     judge_command(
         "cluster setslot 123 stable",
-        {
-            "command": "cluster setslot",
-            "slot": "123",
-            "slotsubcmd": "stable",
-        },
+        {"command": "cluster setslot", "slot": "123", "slotsubcmd": "stable"},
     )
     judge_command(
         "cluster setslot 123 STABLE",
-        {
-            "command": "cluster setslot",
-            "slot": "123",
-            "slotsubcmd": "STABLE",
-        },
+        {"command": "cluster setslot", "slot": "123", "slotsubcmd": "STABLE"},
     )

@@ -14,9 +14,7 @@ def test_ping(judge_command):
 
 def test_select(judge_command):
     for index in range(16):
-        judge_command(
-            f"select {index}", {"command": "select", "index": str(index)}
-        )
+        judge_command(f"select {index}", {"command": "select", "index": str(index)})
     for index in range(16, 100):
         judge_command(f"select {index}", None)
     judge_command("select acb", None)

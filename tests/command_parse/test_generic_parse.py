@@ -24,13 +24,9 @@ def test_exists(judge_command):
 
 
 def test_expire(judge_command):
-    judge_command(
-        "EXPIRE key 12", {"command": "EXPIRE", "key": "key", "second": "12"}
-    )
+    judge_command("EXPIRE key 12", {"command": "EXPIRE", "key": "key", "second": "12"})
     judge_command("EXPIRE key a12", None)
-    judge_command(
-        "EXPIRE 12 12", {"command": "EXPIRE", "key": "12", "second": "12"}
-    )
+    judge_command("EXPIRE 12 12", {"command": "EXPIRE", "key": "12", "second": "12"})
     judge_command("EXPIRE 12", None)
 
 
@@ -49,20 +45,16 @@ def test_keys(judge_command):
 
 
 def test_move(judge_command):
-    judge_command(
-        "MOVE key 14", {"command": "MOVE", "key": "key", "index": "14"}
-    )
+    judge_command("MOVE key 14", {"command": "MOVE", "key": "key", "index": "14"})
 
 
 def test_pexpire(judge_command):
     judge_command(
-        "PEXPIRE key 12",
-        {"command": "PEXPIRE", "key": "key", "millisecond": "12"},
+        "PEXPIRE key 12", {"command": "PEXPIRE", "key": "key", "millisecond": "12"}
     )
     judge_command("PEXPIRE key a12", None)
     judge_command(
-        "PEXPIRE 12 12",
-        {"command": "PEXPIRE", "key": "12", "millisecond": "12"},
+        "PEXPIRE 12 12", {"command": "PEXPIRE", "key": "12", "millisecond": "12"}
     )
     judge_command("PEXPIRE 12", None)
 
@@ -70,23 +62,17 @@ def test_pexpire(judge_command):
 def test_pexpireat(judge_command):
     judge_command(
         "PEXPIREAT key 1565787643",
-        {
-            "command": "PEXPIREAT",
-            "key": "key",
-            "timestampms": "1565787643",
-        },
+        {"command": "PEXPIREAT", "key": "key", "timestampms": "1565787643"},
     )
     judge_command("PEXPIREAT key a12", None)
 
 
 def test_rename(judge_command):
     judge_command(
-        "rename key newkey",
-        {"command": "rename", "key": "key", "newkey": "newkey"},
+        "rename key newkey", {"command": "rename", "key": "key", "newkey": "newkey"}
     )
     judge_command(
-        "rename 123 newkey",
-        {"command": "rename", "key": "123", "newkey": "newkey"},
+        "rename 123 newkey", {"command": "rename", "key": "123", "newkey": "newkey"}
     )
     judge_command("rename 123 ", None)
 
@@ -105,17 +91,10 @@ def test_scan(judge_command):
             "type": "string",
         },
     )
-    judge_command(
-        "SCAN 0", {"command": "SCAN", "cursor": "0"}
-    )
+    judge_command("SCAN 0", {"command": "SCAN", "cursor": "0"})
     judge_command(
         "SCAN 0 MATCH task*",
-        {
-            "command": "SCAN",
-            "cursor": "0",
-            "match": "MATCH",
-            "pattern": "task*",
-        },
+        {"command": "SCAN", "cursor": "0", "match": "MATCH", "pattern": "task*"},
     )
     judge_command(
         "SCAN 0 COUNT 15 TYPE string",
@@ -154,9 +133,7 @@ def test_object(judge_command):
 
 
 def test_wait(judge_command):
-    judge_command(
-        "WAIT 3 100", {"command": "WAIT", "count": "3", "timeout": "100"}
-    )
+    judge_command("WAIT 3 100", {"command": "WAIT", "count": "3", "timeout": "100"})
 
 
 def test_restore(judge_command):

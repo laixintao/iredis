@@ -18,10 +18,5 @@ def test_eval(judge_command):
 
 
 def test_scriptdebug(judge_command):
-    judge_command(
-        "SCRIPT DEBUG YES",
-        {"command": "SCRIPT DEBUG", "scriptdebug": "YES"},
-    )
-    judge_command(
-        "SCRIPT DEBUG no", {"command": "SCRIPT DEBUG", "scriptdebug": "no"}
-    )
+    judge_command("SCRIPT DEBUG YES", {"command": "SCRIPT DEBUG", "scriptdebug": "YES"})
+    judge_command("SCRIPT DEBUG no", {"command": "SCRIPT DEBUG", "scriptdebug": "no"})

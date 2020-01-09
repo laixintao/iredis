@@ -1,13 +1,10 @@
 import pytest
 
 from unittest.mock import MagicMock
-from prompt_toolkit.completion import Completion
-from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 
 from iredis.completers import LatestUsedFirstWordCompleter
-from iredis.config import config
-from iredis.redis_grammar import get_command_grammar, command_grammar
+from iredis.redis_grammar import command_grammar
 from iredis.completers import completer_mapping
 
 
@@ -48,4 +45,4 @@ def test_newbie_mode_complete_with_meta_dict():
     completions = list(completer.get_completions(fake_document, None))
     print(completions[0])
 
-    assert completions[:2] == None
+    assert completions[:2] is None

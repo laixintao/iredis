@@ -52,6 +52,5 @@ def test_command_with_key_in_quotes(judge_command):
         {"command": "cluster keyslot", "key": '"\\"mykey"'},
     )
     judge_command(
-        'cluster keyslot "mykey "',
-        {"command": "cluster keyslot", "key": '"mykey "'},
+        'cluster keyslot "mykey "', {"command": "cluster keyslot", "key": '"mykey "'}
     )

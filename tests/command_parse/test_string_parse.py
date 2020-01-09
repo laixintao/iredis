@@ -1,8 +1,5 @@
 def test_set(judge_command):
-    judge_command(
-        "SET abc bar",
-        {"command": "SET", "key": "abc", "value": "bar"},
-    )
+    judge_command("SET abc bar", {"command": "SET", "key": "abc", "value": "bar"})
     judge_command(
         "SET abc bar EX 10",
         {
@@ -47,22 +44,14 @@ def test_set(judge_command):
     )
     judge_command(
         "SET abc bar XX",
-        {
-            "command": "SET",
-            "key": "abc",
-            "value": "bar",
-            "condition": "XX",
-        },
+        {"command": "SET", "key": "abc", "value": "bar", "condition": "XX"},
     )
 
 
 def test_append(judge_command):
+    judge_command("append foo bar", {"command": "append", "key": "foo", "value": "bar"})
     judge_command(
-        "append foo bar", {"command": "append", "key": "foo", "value": "bar"}
-    )
-    judge_command(
-        "APPEND foo 'bar'",
-        {"command": "APPEND", "key": "foo", "value": "'bar'"},
+        "APPEND foo 'bar'", {"command": "APPEND", "key": "foo", "value": "'bar'"}
     )
     judge_command("APPEND foo", None)
 
@@ -75,21 +64,11 @@ def test_bitcount(judge_command):
     )
     judge_command(
         "bitcount foo 1 -5",
-        {
-            "command": "bitcount",
-            "key": "foo",
-            "start": "1",
-            "end": "-5",
-        },
+        {"command": "bitcount", "key": "foo", "start": "1", "end": "-5"},
     )
     judge_command(
         "bitcount foo -2 -1",
-        {
-            "command": "bitcount",
-            "key": "foo",
-            "start": "-2",
-            "end": "-1",
-        },
+        {"command": "bitcount", "key": "foo", "start": "-2", "end": "-1"},
     )
     judge_command("bitcount foo -2", None)
 
@@ -112,9 +91,7 @@ def test_getrange(judge_command):
 
 
 def test_get_set(judge_command):
-    judge_command(
-        "GETSET abc bar", {"command": "GETSET", "key": "abc", "value": "bar"}
-    )
+    judge_command("GETSET abc bar", {"command": "GETSET", "key": "abc", "value": "bar"})
 
 
 def test_incr(judge_command):
@@ -126,15 +103,9 @@ def test_incr(judge_command):
 def test_incr_by(judge_command):
     judge_command("INCRBY foo", None)
     judge_command("INCRBY", None)
-    judge_command(
-        "INCRBY foo 1", {"command": "INCRBY", "key": "foo", "delta": "1"}
-    )
-    judge_command(
-        "INCRBY foo 200", {"command": "INCRBY", "key": "foo", "delta": "200"}
-    )
-    judge_command(
-        "INCRBY foo -21", {"command": "INCRBY", "key": "foo", "delta": "-21"}
-    )
+    judge_command("INCRBY foo 1", {"command": "INCRBY", "key": "foo", "delta": "1"})
+    judge_command("INCRBY foo 200", {"command": "INCRBY", "key": "foo", "delta": "200"})
+    judge_command("INCRBY foo -21", {"command": "INCRBY", "key": "foo", "delta": "-21"})
 
 
 def test_decr(judge_command):
@@ -146,26 +117,15 @@ def test_decr(judge_command):
 def test_decr_by(judge_command):
     judge_command("DECRBY foo", None)
     judge_command("DECRBY", None)
-    judge_command(
-        "DECRBY foo 1", {"command": "DECRBY", "key": "foo", "delta": "1"}
-    )
-    judge_command(
-        "DECRBY foo 200", {"command": "DECRBY", "key": "foo", "delta": "200"}
-    )
-    judge_command(
-        "DECRBY foo -21", {"command": "DECRBY", "key": "foo", "delta": "-21"}
-    )
+    judge_command("DECRBY foo 1", {"command": "DECRBY", "key": "foo", "delta": "1"})
+    judge_command("DECRBY foo 200", {"command": "DECRBY", "key": "foo", "delta": "200"})
+    judge_command("DECRBY foo -21", {"command": "DECRBY", "key": "foo", "delta": "-21"})
 
 
 def test_command_set_range(judge_command):
     judge_command(
         "SETRANGE foo 10 bar",
-        {
-            "command": "SETRANGE",
-            "key": "foo",
-            "offset": "10",
-            "value": "bar",
-        },
+        {"command": "SETRANGE", "key": "foo", "offset": "10", "value": "bar"},
     )
     judge_command("SETRANGE foo bar", None)
     judge_command(
@@ -182,22 +142,12 @@ def test_command_set_range(judge_command):
 def test_command_set_ex(judge_command):
     judge_command(
         "SETEX key 10 value",
-        {
-            "command": "SETEX",
-            "key": "key",
-            "second": "10",
-            "value": "value",
-        },
+        {"command": "SETEX", "key": "key", "second": "10", "value": "value"},
     )
     judge_command("SETEX foo 10", None)
     judge_command(
         "setex Redis 10 'hello world'",
-        {
-            "command": "setex",
-            "key": "Redis",
-            "second": "10",
-            "value": "'hello world'",
-        },
+        {"command": "setex", "key": "Redis", "second": "10", "value": "'hello world'"},
     )
 
 
@@ -217,12 +167,8 @@ def test_command_setbit(judge_command):
 
 
 def test_command_getbit(judge_command):
-    judge_command(
-        "GETBIT key 10", {"command": "GETBIT", "key": "key", "offset": "10"}
-    )
-    judge_command(
-        "GETBIT foo 0", {"command": "GETBIT", "key": "foo", "offset": "0"}
-    )
+    judge_command("GETBIT key 10", {"command": "GETBIT", "key": "key", "offset": "10"})
+    judge_command("GETBIT foo 0", {"command": "GETBIT", "key": "foo", "offset": "0"})
     judge_command("GETBIT foo -1", None)
     judge_command("SETBIT foo abc", None)
     judge_command("SETBIT foo", None)
@@ -231,16 +177,13 @@ def test_command_getbit(judge_command):
 def test_command_incrbyfloat(judge_command):
     judge_command("INCRBYFLOAT key", None)
     judge_command(
-        "INCRBYFLOAT key 1.1",
-        {"command": "INCRBYFLOAT", "key": "key", "float": "1.1"},
+        "INCRBYFLOAT key 1.1", {"command": "INCRBYFLOAT", "key": "key", "float": "1.1"}
     )
     judge_command(
-        "INCRBYFLOAT key .1",
-        {"command": "INCRBYFLOAT", "key": "key", "float": ".1"},
+        "INCRBYFLOAT key .1", {"command": "INCRBYFLOAT", "key": "key", "float": ".1"}
     )
     judge_command(
-        "INCRBYFLOAT key 1.",
-        {"command": "INCRBYFLOAT", "key": "key", "float": "1."},
+        "INCRBYFLOAT key 1.", {"command": "INCRBYFLOAT", "key": "key", "float": "1."}
     )
     judge_command(
         "INCRBYFLOAT key 5.0e3",
@@ -257,9 +200,7 @@ def test_command_mget(judge_command):
 
 
 def test_mset(judge_command):
-    judge_command(
-        "mset foo bar", {"command": "mset", "key": "foo", "value": "bar"}
-    )
+    judge_command("mset foo bar", {"command": "mset", "key": "foo", "value": "bar"})
     judge_command(
         "mset foo bar hello world",
         {"command": "mset", "key": "hello", "value": "world"},
@@ -269,12 +210,7 @@ def test_mset(judge_command):
 def test_psetex(judge_command):
     judge_command(
         "psetex foo 1000 bar",
-        {
-            "command": "psetex",
-            "key": "foo",
-            "value": "bar",
-            "millisecond": "1000",
-        },
+        {"command": "psetex", "key": "foo", "value": "bar", "millisecond": "1000"},
     )
     judge_command("psetex foo bar", None)
 
@@ -282,21 +218,11 @@ def test_psetex(judge_command):
 def test_bitop(judge_command):
     judge_command(
         "BITOP AND dest key1 key2",
-        {
-            "command": "BITOP",
-            "operation": "AND",
-            "key": "dest",
-            "keys": "key1 key2",
-        },
+        {"command": "BITOP", "operation": "AND", "key": "dest", "keys": "key1 key2"},
     )
     judge_command(
         "BITOP AND dest key1",
-        {
-            "command": "BITOP",
-            "operation": "AND",
-            "key": "dest",
-            "keys": "key1",
-        },
+        {"command": "BITOP", "operation": "AND", "key": "dest", "keys": "key1"},
     )
     judge_command("BITOP AND dest", None)
 
@@ -304,24 +230,10 @@ def test_bitop(judge_command):
 def test_bitpos(judge_command):
     judge_command(
         "BITPOS mykey 1 3 5",
-        {
-            "command": "BITPOS",
-            "key": "mykey",
-            "bit": "1",
-            "start": "3",
-            "end": "5",
-        },
+        {"command": "BITPOS", "key": "mykey", "bit": "1", "start": "3", "end": "5"},
     )
-    judge_command(
-        "BITPOS mykey 1",
-        {"command": "BITPOS", "key": "mykey", "bit": "1"},
-    )
+    judge_command("BITPOS mykey 1", {"command": "BITPOS", "key": "mykey", "bit": "1"})
     judge_command(
         "BITPOS mykey 1 3",
-        {
-            "command": "BITPOS",
-            "key": "mykey",
-            "bit": "1",
-            "start": "3",
-        },
+        {"command": "BITPOS", "key": "mykey", "bit": "1", "start": "3"},
     )

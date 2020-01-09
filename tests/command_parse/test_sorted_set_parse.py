@@ -14,8 +14,7 @@ def test_bzpopmax(judge_command):
         {"command": "bzpopmax", "keys": "set set2 set3", "timeout": "4"},
     )
     judge_command(
-        "bzpopmin set   4",
-        {"command": "bzpopmin", "keys": "set", "timeout": "4"},
+        "bzpopmin set   4", {"command": "bzpopmin", "keys": "set", "timeout": "4"}
     )
 
 
@@ -56,81 +55,41 @@ def test_zadd(judge_command):
 def test_zincrby(judge_command):
     judge_command(
         "zincrby t 10 foo",
-        {
-            "command": "zincrby",
-            "key": "t",
-            "float": "10",
-            "member": "foo",
-        },
+        {"command": "zincrby", "key": "t", "float": "10", "member": "foo"},
     )
     judge_command(
         "zincrby t 2.3 foo",
-        {
-            "command": "zincrby",
-            "key": "t",
-            "float": "2.3",
-            "member": "foo",
-        },
+        {"command": "zincrby", "key": "t", "float": "2.3", "member": "foo"},
     )
 
 
 def test_zlexcount(judge_command):
     judge_command(
         "zlexcount a - +",
-        {
-            "command": "zlexcount",
-            "key": "a",
-            "lexmin": "-",
-            "lexmax": "+",
-        },
+        {"command": "zlexcount", "key": "a", "lexmin": "-", "lexmax": "+"},
     )
     judge_command(
         "zlexcount a (aaaa [z",
-        {
-            "command": "zlexcount",
-            "key": "a",
-            "lexmin": "(aaaa",
-            "lexmax": "[z",
-        },
+        {"command": "zlexcount", "key": "a", "lexmin": "(aaaa", "lexmax": "[z"},
     )
     judge_command(
         "ZLEXCOUNT myset - [c",
-        {
-            "command": "ZLEXCOUNT",
-            "key": "myset",
-            "lexmin": "-",
-            "lexmax": "[c",
-        },
+        {"command": "ZLEXCOUNT", "key": "myset", "lexmin": "-", "lexmax": "[c"},
     )
     judge_command(
         "ZLEXCOUNT myset [aaa (g",
-        {
-            "command": "ZLEXCOUNT",
-            "key": "myset",
-            "lexmin": "[aaa",
-            "lexmax": "(g",
-        },
+        {"command": "ZLEXCOUNT", "key": "myset", "lexmin": "[aaa", "lexmax": "(g"},
     )
 
 
 def test_zrange(judge_command):
     judge_command(
         "zrange foo -1 10",
-        {
-            "command": "zrange",
-            "key": "foo",
-            "start": "-1",
-            "end": "10",
-        },
+        {"command": "zrange", "key": "foo", "start": "-1", "end": "10"},
     )
     judge_command(
         "zrange foo 0 -1",
-        {
-            "command": "zrange",
-            "key": "foo",
-            "start": "0",
-            "end": "-1",
-        },
+        {"command": "zrange", "key": "foo", "start": "0", "end": "-1"},
     )
     judge_command(
         "zrange foo 0 -1 withscores",
@@ -154,21 +113,11 @@ def test_zinterstore(judge_command):
 def test_zrangebylex(judge_command):
     judge_command(
         "ZRANGEBYLEX myzset [aaa (g",
-        {
-            "command": "ZRANGEBYLEX",
-            "key": "myzset",
-            "lexmin": "[aaa",
-            "lexmax": "(g",
-        },
+        {"command": "ZRANGEBYLEX", "key": "myzset", "lexmin": "[aaa", "lexmax": "(g"},
     )
     judge_command(
         "ZRANGEBYLEX myzset - (c",
-        {
-            "command": "ZRANGEBYLEX",
-            "key": "myzset",
-            "lexmin": "-",
-            "lexmax": "(c",
-        },
+        {"command": "ZRANGEBYLEX", "key": "myzset", "lexmin": "-", "lexmax": "(c"},
     )
     judge_command(
         "ZRANGEBYLEX myzset - (c limit 10 100",
@@ -199,30 +148,15 @@ def test_zrangebylex(judge_command):
 def test_zrangebyscore(judge_command):
     judge_command(
         "ZRANGEBYSCORE myzset -inf +inf",
-        {
-            "command": "ZRANGEBYSCORE",
-            "key": "myzset",
-            "min": "-inf",
-            "max": "+inf",
-        },
+        {"command": "ZRANGEBYSCORE", "key": "myzset", "min": "-inf", "max": "+inf"},
     )
     judge_command(
         "ZRANGEBYSCORE myzset 1 2",
-        {
-            "command": "ZRANGEBYSCORE",
-            "key": "myzset",
-            "min": "1",
-            "max": "2",
-        },
+        {"command": "ZRANGEBYSCORE", "key": "myzset", "min": "1", "max": "2"},
     )
     judge_command(
         "ZRANGEBYSCORE myzset (1 (2",
-        {
-            "command": "ZRANGEBYSCORE",
-            "key": "myzset",
-            "min": "(1",
-            "max": "(2",
-        },
+        {"command": "ZRANGEBYSCORE", "key": "myzset", "min": "(1", "max": "(2"},
     )
     judge_command(
         "ZRANGEBYSCORE myzset -inf +inf LIMIT 10 100",
