@@ -298,7 +298,7 @@ NEW_GRAMMAR = {
     "command_pubsubcmd_channels": fr"\s* (?P<command>xxin) \s+ {PUBSUBCMD} (\s+ {CHANNEL})+ \s*",
     "command_channel_message": fr"\s* (?P<command>xxin) \s+ {CHANNEL} \s+ {MESSAGE} \s*",
     "command_channels": fr"\s* (?P<command>xxin) (\s+ {CHANNEL})+ \s*",
-    "command_lua_any": """\s* (?P<command>xxin) (\s+"{DOUBLE_LUA}")? (\s+'{SINGLE_LUA}')? \s+ {ANY} \s*""",
+    "command_lua_any": fr"""\s* (?P<command>xxin) (\s+"{DOUBLE_LUA}")? (\s+'{SINGLE_LUA}')? \s+ {ANY} \s*""",
     "command_scriptdebug": fr"\s* (?P<command>xxin) \s+ {SCRIPTDEBUG} \s*",
     "command_shutdown": fr"\s* (?P<command>xxin) \s+ {SHUTDOWN} \s*",
 }
