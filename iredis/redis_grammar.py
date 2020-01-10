@@ -259,19 +259,29 @@ NEW_GRAMMAR = {
     "command_key_bit_start_end": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {BIT} (\s+ {START})? (\s+ {END})? \s*",
     "command_key_members": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {MEMBERS} \s*",
     "command_geodist": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {MEMBER} \s+ {MEMBER} (\s+ {DISTUNIT})? \s*",
-    "command_key_longitude_latitude_members": fr"\s* (?P<command>xxin) \s+ {KEY} (\s+ {LONGITUDE} \s+ {LATITUDE} \s {MEMBER})+ \s*",
+    "command_key_longitude_latitude_members": fr"""\s* (?P<command>xxin)
+        \s+ {KEY} (\s+ {LONGITUDE} \s+ {LATITUDE} \s {MEMBER})+ \s*""",
     "command_destination_keys": fr"\s* (?P<command>xxin) \s+ {DESTINATION} \s+ {KEYS} \s*",
     "command_object_key": fr"\s* (?P<command>xxin) \s+ {OBJECT} \s+ {KEY} \s*",
     "command_key_member": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {MEMBER} \s*",
     "command_key_newkey_member": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {NEWKEY} \s+ {MEMBER} \s*",
     "command_key_count_x": fr"\s* (?P<command>xxin) \s+ {KEY} (\s+ {COUNT})? \s*",
     "command_key_min_max": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {MIN} \s+ {MAX} \s*",
-    "command_key_condition_changed_incr_score_members": fr"\s* (?P<command_key_condition_changed_incr_score_members> ({t['command_key_condition_changed_incr_score_members']})) \s+ {KEY} (\s+ {CONDITION})? (\s+ {CHANGED})? (\s+ {INCR})? (\s+ {SCORE} \s+ {MEMBER})+ \s*",
+    "command_key_condition_changed_incr_score_members": fr"""\s* (?P<command>xxin)
+        \s+ {KEY} (\s+ {CONDITION})?
+        (\s+ {CHANGED})?
+        (\s+ {INCR})?
+        (\s+ {SCORE} \s+ {MEMBER})+ \s*""",
     "command_key_float_member": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {FLOAT} \s+ {MEMBER} \s*",
     "command_key_lexmin_lexmax": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {LEXMIN} \s+ {LEXMAX} \s*",
-    "command_key_start_end_withscores_x": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {START} \s+ {END} (\s+ {WITHSCORES})? \s*",
-    "command_key_lexmin_lexmax_limit_offset_count": fr"\s* (?P<command_key_lexmin_lexmax_limit_offset_count> ({t['command_key_lexmin_lexmax_limit_offset_count']})) \s+ {KEY} \s+ {LEXMIN} \s+ {LEXMAX} (\s+ {LIMIT} \s+ {OFFSET} \s+ {COUNT})? \s*",
-    "command_key_min_max_withscore_x_limit_offset_count_x": fr"\s* (?P<command_key_min_max_withscore_x_limit_offset_count_x> ({t['command_key_min_max_withscore_x_limit_offset_count_x']})) \s+ {KEY} \s+ {MIN} \s+ {MAX} (\s+ {WITHSCORES})? (\s+ {LIMIT} \s+ {OFFSET} \s+ {COUNT})? \s*",
+    "command_key_start_end_withscores_x": fr"""\s* (?P<command>xxin)
+        \s+ {KEY} \s+ {START} \s+ {END} (\s+ {WITHSCORES})? \s*""",
+    "command_key_lexmin_lexmax_limit_offset_count": fr"""\s* (?P<command>xxin)
+        \s+ {KEY} \s+ {LEXMIN} \s+ {LEXMAX}
+        (\s+ {LIMIT} \s+ {OFFSET} \s+ {COUNT})? \s*""",
+    "command_key_min_max_withscore_x_limit_offset_count_x": fr"""\s* (?P<command>xxin)
+        \s+ {KEY} \s+ {MIN} \s+ {MAX} (\s+ {WITHSCORES})?
+        (\s+ {LIMIT} \s+ {OFFSET} \s+ {COUNT})? \s*""",
     "command_cursor_match_pattern_count_type": fr"\s* (?P<command>xxin) \s+ {CURSOR} (\s+ {MATCH} \s+ {PATTERN})? (\s+ {COUNT_CONST} \s+ {COUNT})? (\s+ {TYPE_CONST} \s+ {TYPE})? \s*",
     "command_key_cursor_match_pattern_count": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {CURSOR} (\s+ {MATCH} \s+ {PATTERN})? (\s+ {COUNT_CONST} \s+ {COUNT})? \s*",
     "command_key_fields": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {FIELDS} \s*",
