@@ -6,7 +6,7 @@ version: 2
 jobs:
   upload-to-pypi:
     docker:
-      - image: circleci/python:3.7.1
+      - image: circleci/python:3.7.5
     working_directory: ~/repo
     steps:
       - attach_workspace:
@@ -32,7 +32,7 @@ jobs:
             twine upload /tmp/workspace/dist/* -u __token__ -p ${PYPITOKEN}
   test-release:
     docker:
-      - image: circleci/python:3.7.1
+      - image: circleci/python:3.7.5
     working_directory: ~/repo
     steps:
       - attach_workspace:
@@ -53,7 +53,7 @@ jobs:
 
   build-release:
     docker:
-      - image: circleci/python:3.7.1
+      - image: circleci/python:3.7.5
     working_directory: ~/repo
     steps:
       - checkout
@@ -93,7 +93,7 @@ jobs:
 
   black-check:
     docker:
-      - image: circleci/python:3.7.1
+      - image: circleci/python:3.7.5
     working_directory: ~/repo
     steps:
       - checkout
@@ -123,7 +123,7 @@ jobs:
 
   flake8-check:
     docker:
-      - image: circleci/python:3.7.1
+      - image: circleci/python:3.7.5
     working_directory: ~/repo
     steps:
       - checkout
@@ -151,6 +151,47 @@ jobs:
             . venv/bin/activate
             flake8 .
 
+  unittest-python3.6.4: &unit-template
+    docker:
+      - image: circleci/python:3.6.4
+      - image: circleci/redis:5
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run:
+         name: "Pull Submodules"
+         command: |
+           git submodule init
+           git submodule update --remote
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v4-dependencies-{{ checksum "pyproject.toml" }}
+            # fallback to using the latest cache if no exact match is found
+            - v4-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install poetry pip==19
+            poetry install
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v4-dependencies-{{ checksum "pyproject.toml" }}
+
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            pytest
   unittest-python3.7.0: &unit-template
     docker:
       - image: circleci/python:3.7.0
@@ -287,6 +328,10 @@ workflows:
           filters:
             tags:
               only: /.*/
+      - unittest-python3.6.4:
+          filters:
+            tags:
+              only: /.*/
       - unittest-python3.7.0:
           filters:
             tags:
@@ -302,6 +347,7 @@ workflows:
       - build-release:
           requires:
             - black-check
+            - unittest-python3.6.4
             - unittest-python3.7.0
             - unittest-python3.7.5
             - unittest-python3.8
