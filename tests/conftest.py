@@ -5,6 +5,7 @@ from iredis.client import Client
 from iredis.commands_csv_loader import all_commands
 from iredis.utils import split_command_args
 from iredis.redis_grammar import get_command_grammar
+from iredis.exceptions import InvalidArguments
 
 
 TIMEOUT = 3
@@ -14,6 +15,11 @@ HISTORY_FILE = ".iredis_history"
 @pytest.fixture
 def judge_command():
     def judge_command_func(input_text, expect):
+        if expect == "invalid":
+            with pytest.raises(InvalidArguments):
+                split_command_args(input_text, all_commands)
+            return
+
         command, _ = split_command_args(input_text, all_commands)
         grammar = get_command_grammar(command)
 
@@ -23,6 +29,8 @@ def judge_command():
         if not expect:
             assert m is None
             return
+
+
 
         variables = m.variables()
         print("Found variables: {}".format(variables))
