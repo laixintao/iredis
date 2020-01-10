@@ -2,6 +2,7 @@
 command_nodex: x means node?
 """
 import logging
+from functools import lru_cache
 
 from prompt_toolkit.contrib.regular_languages.compiler import compile
 from .commands_csv_loader import command2syntax
@@ -224,7 +225,6 @@ NEW_GRAMMAR = {
     "command_value": fr"\s* (?P<command>xxin) \s+ {VALUE} \s*",
     "command_key_second": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {SECOND} \s*",
     "command_key_timestamp": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {TIMESTAMP} \s*",
-    "command_pattern": fr"\s* (?P<command>xxin) \s+ {PATTERN} \s*",
     "command_key_index": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {INDEX} \s*",
     "command_key_millisecond": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {MILLISECOND} \s*",
     "command_key_timestampms": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {TIMESTAMPMS} \s*",
@@ -304,6 +304,7 @@ NEW_GRAMMAR = {
 }
 
 
+@lru_cache(maxsize=256)
 def get_command_grammar(command):
     """
     :param command: command name in upper case. This command must be raw user

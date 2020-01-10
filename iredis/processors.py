@@ -37,7 +37,6 @@ class GetCommandProcessor(Processor):
     def __init__(self, command_holder, session):
         # processor will call for internal_refresh, when input_text didn't
         # change, don't run
-        self.last_text = None
         self.session = session
         self.command_holder = command_holder
 
@@ -45,24 +44,20 @@ class GetCommandProcessor(Processor):
         self, transformation_input: TransformationInput
     ) -> Transformation:
         input_text = transformation_input.document.text
-        if input_text != self.last_text and input_text:
-            try:
-                command, _ = split_command_args(input_text, all_commands)
-            except InvalidArguments:
-                self.command_holder.command = None
-                self.session.completer = default_completer
-                self.session.lexer = default_lexer
-                logger.info(f"[current grammar] default")
-            else:
-                self.command_holder.command = command.upper()
-                # compile grammar for this command
-                grammar = get_command_grammar(command)
-                lexer = GrammarLexer(grammar, lexers=lexers_mapping)
-                completer = GrammarCompleter(grammar, completer_mapping)
+        try:
+            command, _ = split_command_args(input_text, all_commands)
+        except InvalidArguments:
+            self.command_holder.command = None
+            self.session.completer = default_completer
+            self.session.lexer = default_lexer
+        else:
+            self.command_holder.command = command.upper()
+            # compile grammar for this command
+            grammar = get_command_grammar(command)
+            lexer = GrammarLexer(grammar, lexers=lexers_mapping)
+            completer = GrammarCompleter(grammar, completer_mapping)
 
-                self.session.completer = completer
-                self.session.lexer = lexer
-                logger.info(f"[current grammar] {grammar}")
+            self.session.completer = completer
+            self.session.lexer = lexer
 
-            self.last_text = input_text
         return Transformation(transformation_input.fragments)
