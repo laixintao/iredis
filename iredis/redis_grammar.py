@@ -300,7 +300,7 @@ NEW_GRAMMAR = {
     "command_channels": fr"\s* (?P<command>xxin) (\s+ {CHANNEL})+ \s*",
     "command_lua_any": """\s* (?P<command>xxin) (\s+"{DOUBLE_LUA}")? (\s+'{SINGLE_LUA}')? \s+ {ANY} \s*""",
     "command_scriptdebug": fr"\s* (?P<command>xxin) \s+ {SCRIPTDEBUG} \s*",
-    "command_shutdown": fr"\s* (?P<command>xxin) \s+ {SHUTDOWN} \s",
+    "command_shutdown": fr"\s* (?P<command>xxin) \s+ {SHUTDOWN} \s*",
 }
 
 
@@ -316,7 +316,7 @@ def get_command_grammar(command):
     # TODO this should be deleted
     if syntax is None:
         return command_grammar
-    syntax = syntax.replace(r"xxin", command)
+    syntax = syntax.replace(r"xxin", command.replace(r" ", r"\s+"))
 
     logger.info(f"syxtax: {syntax}")
 

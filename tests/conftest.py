@@ -1,38 +1,31 @@
 import pexpect
 import pytest
 import redis
-import time
-import threading
-from unittest.mock import MagicMock
-from iredis.entry import compile_grammar_bg
-from iredis.redis_grammar import REDIS_COMMANDS
 from iredis.client import Client
-from iredis.completers import get_completer
-from iredis.commands_csv_loader import group2commands
-from prompt_toolkit.contrib.regular_languages.compiler import compile
+from iredis.commands_csv_loader import all_commands
+from iredis.utils import split_command_args
+from iredis.redis_grammar import get_command_grammar
 
 
 TIMEOUT = 3
-redis_grammar = compile(REDIS_COMMANDS)
 HISTORY_FILE = ".iredis_history"
 
 
 @pytest.fixture
-def completer():
-    return get_completer(group2commands, redis_grammar)
-
-
-@pytest.fixture
 def judge_command():
-    def judge_command_func(command, expect):
-        m = redis_grammar.match(command)
+    def judge_command_func(input_text, expect):
+        command, _ = split_command_args(input_text, all_commands)
+        grammar = get_command_grammar(command)
 
-        # not match
+        m = grammar.match(input_text)
+
+        # test on not match
         if not expect:
             assert m is None
             return
 
         variables = m.variables()
+        print("Found variables: {}".format(variables))
         for expect_token, expect_value in expect.items():
             all_variables = variables.getall(expect_token)
             if len(all_variables) > 1:
@@ -64,13 +57,3 @@ def local_process():
     child = pexpect.spawn("iredis -n 15", timeout=TIMEOUT)
     yield child
     child.close()
-
-
-def prompt_session():
-    """Global prompt-toolkit session, compiled grammer"""
-    session = MagicMock()
-    normal_thread_count = threading.active_count()
-    compile_grammar_bg(session)
-    while threading.active_count() > normal_thread_count:
-        time.sleep(0.1)
-    return session
