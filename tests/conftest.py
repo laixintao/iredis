@@ -30,8 +30,6 @@ def judge_command():
             assert m is None
             return
 
-
-
         variables = m.variables()
         print("Found variables: {}".format(variables))
         for expect_token, expect_value in expect.items():

@@ -102,12 +102,15 @@ def split_command_args(command, all_commands):
     command = command.lstrip()
     upper_raw_command = command.upper()
     for command_name in all_commands:
-        if upper_raw_command.startswith(command_name):
+        total_equal = command_name == upper_raw_command
+        ends_with_space = upper_raw_command.startswith(command_name + " ")
+        if total_equal or ends_with_space:
             name_len = len(command_name)
             input_command = command[:name_len]
             input_args = command[name_len:]
             break
     else:
+        logger.info("Utils split command] Not valid")
         raise InvalidArguments(f"`{command}` is not a valide Redis Command")
 
     args = list(_strip_quote_args(input_args))
