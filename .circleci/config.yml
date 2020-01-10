@@ -170,7 +170,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v4-dependencies-{{ checksum "pyproject.toml" }}
+            - v4-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v4-dependencies-
 
@@ -185,7 +185,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v4-dependencies-{{ checksum "pyproject.toml" }}
+          key: v4-dependencies-{{ checksum "poetry.lock" }}
 
       - run:
           name: run tests
@@ -211,7 +211,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v4-dependencies-{{ checksum "pyproject.toml" }}
+            - v4-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v4-dependencies-
 
@@ -226,7 +226,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v4-dependencies-{{ checksum "pyproject.toml" }}
+          key: v4-dependencies-{{ checksum "poetry.lock" }}
 
       - run:
           name: run tests
@@ -253,7 +253,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v4-dependencies-{{ checksum "pyproject.toml" }}
+            - v4-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v4-dependencies-
 
@@ -268,7 +268,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v4-dependencies-{{ checksum "pyproject.toml" }}
+          key: v4-dependencies-{{ checksum "poetry.lock" }}
 
       - run:
           name: run tests
@@ -294,7 +294,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v4-dependencies-3.8.0-{{ checksum "pyproject.toml" }}
+            - v4-dependencies-3.8.0-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v4-dependencies-3.8.0-
 
@@ -309,7 +309,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v4-dependencies-3.8.0-{{ checksum "pyproject.toml" }}
+          key: v4-dependencies-3.8.0-{{ checksum "poetry.lock" }}
 
       - run:
           name: run tests
