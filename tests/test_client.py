@@ -8,7 +8,6 @@ from iredis.client import Client
 from iredis.completers import completer_mapping
 from iredis.redis_grammar import get_command_grammar
 from iredis.entry import Rainbow, prompt_message
-from iredis.config import config
 
 
 @pytest.mark.parametrize(
@@ -44,8 +43,7 @@ def test_patch_completer():
     assert completer.completers["keys"].words == ["bar", "world", "hello", "foo"]
 
 
-def test_get_server_verison_after_client():
-
+def test_get_server_verison_after_client(config):
     Client("127.0.0.1", "6379", None)
     assert config.version.startswith("5.")
 
@@ -54,8 +52,7 @@ def test_get_server_verison_after_client():
     assert config.version == "Unknown"
 
 
-def test_do_help():
-
+def test_do_help(config):
     client = Client("127.0.0.1", "6379", None)
     config.version = "5.0.0"
     resp = client.do_help("SET")
@@ -84,7 +81,7 @@ def test_rainbow_iterator():
     Rainbow.color = original_color
 
 
-def test_prompt_message(iredis_client):
+def test_prompt_message(iredis_client, config):
     original_rainbow = config.rainbow
     config.rainbow = False
     assert prompt_message(iredis_client) == "127.0.0.1:6379> "
@@ -95,10 +92,10 @@ def test_prompt_message(iredis_client):
         ("#bb4444", "2"),
         ("#996644", "7"),
     ]
-    config.rainbow = original_rainbow
 
 
-def test_on_connection_error_retry(iredis_client):
+def test_on_connection_error_retry(iredis_client, config):
+    config.retry_times = 1
     mock_connection = MagicMock()
     mock_connection.read_response.side_effect = [
         redis.exceptions.ConnectionError(

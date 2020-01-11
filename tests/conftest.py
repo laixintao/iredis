@@ -6,6 +6,7 @@ from iredis.commands_csv_loader import all_commands
 from iredis.utils import split_command_args
 from iredis.redis_grammar import get_command_grammar
 from iredis.exceptions import InvalidArguments
+from iredis.config import Config, config as global_config
 
 
 TIMEOUT = 3
@@ -55,6 +56,13 @@ def clean_redis():
 @pytest.fixture
 def iredis_client():
     return Client("127.0.0.1", "6379", None)
+
+
+@pytest.fixture
+def config():
+    newconfig = Config()
+    global_config.__dict__ = newconfig.__dict__
+    return global_config
 
 
 @pytest.fixture(scope="module")
