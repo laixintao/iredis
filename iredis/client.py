@@ -3,6 +3,7 @@ IRedis client.
 """
 import re
 import logging
+import sys
 from distutils.version import StrictVersion
 
 import redis
@@ -96,21 +97,31 @@ class Client:
     def execute_command_and_read_response(
         self, completer, command_name, *args, **options
     ):
-        "Execute a command and return a parsed response"
-        try:
-            self.connection.send_command(command_name, *args)
-            response = self.connection.read_response()
-        # retry on timeout
-        except (ConnectionError, TimeoutError) as e:
-            self.connection.disconnect()
-            if not (self.connection.retry_on_timeout and isinstance(e, TimeoutError)):
+        """Execute a command and return a parsed response
+        Here we retry once for ConnectionError.
+        """
+        retry_times = 1  # FIXME configureable
+        last_error = None
+        while retry_times >= 0:
+            try:
+                self.connection.send_command(command_name, *args)
+                response = self.connection.read_response()
+            # retry on timeout
+            except (ConnectionError, TimeoutError) as e:
+                logger.warn(f"Got {e}, retrying...")
+                last_error = e
+                print(f"{str(e)} retrying...", file=sys.stderr)
+                self.connection.disconnect()
+                self.connection.connect()
+                retry_times -= 1
+
+                logger.info(f"New connection created, retry on {self.connection}.")
+            except redis.exceptions.ExecAbortError:
+                config.transaction = False
                 raise
-            self.connection.send_command(command_name, *args)
-            response = self.connection.read_response()
-        except redis.exceptions.ExecAbortError:
-            config.transaction = False
-            raise
-        return self.render_response(response, completer, command_name, **options)
+            else:
+                return self.render_response(response, completer, command_name, **options)
+        raise last_error
 
     def render_command_result(self, command_name, response, completer):
         """
@@ -192,6 +203,7 @@ class Client:
             )
             self.after_hook(raw_command, command_name, args, completer)
             yield redis_resp
+
             if command_name.upper() == "MONITOR":
                 # TODO special render for monitor
                 try:
