@@ -158,7 +158,7 @@ DECODE_HELP = (
 NO_INFO = """
 By default iredis will fire a INFO command to get redis-server's \
 version, but you can use this flag to disable it."""
-RAINBOW = "Display colorful prompt"
+RAINBOW = "Display colorful prompt."
 
 
 # command line entry here...
@@ -174,7 +174,13 @@ RAINBOW = "Display colorful prompt"
 @click.option(
     "--retry-times",
     default=2,
-    help="Retry times for connection error, set 0 to prevent retry.",
+    help="Retry times for connection error, set 0 to prevent retry. Default is 2.",
+)
+@click.option(
+    "--socket-keepalive",
+    default=True,  # FIXME default None, read from config file
+    is_flag=True,
+    help="Socket keepalive, default is true.",
 )
 @click.option(
     "--newbie/--no-newbie",
@@ -186,7 +192,19 @@ RAINBOW = "Display colorful prompt"
 @click.version_option()
 @click.argument("cmd", nargs=-1)
 def gather_args(
-    ctx, h, p, n, password, raw, cmd, decode, newbie, rainbow, no_info, retry_times
+    ctx,
+    h,
+    p,
+    n,
+    password,
+    raw,
+    cmd,
+    decode,
+    newbie,
+    rainbow,
+    no_info,
+    retry_times,
+    socket_keepalive,
 ):
     """
     IRedis: Interactive Redis
@@ -222,6 +240,7 @@ def gather_args(
 
     config.rainbow = rainbow
     config.retry_times = retry_times
+    config.socket_keepalive = socket_keepalive
 
     # TODO read config from file
     # default config file < system < user < pwd/config < commandline args

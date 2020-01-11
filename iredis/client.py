@@ -42,24 +42,16 @@ class Client:
         self.host = host
         self.port = port
         self.db = db
-        if encoding:
-            self.connection = Connection(
-                host=self.host,
-                port=self.port,
-                db=self.db,
-                password=password,
-                encoding=encoding,
-                decode_responses=True,
-                encoding_errors="replace",
-            )
-        else:
-            self.connection = Connection(
-                host=self.host,
-                port=self.port,
-                db=self.db,
-                password=password,
-                decode_responses=False,
-            )
+        self.connection = Connection(
+            host=self.host,
+            port=self.port,
+            db=self.db,
+            password=password,
+            encoding=encoding,
+            decode_responses=encoding is not None,
+            encoding_errors="replace",
+            socket_keepalive=config.socket_keepalive,
+        )
         # all command upper case
         self.answer_callbacks = command2callback
         self.callbacks = self.reder_funcname_mapping()
