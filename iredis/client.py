@@ -3,6 +3,7 @@ IRedis client.
 """
 import re
 import logging
+import sys
 from distutils.version import StrictVersion
 
 import redis
@@ -37,19 +38,20 @@ class Client:
                 mapping[func_name] = func
         return mapping
 
-    def __init__(self, host, port, db, password=None, encoding=None, get_info=True):
+    def __init__(self, host, port, db, password=None):
         self.host = host
         self.port = port
         self.db = db
-        if encoding:
+        if config.decode:
             self.connection = Connection(
                 host=self.host,
                 port=self.port,
                 db=self.db,
                 password=password,
-                encoding=encoding,
+                encoding=config.decode,
                 decode_responses=True,
                 encoding_errors="replace",
+                socket_keepalive=config.socket_keepalive,
             )
         else:
             self.connection = Connection(
@@ -58,12 +60,13 @@ class Client:
                 db=self.db,
                 password=password,
                 decode_responses=False,
+                socket_keepalive=config.socket_keepalive,
             )
         # all command upper case
         self.answer_callbacks = command2callback
         self.callbacks = self.reder_funcname_mapping()
         self.connection.connect()
-        if get_info:
+        if not config.no_info:
             try:
                 self.get_server_info()
             except Exception as e:
@@ -96,21 +99,37 @@ class Client:
     def execute_command_and_read_response(
         self, completer, command_name, *args, **options
     ):
-        "Execute a command and return a parsed response"
-        try:
-            self.connection.send_command(command_name, *args)
-            response = self.connection.read_response()
-        # retry on timeout
-        except (ConnectionError, TimeoutError) as e:
-            self.connection.disconnect()
-            if not (self.connection.retry_on_timeout and isinstance(e, TimeoutError)):
+        """Execute a command and return a parsed response
+        Here we retry once for ConnectionError.
+        """
+        retry_times = config.retry_times  # FIXME configureable
+        last_error = None
+        need_refresh_connection = False
+
+        while retry_times >= 0:
+            if need_refresh_connection:
+                print(f"{str(last_error)} retrying...", file=sys.stderr)
+                self.connection.disconnect()
+                self.connection.connect()
+                logger.info(f"New connection created, retry on {self.connection}.")
+
+            try:
+                self.connection.send_command(command_name, *args)
+                response = self.connection.read_response()
+            except (ConnectionError, TimeoutError) as e:
+                logger.warning(f"Connection Error, got {e}, retrying...")
+                last_error = e
+                retry_times -= 1
+                need_refresh_connection = True
+
+            except redis.exceptions.ExecAbortError:
+                config.transaction = False
                 raise
-            self.connection.send_command(command_name, *args)
-            response = self.connection.read_response()
-        except redis.exceptions.ExecAbortError:
-            config.transaction = False
-            raise
-        return self.render_response(response, completer, command_name, **options)
+            else:
+                return self.render_response(
+                    response, completer, command_name, **options
+                )
+        raise last_error
 
     def render_command_result(self, command_name, response, completer):
         """
@@ -192,6 +211,7 @@ class Client:
             )
             self.after_hook(raw_command, command_name, args, completer)
             yield redis_resp
+
             if command_name.upper() == "MONITOR":
                 # TODO special render for monitor
                 try:

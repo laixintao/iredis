@@ -158,7 +158,7 @@ DECODE_HELP = (
 NO_INFO = """
 By default iredis will fire a INFO command to get redis-server's \
 version, but you can use this flag to disable it."""
-RAINBOW = "Display colorful prompt"
+RAINBOW = "Display colorful prompt."
 
 
 # command line entry here...
@@ -172,6 +172,17 @@ RAINBOW = "Display colorful prompt"
 @click.option("--rainbow/--no-rainbow", default=None, is_flag=True, help=RAINBOW)
 @click.option("--no-info", default=False, is_flag=True, help=NO_INFO)
 @click.option(
+    "--retry-times",
+    default=2,
+    help="Retry times for connection error, set 0 to prevent retry. Default is 2.",
+)
+@click.option(
+    "--socket-keepalive/--no-socket-keepalive",
+    default=True,  # FIXME default None, read from config file
+    is_flag=True,
+    help="Socket keepalive, default is true.",
+)
+@click.option(
     "--newbie/--no-newbie",
     default=False,
     is_flag=True,
@@ -180,7 +191,21 @@ RAINBOW = "Display colorful prompt"
 @click.option("--decode", default=None, help=DECODE_HELP)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
-def gather_args(ctx, h, p, n, password, raw, cmd, decode, newbie, rainbow, no_info):
+def gather_args(
+    ctx,
+    h,
+    p,
+    n,
+    password,
+    raw,
+    cmd,
+    decode,
+    newbie,
+    rainbow,
+    no_info,
+    retry_times,
+    socket_keepalive,
+):
     """
     IRedis: Interactive Redis
 
@@ -206,14 +231,17 @@ def gather_args(ctx, h, p, n, password, raw, cmd, decode, newbie, rainbow, no_in
             config.raw = False
         else:
             config.raw = True
-    # set config decode
-    config.decode = decode
+
     config.newbie_mode = newbie
     if not config.newbie_mode:
         # cancel hints in meta_dict
         completer_mapping["command_pending"].meta_dict = {}
 
+    config.decode = decode
     config.rainbow = rainbow
+    config.retry_times = retry_times
+    config.socket_keepalive = socket_keepalive
+    config.no_info = no_info
 
     # TODO read config from file
     # default config file < system < user < pwd/config < commandline args
@@ -244,12 +272,7 @@ def main():
 
     # redis client
     client = Client(
-        ctx.params["h"],
-        ctx.params["p"],
-        ctx.params["n"],
-        ctx.params["password"],
-        config.decode,
-        get_info=not ctx.params["no_info"],
+        ctx.params["h"], ctx.params["p"], ctx.params["n"], ctx.params["password"]
     )
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():

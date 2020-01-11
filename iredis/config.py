@@ -13,7 +13,6 @@ class Config:
 
     def __init__(self):
         self.raw = False
-        self.decode = None
         self.completer_max = 300
         self.transaction = False
         # for transaction render
@@ -25,6 +24,10 @@ class Config:
         self.version = "Unknown"
         self.no_version_reason = None
         self.rainbow = False
+        self.retry_times = None
+        self.socket_keepalive = True
+        self.decode = None
+        self.no_info = False
 
     def __setter__(self, name, value):
         # for every time start a transaction
