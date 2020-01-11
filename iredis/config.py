@@ -26,6 +26,7 @@ class Config:
         self.no_version_reason = None
         self.rainbow = False
         self.retry_times = None
+        self.socket_keepalive = True
 
     def __setter__(self, name, value):
         # for every time start a transaction

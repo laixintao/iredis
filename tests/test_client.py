@@ -128,3 +128,18 @@ def test_on_connection_error_retry_without_retrytimes(iredis_client, config):
 
     mock_connection.disconnect.assert_not_called()
     mock_connection.connect.assert_not_called()
+
+
+def test_socket_keepalive(config):
+    config.socket_keepalive = True
+    from iredis.client import Client
+
+    newclient = Client("127.0.0.1", "6379", 0)
+    assert newclient.connection.socket_keepalive
+
+    # keepalive off
+    config.socket_keepalive = False
+    from iredis.client import Client
+
+    newclient = Client("127.0.0.1", "6379", 0)
+    assert not newclient.connection.socket_keepalive
