@@ -172,6 +172,11 @@ RAINBOW = "Display colorful prompt"
 @click.option("--rainbow/--no-rainbow", default=None, is_flag=True, help=RAINBOW)
 @click.option("--no-info", default=False, is_flag=True, help=NO_INFO)
 @click.option(
+    "--retry-times",
+    default=2,
+    help="Retry times for connection error, set 0 to prevent retry.",
+)
+@click.option(
     "--newbie/--no-newbie",
     default=False,
     is_flag=True,
@@ -180,7 +185,7 @@ RAINBOW = "Display colorful prompt"
 @click.option("--decode", default=None, help=DECODE_HELP)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
-def gather_args(ctx, h, p, n, password, raw, cmd, decode, newbie, rainbow, no_info):
+def gather_args(ctx, h, p, n, password, raw, cmd, decode, newbie, rainbow, no_info, retry_times):
     """
     IRedis: Interactive Redis
 
@@ -214,6 +219,7 @@ def gather_args(ctx, h, p, n, password, raw, cmd, decode, newbie, rainbow, no_in
         completer_mapping["command_pending"].meta_dict = {}
 
     config.rainbow = rainbow
+    config.retry_times = retry_times
 
     # TODO read config from file
     # default config file < system < user < pwd/config < commandline args

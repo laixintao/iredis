@@ -100,22 +100,26 @@ class Client:
         """Execute a command and return a parsed response
         Here we retry once for ConnectionError.
         """
-        retry_times = 1  # FIXME configureable
+        retry_times = config.retry_times  # FIXME configureable
         last_error = None
+        need_refresh_connection = False
+
         while retry_times >= 0:
+            if need_refresh_connection:
+                print(f"{str(last_error)} retrying...", file=sys.stderr)
+                self.connection.disconnect()
+                self.connection.connect()
+                logger.info(f"New connection created, retry on {self.connection}.")
+
             try:
                 self.connection.send_command(command_name, *args)
                 response = self.connection.read_response()
-            # retry on timeout
             except (ConnectionError, TimeoutError) as e:
                 logger.warning(f"Connection Error, got {e}, retrying...")
                 last_error = e
-                print(f"{str(e)} retrying...", file=sys.stderr)
-                self.connection.disconnect()
-                self.connection.connect()
                 retry_times -= 1
+                need_refresh_connection = True
 
-                logger.info(f"New connection created, retry on {self.connection}.")
             except redis.exceptions.ExecAbortError:
                 config.transaction = False
                 raise
