@@ -169,7 +169,7 @@ RAINBOW = "Display colorful prompt"
 @click.option("-n", help="Database number.", default=None)
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
 @click.option("--raw/--no-raw", default=False, is_flag=True, help=RAW_HELP)
-@click.option("--rainbow/--no-rainbow", default=False, is_flag=True, help=RAINBOW)
+@click.option("--rainbow/--no-rainbow", default=None, is_flag=True, help=RAINBOW)
 @click.option("--no-info", default=False, is_flag=True, help=NO_INFO)
 @click.option(
     "--newbie/--no-newbie",
@@ -238,6 +238,10 @@ def main():
         return
     if not ctx:  # called help
         return
+    # TODO merge config file and commandline options here
+    # ctx.params > pwd config > user conifg > system config > default
+    # ignore None value
+
     # redis client
     client = Client(
         ctx.params["h"],
