@@ -42,13 +42,13 @@ class Client:
         self.host = host
         self.port = port
         self.db = db
-        if config.encoding:
+        if config.decode:
             self.connection = Connection(
                 host=self.host,
                 port=self.port,
                 db=self.db,
                 password=password,
-                encoding=config.encoding,
+                encoding=config.decode,
                 decode_responses=True,
                 encoding_errors="replace",
                 socket_keepalive=config.socket_keepalive,

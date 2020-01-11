@@ -177,7 +177,7 @@ RAINBOW = "Display colorful prompt."
     help="Retry times for connection error, set 0 to prevent retry. Default is 2.",
 )
 @click.option(
-    "--socket-keepalive",
+    "--socket-keepalive/--no-socket-keepalive",
     default=True,  # FIXME default None, read from config file
     is_flag=True,
     help="Socket keepalive, default is true.",
@@ -272,10 +272,7 @@ def main():
 
     # redis client
     client = Client(
-        ctx.params["h"],
-        ctx.params["p"],
-        ctx.params["n"],
-        ctx.params["password"],
+        ctx.params["h"], ctx.params["p"], ctx.params["n"], ctx.params["password"]
     )
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():

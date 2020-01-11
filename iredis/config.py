@@ -13,7 +13,6 @@ class Config:
 
     def __init__(self):
         self.raw = False
-        self.decode = None
         self.completer_max = 300
         self.transaction = False
         # for transaction render

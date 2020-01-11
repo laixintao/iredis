@@ -48,7 +48,8 @@ def test_get_server_verison_after_client(config):
     assert config.version.startswith("5.")
 
     config.version = "Unknown"
-    Client("127.0.0.1", "6379", None, get_info=False)
+    config.no_info = True
+    Client("127.0.0.1", "6379", None)
     assert config.version == "Unknown"
 
 
