@@ -110,12 +110,10 @@ def split_command_args(command, all_commands):
             input_args = command[name_len:]
             break
     else:
-        logger.info("Utils split command] Not valid")
         raise InvalidArguments(f"`{command}` is not a valide Redis Command")
 
     args = list(_strip_quote_args(input_args))
 
-    logger.debug(f"[Utils split command] Command: {input_command} Args: {args}")
     return input_command, args
 
 
