@@ -1,4 +1,5 @@
 import pytest
+import redis
 from unittest.mock import MagicMock
 
 from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
@@ -95,3 +96,22 @@ def test_prompt_message(iredis_client):
         ("#996644", "7"),
     ]
     config.rainbow = original_rainbow
+
+
+def test_on_connection_error_retry(iredis_client):
+    mock_connection = MagicMock()
+    mock_connection.read_response.side_effect = [
+        redis.exceptions.ConnectionError(
+            "Error 61 connecting to 127.0.0.1:7788. Connection refused."
+        ),
+        "hello",
+    ]
+    original_connection = iredis_client.connection
+    iredis_client.connection = mock_connection
+    value = iredis_client.execute_command_and_read_response("None", "GET", ["foo"])
+    assert value == '"hello"'  # be rendered
+
+    mock_connection.disconnect.assert_called_once()
+    mock_connection.connect.assert_called_once()
+
+    iredis_client.connection = original_connection

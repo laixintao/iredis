@@ -108,7 +108,7 @@ class Client:
                 response = self.connection.read_response()
             # retry on timeout
             except (ConnectionError, TimeoutError) as e:
-                logger.warn(f"Got {e}, retrying...")
+                logger.warning(f"Connection Error, got {e}, retrying...")
                 last_error = e
                 print(f"{str(e)} retrying...", file=sys.stderr)
                 self.connection.disconnect()
