@@ -151,9 +151,9 @@ jobs:
             . venv/bin/activate
             flake8 .
 
-  unittest-python3.6.0: &unit-template
+  unittest-python3.6.4: &unit-template
     docker:
-      - image: circleci/python:3.6.0
+      - image: circleci/python:3.6.4
       - image: circleci/redis:5
 
     working_directory: ~/repo
@@ -328,7 +328,7 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - unittest-python3.6.0:
+      - unittest-python3.6.4:
           filters:
             tags:
               only: /.*/
@@ -347,7 +347,7 @@ workflows:
       - build-release:
           requires:
             - black-check
-            - unittest-python3.6.0
+            - unittest-python3.6.4
             - unittest-python3.7.0
             - unittest-python3.7.5
             - unittest-python3.8
