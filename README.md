@@ -18,7 +18,7 @@ A Terminal Client for Redis with AutoCompletion and Syntax Highlighting. It is a
 ## Features
 
 - Advanced code completion. If you run command `KEYS` then run `DEL`, iredis will auto complete your command based on `KEYS` result.
-- Command validation: `CLUSTER MEET IP PORT`
+- Command validation,(eg. try `CLUSTER MEET IP PORT`, iredis will validate IP and PORT for you)
 - Command highlighting, fully based on redis grammar. Any valide command in iredis shell is a valide redis command.
 - <kbd>Ctrl</kbd> + <kbd>C</kbd> to clear cureent line, won't exit redis-cli. Use <kbd>Ctrl</kbd> + <kbd>D</kbd>  
 - Say "Goodbye!" to you when you exit!
@@ -36,8 +36,12 @@ pip install iredis
 
 ## Usage
 
+Once you install IRedis, you will know how to use it. Just remember, IRedis
+support similar options like redis-cli, like `-h` for redis-server's host
+and `-p` for port. 
+
 ```
-$ iredis -h
+$ iredis --help
 ```
 
 ## Development
@@ -55,14 +59,15 @@ pip install poetry
 Then run(which euqals `pip install -e .`):
 
 ```
-poetry install --develop=DEVELOP
+poetry install
 ```
 
 ### Development Logs
 
 Since this is a commandline tool, so we didn't write logs to stdout.
 
-You can `tail -f iredis.log` to see logs, the log is pretty clear, you can see what actually happend from log files.
+You can `tail -f ~/.iredis.log` to see logs, the log is pretty clear,
+you can see what actually happend from log files.
 
 ### Command Reference
 
