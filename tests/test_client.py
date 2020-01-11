@@ -82,7 +82,6 @@ def test_rainbow_iterator():
 
 
 def test_prompt_message(iredis_client, config):
-    original_rainbow = config.rainbow
     config.rainbow = False
     assert prompt_message(iredis_client) == "127.0.0.1:6379> "
 
@@ -112,3 +111,20 @@ def test_on_connection_error_retry(iredis_client, config):
     mock_connection.connect.assert_called_once()
 
     iredis_client.connection = original_connection
+
+
+def test_on_connection_error_retry_without_retrytimes(iredis_client, config):
+    config.retry_times = 0
+    mock_connection = MagicMock()
+    mock_connection.read_response.side_effect = [
+        redis.exceptions.ConnectionError(
+            "Error 61 connecting to 127.0.0.1:7788. Connection refused."
+        ),
+        "hello",
+    ]
+    iredis_client.connection = mock_connection
+    with pytest.raises(redis.exceptions.ConnectionError):
+        iredis_client.execute_command_and_read_response("None", "GET", ["foo"])
+
+    mock_connection.disconnect.assert_not_called()
+    mock_connection.connect.assert_not_called()

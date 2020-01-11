@@ -124,7 +124,9 @@ class Client:
                 config.transaction = False
                 raise
             else:
-                return self.render_response(response, completer, command_name, **options)
+                return self.render_response(
+                    response, completer, command_name, **options
+                )
         raise last_error
 
     def render_command_result(self, command_name, response, completer):

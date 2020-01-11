@@ -185,7 +185,9 @@ RAINBOW = "Display colorful prompt"
 @click.option("--decode", default=None, help=DECODE_HELP)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
-def gather_args(ctx, h, p, n, password, raw, cmd, decode, newbie, rainbow, no_info, retry_times):
+def gather_args(
+    ctx, h, p, n, password, raw, cmd, decode, newbie, rainbow, no_info, retry_times
+):
     """
     IRedis: Interactive Redis
 
