@@ -231,16 +231,17 @@ def gather_args(
             config.raw = False
         else:
             config.raw = True
-    # set config decode
-    config.decode = decode
+
     config.newbie_mode = newbie
     if not config.newbie_mode:
         # cancel hints in meta_dict
         completer_mapping["command_pending"].meta_dict = {}
 
+    config.decode = decode
     config.rainbow = rainbow
     config.retry_times = retry_times
     config.socket_keepalive = socket_keepalive
+    config.no_info = no_info
 
     # TODO read config from file
     # default config file < system < user < pwd/config < commandline args
@@ -275,8 +276,6 @@ def main():
         ctx.params["p"],
         ctx.params["n"],
         ctx.params["password"],
-        config.decode,
-        get_info=not ctx.params["no_info"],
     )
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():

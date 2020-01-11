@@ -38,17 +38,17 @@ class Client:
                 mapping[func_name] = func
         return mapping
 
-    def __init__(self, host, port, db, password=None, encoding=None, get_info=True):
+    def __init__(self, host, port, db, password=None):
         self.host = host
         self.port = port
         self.db = db
-        if encoding:
+        if config.encoding:
             self.connection = Connection(
                 host=self.host,
                 port=self.port,
                 db=self.db,
                 password=password,
-                encoding=encoding,
+                encoding=config.encoding,
                 decode_responses=True,
                 encoding_errors="replace",
                 socket_keepalive=config.socket_keepalive,
@@ -66,7 +66,7 @@ class Client:
         self.answer_callbacks = command2callback
         self.callbacks = self.reder_funcname_mapping()
         self.connection.connect()
-        if get_info:
+        if not config.no_info:
             try:
                 self.get_server_info()
             except Exception as e:
