@@ -102,7 +102,6 @@ class Rainbow:
 def prompt_message(client):
     # TODO custome prompt
     text = "{hostname}> ".format(hostname=str(client))
-    logger.info("[Prompt message] rainbow={0}".format(config.rainbow))
     if config.rainbow:
         return list(zip(Rainbow(), text))
     return text
