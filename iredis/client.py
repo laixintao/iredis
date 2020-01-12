@@ -234,6 +234,16 @@ class Client:
             redis_resp = self.execute_command_and_read_response(
                 completer, command_name, *args
             )
+            # if shell, do not render, just run in shell pipe and show the
+            # subcommand's stdout/stderr
+            if shell_command:
+                import shlex
+                from subprocess import run
+
+                args = shlex.split(shell_command)
+                run(args, stdout=sys.stdout, input=redis_resp)
+                return
+
             yield self.render_response(redis_resp, completer, command_name)
 
             self.after_hook(raw_command, command_name, args, completer)
