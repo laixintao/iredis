@@ -318,6 +318,8 @@ NEW_GRAMMAR = {
     "command_shutdown": fr"\s* (?P<command>xxin) \s+ {SHUTDOWN} \s*",
 }
 
+pipeline = r"(?P<shellcommand>\|.*)?"
+
 
 @lru_cache(maxsize=256)
 def get_command_grammar(command):
@@ -332,6 +334,7 @@ def get_command_grammar(command):
     if syntax is None:
         return command_grammar
     syntax = syntax.replace(r"xxin", command.replace(r" ", r"\s+"))
+    syntax += pipeline
 
     logger.info(f"syxtax: {syntax}")
 

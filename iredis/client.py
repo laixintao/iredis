@@ -130,10 +130,8 @@ class Client:
                 config.transaction = False
                 raise
             else:
-                return self.render_response(
-                    response, completer, command_name, **options
-                )
-        raise last_error
+                return response
+            raise last_error
 
     def render_command_result(self, command_name, response, completer):
         """
@@ -160,7 +158,7 @@ class Client:
         logger.info(f"[rendered] {rendered}")
         return rendered
 
-    def render_response(self, response, completer, command_name, **options):
+    def render_response(self, response, completer, command_name):
         "Parses a response from the Redis server"
         logger.info(f"[Redis-Server] Response: {response}")
         # if in transaction, use queue render first
@@ -192,6 +190,25 @@ class Client:
         response = self.connection.read_response()
         yield render_subscribe(response)
 
+    def split_command_and_pipeline(self, rawinput, grammar):
+        """
+        split user raw input to redis command and shell pipeline.
+        eg:
+        GET json | jq .key
+        return: GET json, jq . key
+        """
+        matched = grammar.match(rawinput)
+        if not matched:
+            # invalide command!
+            return rawinput, None
+        variables = matched.variables()
+        shell_command = variables.get("shellcommand")
+        if shell_command:
+            redis_command = rawinput.replace(shell_command, "")
+            shell_command = shell_command.lstrip("| ")
+            return redis_command, shell_command
+        return rawinput, None
+
     def send_command(self, raw_command, completer=None):
         """
         Send raw_command to redis-server, return parsed response.
@@ -201,9 +218,13 @@ class Client:
             based on redis response. eg: update key completer after ``keys``
             raw_command
         """
-        command_name = ""
+        redis_command, shell_command = self.split_command_and_pipeline(
+            raw_command, completer.compiled_grammar
+        )
+        logger.info(f"[Prepare command] Redis: {redis_command}, Shell: {shell_command}")
         try:
-            command_name, args = split_command_args(raw_command, all_commands)
+            command_name = ""
+            command_name, args = split_command_args(redis_command, all_commands)
             # if raw_command is not supposed to send to server
             if command_name.upper() in CLIENT_COMMANDS:
                 redis_resp = self.client_execute_command(command_name, *args)
@@ -213,8 +234,9 @@ class Client:
             redis_resp = self.execute_command_and_read_response(
                 completer, command_name, *args
             )
+            yield self.render_response(redis_resp, completer, command_name)
+
             self.after_hook(raw_command, command_name, args, completer)
-            yield redis_resp
 
             if command_name.upper() == "MONITOR":
                 # TODO special render for monitor
@@ -301,7 +323,6 @@ class Client:
                 # so we have to split them manualy
                 for single_token in _strip_quote_args(tokens_in_command):
                     _completer.touch(single_token)
-            logger.debug(f"[Complter {_token} updated] Done: {_completer.words}")
 
     def do_help(self, *args):
         command_docs_name = "-".join(args).lower()
