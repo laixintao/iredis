@@ -120,6 +120,7 @@ def compile_grammar_bg(session):
         start_time = time.time()
         logger.debug("[compile] start compile grammer...")
         redis_grammar = compile(REDIS_COMMANDS)
+        logger.info(f"Compiled _re_prefix_pattern: {len(redis_grammar._re_prefix_patterns)}")
         end_time = time.time()
         logger.debug(f"[compile] Compile finished! Cost: {end_time - start_time}")
 
