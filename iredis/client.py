@@ -5,6 +5,8 @@ import re
 import logging
 import sys
 from distutils.version import StrictVersion
+import shlex
+from subprocess import run
 
 import redis
 from redis.connection import Connection
@@ -237,12 +239,11 @@ class Client:
             # if shell, do not render, just run in shell pipe and show the
             # subcommand's stdout/stderr
             if shell_command:
-                import shlex
-                from subprocess import run
-
                 args = shlex.split(shell_command)
+                # pass the --raw response of redis to shell command
                 run(args, stdout=sys.stdout, input=redis_resp)
                 return
+            # otherwise yield the rendered response
 
             yield self.render_response(redis_resp, completer, command_name)
 
