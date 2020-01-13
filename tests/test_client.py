@@ -106,7 +106,7 @@ def test_on_connection_error_retry(iredis_client, config):
     original_connection = iredis_client.connection
     iredis_client.connection = mock_connection
     value = iredis_client.execute_command_and_read_response("None", "GET", ["foo"])
-    assert value == '"hello"'  # be rendered
+    assert value == "hello"  # be rendered
 
     mock_connection.disconnect.assert_called_once()
     mock_connection.connect.assert_called_once()

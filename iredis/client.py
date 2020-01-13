@@ -133,7 +133,7 @@ class Client:
                 raise
             else:
                 return response
-            raise last_error
+        raise last_error
 
     def _dynamic_render(self, command_name, response, completer):
         """
@@ -251,11 +251,9 @@ class Client:
 
                 run(args, stdout=sys.stdout, input=stdin)
                 return
-            # otherwise yield the rendered response
-
-            yield self.render_response(redis_resp, completer, command_name)
 
             self.after_hook(raw_command, command_name, args, completer)
+            yield self.render_response(redis_resp, completer, command_name)
 
             # FIXME generator response do not support pipeline
             if command_name.upper() == "MONITOR":
