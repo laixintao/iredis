@@ -6,7 +6,7 @@ import logging
 import sys
 from distutils.version import StrictVersion
 import shlex
-from subprocess import run
+from subprocess import run, Popen, PIPE
 
 import redis
 from redis.connection import Connection
@@ -242,14 +242,15 @@ class Client:
             # if shell, do not render, just run in shell pipe and show the
             # subcommand's stdout/stderr
             if shell_command:
-                args = shlex.split(shell_command)
                 # pass the raw response of redis to shell command
                 if isinstance(redis_resp, list):
                     stdin = b"\n".join(redis_resp)
                 else:
                     stdin = redis_resp
 
-                run(args, stdout=sys.stdout, input=stdin)
+                p = Popen(shell_command, stdout=sys.stdout, stderr=PIPE, shell=True)
+                p.communicate(stdin)
+
                 return
 
             self.after_hook(raw_command, command_name, args, completer)
