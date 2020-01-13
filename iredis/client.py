@@ -236,12 +236,13 @@ class Client:
     def after_hook(self, command, command_name, args, completer):
         # === After hook ===
         # SELECT db on AUTH
-        if command_name.upper() == "AUTH" and self.db:
-            select_result = self.execute_command_and_read_response(
-                completer, "SELECT", self.db
-            )
-            if nativestr(select_result) != "OK":
-                raise ConnectionError("Invalid Database")
+        if command_name.upper() == "AUTH":
+            if self.db:
+                select_result = self.execute_command_and_read_response(
+                    completer, "SELECT", self.db
+                )
+                if nativestr(select_result) != "OK":
+                    raise ConnectionError("Invalid Database")
             # When the connection is TimeoutError or ConnectionError, reconnect the connection will use it
             self.connection.password = args[0]
         elif command_name.upper() == "SELECT":
