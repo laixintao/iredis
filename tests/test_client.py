@@ -140,7 +140,34 @@ def test_socket_keepalive(config):
 
     # keepalive off
     config.socket_keepalive = False
-    from iredis.client import Client
 
     newclient = Client("127.0.0.1", "6379", 0)
     assert not newclient.connection.socket_keepalive
+
+
+def test_not_retry_on_authentication_error(iredis_client, config):
+    config.retry_times = 2
+    mock_connection = MagicMock()
+    mock_connection.read_response.side_effect = [
+        redis.exceptions.AuthenticationError("Authentication required."),
+        "hello",
+    ]
+    iredis_client.connection = mock_connection
+    with pytest.raises(redis.exceptions.ConnectionError):
+        iredis_client.execute_command_and_read_response("None", "GET", ["foo"])
+
+
+def test_auto_select_db_and_auth_for_reconnect(iredis_client, config):
+    config.retry_times = 2
+    config.raw = True
+    next(iredis_client.send_command("select 2"))
+    assert iredis_client.connection.db == 2
+
+    resp = next(iredis_client.send_command("auth 123"))
+    assert "Client sent AUTH, but no password is set" in resp
+    assert iredis_client.connection.password is None
+
+    next(iredis_client.send_command("config set requirepass 'abc'"))
+    next(iredis_client.send_command("auth abc"))
+    assert iredis_client.connection.password == "abc"
+    next(iredis_client.send_command("config set requirepass ''"))
