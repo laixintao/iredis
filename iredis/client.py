@@ -8,7 +8,7 @@ from distutils.version import StrictVersion
 
 import redis
 from redis.connection import Connection
-from redis.exceptions import TimeoutError, ConnectionError
+from redis.exceptions import TimeoutError, ConnectionError, AuthenticationError
 from prompt_toolkit.formatted_text import FormattedText
 
 from . import renders
@@ -107,15 +107,16 @@ class Client:
         need_refresh_connection = False
 
         while retry_times >= 0:
-            if need_refresh_connection:
-                print(f"{str(last_error)} retrying...", file=sys.stderr)
-                self.connection.disconnect()
-                self.connection.connect()
-                logger.info(f"New connection created, retry on {self.connection}.")
-
             try:
+                if need_refresh_connection:
+                    print(f"{str(last_error)} retrying... retry left: {retry_times+1}", file=sys.stderr)
+                    self.connection.disconnect()
+                    self.connection.connect()
+                    logger.info(f"New connection created, retry on {self.connection}.")
                 self.connection.send_command(command_name, *args)
                 response = self.connection.read_response()
+            except AuthenticationError:
+                raise
             except (ConnectionError, TimeoutError) as e:
                 logger.warning(f"Connection Error, got {e}, retrying...")
                 last_error = e
