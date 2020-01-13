@@ -135,7 +135,7 @@ class Client:
                 return response
             raise last_error
 
-    def render_command_result(self, command_name, response, completer):
+    def _dynamic_render(self, command_name, response, completer):
         """
         Render command result using callback
 
@@ -168,7 +168,7 @@ class Client:
             callback = renders.render_transaction_queue
             rendered = callback(response, completer)
         else:
-            rendered = self.render_command_result(command_name, response, completer)
+            rendered = self._dynamic_render(command_name, response, completer)
         return rendered
 
     def monitor(self):
@@ -240,8 +240,13 @@ class Client:
             # subcommand's stdout/stderr
             if shell_command:
                 args = shlex.split(shell_command)
-                # pass the --raw response of redis to shell command
-                run(args, stdout=sys.stdout, input=redis_resp)
+                # pass the raw response of redis to shell command
+                if isinstance(redis_resp, list):
+                    stdin = b"\n".join(redis_resp)
+                else:
+                    stdin = redis_resp
+
+                run(args, stdout=sys.stdout, input=stdin)
                 return
             # otherwise yield the rendered response
 
@@ -249,6 +254,7 @@ class Client:
 
             self.after_hook(raw_command, command_name, args, completer)
 
+            # FIXME generator response do not support pipeline
             if command_name.upper() == "MONITOR":
                 # TODO special render for monitor
                 try:

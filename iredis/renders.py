@@ -497,5 +497,9 @@ def render_subscribe(raw, completers=None):
     )
 
 
+def default_render(text):
+    pass
+
+
 # TODO
 # special list render, bzpopmax, key-value pair
