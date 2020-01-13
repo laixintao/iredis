@@ -1,6 +1,6 @@
 import pytest
 import redis
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 
@@ -8,6 +8,7 @@ from iredis.client import Client
 from iredis.completers import completer_mapping
 from iredis.redis_grammar import get_command_grammar
 from iredis.entry import Rainbow, prompt_message
+from iredis.completers import get_completer_mapping
 
 
 @pytest.mark.parametrize(
@@ -84,7 +85,7 @@ def test_rainbow_iterator():
 
 def test_prompt_message(iredis_client, config):
     config.rainbow = False
-    assert prompt_message(iredis_client) == "127.0.0.1:6379> "
+    assert prompt_message(iredis_client) == "127.0.0.1:6379[15]> "
 
     config.rainbow = True
     assert prompt_message(iredis_client)[:3] == [
@@ -185,3 +186,12 @@ def test_split_shell_command(iredis_client):
         """ get "json | \\" hello" | rg . """, grammar
     ) == (""" get "json | \\" hello" """, "rg . ")
 
+
+def test_running_with_pipeline(clean_redis, iredis_client, capfd):
+    grammar = get_command_grammar("get")
+    completer = GrammarCompleter(grammar, get_completer_mapping())
+    clean_redis.set("foo", "hello \n world")
+    with pytest.raises(StopIteration):
+        next(iredis_client.send_command("get foo | grep w", completer))
+    out, err = capfd.readouterr()
+    assert out == " world\n"

@@ -68,6 +68,8 @@ Then run(which euqals `pip install -e .`):
 poetry install
 ```
 
+**Be careful running testcases, it may flush you db!!!**
+
 ### Development Logs
 
 Since this is a commandline tool, so we didn't write logs to stdout.
