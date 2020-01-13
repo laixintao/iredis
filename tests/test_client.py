@@ -1,6 +1,6 @@
 import pytest
 import redis
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 
