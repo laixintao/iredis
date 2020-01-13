@@ -46,6 +46,12 @@ $ iredis --help
 
 ## Development
 
+### Release Strategy
+
+The IRedis project was build and released by CircleCI, whenever a tag was pushed to master branch a new release will be pushed to pypi.org, it's very convent.
+
+Thus, we release as often as possible, so users can always enjoy the new features and bugfixes. Any bugfix or new feature will get at least a patch release, the big feature will get a minor release.
+
 ### Setup Environment
 
 iredis favors [poetry](https://github.com/sdispater/poetry) as a packagement tool. You can setup a develop envioment on your computer easily.
