@@ -242,7 +242,7 @@ class Client:
             if nativestr(select_result) != "OK":
                 raise ConnectionError("Invalid Database")
             # When the connection is TimeoutError or ConnectionError, reconnect the connection will use it
-            self.connection.db = self.db
+            self.connection.password = args[0]
         elif command_name.upper() == "SELECT":
             logger.debug("[After hook] Command is SELECT, change self.db.")
             self.db = int(args[0])
