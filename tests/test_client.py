@@ -171,3 +171,17 @@ def test_auto_select_db_and_auth_for_reconnect(iredis_client, config):
     next(iredis_client.send_command("auth abc"))
     assert iredis_client.connection.password == "abc"
     next(iredis_client.send_command("config set requirepass ''"))
+
+
+def test_split_shell_command(iredis_client):
+    grammar = get_command_grammar("get")
+
+    assert iredis_client.split_command_and_pipeline(" get json | rg . ", grammar) == (
+        " get json ",
+        "rg . ",
+    )
+
+    assert iredis_client.split_command_and_pipeline(
+        """ get "json | \\" hello" | rg . """, grammar
+    ) == (""" get "json | \\" hello" """, "rg . ")
+
