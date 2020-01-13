@@ -14,7 +14,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v4-dependencies-twine
+            - v5-dependencies-twine
       - run:
           name: install dependencies
           command: |
@@ -24,7 +24,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v4-dependencies-poetry
+          key: v5-dependencies-poetry
       - run:
           name: "upload files to pypi: https://pypi.org/project/iredis/#history"
           command: |
@@ -67,7 +67,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v4-dependencies-poetry
+            - v5-dependencies-poetry
 
       - run:
           name: install dependencies
@@ -79,7 +79,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v4-dependencies-poetry
+          key: v5-dependencies-poetry
 
       - run:
           name: build release
@@ -101,7 +101,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v4-dependencies-black
+            - v5-dependencies-black
 
       - run:
           name: install dependencies
@@ -113,7 +113,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v4-dependencies-black
+          key: v5-dependencies-black
 
       - run:
           name: black format
@@ -131,7 +131,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v4-dependencies-flake8
+            - v5-dependencies-flake8
 
       - run:
           name: install dependencies
@@ -143,7 +143,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v4-dependencies-flake8
+          key: v5-dependencies-flake8
 
       - run:
           name: run flake8
@@ -170,9 +170,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v4-dependencies-{{ checksum "poetry.lock" }}
+            - v5-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - v5-dependencies-
 
       - run:
           name: install dependencies
@@ -185,7 +185,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v4-dependencies-{{ checksum "poetry.lock" }}
+          key: v5-dependencies-{{ checksum "poetry.lock" }}
 
       - run:
           name: run tests
@@ -211,9 +211,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v4-dependencies-{{ checksum "poetry.lock" }}
+            - v5-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - v5-dependencies-
 
       - run:
           name: install dependencies
@@ -226,7 +226,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v4-dependencies-{{ checksum "poetry.lock" }}
+          key: v5-dependencies-{{ checksum "poetry.lock" }}
 
       - run:
           name: run tests
@@ -253,9 +253,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v4-dependencies-{{ checksum "poetry.lock" }}
+            - v5-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - v5-dependencies-
 
       - run:
           name: install dependencies
@@ -268,7 +268,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v4-dependencies-{{ checksum "poetry.lock" }}
+          key: v5-dependencies-{{ checksum "poetry.lock" }}
 
       - run:
           name: run tests
@@ -294,9 +294,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v4-dependencies-3.8.0-{{ checksum "poetry.lock" }}
+            - v5-dependencies-3.8.0-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-3.8.0-
+            - v5-dependencies-3.8.0-
 
       - run:
           name: install dependencies
@@ -309,7 +309,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v4-dependencies-3.8.0-{{ checksum "poetry.lock" }}
+          key: v5-dependencies-3.8.0-{{ checksum "poetry.lock" }}
 
       - run:
           name: run tests

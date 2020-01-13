@@ -109,7 +109,10 @@ class Client:
         while retry_times >= 0:
             try:
                 if need_refresh_connection:
-                    print(f"{str(last_error)} retrying... retry left: {retry_times+1}", file=sys.stderr)
+                    print(
+                        f"{str(last_error)} retrying... retry left: {retry_times+1}",
+                        file=sys.stderr,
+                    )
                     self.connection.disconnect()
                     self.connection.connect()
                     logger.info(f"New connection created, retry on {self.connection}.")
