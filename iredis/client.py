@@ -220,9 +220,12 @@ class Client:
             based on redis response. eg: update key completer after ``keys``
             raw_command
         """
-        redis_command, shell_command = self.split_command_and_pipeline(
-            raw_command, completer.compiled_grammar
-        )
+        if completer is None:  # not in a tty
+            redis_command, shell_command = raw_command, None
+        else:
+            redis_command, shell_command = self.split_command_and_pipeline(
+                raw_command, completer.compiled_grammar
+            )
         logger.info(f"[Prepare command] Redis: {redis_command}, Shell: {shell_command}")
         try:
             command_name = ""
