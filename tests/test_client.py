@@ -8,6 +8,7 @@ from iredis.client import Client
 from iredis.completers import completer_mapping
 from iredis.redis_grammar import get_command_grammar
 from iredis.entry import Rainbow, prompt_message
+from iredis.completers import get_completer_mapping
 
 
 @pytest.mark.parametrize(
@@ -84,7 +85,7 @@ def test_rainbow_iterator():
 
 def test_prompt_message(iredis_client, config):
     config.rainbow = False
-    assert prompt_message(iredis_client) == "127.0.0.1:6379> "
+    assert prompt_message(iredis_client) == "127.0.0.1:6379[15]> "
 
     config.rainbow = True
     assert prompt_message(iredis_client)[:3] == [
@@ -106,7 +107,7 @@ def test_on_connection_error_retry(iredis_client, config):
     original_connection = iredis_client.connection
     iredis_client.connection = mock_connection
     value = iredis_client.execute_command_and_read_response("None", "GET", ["foo"])
-    assert value == '"hello"'  # be rendered
+    assert value == "hello"  # be rendered
 
     mock_connection.disconnect.assert_called_once()
     mock_connection.connect.assert_called_once()
@@ -171,3 +172,26 @@ def test_auto_select_db_and_auth_for_reconnect(iredis_client, config):
     next(iredis_client.send_command("auth abc"))
     assert iredis_client.connection.password == "abc"
     next(iredis_client.send_command("config set requirepass ''"))
+
+
+def test_split_shell_command(iredis_client):
+    grammar = get_command_grammar("get")
+
+    assert iredis_client.split_command_and_pipeline(" get json | rg . ", grammar) == (
+        " get json ",
+        "rg . ",
+    )
+
+    assert iredis_client.split_command_and_pipeline(
+        """ get "json | \\" hello" | rg . """, grammar
+    ) == (""" get "json | \\" hello" """, "rg . ")
+
+
+def test_running_with_pipeline(clean_redis, iredis_client, capfd):
+    grammar = get_command_grammar("get")
+    completer = GrammarCompleter(grammar, get_completer_mapping())
+    clean_redis.set("foo", "hello \n world")
+    with pytest.raises(StopIteration):
+        next(iredis_client.send_command("get foo | grep w", completer))
+    out, err = capfd.readouterr()
+    assert out == " world\n"

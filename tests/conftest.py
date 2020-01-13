@@ -55,7 +55,7 @@ def clean_redis():
 
 @pytest.fixture
 def iredis_client():
-    return Client("127.0.0.1", "6379", None)
+    return Client("127.0.0.1", "6379", db=15)
 
 
 @pytest.fixture

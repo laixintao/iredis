@@ -5,6 +5,8 @@ import re
 import logging
 import sys
 from distutils.version import StrictVersion
+import shlex
+from subprocess import run
 
 import redis
 from redis.connection import Connection
@@ -130,12 +132,10 @@ class Client:
                 config.transaction = False
                 raise
             else:
-                return self.render_response(
-                    response, completer, command_name, **options
-                )
+                return response
         raise last_error
 
-    def render_command_result(self, command_name, response, completer):
+    def _dynamic_render(self, command_name, response, completer):
         """
         Render command result using callback
 
@@ -160,7 +160,7 @@ class Client:
         logger.info(f"[rendered] {rendered}")
         return rendered
 
-    def render_response(self, response, completer, command_name, **options):
+    def render_response(self, response, completer, command_name):
         "Parses a response from the Redis server"
         logger.info(f"[Redis-Server] Response: {response}")
         # if in transaction, use queue render first
@@ -168,7 +168,7 @@ class Client:
             callback = renders.render_transaction_queue
             rendered = callback(response, completer)
         else:
-            rendered = self.render_command_result(command_name, response, completer)
+            rendered = self._dynamic_render(command_name, response, completer)
         return rendered
 
     def monitor(self):
@@ -192,6 +192,25 @@ class Client:
         response = self.connection.read_response()
         yield render_subscribe(response)
 
+    def split_command_and_pipeline(self, rawinput, grammar):
+        """
+        split user raw input to redis command and shell pipeline.
+        eg:
+        GET json | jq .key
+        return: GET json, jq . key
+        """
+        matched = grammar.match(rawinput)
+        if not matched:
+            # invalide command!
+            return rawinput, None
+        variables = matched.variables()
+        shell_command = variables.get("shellcommand")
+        if shell_command:
+            redis_command = rawinput.replace(shell_command, "")
+            shell_command = shell_command.lstrip("| ")
+            return redis_command, shell_command
+        return rawinput, None
+
     def send_command(self, raw_command, completer=None):
         """
         Send raw_command to redis-server, return parsed response.
@@ -201,9 +220,16 @@ class Client:
             based on redis response. eg: update key completer after ``keys``
             raw_command
         """
-        command_name = ""
+        if completer is None:  # not in a tty
+            redis_command, shell_command = raw_command, None
+        else:
+            redis_command, shell_command = self.split_command_and_pipeline(
+                raw_command, completer.compiled_grammar
+            )
+        logger.info(f"[Prepare command] Redis: {redis_command}, Shell: {shell_command}")
         try:
-            command_name, args = split_command_args(raw_command, all_commands)
+            command_name = ""
+            command_name, args = split_command_args(redis_command, all_commands)
             # if raw_command is not supposed to send to server
             if command_name.upper() in CLIENT_COMMANDS:
                 redis_resp = self.client_execute_command(command_name, *args)
@@ -213,9 +239,23 @@ class Client:
             redis_resp = self.execute_command_and_read_response(
                 completer, command_name, *args
             )
-            self.after_hook(raw_command, command_name, args, completer)
-            yield redis_resp
+            # if shell, do not render, just run in shell pipe and show the
+            # subcommand's stdout/stderr
+            if shell_command:
+                args = shlex.split(shell_command)
+                # pass the raw response of redis to shell command
+                if isinstance(redis_resp, list):
+                    stdin = b"\n".join(redis_resp)
+                else:
+                    stdin = redis_resp
 
+                run(args, stdout=sys.stdout, input=stdin)
+                return
+
+            self.after_hook(raw_command, command_name, args, completer)
+            yield self.render_response(redis_resp, completer, command_name)
+
+            # FIXME generator response do not support pipeline
             if command_name.upper() == "MONITOR":
                 # TODO special render for monitor
                 try:
@@ -301,7 +341,6 @@ class Client:
                 # so we have to split them manualy
                 for single_token in _strip_quote_args(tokens_in_command):
                     _completer.touch(single_token)
-            logger.debug(f"[Complter {_token} updated] Done: {_completer.words}")
 
     def do_help(self, *args):
         command_docs_name = "-".join(args).lower()

@@ -277,7 +277,6 @@ def render_transaction_queue(text, completer):
     """
     # FIXME raw
     text = _ensure_str(text)
-    assert text == "QUEUED"
     return FormattedText([("class:queued", text)])
 
 
@@ -495,6 +494,10 @@ def render_subscribe(raw, completers=None):
             ("class:string", f"{message}"),
         ]
     )
+
+
+def default_render(text):
+    pass
 
 
 # TODO
