@@ -2,7 +2,7 @@ import os
 import logging
 from pathlib import Path
 
-__version__ = "0.8.6"
+__version__ = "0.8.7"
 
 
 logging.basicConfig(
