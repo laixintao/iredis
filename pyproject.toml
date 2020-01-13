@@ -37,7 +37,7 @@ redis = "^3"
 prompt_toolkit = "^2"
 Pygments = "^2"
 click8 = "^8"
-mistune = "^0.8.5"
+mistune = "^0.8.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5"
