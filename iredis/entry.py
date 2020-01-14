@@ -118,7 +118,9 @@ def repl(client, session, start_time):
         try:
             command = session.prompt(
                 prompt_message(client),
-                bottom_toolbar=BottomToolbar(command_holder).render,
+                bottom_toolbar=BottomToolbar(command_holder).render
+                if config.bottom_bar
+                else None,
                 input_processors=[GetCommandProcessor(command_holder, session)],
                 rprompt=lambda: "<transaction>" if config.transaction else None,
             )
@@ -188,6 +190,12 @@ RAINBOW = "Display colorful prompt."
     is_flag=True,
     help="Show command hints and useful helps.",
 )
+@click.option(
+    "--bottom-bar/--no-bottom-bar",
+    default=True,
+    is_flag=True,
+    help="Show command hint at bottom.",
+)
 @click.option("--decode", default=None, help=DECODE_HELP)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
@@ -201,6 +209,7 @@ def gather_args(
     cmd,
     decode,
     newbie,
+    bottom_bar,
     rainbow,
     no_info,
     retry_times,
@@ -221,7 +230,8 @@ def gather_args(
     and settings.
     """
     logger.info(
-        f"[start args] host={h}, port={p}, db={n}, raw={raw}, cmd={cmd}, decode={decode}."
+        f"[start args] host={h}, port={p}, db={n}, raw={raw}, "
+        f"cmd={cmd}, decode={decode}, buttom_bar={bottom_bar}",
     )
     # figout raw output or formatted output
     if ctx.get_parameter_source("raw") == click.ParameterSource.COMMANDLINE:
@@ -242,6 +252,7 @@ def gather_args(
     config.retry_times = retry_times
     config.socket_keepalive = socket_keepalive
     config.no_info = no_info
+    config.bottom_bar = bottom_bar
 
     # TODO read config from file
     # default config file < system < user < pwd/config < commandline args

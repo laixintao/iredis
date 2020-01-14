@@ -28,6 +28,7 @@ class Config:
         self.socket_keepalive = True
         self.decode = None
         self.no_info = False
+        self.bottom_bar = None
 
     def __setter__(self, name, value):
         # for every time start a transaction
