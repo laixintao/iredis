@@ -195,3 +195,15 @@ def test_running_with_pipeline(clean_redis, iredis_client, capfd):
         next(iredis_client.send_command("get foo | grep w", completer))
     out, err = capfd.readouterr()
     assert out == " world\n"
+
+
+def test_running_with_multiple_pipeline(clean_redis, iredis_client, capfd):
+    grammar = get_command_grammar("get")
+    completer = GrammarCompleter(grammar, get_completer_mapping())
+    clean_redis.set("foo", "hello world\nhello iredis")
+    with pytest.raises(StopIteration):
+        next(
+            iredis_client.send_command("get foo | grep hello | grep iredis", completer)
+        )
+    out, err = capfd.readouterr()
+    assert out == "hello iredis\n"
