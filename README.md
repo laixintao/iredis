@@ -48,9 +48,9 @@ $ iredis --help
 
 ### Release Strategy
 
-The IRedis project was build and released by CircleCI, whenever a tag was pushed to master branch a new release will be pushed to pypi.org, it's very convent.
+The IRedis project was build and released by CircleCI, whenever a tag was pushed to master branch, a new release will be built and uploaded to pypi.org, it's very convenient.
 
-Thus, we release as often as possible, so users can always enjoy the new features and bugfixes. Any bugfix or new feature will get at least a patch release, the big feature will get a minor release.
+Thus, we release as often as possible, so users can always enjoy the new features and bugfixes very quickly. Any bugfix or new feature will get at least a patch release, the big feature will get a minor release.
 
 ### Setup Environment
 
