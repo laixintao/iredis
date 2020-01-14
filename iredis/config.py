@@ -1,3 +1,18 @@
+import os
+import logging
+
+from configobj import ConfigObj, ConfigObjError
+from iredis import project_data
+
+# TODO verbose logger to print to stdout
+logger = logging.getLogger(__name__)
+
+
+system_config_file = "/etc/iredisrc"
+default_config_file = os.path.join(project_data, "iredisrc")
+pwd_config_file = os.path.join(os.getcwd(), ".iredisrc")
+
+
 class Config:
     """
     Global config, set once on start, then
@@ -12,23 +27,25 @@ class Config:
     """
 
     def __init__(self):
-        self.raw = False
-        self.completer_max = 300
-        self.transaction = False
+        self.raw = None
+        self.completer_max = None
+        # show command hint?
+        self.newbie_mode = None
+        self.rainbow = None
+        self.retry_times = None
+        self.socket_keepalive = None
+        self.decode = None
+        self.no_info = None
+        self.bottom_bar = None
+
+        # dynamic
         # for transaction render
         self.queued_commands = []
-        # show command hint?
-        self.newbie_mode = False
+        self.transaction = False
         # display zset withscores?
         self.withscores = False
         self.version = "Unknown"
         self.no_version_reason = None
-        self.rainbow = False
-        self.retry_times = None
-        self.socket_keepalive = True
-        self.decode = None
-        self.no_info = False
-        self.bottom_bar = None
 
     def __setter__(self, name, value):
         # for every time start a transaction
@@ -39,3 +56,50 @@ class Config:
 
 
 config = Config()
+
+
+def read_config_file(f):
+    """Read a config file."""
+
+    if isinstance(f, str):
+        f = os.path.expanduser(f)
+
+    try:
+        config = ConfigObj(f, interpolation=False, encoding="utf8")
+    except ConfigObjError as e:
+        logger.error(
+            "Unable to parse line {0} of config file " "'{1}'.".format(e.line_number, f)
+        )
+        logger.error("Using successfully parsed config values.")
+        return e.config
+    except (IOError, OSError) as e:
+        logger.error(
+            "You don't have permission to read " "config file '{0}'.".format(e.filename)
+        )
+        return None
+
+    return config
+
+
+def load_config_files(iredisrc):
+    global config
+
+    config_obj = ConfigObj()
+
+    for _file in [default_config_file, system_config_file, iredisrc, pwd_config_file]:
+        _config = read_config_file(_file)
+        if bool(_config) is True:
+            config_obj.merge(_config)
+            config_obj.filename = _config.filename
+
+    config.raw = config_obj['main'].as_bool('raw')
+    config.completer_max = config_obj['main']['completer_max']
+    config.newbie_mode = config_obj['main'].as_bool('newbie_mode')
+    config.rainbow = config_obj['main'].as_bool('rainbow')
+    config.retry_times = config_obj['main']['retry_times']
+    config.socket_keepalive = config_obj['main'].as_bool('socket_keepalive')
+    config.decode = config_obj['main']['decode']
+    config.no_info = config_obj['main'].as_bool('no_info')
+    config.bottom_bar = config_obj['main'].as_bool('bottom_bar')
+
+    return config_obj

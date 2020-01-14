@@ -14,4 +14,6 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 logger.info("------ iRedis ------")
-project_path = Path(os.path.dirname(os.path.abspath(__file__))) / "data"
+
+project_root = Path(os.path.dirname(os.path.abspath(__file__)))
+project_data = project_root / "data"

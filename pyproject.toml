@@ -38,7 +38,7 @@ prompt_toolkit = "^2"
 Pygments = "^2"
 click8 = "^8"
 mistune = "^0.8.4"
-appdirs = "^1.4.3"
+configobj = "^5.0.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5"

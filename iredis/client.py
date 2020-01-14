@@ -14,7 +14,7 @@ from prompt_toolkit.formatted_text import FormattedText
 
 from . import renders
 from . import markdown
-from . import utils, project_path
+from . import utils, project_data
 from .config import config
 from .commands_csv_loader import all_commands, command2callback, commands_summary
 from .utils import nativestr, split_command_args, _strip_quote_args
@@ -348,7 +348,7 @@ class Client:
         command_summary_name = " ".join(args).upper()
         try:
             doc_file = open(
-                project_path / "redis-doc" / "commands" / f"{command_docs_name}.md"
+                project_data / "redis-doc" / "commands" / f"{command_docs_name}.md"
             )
         except FileNotFoundError:
             raise NotRedisCommand(
