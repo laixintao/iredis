@@ -19,8 +19,8 @@ retry_times = 2
 
 socket_keepalive = True
 
-# decode redis response
-decode = utf-8
+# decode redis response, default None
+decode = 
 
 # iredis will send a `INFO` command to get the server's version, this option can
 # disable it

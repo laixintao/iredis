@@ -49,7 +49,7 @@ def print_help_msg(command):
 
 def write_result(text):
     """
-    :param text: is_raw: bytes, not raw: FormattedText
+    :param text: is_raw: bytes or str, not raw: FormattedText
     :is_raw: bool
     """
     logger.info(f"write: {text}")
