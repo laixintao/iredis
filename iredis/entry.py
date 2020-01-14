@@ -54,6 +54,8 @@ def write_result(text):
     """
     logger.info(f"write: {text}")
     if config.raw:
+        if isinstance(text, str):
+            text = text.encode(config.decode)
         sys.stdout.buffer.write(text)
         sys.stdout.write("\n")
     else:

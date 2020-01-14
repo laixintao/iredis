@@ -92,16 +92,18 @@ def load_config_files(iredisrc):
             config_obj.merge(_config)
             config_obj.filename = _config.filename
 
-    config.raw = config_obj['main'].as_bool('raw')
-    config.completer_max = config_obj['main'].as_int('completer_max')
-    config.newbie_mode = config_obj['main'].as_bool('newbie_mode')
-    config.rainbow = config_obj['main'].as_bool('rainbow')
-    config.retry_times = config_obj['main'].as_int('retry_times')
-    config.socket_keepalive = config_obj['main'].as_bool('socket_keepalive')
-    config.decode = config_obj['main']['decode']
-    config.no_info = config_obj['main'].as_bool('no_info')
-    config.bottom_bar = config_obj['main'].as_bool('bottom_bar')
+    config.raw = config_obj["main"].as_bool("raw")
+    config.completer_max = config_obj["main"].as_int("completer_max")
+    config.newbie_mode = config_obj["main"].as_bool("newbie_mode")
+    config.rainbow = config_obj["main"].as_bool("rainbow")
+    config.retry_times = config_obj["main"].as_int("retry_times")
+    config.socket_keepalive = config_obj["main"].as_bool("socket_keepalive")
+    config.decode = config_obj["main"]["decode"]
+    config.no_info = config_obj["main"].as_bool("no_info")
+    config.bottom_bar = config_obj["main"].as_bool("bottom_bar")
 
-    logger.info(f"[config] retry_times={config.retry_times}({type(config.retry_times)}).")
+    logger.info(
+        f"[config] retry_times={config.retry_times}({type(config.retry_times)})."
+    )
 
     return config_obj
