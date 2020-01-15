@@ -40,7 +40,7 @@ def test_command_with_decode_utf_8():
     assert config.decode == "utf-8"
 
     gather_args.main(["iredis"], standalone_mode=False)
-    assert config.decode == ''
+    assert config.decode == ""
 
 
 @pytest.mark.xfail(reason="move to behave")
