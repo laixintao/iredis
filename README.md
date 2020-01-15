@@ -44,6 +44,21 @@ and `-p` for port.
 $ iredis --help
 ```
 
+IRedis support config files. The options from command line will always be the
+highest priority. The config files from high priority to low is:
+
+- *Options from command line*
+- `$PWD/.iredisrc`
+- `~/.iredisrc` (this path can be changed with `iredis --iredisrc $YOUR_PATH`)
+- `/etc/iredisrc`
+- default config in iredis package.
+
+You can copy the self-explained default config here: 
+
+https://raw.githubusercontent.com/laixintao/iredis/master/iredis/data/iredisrc
+
+And then make your own changes.
+
 ## Development
 
 ### Release Strategy
