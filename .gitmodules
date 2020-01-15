@@ -1,3 +1,6 @@
 [submodule "iredis/data/redis-doc"]
 	path = iredis/data/redis-doc
 	url = https://github.com/antirez/redis-doc.git
+[submodule "redis-doc"]
+	path = redis-doc
+	url = https://github.com/antirez/redis-doc.git

@@ -350,9 +350,7 @@ class Client:
         command_docs_name = "-".join(args).lower()
         command_summary_name = " ".join(args).upper()
         try:
-            doc_file = open(
-                project_data / "redis-doc" / "commands" / f"{command_docs_name}.md"
-            )
+            doc_file = open(project_data / "commands" / f"{command_docs_name}.md")
         except FileNotFoundError:
             raise NotRedisCommand(
                 f"{command_summary_name} is not a valide Redis command."
