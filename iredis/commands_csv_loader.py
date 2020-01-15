@@ -2,11 +2,11 @@ import csv
 import json
 
 from .utils import timer
-from . import project_path
+from . import project_data
 
 
 def load_command_summary():
-    commands_json_path = project_path / "commands.json"
+    commands_json_path = project_data / "commands.json"
 
     with open(commands_json_path) as jsonfile:
         commands_summary = json.load(jsonfile)
@@ -20,7 +20,7 @@ def load_command():
         - original_commans: dict, command name : Command
         - command_group: dict, group_name: command_names
     """
-    syntax_path = project_path / "command_syntax.csv"
+    syntax_path = project_data / "command_syntax.csv"
 
     first_line = True
     command2callback = {}

@@ -36,8 +36,9 @@ python = "^3.6"
 redis = "^3"
 prompt_toolkit = "^2"
 Pygments = "^2"
-click8 = "^8"
 mistune = "^0.8.4"
+configobj = "^5.0.6"
+click = "^7.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5"

@@ -1,0 +1,30 @@
+# vi: ft=dosini
+[main]
+# weather display raw redis response
+raw = False
+
+# iredis use a LRU strategy to store the completions, like keys, set members,
+# etc, this will set how many completions can iredis keep at most.
+completer_max = 300
+
+# if in newbie_mode, a description of commands and options will showup along
+# with completion, encourage to enable it to who is new to redis
+newbie_mode = False
+
+# show prompt in a ranibow color
+rainbow = False
+
+# retry times for connection error and timeout
+retry_times = 2
+
+socket_keepalive = True
+
+# decode redis response, default None
+decode = 
+
+# iredis will send a `INFO` command to get the server's version, this option can
+# disable it
+no_info = False
+
+# iredis will show command hint on bottom bar, this option can disable it
+bottom_bar = True

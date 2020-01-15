@@ -13,7 +13,7 @@ from prompt_toolkit import print_formatted_text
 
 from .client import Client
 from .style import STYLE
-from .config import config
+from .config import config, load_config_files
 from .processors import UserInputCommand, GetCommandProcessor
 from .bottom import BottomToolbar
 from .utils import timer
@@ -49,11 +49,13 @@ def print_help_msg(command):
 
 def write_result(text):
     """
-    :param text: is_raw: bytes, not raw: FormattedText
+    :param text: is_raw: bytes or str, not raw: FormattedText
     :is_raw: bool
     """
     logger.info(f"write: {text}")
     if config.raw:
+        if isinstance(text, str):
+            text = text.encode(config.decode)
         sys.stdout.buffer.write(text)
         sys.stdout.write("\n")
     else:
@@ -118,7 +120,9 @@ def repl(client, session, start_time):
         try:
             command = session.prompt(
                 prompt_message(client),
-                bottom_toolbar=BottomToolbar(command_holder).render,
+                bottom_toolbar=BottomToolbar(command_holder).render
+                if config.bottom_bar
+                else None,
                 input_processors=[GetCommandProcessor(command_holder, session)],
                 rprompt=lambda: "<transaction>" if config.transaction else None,
             )
@@ -155,9 +159,6 @@ when STDOUT is not a tty.
 DECODE_HELP = (
     "decode response, defult is No decode, which will output all bytes literals."
 )
-NO_INFO = """
-By default iredis will fire a INFO command to get redis-server's \
-version, but you can use this flag to disable it."""
 RAINBOW = "Display colorful prompt."
 
 
@@ -168,44 +169,23 @@ RAINBOW = "Display colorful prompt."
 @click.option("-p", help="Server port (default: 6379).", default="6379")
 @click.option("-n", help="Database number.", default=None)
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
-@click.option("--raw/--no-raw", default=False, is_flag=True, help=RAW_HELP)
-@click.option("--rainbow/--no-rainbow", default=None, is_flag=True, help=RAINBOW)
-@click.option("--no-info", default=False, is_flag=True, help=NO_INFO)
-@click.option(
-    "--retry-times",
-    default=2,
-    help="Retry times for connection error, set 0 to prevent retry. Default is 2.",
-)
-@click.option(
-    "--socket-keepalive/--no-socket-keepalive",
-    default=True,  # FIXME default None, read from config file
-    is_flag=True,
-    help="Socket keepalive, default is true.",
-)
 @click.option(
     "--newbie/--no-newbie",
-    default=False,
+    default=None,
     is_flag=True,
     help="Show command hints and useful helps.",
 )
+@click.option(
+    "--iredisrc",
+    default="~/.iredisrc",
+    help="Config file for iredis, default is ~/.iredisrc.",
+)
 @click.option("--decode", default=None, help=DECODE_HELP)
+@click.option("--raw/--no-raw", default=None, is_flag=True, help=RAW_HELP)
+@click.option("--rainbow/--no-rainbow", default=None, is_flag=True, help=RAINBOW)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
-def gather_args(
-    ctx,
-    h,
-    p,
-    n,
-    password,
-    raw,
-    cmd,
-    decode,
-    newbie,
-    rainbow,
-    no_info,
-    retry_times,
-    socket_keepalive,
-):
+def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, cmd):
     """
     IRedis: Interactive Redis
 
@@ -221,30 +201,26 @@ def gather_args(
     and settings.
     """
     logger.info(
-        f"[start args] host={h}, port={p}, db={n}, raw={raw}, cmd={cmd}, decode={decode}."
+        f"[commandline args] host={h}, port={p}, db={n}, newbie={newbie}, "
+        f"iredisrc={iredisrc}, decode={decode}, raw={raw}, "
+        f"cmd={cmd}, rainbow={rainbow}."
     )
-    # figout raw output or formatted output
-    if ctx.get_parameter_source("raw") == click.ParameterSource.COMMANDLINE:
+    load_config_files(iredisrc)
+    # raw config
+    if raw is not None:
         config.raw = raw
-    else:
-        if sys.stdout.isatty():
-            config.raw = False
-        else:
-            config.raw = True
+    if not sys.stdout.isatty():
+        config.raw = True
 
     config.newbie_mode = newbie
     if not config.newbie_mode:
         # cancel hints in meta_dict
         completer_mapping["command_pending"].meta_dict = {}
 
-    config.decode = decode
-    config.rainbow = rainbow
-    config.retry_times = retry_times
-    config.socket_keepalive = socket_keepalive
-    config.no_info = no_info
-
-    # TODO read config from file
-    # default config file < system < user < pwd/config < commandline args
+    if decode is not None:
+        config.decode = decode
+    if rainbow is not None:
+        config.rainbow = rainbow
 
     return ctx
 
