@@ -212,4 +212,4 @@ def test_running_with_multiple_pipeline(clean_redis, iredis_client, capfd):
 def test_can_not_connect_on_startup(capfd):
     Client("localhost", "16111", 15)
     out, err = capfd.readouterr()
-    assert err == "Error 61 connecting to localhost:16111. Connection refused.\n"
+    assert "connecting to localhost:16111." in err
