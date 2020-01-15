@@ -66,12 +66,15 @@ class Client:
         # all command upper case
         self.answer_callbacks = command2callback
         self.callbacks = self.reder_funcname_mapping()
-        self.connection.connect()
+        try:
+            self.connection.connect()
+        except Exception as e:
+            print(str(e), file=sys.stderr)
         if not config.no_info:
             try:
                 self.get_server_info()
             except Exception as e:
-                logger.warn(f"[After Connection] {str(e)}")
+                logger.warning(f"[After Connection] {str(e)}")
                 config.no_version_reason = str(e)
         else:
             config.no_version_reason = "--no-info flag activated"
