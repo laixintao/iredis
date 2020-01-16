@@ -5,7 +5,7 @@ import re
 import logging
 import sys
 from distutils.version import StrictVersion
-from subprocess import Popen, PIPE
+from subprocess import run
 
 import redis
 from redis.connection import Connection
@@ -249,10 +249,7 @@ class Client:
                     stdin = b"\n".join(redis_resp)
                 else:
                     stdin = redis_resp
-                shell_resp = Popen(
-                    shell_command, stdout=sys.stdout, stdin=PIPE, shell=True
-                )
-                shell_resp.communicate(stdin)
+                run(shell_command, input=stdin, stdout=sys.stdout, shell=True)
 
                 return
 
