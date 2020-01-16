@@ -28,6 +28,7 @@ class TerminalRender(mistune.Renderer):
         if level == 2:
             header_text = self._to_title(text)
             return super().header(header_text, 2)
+        return super().header(self._to_title(text), level)
 
 
 class RedisDocLexer(mistune.BlockLexer):
