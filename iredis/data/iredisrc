@@ -28,3 +28,8 @@ no_info = False
 
 # iredis will show command hint on bottom bar, this option can disable it
 bottom_bar = True
+
+# Dangerous command warning mode will alert you before executing a dangerous
+# command, that may cause harm to the redis-server or hang server,
+# such as "KEYS", "DEL" or "SHUTDOWN".
+warning = True

@@ -1,0 +1,13 @@
+Command,Reason
+FLUSHDB,"FLUSHDB will delete all the keys of the currently selected DB"
+FLUSHALL,"FLUSHALL will delete all the keys of all the existing databases"
+KEYS,"KEYS will hang redis server, use SCAN instead"
+PEXPIRE,"PEXPIRE may delete keys"
+DEL,"DEL will delete keys, it may cause high latency when the value is big"
+CONFIG SET,"CONFIG SET will change the server's configs"
+SHUTDOWN,"SHUTDOWN will shutdown the server"
+SAVE,"SAVE performs a synchronous save, it will hang redis server"
+SPOP,"SPOP will delete items"
+SREM,"SREM will delete items"
+RENAME,"RENAME use DELETE command to overwrite exist key, it may cause high latency when the value is big"
+DEBUG,"It's a dangerous command"
