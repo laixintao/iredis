@@ -27,7 +27,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.6"
 redis = "^3"
-prompt_toolkit = "^2"
+prompt_toolkit = "^3"
 Pygments = "^2"
 mistune = "^0.8.4"
 configobj = "^5.0.6"
