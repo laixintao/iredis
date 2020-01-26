@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import asyncio
 import os
 import logging
 import sys
@@ -109,7 +110,7 @@ def prompt_message(client):
     return text
 
 
-def repl(client, session, start_time):
+async def repl(client, session, start_time):
     command_holder = UserInputCommand()
     timer(f"First REPL command enter, time cost: {time.time() - start_time}")
 
@@ -118,7 +119,7 @@ def repl(client, session, start_time):
         logger.info("REPL waiting for command...")
 
         try:
-            command = session.prompt(
+            command = await session.prompt_async(
                 prompt_message(client),
                 bottom_toolbar=BottomToolbar(command_holder).render
                 if config.bottom_bar
@@ -282,4 +283,4 @@ def main():
 
     # print hello message
     greetings()
-    repl(client, session, enter_main_time)
+    asyncio.run(repl(client, session, enter_main_time))
