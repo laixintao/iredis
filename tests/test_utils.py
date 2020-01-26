@@ -68,6 +68,7 @@ def test_stipe_quote_escaple_in_quote(test_input, expected):
         ("getbit foo 17", "getbit"),
         ("command ", "command"),
         (" command count  ", "command count"),
+        (" command  count  ", "command count"),  # command with multi space
     ],
 )
 def test_split_commands(command, expected):

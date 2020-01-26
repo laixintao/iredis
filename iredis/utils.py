@@ -99,15 +99,15 @@ def split_command_args(command, all_commands):
     :param command: redis command string, with args
     :param all_commands: full redis commands list
     """
-    command = command.lstrip()
-    upper_raw_command = command.upper()
+    command = command.strip()
+    upper_command_list = command.upper().split()
     for command_name in all_commands:
-        total_equal = command_name == upper_raw_command
-        ends_with_space = upper_raw_command.startswith(command_name + " ")
-        if total_equal or ends_with_space:
+        _command_name = command_name.split()
+        _command_length = len(_command_name)
+        if upper_command_list[:_command_length] == _command_name:
             name_len = len(command_name)
-            input_command = command[:name_len]
-            input_args = command[name_len:]
+            input_command = " ".join(command.split()[:_command_length])
+            input_args = " ".join(command.split()[_command_length:])
             break
     else:
         raise InvalidArguments(f"`{command}` is not a valide Redis Command")
