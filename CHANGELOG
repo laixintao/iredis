@@ -1,6 +1,7 @@
 ### 0.8.10
 
 * Bugfix: previous version of iredis didn't package redis-doc correctly.
+* Feature: prompt for dangerous commands.
 
 ### 0.8.9
 

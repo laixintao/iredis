@@ -214,7 +214,7 @@ class Client:
             return redis_command, shell_command
         return rawinput, None
 
-    def send_command(self, raw_command, completer=None):
+    def send_command(self, raw_command, completer=None):  # noqa
         """
         Send raw_command to redis-server, return parsed response.
 
