@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "iredis"
-version = "0.8.11"
+version = "0.8.12"
 description = "Terminal client for Redis with auto-completion and syntax highlighting."
 authors = ["laixintao <laixintao1995@163.com>"]
 readme = 'README.md'
