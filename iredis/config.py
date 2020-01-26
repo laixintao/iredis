@@ -103,6 +103,7 @@ def load_config_files(iredisrc):
     config.decode = config_obj["main"]["decode"]
     config.no_info = config_obj["main"].as_bool("no_info")
     config.bottom_bar = config_obj["main"].as_bool("bottom_bar")
+    config.warning = config_obj["main"].as_bool("warning")
 
     logger.info(
         f"[config] retry_times={config.retry_times}({type(config.retry_times)})."
