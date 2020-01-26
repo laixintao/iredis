@@ -2,6 +2,7 @@
 
 * Bugfix: Multi spaces between commands can be recongnised as correct
 commands now.
+* Feature: Warning on dangerous command.
 
 ### 0.8.11
 
