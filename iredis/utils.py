@@ -105,7 +105,6 @@ def split_command_args(command, all_commands):
         _command_name = command_name.split()
         _command_length = len(_command_name)
         if upper_command_list[:_command_length] == _command_name:
-            name_len = len(command_name)
             input_command = " ".join(command.split()[:_command_length])
             input_args = " ".join(command.split()[_command_length:])
             break
