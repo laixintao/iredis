@@ -232,6 +232,7 @@ class Client:
         logger.info(f"[Prepare command] Redis: {redis_command}, Shell: {shell_command}")
         try:
             command_name, args = split_command_args(redis_command, all_commands)
+            logger.info(f"[Split command] command: {command_name}, args: {args}")
             input_command_upper = command_name.upper()
             # Confirm for dangerous command
             if config.warning:

@@ -25,3 +25,7 @@ def test_get(local_process):
 
     local_process.sendline("get foo")
     local_process.expect("(nil)")
+
+def test_on_dangerous_commands(local_process):
+    local_process.sendline("keys *")
+    local_process.expect("KEYS is dangerous, use SCAN instead.")
