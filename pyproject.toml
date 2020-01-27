@@ -32,6 +32,7 @@ Pygments = "^2"
 mistune = "^0.8.4"
 configobj = "^5.0.6"
 click = "^7.0"
+aioredis = "^1.3.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5"
