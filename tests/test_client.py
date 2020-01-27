@@ -4,10 +4,14 @@ from unittest.mock import MagicMock
 
 
 from iredis.client import Client
-from iredis.completers import completer_mapping, IRedisCompleter
+from iredis.completers import IRedisCompleter
 from iredis.redis_grammar import get_command_grammar
 from iredis.entry import Rainbow, prompt_message
 from iredis.completers import get_completer_mapping
+
+@pytest.fixture
+def completer():
+    return IRedisCompleter()
 
 
 @pytest.mark.parametrize(
@@ -36,7 +40,6 @@ def test_patch_completer():
     assert completer.key_completer.words == ["world", "hello", "bar", "foo"]
     assert completer.key_completer.words == ["world", "hello", "bar", "foo"]
 
-    completer = IRedisCompleter()
     client.pre_hook("GET bar", "GET", "bar", completer)
     assert completer.key_completer.words == ["bar", "world", "hello", "foo"]
 
@@ -171,22 +174,19 @@ def test_auto_select_db_and_auth_for_reconnect(iredis_client, config):
     next(iredis_client.send_command("config set requirepass ''"))
 
 
-def test_split_shell_command(iredis_client):
-    grammar = get_command_grammar("get")
-
-    assert iredis_client.split_command_and_pipeline(" get json | rg . ", grammar) == (
+def test_split_shell_command(iredis_client, completer):
+    assert iredis_client.split_command_and_pipeline(" get json | rg . ", completer) == (
         " get json ",
         "rg . ",
     )
 
     assert iredis_client.split_command_and_pipeline(
-        """ get "json | \\" hello" | rg . """, grammar
+        """ get "json | \\" hello" | rg . """, completer
     ) == (""" get "json | \\" hello" """, "rg . ")
 
 
-def test_running_with_pipeline(clean_redis, iredis_client, capfd):
+def test_running_with_pipeline(clean_redis, iredis_client, capfd, completer):
     grammar = get_command_grammar("get")
-    completer = GrammarCompleter(grammar, get_completer_mapping())
     clean_redis.set("foo", "hello \n world")
     with pytest.raises(StopIteration):
         next(iredis_client.send_command("get foo | grep w", completer))
@@ -194,9 +194,8 @@ def test_running_with_pipeline(clean_redis, iredis_client, capfd):
     assert out == " world\n"
 
 
-def test_running_with_multiple_pipeline(clean_redis, iredis_client, capfd):
+def test_running_with_multiple_pipeline(clean_redis, iredis_client, capfd, completer):
     grammar = get_command_grammar("get")
-    completer = GrammarCompleter(grammar, get_completer_mapping())
     clean_redis.set("foo", "hello world\nhello iredis")
     with pytest.raises(StopIteration):
         next(

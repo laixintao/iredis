@@ -11,7 +11,7 @@ from .utils import split_command_args
 from .exceptions import InvalidArguments
 from .commands_csv_loader import all_commands
 from .lexer import lexers_mapping, default_lexer
-from .completers import completer_mapping, default_completer
+from .completers import default_completer
 from .redis_grammar import get_command_grammar
 
 logger = logging.getLogger(__name__)

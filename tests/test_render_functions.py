@@ -63,7 +63,7 @@ def test_render_list_with_nil_init():
 
     config.raw = False
     raw = [b"hello", None, b"world"]
-    out = renders.OutputRender.render_list(raw, None)
+    out = renders.OutputRender.render_list(raw)
     out = strip_formatted_text(out)
     assert out == '1) "hello"\n2) (nil)\n3) "world"'
 
@@ -73,7 +73,7 @@ def test_render_list_with_nil_init_while_config_raw():
 
     config.raw = True
     raw = [b"hello", None, b"world"]
-    out = renders.OutputRender.render_list(raw, None)
+    out = renders.OutputRender.render_list(raw)
     assert out == b"hello\n\nworld"
 
 
@@ -82,7 +82,7 @@ def test_render_list_with_empty_list_raw():
 
     config.raw = True
     raw = []
-    out = renders.OutputRender.render_list(raw, None)
+    out = renders.OutputRender.render_list(raw)
     assert out == b""
 
 
@@ -91,24 +91,24 @@ def test_render_list_with_empty_list():
 
     config.raw = False
     raw = []
-    out = renders.OutputRender.render_list(raw, None)
+    out = renders.OutputRender.render_list(raw)
     out = strip_formatted_text(out)
     assert out == "(empty list or set)"
 
 
 def test_ensure_str_bytes():
-    assert renders._ensure_str(b"hello world") == r"hello world"
-    assert renders._ensure_str(b"hello'world") == r"hello'world"
-    assert renders._ensure_str("你好".encode()) == r"\xe4\xbd\xa0\xe5\xa5\xbd"
+    assert renders.ensure_str(b"hello world") == r"hello world"
+    assert renders.ensure_str(b"hello'world") == r"hello'world"
+    assert renders.ensure_str("你好".encode()) == r"\xe4\xbd\xa0\xe5\xa5\xbd"
 
 
 def test_double_quotes():
-    assert renders._double_quotes('hello"world') == r'"hello\"world"'
-    assert renders._double_quotes('"hello\\world"') == '"\\"hello\\world\\""'
+    assert renders.double_quotes('hello"world') == r'"hello\"world"'
+    assert renders.double_quotes('"hello\\world"') == '"\\"hello\\world\\""'
 
-    assert renders._double_quotes("'") == '"\'"'
-    assert renders._double_quotes("\\") == '"\\"'
-    assert renders._double_quotes('"') == '"\\""'
+    assert renders.double_quotes("'") == '"\'"'
+    assert renders.double_quotes("\\") == '"\\"'
+    assert renders.double_quotes('"') == '"\\""'
 
 
 def test_simple_string_reply():
@@ -159,9 +159,10 @@ def test_list_or_string():
 
 
 def test_command_keys():
-    completer.completers["key"].words = []
+    completer.key_completer.words = []
     config.raw = False
-    rendered = renders.command_keys([b"cat", b"dog", b"banana"], completer)
+    rendered = renders.OutputRender.command_keys([b"cat", b"dog", b"banana"])
+    completer.touch("KEYS", [b"cat", b"dog", b"banana"])
 
     assert rendered == FormattedText(
         [
@@ -178,15 +179,16 @@ def test_command_keys():
             ("class:key", '"banana"'),
         ]
     )
-    assert completer.completers["keys"].words == ["banana", "dog", "cat"]
+    assert completer.key_completer.words == ["banana", "dog", "cat"]
 
 
 def test_command_scan():
-    completer.completers["key"].words = []
+    completer.key_completer.words = []
     config.raw = False
-    rendered = renders.command_scan(
-        [b"44", [b"a", b"key:__rand_int__", b"dest", b" a"]], completer
+    rendered = renders.OutputRender.command_scan(
+        [b"44", [b"a", b"key:__rand_int__", b"dest", b" a"]]
     )
+    completer.touch("SCAN", [b"44", [b"a", b"key:__rand_int__", b"dest", b" a"]])
 
     assert rendered == FormattedText(
         [
@@ -210,15 +212,16 @@ def test_command_scan():
             ("class:key", '" a"'),
         ]
     )
-    assert completer.completers["keys"].words == [" a", "dest", "key:__rand_int__", "a"]
+    assert completer.key_completer.words == [" a", "dest", "key:__rand_int__", "a"]
 
 
 def test_command_sscan():
-    completer.completers["member"].words = []
+    completer.member_completer.words = []
     config.raw = False
-    rendered = renders.command_sscan(
-        [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]], completer
+    rendered = renders.OutputRender.command_sscan(
+        [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]]
     )
+    completer.touch("SSCAN", [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]])
 
     assert rendered == FormattedText(
         [
@@ -242,7 +245,7 @@ def test_command_sscan():
             ("class:member", '" a"'),
         ]
     )
-    assert completer.completers["members"].words == [
+    assert completer.member_completer.words == [
         " a",
         "dest",
         "member:__rand_int__",
@@ -251,14 +254,16 @@ def test_command_sscan():
 
 
 def test_command_sscan_config_raw():
-    completer.completers["member"].words = []
+    completer.member_completer.words = []
     config.raw = True
-    rendered = renders.command_sscan(
-        [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]], completer
+    rendered = renders.OutputRender.command_sscan(
+        [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]]
     )
+    completer.touch("SSCAN", [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]])
+
 
     assert rendered == b"44\na\nmember:__rand_int__\ndest\n a"
-    assert completer.completers["members"].words == [
+    assert completer.member_completer.words == [
         " a",
         "dest",
         "member:__rand_int__",
@@ -267,10 +272,12 @@ def test_command_sscan_config_raw():
 
 
 def test_render_members():
-    completer.completers["members"].words = []
+    completer.member_completer.words = []
     config.raw = False
     config.withscores = True
-    rendered = renders.OutputRender.render_members([b"duck", b"667", b"camel", b"708"], completer)
+    resp = [b"duck", b"667", b"camel", b"708"]
+    rendered = renders.OutputRender.render_members(resp)
+    completer.touch("ZRANGE", resp)
 
     assert rendered == FormattedText(
         [
@@ -285,17 +292,19 @@ def test_render_members():
             ("class:member", '"camel"'),
         ]
     )
-    assert completer.completers["member"].words == ["camel", "duck"]
+    assert completer.member_completer.words == ["camel", "duck"]
 
 
 def test_render_members_config_raw():
-    completer.completers["members"].words = []
+    completer.member_completer.words = []
     config.raw = True
     config.withscores = True
-    rendered = renders.OutputRender.render_members([b"duck", b"667", b"camel", b"708"], completer)
+    resp = [b"duck", b"667", b"camel", b"708"]
+    rendered = renders.OutputRender.render_members(resp)
+    completer.touch("ZRANGE", resp)
 
     assert rendered == b"duck\n667\ncamel\n708"
-    assert completer.completers["member"].words == ["camel", "duck"]
+    assert completer.member_completer.words == ["camel", "duck"]
 
 
 def test_render_unixtime_config_raw():
@@ -411,7 +420,7 @@ def test_render_nested_pairs():
 def test_render_nested_list():
     text = [[b"get", 2, [b"readonly", b"fast"], 1, 1, 1]]
     config.raw = False
-    assert renders.OutputRender.render_list(text, None) == FormattedText(
+    assert renders.OutputRender.render_list(text) == FormattedText(
         [
             ("", "1)"),
             ("", " "),

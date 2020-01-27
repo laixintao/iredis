@@ -299,7 +299,7 @@ class OutputRender:
         Render Scan command result.
         see: https://redis.io/commands/scan
         """
-        return _render_scan(command_keys, response)
+        return _render_scan(OutputRender.command_keys, response)
 
     @staticmethod
     def command_sscan(response):

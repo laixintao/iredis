@@ -17,7 +17,7 @@ from .config import config, load_config_files
 from .processors import UserInputCommand, GetCommandProcessor
 from .bottom import BottomToolbar
 from .utils import timer
-from .completers import default_completer, completer_mapping
+from .completers import default_completer
 from .lexer import default_lexer
 from . import __version__
 
@@ -215,7 +215,7 @@ def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, 
     config.newbie_mode = newbie
     if not config.newbie_mode:
         # cancel hints in meta_dict
-        completer_mapping["command_pending"].meta_dict = {}
+        default_completer.completer_mapping["command_pending"].meta_dict = {}
 
     if decode is not None:
         config.decode = decode

@@ -85,9 +85,6 @@ def get_completer_mapping():
     return completer_mapping
 
 
-completer_mapping = get_completer_mapping()
-
-
 class IRedisCompleter(Completer):
     """
     Completer class that can dynamically returns any Completer.
@@ -97,10 +94,10 @@ class IRedisCompleter(Completer):
 
     def __init__(self):
         super().__init__()
+        self.completer_mapping = get_completer_mapping()
         self.current_completer = self.root_completer = GrammarCompleter(
-            command_grammar, completer_mapping
+            command_grammar, self.completer_mapping
         )
-        self.completer_mapping = completer_mapping
 
     @property
     def key_completer(self) -> LatestUsedFirstWordCompleter:
@@ -120,7 +117,7 @@ class IRedisCompleter(Completer):
             # compile grammar for this command
             grammar = get_command_grammar(command)
             completer = GrammarCompleter(
-                compiled_grammar=grammar, completers=completer_mapping
+                compiled_grammar=grammar, completers=self.completer_mapping
             )
         except InvalidArguments:
             completer = self.root_completer
@@ -159,6 +156,9 @@ class IRedisCompleter(Completer):
 
     def touch(self, command_name, response):
         command_name = command_name.upper()
+        if response is None:
+            return
+
         response = ensure_str(response)
         if command_name in ("HKEYS",):
             self.field_completer.touch_words(response)
@@ -182,6 +182,20 @@ class IRedisCompleter(Completer):
             self.key_completer.touch_words(response)
             logger.debug(f"[Completer] key completer updated with {response}.")
 
+        if command_name in ("SCAN",):
+            self.key_completer.touch_words(response[1])
+            logger.debug(f"[Completer] key completer updated with {response[1]}.")
+
+        if command_name in ("SSCAN", "ZSCAN",):
+            self.member_completer.touch_words(response[1])
+            logger.debug(f"[Completer] member completer updated with {response[1]}.")
+
+        if command_name in ("HSCAN",):
+            self.field_completer.touch_words(response[1][::2])
+            logger.debug(
+                f"[Completer] field completer updated with {response[1][::2]}."
+            )
+
     def _touch_members(self, items):
         _step = 1
 
@@ -201,23 +215,6 @@ class IRedisCompleter(Completer):
             self.get_completer,
             self.current_completer,
         )
-
-
-class IRedisGrammarCompleter(Completer):
-    def __init__(self):
-        super().__init__(command_grammar, completer_mapping)
-
-    @property
-    def key_completer(self):
-        return self.completers["key"]
-
-    @property
-    def member_completer(self):
-        return self.completers["member"]
-
-    @property
-    def field_completer(self):
-        return self.completers["field"]
 
 
 default_completer = IRedisCompleter()

@@ -77,7 +77,8 @@ class Client:
     def get_server_info(self):
         self.connection.send_command("INFO")
         # safe to decode Redis's INFO response
-        info_resp = utils.ensure_str(self.connection.read_response())
+        resp = self.connection.read_response()
+        info_resp = utils.ensure_str(resp, decode="utf-8")
 
         version = re.findall(r"^redis_version:([\d\.]+)\r\n", info_resp, re.MULTILINE)[
             0
@@ -144,7 +145,7 @@ class Client:
         logger.info(f"[Redis-Server] Response: {response}")
         # if in transaction, use queue render first
         if config.transaction:
-            callback = renders.render_transaction_queue
+            callback = renders.OutputRender.render_transaction_queue
             rendered = callback(response)
         else:
             rendered = self._dynamic_render(command_name, response)
