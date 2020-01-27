@@ -27,14 +27,19 @@ logger = logging.getLogger(__name__)
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
 
 
-def greetings():
+async def greetings(client: Client):
     iredis_version = f"iredis  {__version__}"
-    if config.no_version_reason:
-        reason = f"({config.no_version_reason})"
-    else:
+
+    try:
+        _version = await client.get_server_version()
         reason = ""
 
-    server_version = f"redis-server  {config.version} {reason}"
+    except Exception as e:
+        logger.warning(f"[After Connection] {str(e)}")
+        reason = str(e)
+        _version = "unknown"
+
+    server_version = f"redis-server  {_version} {reason}"
     home_page = "Home:   https://iredis.io"
     issues = "Issues: https://iredis.io/issues"
     display = "\n".join([iredis_version, server_version, home_page, issues])
@@ -143,7 +148,7 @@ async def repl(client, session, start_time):
 
         try:
             answers = client.send_command(command, session.completer)
-            for answer in answers:
+            async for answer in answers:
                 write_result(answer)
         # Error with previous command or exception
         except Exception as e:
@@ -225,8 +230,12 @@ def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, 
 
     return ctx
 
-
 def main():
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(async_main())
+
+async def async_main():
     enter_main_time = time.time()  # just for logs
 
     # invoke in non-standalone mode to gather args
@@ -254,13 +263,13 @@ def main():
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():
             logger.debug(f"[Command stdin] {line}")
-            for answer in client.send_command(line, None):
+            async for answer in client.send_command(line, None):
                 write_result(answer)
         return
 
     if ctx.params["cmd"]:  # no interactive mode
         answers = client.send_command(" ".join(ctx.params["cmd"]), None)
-        for answer in answers:
+        async for answer in answers:
             write_result(answer)
         logger.warning("[OVER] command executed, exit...")
         return
@@ -282,5 +291,5 @@ def main():
     )
 
     # print hello message
-    greetings()
-    asyncio.run(repl(client, session, enter_main_time))
+    await greetings(client)
+    await repl(client, session, enter_main_time)

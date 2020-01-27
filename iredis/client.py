@@ -1,12 +1,15 @@
 """
 IRedis client.
 """
+import asyncio
 import re
 import logging
 import sys
+import socket
 from distutils.version import StrictVersion
 from subprocess import run
 
+import aioredis
 import redis
 from redis.connection import Connection
 from redis.exceptions import TimeoutError, ConnectionError, AuthenticationError
@@ -27,6 +30,46 @@ logger = logging.getLogger(__name__)
 CLIENT_COMMANDS = ["HELP"]
 
 
+class ConnectionManager:
+    def __init__(self, host, port, db, password=None):
+        self.host = host
+        self.port = port
+        self.db = db
+        self._password = password
+        self._encoding = config.decode or None
+        self.connection: aioredis.RedisConnection = None
+
+    async def _create_connection(self) -> aioredis.RedisConnection:
+        connection = await aioredis.create_connection(
+            address=(self.host, self.port),
+            db=self.db,
+            password=self._password,
+            encoding=self._encoding,
+        )
+        _socket = connection._writer.transport.get_extra_info("socket")
+        _socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+        return connection
+
+    async def get_connection(self) -> aioredis.RedisConnection:
+        if self.connection is None:
+            self.connection = await self._create_connection()
+
+        if self.connection.closed:
+            self.connection = await self._create_connection()
+
+        return self.connection
+
+    async def reset_connection(self) ->aioredis.RedisConnection:
+        self.connection.close()
+        self.connection = await self._create_connection()
+        return self.connection
+
+    def __str__(self):
+        if self.db:
+            return f"{self.host}:{self.port}[{self.db}]"
+        return f"{self.host}:{self.port}"
+
+
 class Client:
     """
     iRedis client, hold a redis-py Client to interact with Redis.
@@ -43,69 +86,44 @@ class Client:
         self.host = host
         self.port = port
         self.db = db
-        if config.decode:
-            self.connection = Connection(
-                host=self.host,
-                port=self.port,
-                db=self.db,
-                password=password,
-                encoding=config.decode,
-                decode_responses=True,
-                encoding_errors="replace",
-                socket_keepalive=config.socket_keepalive,
-            )
-        else:
-            self.connection = Connection(
-                host=self.host,
-                port=self.port,
-                db=self.db,
-                password=password,
-                decode_responses=False,
-                socket_keepalive=config.socket_keepalive,
-            )
+        self._password = password
+        self._encoding = config.decode
+        self.manager = ConnectionManager(
+            host, port, db, password
+        )
+
         # all command upper case
         self.answer_callbacks = command2callback
         self.callbacks = self.reder_funcname_mapping()
-        try:
-            self.connection.connect()
-        except Exception as e:
-            print(str(e), file=sys.stderr)
-        if not config.no_info:
-            try:
-                self.get_server_info()
-            except Exception as e:
-                logger.warning(f"[After Connection] {str(e)}")
-                config.no_version_reason = str(e)
-        else:
-            config.no_version_reason = "--no-info flag activated"
 
-    def get_server_info(self):
-        self.connection.send_command("INFO")
+    async def get_server_version(self):
+        conn = await self.manager.get_connection()
+        result = await conn.execute("INFO")
         # safe to decode Redis's INFO response
-        info_resp = utils.ensure_str(self.connection.read_response())
+        info_resp = utils.ensure_str(result)
 
         version = re.findall(r"^redis_version:([\d\.]+)\r\n", info_resp, re.MULTILINE)[
             0
         ]
         logger.debug(f"[Redis Version] {version}")
-        config.version = version
+        return version
 
     def __str__(self):
-        if self.db:
-            return f"{self.host}:{self.port}[{self.db}]"
-        return f"{self.host}:{self.port}"
+        return str(self.manager)
 
     def client_execute_command(self, command_name, *args):
         command = command_name.upper()
         if command == "HELP":
             return self.do_help(*args)
 
-    def execute_command_and_read_response(
+    async def execute_command_and_read_response(
         self, completer, command_name, *args, **options
     ):
         """Execute a command and return a parsed response
         Here we retry once for ConnectionError.
         """
+        conn = await self.manager.get_connection()
+
         retry_times = config.retry_times  # FIXME configureable
         last_error = None
         need_refresh_connection = False
@@ -117,11 +135,10 @@ class Client:
                         f"{str(last_error)} retrying... retry left: {retry_times+1}",
                         file=sys.stderr,
                     )
-                    self.connection.disconnect()
-                    self.connection.connect()
-                    logger.info(f"New connection created, retry on {self.connection}.")
-                self.connection.send_command(command_name, *args)
-                response = self.connection.read_response()
+                    conn = await self.manager.reset_connection()
+                    logger.info(f"New connection created, retry on {conn}.")
+
+                response = await conn.execute(command_name, *args)
             except AuthenticationError:
                 raise
             except (ConnectionError, TimeoutError) as e:
@@ -183,15 +200,15 @@ class Client:
             response = self.connection.read_response()
             yield render_bulk_string_decode(response)
 
-    def subscribing(self):
+    async def subscribing(self):
         while 1:
             response = self.connection.read_response()
             yield render_subscribe(response)
 
-    def unsubscribing(self):
+    async def unsubscribing(self):
         "unsubscribe from all channels"
-        self.connection.send_command("UNSUBSCRIBE")
-        response = self.connection.read_response()
+        conn = self.manager.get_connection()
+        response = await conn.execute("UNSUBSCRIBE")
         yield render_subscribe(response)
 
     def split_command_and_pipeline(self, rawinput, grammar):
@@ -213,7 +230,7 @@ class Client:
             return redis_command, shell_command
         return rawinput, None
 
-    def send_command(self, raw_command, completer=None):
+    async def send_command(self, raw_command, completer=None):
         """
         Send raw_command to redis-server, return parsed response.
 
@@ -238,7 +255,7 @@ class Client:
                 yield redis_resp
                 return
             self.pre_hook(raw_command, command_name, args, completer)
-            redis_resp = self.execute_command_and_read_response(
+            redis_resp = await self.execute_command_and_read_response(
                 completer, command_name, *args
             )
             # if shell, do not render, just run in shell pipe and show the
@@ -260,7 +277,7 @@ class Client:
             if command_name.upper() == "MONITOR":
                 # TODO special render for monitor
                 try:
-                    yield from self.monitor()
+                    yield self.monitor()
                 except KeyboardInterrupt:
                     pass
             elif command_name.upper() in [
@@ -268,9 +285,9 @@ class Client:
                 "PSUBSCRIBE",
             ]:  # enter subscribe mode
                 try:
-                    yield from self.subscribing()
+                    yield self.subscribing()
                 except KeyboardInterrupt:
-                    yield from self.unsubscribing()
+                    yield self.unsubscribing()
         except Exception as e:
             logger.exception(e)
             yield render_error(str(e))
