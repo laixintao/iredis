@@ -48,16 +48,7 @@ class GetCommandProcessor(Processor):
             command, _ = split_command_args(input_text, all_commands)
         except InvalidArguments:
             self.command_holder.command = None
-            self.session.completer = default_completer
-            self.session.lexer = default_lexer
         else:
             self.command_holder.command = command.upper()
-            # compile grammar for this command
-            grammar = get_command_grammar(command)
-            lexer = GrammarLexer(grammar, lexers=lexers_mapping)
-            completer = GrammarCompleter(grammar, completer_mapping)
-
-            self.session.completer = completer
-            self.session.lexer = lexer
 
         return Transformation(transformation_input.fragments)

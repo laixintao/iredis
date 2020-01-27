@@ -2,14 +2,17 @@
 Render redis-server responses.
 This module will be auto loaded to callbacks.
 
-func(redis-response, completers: GrammarCompleter) -> formatted result(str)
+func(redis-response) -> formatted result(str)
 """
-import time
 import logging
-from prompt_toolkit.formatted_text import FormattedText
+import time
 from distutils.version import StrictVersion
 
+from prompt_toolkit.formatted_text import FormattedText
+
+from .commands_csv_loader import command2callback
 from .config import config
+from .utils import double_quotes, ensure_str
 
 logger = logging.getLogger(__name__)
 NEWLINE_TUPLE = ("", "\n")
@@ -18,154 +21,305 @@ NIL = FormattedText([NIL_TUPLE])
 EMPTY_LIST = FormattedText([("class:type", "(empty list or set)")])
 
 
-def _literal_bytes(b):
+class OutputRender:
+    """Render redis output
     """
-    convert bytes to printable text.
 
-    backslash and double-quotes will be escaped by
-    backslash.
-    "hello\" -> \"hello\\\"
+    @staticmethod
+    def dynamic_render(command_name, response):
+        """Dynamic render output due to command name."""
+        command_upper = command_name.upper()
+        callback_name = command2callback.get(command_upper)
+        # else, use defined callback
+        if callback_name is None:
+            logger.warning("unknown command %s", command_name)
+            return response
 
-    we don't add outter double quotes here, since
-    completer also need this function's return value
-    to patch completers.
+        if not hasattr(OutputRender, callback_name):
+            # FIXME
+            # not implemented command, use no conversion
+            # this condition should be deleted finally
+            logger.warning(
+                "command `%s`'s callback %s is not implemented",
+                command_name,
+                callback_name,
+            )
+            return response
 
-    b'hello' -> "hello"
-    b'double"quotes"' -> "double\"quotes\""
-    """
-    s = str(b)
-    s = s[2:-1]  # remove b' '
-    # unescape single quote
-    s = s.replace(r"\'", "'")
-    return s
+        callback = getattr(OutputRender, callback_name)
+        rendered = callback(response)
+        logger.info(f"[rendered] {rendered}")
+        return rendered
 
-
-def _double_quotes(unquoted):
-    """
-    Display String like redis-cli.
-    escape inner double quotes.
-    add outter double quotes.
-
-    :param unquoted: list, or str
-    """
-    if isinstance(unquoted, str):
-        # escape double quote
-        escaped = unquoted.replace('"', '\\"')
-        return f'"{escaped}"'  # add outter double quotes
-    elif isinstance(unquoted, list):
-        return [_double_quotes(item) for item in unquoted]
-
-
-def _ensure_str(origin, decode=None):
-    """
-    Ensure is string, for display and completion.
-
-    Then add double quotes
-
-    Note: this method do not handle nil, make sure check (nil)
-          out of this method.
-    """
-    if isinstance(origin, str):
-        return origin
-    if isinstance(origin, int):
-        return str(origin)
-    elif isinstance(origin, list):
-        return [_ensure_str(b) for b in origin]
-    elif isinstance(origin, bytes):
-        if decode:
-            return origin.decode(decode)
-        return _literal_bytes(origin)
-    else:
-        raise Exception(f"Unkown type: {type(origin)}, origin: {origin}")
-
-
-def render_bulk_string(value, completers=None):
-    if config.raw:
+    @staticmethod
+    def render_bulk_string(value):
+        if config.raw:
+            if value is None:
+                return b""
+            return value
         if value is None:
-            return b""
-        return value
-    if value is None:
-        return NIL
-    return _double_quotes(_ensure_str(value))
+            return NIL
+        return double_quotes(ensure_str(value))
 
+    @staticmethod
+    def render_bulk_string_decode(value):
+        """Only for server group commands, no double quoted,  displayed.
+        Display use UTF-8.
+        """
+        decoded = value.decode()
+        splitted = "\n".join(decoded.splitlines())
+        return splitted
 
-def render_bulk_string_decode(value, completers=None):
-    """Only for server group commands, no double quoted,  displayed.
-    Display use UTF-8.
-    """
-    decoded = value.decode()
-    splitted = "\n".join(decoded.splitlines())
-    return splitted
+    @staticmethod
+    def render_nested_pair(value):
+        """
+        For redis internel responses.
+        Always decode with utf-8
+        Render nested list.
+        Items come as pairs.
+        """
+        if config.raw:
+            return OutputRender.render_list(value)
+        return FormattedText(_render_pair(value, 0))
 
-
-def _render_pair(pairs, indent):
-    keys = [item for item in pairs[::2]]
-    values = [item for item in pairs[1::2]]
-    rendered = []
-    for key, value in zip(keys, values):
-        key = _ensure_str(key, decode="utf-8")
-        value = _ensure_str(value, decode="utf-8")
-        rendered.append(("class:string", f"{' '*4*indent}{key}: "))
-        if isinstance(value, list):
-            rendered.append(NEWLINE_TUPLE)
-            rendered.extend(_render_pair(value, indent + 1))
-        else:
-            rendered.append(("class:value", value))
-        rendered.append(NEWLINE_TUPLE)
-    return rendered[:-1]  # remove last newline
-
-
-def render_nested_pair(value, completers=None):
-    """
-    For redis internel responses.
-    Always decode with utf-8
-    Render nested list.
-    Items come as pairs.
-    """
-    if config.raw:
-        return render_list(value)
-    return FormattedText(_render_pair(value, 0))
-
-
-def render_int(value, completers=None):
-    if config.raw:
+    @staticmethod
+    def render_int(value):
+        if config.raw:
+            if value is None:
+                return b""
+            return str(value).encode()
         if value is None:
-            return b""
-        return str(value).encode()
-    if value is None:
-        return NIL
-    return FormattedText([("class:type", "(integer) "), ("", str(value))])
+            return NIL
+        return FormattedText([("class:type", "(integer) "), ("", str(value))])
 
-
-def render_unixtime(value, completers=None):
-    rendered_int = render_int(value, completers)
-    if config.raw:
+    @staticmethod
+    def render_unixtime(value):
+        rendered_int = OutputRender.render_int(value)
+        if config.raw:
+            return rendered_int
+        explained_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(value)))
+        rendered_int.extend(
+            [
+                NEWLINE_TUPLE,
+                ("class:type", "(local time)"),
+                ("", " "),
+                ("", explained_date),
+            ]
+        )
         return rendered_int
-    explained_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(value)))
-    rendered_int.extend(
-        [NEWLINE_TUPLE, ("class:type", "(local time)"), ("", " "), ("", explained_date)]
-    )
-    return rendered_int
 
+    @staticmethod
+    def render_time(value):
+        if config.raw:
+            return OutputRender.render_list(value)
+        unix_timestamp, millisecond = value[0].decode(), value[1].decode()
+        explained_date = time.strftime(
+            "%Y-%m-%d %H:%M:%S", time.localtime(int(unix_timestamp))
+        )
+        rendered = [
+            ("class:type", "(unix timestamp) "),
+            ("", unix_timestamp),
+            NEWLINE_TUPLE,
+            ("class:type", "(millisecond) "),
+            ("", millisecond),
+            NEWLINE_TUPLE,
+            ("class:type", "(convert to local timezone) "),
+            ("", f"{explained_date}.{millisecond}"),
+        ]
+        return FormattedText(rendered)
 
-def render_time(value, completers=None):
-    if config.raw:
-        return render_list(value)
-    unix_timestamp, millisecond = value[0].decode(), value[1].decode()
-    explained_date = time.strftime(
-        "%Y-%m-%d %H:%M:%S", time.localtime(int(unix_timestamp))
-    )
-    rendered = [
-        ("class:type", "(unix timestamp) "),
-        ("", unix_timestamp),
-        NEWLINE_TUPLE,
-        ("class:type", "(millisecond) "),
-        ("", millisecond),
-        NEWLINE_TUPLE,
-        ("class:type", "(convert to local timezone) "),
-        ("", f"{explained_date}.{millisecond}"),
-    ]
-    return FormattedText(rendered)
+    @staticmethod
+    def render_list(text):
+        """
+        Render callback for redis Array Reply, can't render nested list
+        Note: Cloud be null in it.
+        """
+        str_items = []
+        for item in text:
+            if item is None:
+                str_items.append(None)
+            else:
+                str_item = ensure_str(item)
+                double_quoted = double_quotes(str_item)
+                str_items.append(double_quoted)
+        rendered = _render_list(text, str_items, "class:string")
+        if config.raw:
+            return rendered
+        return FormattedText(rendered)
+
+    @staticmethod
+    def render_list_or_string(text):
+        if isinstance(text, list):
+            return OutputRender.render_list(text)
+        return OutputRender.render_bulk_string(text)
+
+    @staticmethod
+    def render_string_or_int(text):
+        if isinstance(text, int):
+            return OutputRender.render_int(text)
+        return OutputRender.render_bulk_string(text)
+
+    @staticmethod
+    def render_error(error_msg):
+        if config.raw:
+            return error_msg
+        text = ensure_str(error_msg)
+        return FormattedText([("class:type", "(error) "), ("class:error", text)])
+
+    @staticmethod
+    def render_simple_string(text):
+        """
+        If response is b'OK', render ok with success color.
+        else render message with Error color.
+        """
+        if config.raw:
+            return text
+        if text is None:
+            return NIL
+        text = ensure_str(text)
+        return FormattedText([("class:success", text)])
+
+    @staticmethod
+    def render_transaction_queue(text):
+        """
+        Used when client session is in a transaction.
+
+        Response message should be "QUEUE" or Error.
+        """
+        # FIXME raw
+        text = ensure_str(text)
+        return FormattedText([("class:queued", text)])
+
+    @staticmethod
+    def render_members(items):
+        if config.withscores:
+            if config.raw:
+                return _update_completer_then_render(items, "class:member")
+            return _update_completer_then_render_withscores(items)
+        return _update_completer_then_render(items, "class:member")
+
+    @staticmethod
+    def render_hash_pairs(response):
+        if config.raw:
+            return _update_completer_then_render(response, "class:field")
+        # render hash pairs
+        if not response:
+            return EMPTY_LIST
+        complter_name = "field"
+        str_items = ensure_str(response)
+        fields = str_items[0::2]
+        values = str_items[1::2]
+        # render display
+        index_width = len(str(len(fields)))
+        values_quoted = double_quotes(values)
+        fields_quoted = double_quotes(fields)
+        rendered = []
+        for index, item in enumerate(fields_quoted):
+            index_const_width = f"{index+1:{index_width}})"
+            rendered.append(("", index_const_width))
+            rendered.append(("", " "))
+            rendered.append(("class:field", item))
+            rendered.append(NEWLINE_TUPLE)
+            rendered.append(("", " " * (len(index_const_width) + 1)))
+            value = values_quoted[index]
+            if value is None:
+                rendered.append(NIL_TUPLE)
+            else:
+                rendered.append(("class:string", value))
+
+            # add a newline for eachline
+            if index + 1 < len(fields):
+                rendered.append(NEWLINE_TUPLE)
+        return FormattedText(rendered)
+
+    @staticmethod
+    def render_slowlog(raw):
+        if config.raw:
+            return _render_raw_list(raw)
+        fields = ["Slow log id", "Start at", "Running time(ms)", "Command"]
+        if StrictVersion(config.version) > StrictVersion("4.0"):
+            fields.extend(["Client IP and port", "Client name"])
+
+        rendered = []
+        text = ensure_str(raw)
+        index_width = len(str(len(text)))
+        for index, slowlog in enumerate(text):
+            index_str = f"{index+1:{index_width}}) "
+            rendered.append(("", index_str))
+            for field, value in zip(fields, slowlog):
+                if field == "Command":
+                    value = " ".join(value)
+                if field != "Slow log id":
+                    display_field = " " * len(index_str) + field
+                else:
+                    display_field = field
+                logger.debug(f"field: {field}, value: {value}")
+                rendered.extend(
+                    [
+                        ("class:field", f"{display_field}: "),
+                        ("class:string", value),
+                        NEWLINE_TUPLE,
+                    ]
+                )
+
+        return FormattedText(rendered[:-1])
+
+    @staticmethod
+    def render_subscribe(raw):
+        """
+        message type;
+        channel;
+        message;
+        see: https://redis.io/topics/pubsub#format-of-pushed-messages
+        """
+        logger.info(raw)
+        if config.raw:
+            return render_list(raw)
+        if raw[1] is None:
+            raw[1] = "all"
+        mtype, *channel, message = ensure_str(raw)
+        # PUNSUBSCRIBE, 4 args
+        channel = ":".join(channel)
+        return FormattedText(
+            [
+                ("", f"{mtype:<9} from "),  # 9 is len("subscribe")
+                ("class:channel", channel),
+                ("", ": "),  # 9 is len("subscribe")
+                ("class:string", f"{message}"),
+            ]
+        )
+
+    @staticmethod
+    def command_keys(items):
+        return _update_completer_then_render(items, "class:key")
+
+    @staticmethod
+    def command_scan(response):
+        """
+        Render Scan command result.
+        see: https://redis.io/commands/scan
+        """
+        return _render_scan(command_keys, response)
+
+    @staticmethod
+    def command_sscan(response):
+        return _render_scan(OutputRender.render_members, response)
+
+    @staticmethod
+    def command_zscan(response):
+        return _render_scan(OutputRender.render_members, response)
+
+    @staticmethod
+    def command_hscan(response):
+        return _render_scan(OutputRender.render_hash_pairs, response)
+
+    @staticmethod
+    def command_hkeys(response):
+        return _update_completer_then_render(response, "class:field")
+
+    @staticmethod
+    def default_render(text):
+        pass
 
 
 def _render_raw_list(bytes_items):
@@ -218,108 +372,60 @@ def _render_list(byte_items, str_items, style=None, pre_space=0):
     return rendered
 
 
-def render_list(text, completer=None):
-    """
-    Render callback for redis Array Reply, can't render nested list
-    Note: Cloud be null in it.
-    """
-    str_items = []
-    for item in text:
-        if item is None:
-            str_items.append(None)
+def _render_scan(render_response, response):
+    cursor, responses = response
+    if config.raw:
+        return b"\n".join([cursor, render_response(responses)])
+
+    rendered = [
+        ("class:type", "(cursor) "),
+        ("class:integer", cursor.decode()),
+        ("", "\n"),
+    ]
+    rendered_keys = render_response(responses)
+    return FormattedText(rendered + rendered_keys)
+
+
+def _render_pair(pairs, indent):
+    keys = [item for item in pairs[::2]]
+    values = [item for item in pairs[1::2]]
+    rendered = []
+    for key, value in zip(keys, values):
+        key = ensure_str(key, decode="utf-8")
+        value = ensure_str(value, decode="utf-8")
+        rendered.append(("class:string", f"{' '*4*indent}{key}: "))
+        if isinstance(value, list):
+            rendered.append(NEWLINE_TUPLE)
+            rendered.extend(_render_pair(value, indent + 1))
         else:
-            str_item = _ensure_str(item)
-            double_quoted = _double_quotes(str_item)
-            str_items.append(double_quoted)
-    rendered = _render_list(text, str_items, "class:string")
-    if config.raw:
-        return rendered
-    return FormattedText(rendered)
+            rendered.append(("class:value", value))
+        rendered.append(NEWLINE_TUPLE)
+    return rendered[:-1]  # remove last newline
 
 
-def render_list_or_string(text, completer=None):
-    if isinstance(text, list):
-        return render_list(text, completer)
-    return render_bulk_string(text, completer)
-
-
-def render_string_or_int(text, completer=None):
-    if isinstance(text, int):
-        return render_int(text, completer)
-    return render_bulk_string(text, completer)
-
-
-def render_error(error_msg):
-    if config.raw:
-        return error_msg
-    text = _ensure_str(error_msg)
-    return FormattedText([("class:type", "(error) "), ("class:error", text)])
-
-
-def render_simple_string(text, completer):
+def _update_completer_then_render(items, style):
     """
-    If response is b'OK', render ok with success color.
-    else render message with Error color.
     """
-    if config.raw:
-        return text
-    if text is None:
-        return NIL
-    text = _ensure_str(text)
-    return FormattedText([("class:success", text)])
-
-
-def render_transaction_queue(text, completer):
-    """
-    Used when client session is in a transaction.
-
-    Response message should be "QUEUE" or Error.
-    """
-    # FIXME raw
-    text = _ensure_str(text)
-    return FormattedText([("class:queued", text)])
-
-
-def _update_completer_then_render(
-    items, completer, complter_name, style, completer_iter_step=1
-):
-    """
-    :param completer_iter_step: every `completer_iter_step` items is used to update complters
-    """
-    str_items = _ensure_str(items)
-    # update completers
-    if completer:
-        token_completer = completer.completers[complter_name]
-        token_completer.touch_words(str_items[::completer_iter_step])
-        logger.debug(f"[Completer] {complter_name} completer updated.")
-    else:
-        logger.debug(f"[Completer] completer is None, not updated.")
-    double_quoted = _double_quotes(str_items)
+    str_items = ensure_str(items)
+    double_quoted = double_quotes(str_items)
     rendered = _render_list(items, double_quoted, style)
     if config.raw:
         return rendered
     return FormattedText(rendered)
 
 
-def _update_completer_then_render_withscores(items, completer):
+def _update_completer_then_render_withscores(items):
     if not items:
         return EMPTY_LIST
     complter_name = "member"
-    str_items = _ensure_str(items)
+    str_items = ensure_str(items)
 
     members = [item for item in str_items[::2]]
     scores = [item for item in str_items[1::2]]
     logger.debug(f"[MEMBERS] {members}")
     logger.debug(f"[SCORES] {scores}")
-    # update completers
-    if completer:
-        token_completer = completer.completers[complter_name]
-        token_completer.touch_words(members)
-        logger.debug(f"[Completer] {complter_name} completer updated.")
-    else:
-        logger.debug(f"[Completer] completer is None, not updated.")
     # render display
-    double_quoted = _double_quotes(members)
+    double_quoted = double_quotes(members)
     index_width = len(str(len(double_quoted)))
     score_width = max(len(score) for score in scores)
     rendered = []
@@ -340,164 +446,6 @@ def _update_completer_then_render_withscores(items, completer):
         if index + 1 < len(double_quoted):
             rendered.append(NEWLINE_TUPLE)
     return FormattedText(rendered)
-
-
-def command_keys(items, completer):
-    return _update_completer_then_render(items, completer, "key", "class:key")
-
-
-def render_members(items, completer):
-    if config.withscores:
-        if config.raw:
-            return _update_completer_then_render(
-                items, completer, "member", "class:member", completer_iter_step=2
-            )
-        return _update_completer_then_render_withscores(items, completer)
-    return _update_completer_then_render(
-        items, completer, "member", "class:member", completer_iter_step=1
-    )
-
-
-def _render_scan(render_response, response, completer):
-    cursor, responses = response
-    if config.raw:
-        return b"\n".join([cursor, render_response(responses, completer)])
-
-    rendered = [
-        ("class:type", "(cursor) "),
-        ("class:integer", cursor.decode()),
-        ("", "\n"),
-    ]
-    rendered_keys = render_response(responses, completer)
-    return FormattedText(rendered + rendered_keys)
-
-
-def command_scan(response, completer):
-    """
-    Render Scan command result.
-    see: https://redis.io/commands/scan
-    """
-    return _render_scan(command_keys, response, completer)
-
-
-def command_sscan(response, completer):
-    return _render_scan(render_members, response, completer)
-
-
-def command_zscan(response, completer):
-    return _render_scan(render_members, response, completer)
-
-
-def command_hscan(response, completer):
-    return _render_scan(render_hash_pairs, response, completer)
-
-
-def command_hkeys(response, completer):
-    return _update_completer_then_render(response, completer, "field", "class:field")
-
-
-def render_hash_pairs(response, completer):
-    if config.raw:
-        return _update_completer_then_render(
-            response, completer, "field", "class:field", completer_iter_step=2
-        )
-    # render hash pairs
-    if not response:
-        return EMPTY_LIST
-    complter_name = "field"
-    str_items = _ensure_str(response)
-    fields = str_items[0::2]
-    values = str_items[1::2]
-    # update completers
-    if completer:
-        field_completer = completer.completers[complter_name]
-        field_completer.touch_words(fields)
-        logger.debug(f"[Completer] {complter_name} completer updated.")
-    else:
-        logger.debug(f"[Completer] completer is None, not updated.")
-    # render display
-    index_width = len(str(len(fields)))
-    values_quoted = _double_quotes(values)
-    fields_quoted = _double_quotes(fields)
-    rendered = []
-    for index, item in enumerate(fields_quoted):
-        index_const_width = f"{index+1:{index_width}})"
-        rendered.append(("", index_const_width))
-        rendered.append(("", " "))
-        rendered.append(("class:field", item))
-        rendered.append(NEWLINE_TUPLE)
-        rendered.append(("", " " * (len(index_const_width) + 1)))
-        value = values_quoted[index]
-        if value is None:
-            rendered.append(NIL_TUPLE)
-        else:
-            rendered.append(("class:string", value))
-
-        # add a newline for eachline
-        if index + 1 < len(fields):
-            rendered.append(NEWLINE_TUPLE)
-    return FormattedText(rendered)
-
-
-def render_slowlog(raw, completers=None):
-    if config.raw:
-        return _render_raw_list(raw)
-    fields = ["Slow log id", "Start at", "Running time(ms)", "Command"]
-    if StrictVersion(config.version) > StrictVersion("4.0"):
-        fields.extend(["Client IP and port", "Client name"])
-
-    rendered = []
-    text = _ensure_str(raw)
-    index_width = len(str(len(text)))
-    for index, slowlog in enumerate(text):
-        index_str = f"{index+1:{index_width}}) "
-        rendered.append(("", index_str))
-        for field, value in zip(fields, slowlog):
-            if field == "Command":
-                value = " ".join(value)
-            if field != "Slow log id":
-                display_field = " " * len(index_str) + field
-            else:
-                display_field = field
-            logger.debug(f"field: {field}, value: {value}")
-            rendered.extend(
-                [
-                    ("class:field", f"{display_field}: "),
-                    ("class:string", value),
-                    NEWLINE_TUPLE,
-                ]
-            )
-
-    return FormattedText(rendered[:-1])
-
-
-def render_subscribe(raw, completers=None):
-    """
-    message type;
-    channel;
-    message;
-    see: https://redis.io/topics/pubsub#format-of-pushed-messages
-    """
-    logger.info(raw)
-    if config.raw:
-        return render_list(raw)
-    if raw[1] is None:
-        raw[1] = "all"
-    mtype, *channel, message = _ensure_str(raw)
-    # PUNSUBSCRIBE, 4 args
-    channel = ":".join(channel)
-    return FormattedText(
-        [
-            ("", f"{mtype:<9} from "),  # 9 is len("subscribe")
-            ("class:channel", channel),
-            ("", ": "),  # 9 is len("subscribe")
-            ("class:string", f"{message}"),
-        ]
-    )
-
-
-def default_render(text):
-    pass
 
 
 # TODO

@@ -63,7 +63,7 @@ def test_render_list_with_nil_init():
 
     config.raw = False
     raw = [b"hello", None, b"world"]
-    out = renders.render_list(raw, None)
+    out = renders.OutputRender.render_list(raw, None)
     out = strip_formatted_text(out)
     assert out == '1) "hello"\n2) (nil)\n3) "world"'
 
@@ -73,7 +73,7 @@ def test_render_list_with_nil_init_while_config_raw():
 
     config.raw = True
     raw = [b"hello", None, b"world"]
-    out = renders.render_list(raw, None)
+    out = renders.OutputRender.render_list(raw, None)
     assert out == b"hello\n\nworld"
 
 
@@ -82,7 +82,7 @@ def test_render_list_with_empty_list_raw():
 
     config.raw = True
     raw = []
-    out = renders.render_list(raw, None)
+    out = renders.OutputRender.render_list(raw, None)
     assert out == b""
 
 
@@ -91,7 +91,7 @@ def test_render_list_with_empty_list():
 
     config.raw = False
     raw = []
-    out = renders.render_list(raw, None)
+    out = renders.OutputRender.render_list(raw, None)
     out = strip_formatted_text(out)
     assert out == "(empty list or set)"
 
@@ -113,40 +113,31 @@ def test_double_quotes():
 
 def test_simple_string_reply():
     config.raw = False
-    assert renders.render_bulk_string(b"'\"") == '''"'\\""'''
+    assert renders.OutputRender.render_bulk_string(b"'\"") == '''"'\\""'''
 
 
 def test_simple_string_reply_raw():
     config.raw = True
-    assert renders.render_bulk_string(b"hello") == b"hello"
+    assert renders.OutputRender.render_bulk_string(b"hello") == b"hello"
 
 
 def test_render_int():
     config.raw = False
-    assert renders.render_int(12) == FormattedText(
+    assert renders.OutputRender.render_int(12) == FormattedText(
         [("class:type", "(integer) "), ("", "12")]
     )
 
 
 def test_render_int_raw():
     config.raw = True
-    assert renders.render_int(12) == b"12"
-
-
-def test_make_sure_all_callback_functions_exists(iredis_client):
-    from iredis.commands_csv_loader import command2callback
-
-    for callback in command2callback.values():
-        if callback == "":
-            continue
-        assert callable(iredis_client.callbacks[callback])
+    assert renders.OutputRender.render_int(12) == b"12"
 
 
 def test_render_list_or_string():
     config.raw = False
-    assert renders.render_list_or_string("") == '""'
-    assert renders.render_list_or_string("foo") == '"foo"'
-    assert renders.render_list_or_string([b"foo", b"bar"]) == FormattedText(
+    assert renders.OutputRender.render_list_or_string("") == '""'
+    assert renders.OutputRender.render_list_or_string("foo") == '"foo"'
+    assert renders.OutputRender.render_list_or_string([b"foo", b"bar"]) == FormattedText(
         [
             ("", "1)"),
             ("", " "),
@@ -161,8 +152,8 @@ def test_render_list_or_string():
 
 def test_list_or_string():
     config.raw = False
-    assert renders.render_string_or_int(b"10.1") == '"10.1"'
-    assert renders.render_string_or_int(3) == FormattedText(
+    assert renders.OutputRender.render_string_or_int(b"10.1") == '"10.1"'
+    assert renders.OutputRender.render_string_or_int(3) == FormattedText(
         [("class:type", "(integer) "), ("", "3")]
     )
 
@@ -279,7 +270,7 @@ def test_render_members():
     completer.completers["members"].words = []
     config.raw = False
     config.withscores = True
-    rendered = renders.render_members([b"duck", b"667", b"camel", b"708"], completer)
+    rendered = renders.OutputRender.render_members([b"duck", b"667", b"camel", b"708"], completer)
 
     assert rendered == FormattedText(
         [
@@ -301,7 +292,7 @@ def test_render_members_config_raw():
     completer.completers["members"].words = []
     config.raw = True
     config.withscores = True
-    rendered = renders.render_members([b"duck", b"667", b"camel", b"708"], completer)
+    rendered = renders.OutputRender.render_members([b"duck", b"667", b"camel", b"708"], completer)
 
     assert rendered == b"duck\n667\ncamel\n708"
     assert completer.completers["member"].words == ["camel", "duck"]
@@ -312,7 +303,7 @@ def test_render_unixtime_config_raw():
     # fake the timezone and reload
     os.environ["TZ"] = "Asia/Shanghai"
     time.tzset()
-    rendered = renders.render_unixtime(1570469891)
+    rendered = renders.OutputRender.render_unixtime(1570469891)
 
     assert rendered == FormattedText(
         [
@@ -328,7 +319,7 @@ def test_render_unixtime_config_raw():
 
 def test_render_unixtime():
     config.raw = True
-    rendered = renders.render_unixtime(1570469891)
+    rendered = renders.OutputRender.render_unixtime(1570469891)
 
     assert rendered == b"1570469891"
 
@@ -336,13 +327,13 @@ def test_render_unixtime():
 def test_render_bulk_string_decoded():
     EXPECTED_RENDER = """# Server\nredis_version:5.0.5\nredis_git_sha1:00000000\nredis_git_dirty:0\nredis_build_id:31cd6e21ec924b46"""  # noqa
     _input = b"# Server\r\nredis_version:5.0.5\r\nredis_git_sha1:00000000\r\nredis_git_dirty:0\r\nredis_build_id:31cd6e21ec924b46"  # noqa
-    assert renders.render_bulk_string_decode(_input) == EXPECTED_RENDER
+    assert renders.OutputRender.render_bulk_string_decode(_input) == EXPECTED_RENDER
 
 
 def test_render_time():
     config.raw = False
     value = [b"1571305643", b"765481"]
-    assert renders.render_time(value) == FormattedText(
+    assert renders.OutputRender.render_time(value) == FormattedText(
         [
             ("class:type", "(unix timestamp) "),
             ("", "1571305643"),
@@ -356,7 +347,7 @@ def test_render_time():
     )
 
     config.raw = True
-    assert renders.render_time(value) == b"1571305643\n765481"
+    assert renders.OutputRender.render_time(value) == b"1571305643\n765481"
 
 
 def test_render_nested_pairs():
@@ -376,7 +367,7 @@ def test_render_nested_pairs():
     ]
 
     config.raw = True
-    assert renders.render_nested_pair(text) == (
+    assert renders.OutputRender.render_nested_pair(text) == (
         b"peak.allocated\n10160336\nlua.caches\n0\ndb.0\noverhead.hashtable.main\n64"
         b"8\noverhead.hashtable.expires\n32\ndb.1\noverhead.hashtable.main\n112\nove"
         b"rhead.hashtable.expires\n32\nfragmentation\n0.062980629503726959\nfragmentat"
@@ -384,7 +375,7 @@ def test_render_nested_pairs():
     )
 
     config.raw = False
-    assert renders.render_nested_pair(text) == FormattedText(
+    assert renders.OutputRender.render_nested_pair(text) == FormattedText(
         [
             ("class:string", "peak.allocated: "),
             ("class:value", "10160336"),
@@ -420,7 +411,7 @@ def test_render_nested_pairs():
 def test_render_nested_list():
     text = [[b"get", 2, [b"readonly", b"fast"], 1, 1, 1]]
     config.raw = False
-    assert renders.render_list(text, None) == FormattedText(
+    assert renders.OutputRender.render_list(text, None) == FormattedText(
         [
             ("", "1)"),
             ("", " "),

@@ -203,7 +203,62 @@ def command_syntax(command, command_info):
     return FormattedText(bottoms)
 
 
-def ensure_str(x):
-    if isinstance(x, bytes):
-        return x.decode()
-    return x
+def _literal_bytes(b):
+    """
+    convert bytes to printable text.
+
+    backslash and double-quotes will be escaped by
+    backslash.
+    "hello\" -> \"hello\\\"
+
+    we don't add outter double quotes here, since
+    completer also need this function's return value
+    to patch completers.
+
+    b'hello' -> "hello"
+    b'double"quotes"' -> "double\"quotes\""
+    """
+    s = str(b)
+    s = s[2:-1]  # remove b' '
+    # unescape single quote
+    s = s.replace(r"\'", "'")
+    return s
+
+
+def ensure_str(origin, decode=None):
+    """
+    Ensure is string, for display and completion.
+
+    Then add double quotes
+
+    Note: this method do not handle nil, make sure check (nil)
+          out of this method.
+    """
+    if isinstance(origin, str):
+        return origin
+    if isinstance(origin, int):
+        return str(origin)
+    elif isinstance(origin, list):
+        return [ensure_str(b) for b in origin]
+    elif isinstance(origin, bytes):
+        if decode:
+            return origin.decode(decode)
+        return _literal_bytes(origin)
+    else:
+        raise Exception(f"Unkown type: {type(origin)}, origin: {origin}")
+
+
+def double_quotes(unquoted):
+    """
+    Display String like redis-cli.
+    escape inner double quotes.
+    add outter double quotes.
+
+    :param unquoted: list, or str
+    """
+    if isinstance(unquoted, str):
+        # escape double quote
+        escaped = unquoted.replace('"', '\\"')
+        return f'"{escaped}"'  # add outter double quotes
+    elif isinstance(unquoted, list):
+        return [double_quotes(item) for item in unquoted]

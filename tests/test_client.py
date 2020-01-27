@@ -2,10 +2,9 @@ import pytest
 import redis
 from unittest.mock import MagicMock
 
-from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 
 from iredis.client import Client
-from iredis.completers import completer_mapping
+from iredis.completers import completer_mapping, IRedisCompleter
 from iredis.redis_grammar import get_command_grammar
 from iredis.entry import Rainbow, prompt_message
 from iredis.completers import get_completer_mapping
@@ -25,23 +24,21 @@ def test_send_command(_input, command_name, expect_args):
     client.execute_command_and_read_response = MagicMock()
     next(client.send_command(_input, None))
     args, kwargs = client.execute_command_and_read_response.call_args
-    assert args == (None, command_name, *expect_args)
+    assert args == (command_name, *expect_args)
 
 
 def test_patch_completer():
     client = Client("127.0.0.1", "6379", None)
-    grammar = get_command_grammar("MGET")
-    completer = GrammarCompleter(grammar, completer_mapping)
+    completer = IRedisCompleter()
     client.pre_hook(
         "MGET foo bar hello world", "MGET", "foo bar hello world", completer
     )
-    assert completer.completers["key"].words == ["world", "hello", "bar", "foo"]
-    assert completer.completers["keys"].words == ["world", "hello", "bar", "foo"]
+    assert completer.key_completer.words == ["world", "hello", "bar", "foo"]
+    assert completer.key_completer.words == ["world", "hello", "bar", "foo"]
 
-    grammar = get_command_grammar("GET")
-    completer = GrammarCompleter(grammar, completer_mapping)
+    completer = IRedisCompleter()
     client.pre_hook("GET bar", "GET", "bar", completer)
-    assert completer.completers["keys"].words == ["bar", "world", "hello", "foo"]
+    assert completer.key_completer.words == ["bar", "world", "hello", "foo"]
 
 
 def test_get_server_verison_after_client(config):
