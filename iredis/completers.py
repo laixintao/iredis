@@ -1,11 +1,11 @@
 import logging
-from typing import AsyncGenerator, Callable, Iterable, Optional, Sequence
+from typing import Iterable
 
 from prompt_toolkit.completion import (
     CompleteEvent,
     Completer,
     Completion,
-    DummyCompleter,
+
     FuzzyWordCompleter,
     WordCompleter,
 )

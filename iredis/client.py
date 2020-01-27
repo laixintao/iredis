@@ -14,12 +14,11 @@ from redis.exceptions import AuthenticationError, ConnectionError, TimeoutError
 
 from . import markdown, project_data, renders, utils
 from .commands_csv_loader import all_commands, command2callback, commands_summary
-from .completers import IRedisCompleter, LatestUsedFirstWordCompleter
+from .completers import IRedisCompleter
 from .config import config
 from .exceptions import NotRedisCommand
 from .renders import OutputRender
 from .utils import (
-    _strip_quote_args,
     compose_command_syntax,
     nativestr,
     split_command_args,

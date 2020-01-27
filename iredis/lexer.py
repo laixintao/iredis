@@ -1,4 +1,4 @@
-from typing import Callable, Hashable, Optional
+from typing import Callable, Hashable
 
 from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
 from prompt_toolkit.document import Document
@@ -8,7 +8,7 @@ from pygments.lexers.scripting import LuaLexer
 
 from .commands_csv_loader import all_commands
 from .exceptions import InvalidArguments
-from .redis_grammar import CONST, command_grammar, get_command_grammar
+from .redis_grammar import CONST, get_command_grammar
 from .utils import split_command_args
 
 

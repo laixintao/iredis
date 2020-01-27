@@ -4,15 +4,10 @@ from prompt_toolkit.layout.processors import (
     Transformation,
     TransformationInput,
 )
-from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
-from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 
 from .utils import split_command_args
 from .exceptions import InvalidArguments
 from .commands_csv_loader import all_commands
-from .lexer import lexers_mapping, default_lexer
-from .completers import default_completer
-from .redis_grammar import get_command_grammar
 
 logger = logging.getLogger(__name__)
 

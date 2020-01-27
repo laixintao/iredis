@@ -5,9 +5,8 @@ from unittest.mock import MagicMock
 
 from iredis.client import Client
 from iredis.completers import IRedisCompleter
-from iredis.redis_grammar import get_command_grammar
 from iredis.entry import Rainbow, prompt_message
-from iredis.completers import get_completer_mapping
+
 
 @pytest.fixture
 def completer():
@@ -186,7 +185,6 @@ def test_split_shell_command(iredis_client, completer):
 
 
 def test_running_with_pipeline(clean_redis, iredis_client, capfd, completer):
-    grammar = get_command_grammar("get")
     clean_redis.set("foo", "hello \n world")
     with pytest.raises(StopIteration):
         next(iredis_client.send_command("get foo | grep w", completer))
@@ -195,7 +193,6 @@ def test_running_with_pipeline(clean_redis, iredis_client, capfd, completer):
 
 
 def test_running_with_multiple_pipeline(clean_redis, iredis_client, capfd, completer):
-    grammar = get_command_grammar("get")
     clean_redis.set("foo", "hello world\nhello iredis")
     with pytest.raises(StopIteration):
         next(

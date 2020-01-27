@@ -205,7 +205,6 @@ class OutputRender:
         # render hash pairs
         if not response:
             return EMPTY_LIST
-        complter_name = "field"
         str_items = ensure_str(response)
         fields = str_items[0::2]
         values = str_items[1::2]
@@ -274,7 +273,7 @@ class OutputRender:
         """
         logger.info(raw)
         if config.raw:
-            return render_list(raw)
+            return OutputRender.render_list(raw)
         if raw[1] is None:
             raw[1] = "all"
         mtype, *channel, message = ensure_str(raw)
@@ -417,7 +416,6 @@ def _update_completer_then_render(items, style):
 def _update_completer_then_render_withscores(items):
     if not items:
         return EMPTY_LIST
-    complter_name = "member"
     str_items = ensure_str(items)
 
     members = [item for item in str_items[::2]]

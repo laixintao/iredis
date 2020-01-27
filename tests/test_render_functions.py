@@ -137,7 +137,9 @@ def test_render_list_or_string():
     config.raw = False
     assert renders.OutputRender.render_list_or_string("") == '""'
     assert renders.OutputRender.render_list_or_string("foo") == '"foo"'
-    assert renders.OutputRender.render_list_or_string([b"foo", b"bar"]) == FormattedText(
+    assert renders.OutputRender.render_list_or_string(
+        [b"foo", b"bar"]
+    ) == FormattedText(
         [
             ("", "1)"),
             ("", " "),
@@ -260,7 +262,6 @@ def test_command_sscan_config_raw():
         [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]]
     )
     completer.touch("SSCAN", [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]])
-
 
     assert rendered == b"44\na\nmember:__rand_int__\ndest\n a"
     assert completer.member_completer.words == [
