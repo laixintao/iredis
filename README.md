@@ -95,10 +95,13 @@ you can see what actually happend from log files.
 
 ### CI
 
-We use[pexpect](https://pexpect.readthedocs.io/en/stable/) to test commandline
+We use [pexpect](https://pexpect.readthedocs.io/en/stable/) to test commandline
 behavior, since there are problems with circleci's tty, so we run
 pexpect-related tests on travis, and run unittest/black style check/flake8 check
 on circleci.
+
+For local development, you just run `pytest`, if all tests passed locally, it
+shall be passed on CI.
 
 ### Command Reference
 
