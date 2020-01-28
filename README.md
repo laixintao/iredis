@@ -3,6 +3,7 @@
 <img align="right" width="100" height="100" src="https://raw.githubusercontent.com/laixintao/iredis/master/docs/assets/logo.png" />
 
 [![CircleCI](https://circleci.com/gh/laixintao/iredis.svg?style=svg)](https://circleci.com/gh/laixintao/iredis)
+[![TravisCI](https://travis-ci.org/laixintao/iredis.svg?branch=master)](https://travis-ci.org/laixintao/iredis)
 [![PyPI version](https://badge.fury.io/py/iredis.svg)](https://badge.fury.io/py/iredis)
 ![Python version](https://badgen.net/badge/python/3.6%20|%203.7%20|%203.8/)
 [![Chat on telegram](https://badgen.net/badge/icon/join?icon=telegram&label=usergroup)](https://t.me/iredis_users)
@@ -91,6 +92,13 @@ Since this is a commandline tool, so we didn't write logs to stdout.
 
 You can `tail -f ~/.iredis.log` to see logs, the log is pretty clear,
 you can see what actually happend from log files.
+
+### CI
+
+We use[pexpect](https://pexpect.readthedocs.io/en/stable/) to test commandline
+behavior, since there are problems with circleci's tty, so we run
+pexpect-related tests on travis, and run unittest/black style check/flake8 check
+on circleci.
 
 ### Command Reference
 

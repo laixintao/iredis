@@ -1,0 +1,23 @@
+sudo: false
+cache: pip
+language: python
+
+services:
+    - redis-server
+
+matrix:
+  include:
+    - python: 3.7
+      dist: xenial
+      sudo: required
+    - python: 3.6
+    - python: 3.8
+
+install:
+  - pip install poetry
+  - poetry install
+  - pip list
+
+script:
+  - echo "$TRAVIS_PYTHON_VERSION"
+  - pytest tests/cli_tests
