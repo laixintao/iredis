@@ -9,7 +9,7 @@ from iredis.exceptions import InvalidArguments
 from iredis.config import Config, config as global_config
 
 
-TIMEOUT = 3
+TIMEOUT = 30
 HISTORY_FILE = ".iredis_history"
 
 
