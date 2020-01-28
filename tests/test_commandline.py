@@ -43,7 +43,6 @@ def test_command_with_decode_utf_8():
     assert config.decode == ""
 
 
-@pytest.mark.xfail(reason="move to behave")
 def test_short_help_option(config):
     c = pexpect.spawn("iredis -h", timeout=0.5)
 
@@ -55,7 +54,6 @@ def test_short_help_option(config):
     c.close()
 
 
-@pytest.mark.xfail(reason="move to behave")
 def test_server_version_in_starting():
     c = pexpect.spawn("iredis", timeout=0.5)
     c.expect("redis-server  5")
