@@ -190,7 +190,9 @@ def test_command_scan():
     rendered = renders.OutputRender.command_scan(
         [b"44", [b"a", b"key:__rand_int__", b"dest", b" a"]]
     )
-    completer.update_completer_for_response("SCAN", [b"44", [b"a", b"key:__rand_int__", b"dest", b" a"]])
+    completer.update_completer_for_response(
+        "SCAN", [b"44", [b"a", b"key:__rand_int__", b"dest", b" a"]]
+    )
 
     assert rendered == FormattedText(
         [
@@ -223,7 +225,9 @@ def test_command_sscan():
     rendered = renders.OutputRender.command_sscan(
         [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]]
     )
-    completer.update_completer_for_response("SSCAN", [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]])
+    completer.update_completer_for_response(
+        "SSCAN", [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]]
+    )
 
     assert rendered == FormattedText(
         [
@@ -261,7 +265,9 @@ def test_command_sscan_config_raw():
     rendered = renders.OutputRender.command_sscan(
         [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]]
     )
-    completer.update_completer_for_response("SSCAN", [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]])
+    completer.update_completer_for_response(
+        "SSCAN", [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]]
+    )
 
     assert rendered == b"44\na\nmember:__rand_int__\ndest\n a"
     assert completer.member_completer.words == [
