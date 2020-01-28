@@ -1,27 +1,28 @@
 """
 IRedis client.
 """
-import re
 import logging
+import re
 import sys
 from distutils.version import StrictVersion
 from subprocess import run
 
 import redis
-from redis.connection import Connection
-from redis.exceptions import TimeoutError, ConnectionError, AuthenticationError
 from prompt_toolkit.formatted_text import FormattedText
+from redis.connection import Connection
+from redis.exceptions import AuthenticationError, ConnectionError, TimeoutError
 
-from . import renders
-from . import markdown
-from . import utils, project_data
-from .config import config
+from . import markdown, project_data, renders, utils
 from .commands_csv_loader import all_commands, command2callback, commands_summary
-from .utils import nativestr, split_command_args, _strip_quote_args
-from .utils import compose_command_syntax
-from .renders import render_error, render_bulk_string_decode, render_subscribe
-from .completers import LatestUsedFirstWordCompleter
+from .completers import IRedisCompleter
+from .config import config
 from .exceptions import NotRedisCommand
+from .renders import OutputRender
+from .utils import (
+    compose_command_syntax,
+    nativestr,
+    split_command_args,
+)
 from .warning import confirm_dangerous_command
 
 logger = logging.getLogger(__name__)
@@ -32,13 +33,6 @@ class Client:
     """
     iRedis client, hold a redis-py Client to interact with Redis.
     """
-
-    def reder_funcname_mapping(self):
-        mapping = {}
-        for func_name, func in renders.__dict__.items():
-            if callable(func):
-                mapping[func_name] = func
-        return mapping
 
     def __init__(self, host, port, db, password=None):
         self.host = host
@@ -66,7 +60,6 @@ class Client:
             )
         # all command upper case
         self.answer_callbacks = command2callback
-        self.callbacks = self.reder_funcname_mapping()
         try:
             self.connection.connect()
         except Exception as e:
@@ -83,7 +76,8 @@ class Client:
     def get_server_info(self):
         self.connection.send_command("INFO")
         # safe to decode Redis's INFO response
-        info_resp = utils.ensure_str(self.connection.read_response())
+        resp = self.connection.read_response()
+        info_resp = utils.ensure_str(resp, decode="utf-8")
 
         version = re.findall(r"^redis_version:([\d\.]+)\r\n", info_resp, re.MULTILINE)[
             0
@@ -101,9 +95,7 @@ class Client:
         if command == "HELP":
             return self.do_help(*args)
 
-    def execute_command_and_read_response(
-        self, completer, command_name, *args, **options
-    ):
+    def execute_command_and_read_response(self, command_name, *args, **options):
         """Execute a command and return a parsed response
         Here we retry once for ConnectionError.
         """
@@ -138,41 +130,29 @@ class Client:
                 return response
         raise last_error
 
-    def _dynamic_render(self, command_name, response, completer):
+    def _dynamic_render(self, command_name, response):
         """
         Render command result using callback
 
         :param command_name: command name, (will be converted
             to UPPER case;
-        :param completer: completers to be patched;
         """
-        command_upper = command_name.upper()
-        # else, use defined callback
-        if (
-            command_upper in self.answer_callbacks
-            and self.answer_callbacks[command_upper]
-        ):
-            callback_name = self.answer_callbacks[command_upper]
-            callback = self.callbacks[callback_name]
-            rendered = callback(response, completer)
-        # FIXME
-        # not implemented command, use no conversion
-        # this `else` should be deleted finally
-        else:
-            rendered = response
-        logger.info(f"[rendered] {rendered}")
-        return rendered
+        return OutputRender.dynamic_render(command_name=command_name, response=response)
 
-    def render_response(self, response, completer, command_name):
+    def render_response(self, response, command_name):
         "Parses a response from the Redis server"
         logger.info(f"[Redis-Server] Response: {response}")
         # if in transaction, use queue render first
         if config.transaction:
-            callback = renders.render_transaction_queue
-            rendered = callback(response, completer)
+            callback = renders.OutputRender.render_transaction_queue
+            rendered = callback(response)
         else:
-            rendered = self._dynamic_render(command_name, response, completer)
+            rendered = self._dynamic_render(command_name, response)
         return rendered
+
+    def update_completer(self, response, completer: IRedisCompleter, command_name):
+        """Update completer for LRU usage."""
+        completer.update_completer_for_response(command_name, response)
 
     def monitor(self):
         """Redis' MONITOR command:
@@ -182,26 +162,27 @@ class Client:
         """
         while 1:
             response = self.connection.read_response()
-            yield render_bulk_string_decode(response)
+            yield OutputRender.render_bulk_string_decode(response)
 
     def subscribing(self):
         while 1:
             response = self.connection.read_response()
-            yield render_subscribe(response)
+            yield OutputRender.render_subscribe(response)
 
     def unsubscribing(self):
         "unsubscribe from all channels"
         self.connection.send_command("UNSUBSCRIBE")
         response = self.connection.read_response()
-        yield render_subscribe(response)
+        yield OutputRender.render_subscribe(response)
 
-    def split_command_and_pipeline(self, rawinput, grammar):
+    def split_command_and_pipeline(self, rawinput, completer: IRedisCompleter):
         """
         split user raw input to redis command and shell pipeline.
         eg:
         GET json | jq .key
         return: GET json, jq . key
         """
+        grammar = completer.get_completer(input_text=rawinput).compiled_grammar
         matched = grammar.match(rawinput)
         if not matched:
             # invalide command!
@@ -227,7 +208,7 @@ class Client:
             redis_command, shell_command = raw_command, None
         else:
             redis_command, shell_command = self.split_command_and_pipeline(
-                raw_command, completer.compiled_grammar
+                raw_command, completer
             )
         logger.info(f"[Prepare command] Redis: {redis_command}, Shell: {shell_command}")
         try:
@@ -251,9 +232,7 @@ class Client:
                 yield redis_resp
                 return
             self.pre_hook(raw_command, command_name, args, completer)
-            redis_resp = self.execute_command_and_read_response(
-                completer, command_name, *args
-            )
+            redis_resp = self.execute_command_and_read_response(command_name, *args)
             # if shell, do not render, just run in shell pipe and show the
             # subcommand's stdout/stderr
             if shell_command:
@@ -266,8 +245,9 @@ class Client:
 
                 return
 
-            self.after_hook(raw_command, command_name, args, completer)
-            yield self.render_response(redis_resp, completer, command_name)
+            self.after_hook(raw_command, command_name, args)
+            self.update_completer(redis_resp, completer, command_name)
+            yield self.render_response(redis_resp, command_name)
 
             # FIXME generator response do not support pipeline
             if input_command_upper == "MONITOR":
@@ -286,17 +266,17 @@ class Client:
                     yield from self.unsubscribing()
         except Exception as e:
             logger.exception(e)
-            yield render_error(str(e))
+            yield OutputRender.render_error(str(e))
         finally:
             config.withscores = False
 
-    def after_hook(self, command, command_name, args, completer):
+    def after_hook(self, command, command_name, args):
         # === After hook ===
         # SELECT db on AUTH
         if command_name.upper() == "AUTH":
             if self.db:
                 select_result = self.execute_command_and_read_response(
-                    completer, "SELECT", self.db
+                    "SELECT", self.db
                 )
                 if nativestr(select_result) != "OK":
                     raise ConnectionError("Invalid Database")
@@ -311,7 +291,7 @@ class Client:
             logger.debug("[After hook] Command is MULTI, start transaction.")
             config.transaction = True
 
-    def pre_hook(self, command, command_name, args, completer):
+    def pre_hook(self, command, command_name, args, completer: IRedisCompleter):
         """
         Before execute command, patch completers first.
         Eg: When user run `GET foo`, key completer need to
@@ -331,7 +311,10 @@ class Client:
         if not completer:
             logger.warning("[Pre patch completer] Complter not ready, not patched...")
             return
-        redis_grammar = completer.compiled_grammar
+
+        completer.update_completer_for_input(command)
+
+        redis_grammar = completer.get_completer(command).compiled_grammar
         m = redis_grammar.match(command)
         if not m:
             # invalide command!
@@ -342,19 +325,6 @@ class Client:
         logger.debug(f"[PRE HOOK] withscores: {withscores}")
         if withscores:
             config.withscores = True
-
-        # auto update LatestUsedFirstWordCompleter
-        for _token, _completer in completer.completers.items():
-            if not isinstance(_completer, LatestUsedFirstWordCompleter):
-                continue
-            # getall always returns a []
-            tokens_in_command = variables.getall(_token)
-            for tokens_in_command in tokens_in_command:
-                # prompt_toolkit didn't support multi tokens
-                # like DEL key1 key2 key3
-                # so we have to split them manualy
-                for single_token in _strip_quote_args(tokens_in_command):
-                    _completer.touch(single_token)
 
     def do_help(self, *args):
         command_docs_name = "-".join(args).lower()

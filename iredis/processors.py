@@ -4,15 +4,10 @@ from prompt_toolkit.layout.processors import (
     Transformation,
     TransformationInput,
 )
-from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
-from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 
 from .utils import split_command_args
 from .exceptions import InvalidArguments
 from .commands_csv_loader import all_commands
-from .lexer import lexers_mapping, default_lexer
-from .completers import completer_mapping, default_completer
-from .redis_grammar import get_command_grammar
 
 logger = logging.getLogger(__name__)
 
@@ -48,16 +43,7 @@ class GetCommandProcessor(Processor):
             command, _ = split_command_args(input_text, all_commands)
         except InvalidArguments:
             self.command_holder.command = None
-            self.session.completer = default_completer
-            self.session.lexer = default_lexer
         else:
             self.command_holder.command = command.upper()
-            # compile grammar for this command
-            grammar = get_command_grammar(command)
-            lexer = GrammarLexer(grammar, lexers=lexers_mapping)
-            completer = GrammarCompleter(grammar, completer_mapping)
-
-            self.session.completer = completer
-            self.session.lexer = lexer
 
         return Transformation(transformation_input.fragments)

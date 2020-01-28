@@ -1,9 +1,15 @@
-from prompt_toolkit.lexers import SimpleLexer
-from prompt_toolkit.lexers import PygmentsLexer
+from typing import Callable, Hashable
+
 from prompt_toolkit.contrib.regular_languages.lexer import GrammarLexer
+from prompt_toolkit.document import Document
+from prompt_toolkit.formatted_text.base import StyleAndTextTuples
+from prompt_toolkit.lexers import Lexer, PygmentsLexer, SimpleLexer
 from pygments.lexers.scripting import LuaLexer
 
-from .redis_grammar import CONST, command_grammar
+from .commands_csv_loader import all_commands
+from .exceptions import InvalidArguments
+from .redis_grammar import CONST, get_command_grammar
+from .utils import split_command_args
 
 
 def get_lexer_mapping():
@@ -60,4 +66,34 @@ def get_lexer_mapping():
 
 
 lexers_mapping = get_lexer_mapping()
-default_lexer = GrammarLexer(command_grammar, lexers=lexers_mapping)
+
+
+class IRedisLexer(Lexer):
+    """
+    Lexer class that can dynamically returns any Lexer.
+
+    :param get_lexer: Callable that returns a :class:`.Lexer` instance.
+    """
+
+    def __init__(self) -> None:
+        self._current_lexer = self._dummy = SimpleLexer()
+
+    def lex_document(self, document: Document) -> Callable[[int], StyleAndTextTuples]:
+        input_text = document.text
+
+        try:
+            command, _ = split_command_args(input_text, all_commands)
+            # compile grammar for this command
+            grammar = get_command_grammar(command)
+            self._current_lexer = GrammarLexer(grammar, lexers=lexers_mapping)
+        except InvalidArguments:
+            self._current_lexer = self._dummy
+
+        return self._current_lexer.lex_document(document)
+
+    def invalidation_hash(self) -> Hashable:
+        lexer = self.get_lexer() or self._dummy
+        return id(lexer)
+
+
+default_lexer = IRedisLexer()
