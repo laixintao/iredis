@@ -146,11 +146,11 @@ class IRedisCompleter(Completer):
 
             # getall always returns a []
             tokens_in_command = variables.getall(_token)
-            for tokens_in_command in tokens_in_command:
+            for _token_in_command in tokens_in_command:
                 # prompt_toolkit didn't support multi tokens
                 # like DEL key1 key2 key3
                 # so we have to split them manualy
-                for single_token in _strip_quote_args(tokens_in_command):
+                for single_token in _strip_quote_args(_token_in_command):
                     _completer.touch(single_token)
 
     def touch(self, command_name, response):
