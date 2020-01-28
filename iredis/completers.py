@@ -185,7 +185,7 @@ class IRedisCompleter(Completer):
             self.key_completer.touch_words(response[1])
             logger.debug(f"[Completer] key completer updated with {response[1]}.")
 
-        if command_name in ("SSCAN", "ZSCAN",):
+        if command_name in ("SSCAN", "ZSCAN"):
             self.member_completer.touch_words(response[1])
             logger.debug(f"[Completer] member completer updated with {response[1]}.")
 

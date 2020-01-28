@@ -1,3 +1,5 @@
+import sys
+
 import pexpect
 import pytest
 import redis
@@ -9,7 +11,7 @@ from iredis.exceptions import InvalidArguments
 from iredis.config import Config, config as global_config
 
 
-TIMEOUT = 3
+TIMEOUT = 2
 HISTORY_FILE = ".iredis_history"
 
 
@@ -65,9 +67,10 @@ def config():
     return global_config
 
 
-@pytest.fixture(scope="module")
-def local_process():
+@pytest.fixture(scope="function")
+def cli():
     """Open iredis subprocess to test"""
     child = pexpect.spawn("iredis -n 15", timeout=TIMEOUT)
+    child.logfile_read = sys.stdout.buffer
     yield child
     child.close()

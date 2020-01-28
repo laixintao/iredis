@@ -191,7 +191,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            pytest
+            pytest tests/unittests
   unittest-python3.7.0: &unit-template
     docker:
       - image: circleci/python:3.7.0
@@ -232,7 +232,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            pytest
+            pytest tests/unittests
 
   unittest-python3.7.5: &unit-template
     docker:
@@ -274,7 +274,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            pytest
+            pytest tests/unittests
   unittest-python3.8: &unit-template
     docker:
       - image: circleci/python:3.8.0
@@ -315,7 +315,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            pytest
+            pytest tests/unittests
 workflows:
   version: 2
   test-n-release:

@@ -18,11 +18,7 @@ from .completers import IRedisCompleter
 from .config import config
 from .exceptions import NotRedisCommand
 from .renders import OutputRender
-from .utils import (
-    compose_command_syntax,
-    nativestr,
-    split_command_args,
-)
+from .utils import compose_command_syntax, nativestr, split_command_args
 from .warning import confirm_dangerous_command
 
 logger = logging.getLogger(__name__)
