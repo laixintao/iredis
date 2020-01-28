@@ -93,6 +93,13 @@ Since this is a commandline tool, so we didn't write logs to stdout.
 You can `tail -f ~/.iredis.log` to see logs, the log is pretty clear,
 you can see what actually happend from log files.
 
+### CI
+
+We use[pexpect](https://pexpect.readthedocs.io/en/stable/) to test commandline
+behavior, since there are problems with circleci's tty, so we run
+pexpect-related tests on travis, and run unittest/black style check/flake8 check
+on circleci.
+
 ### Command Reference
 
 There is a full Redis command list in [commands.csv](docs/commands.csv) file, downloaded by:
