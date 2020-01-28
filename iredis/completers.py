@@ -130,7 +130,7 @@ class IRedisCompleter(Completer):
         self.current_completer = self.get_completer(input_text)
         return self.current_completer.get_completions(document, complete_event)
 
-    def touch_all_words(self, command):
+    def update_completer_for_input(self, command):
         completer = self.get_completer(command)
         grammar = completer.compiled_grammar
         m = grammar.match(command)
@@ -153,7 +153,7 @@ class IRedisCompleter(Completer):
                 for single_token in _strip_quote_args(_token_in_command):
                     _completer.touch(single_token)
 
-    def touch(self, command_name, response):
+    def update_completer_for_response(self, command_name, response):
         command_name = command_name.upper()
         if response is None:
             return

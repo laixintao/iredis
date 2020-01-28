@@ -152,7 +152,7 @@ class Client:
 
     def update_completer(self, response, completer: IRedisCompleter, command_name):
         """Update completer for LRU usage."""
-        completer.touch(command_name, response)
+        completer.update_completer_for_response(command_name, response)
 
     def monitor(self):
         """Redis' MONITOR command:
@@ -312,7 +312,7 @@ class Client:
             logger.warning("[Pre patch completer] Complter not ready, not patched...")
             return
 
-        completer.touch_all_words(command)
+        completer.update_completer_for_input(command)
 
         redis_grammar = completer.get_completer(command).compiled_grammar
         m = redis_grammar.match(command)

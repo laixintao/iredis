@@ -164,7 +164,7 @@ def test_command_keys():
     completer.key_completer.words = []
     config.raw = False
     rendered = renders.OutputRender.command_keys([b"cat", b"dog", b"banana"])
-    completer.touch("KEYS", [b"cat", b"dog", b"banana"])
+    completer.update_completer_for_response("KEYS", [b"cat", b"dog", b"banana"])
 
     assert rendered == FormattedText(
         [
@@ -190,7 +190,7 @@ def test_command_scan():
     rendered = renders.OutputRender.command_scan(
         [b"44", [b"a", b"key:__rand_int__", b"dest", b" a"]]
     )
-    completer.touch("SCAN", [b"44", [b"a", b"key:__rand_int__", b"dest", b" a"]])
+    completer.update_completer_for_response("SCAN", [b"44", [b"a", b"key:__rand_int__", b"dest", b" a"]])
 
     assert rendered == FormattedText(
         [
@@ -223,7 +223,7 @@ def test_command_sscan():
     rendered = renders.OutputRender.command_sscan(
         [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]]
     )
-    completer.touch("SSCAN", [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]])
+    completer.update_completer_for_response("SSCAN", [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]])
 
     assert rendered == FormattedText(
         [
@@ -261,7 +261,7 @@ def test_command_sscan_config_raw():
     rendered = renders.OutputRender.command_sscan(
         [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]]
     )
-    completer.touch("SSCAN", [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]])
+    completer.update_completer_for_response("SSCAN", [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]])
 
     assert rendered == b"44\na\nmember:__rand_int__\ndest\n a"
     assert completer.member_completer.words == [
@@ -278,7 +278,7 @@ def test_render_members():
     config.withscores = True
     resp = [b"duck", b"667", b"camel", b"708"]
     rendered = renders.OutputRender.render_members(resp)
-    completer.touch("ZRANGE", resp)
+    completer.update_completer_for_response("ZRANGE", resp)
 
     assert rendered == FormattedText(
         [
@@ -302,7 +302,7 @@ def test_render_members_config_raw():
     config.withscores = True
     resp = [b"duck", b"667", b"camel", b"708"]
     rendered = renders.OutputRender.render_members(resp)
-    completer.touch("ZRANGE", resp)
+    completer.update_completer_for_response("ZRANGE", resp)
 
     assert rendered == b"duck\n667\ncamel\n708"
     assert completer.member_completer.words == ["camel", "duck"]
