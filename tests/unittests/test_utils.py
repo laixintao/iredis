@@ -42,7 +42,7 @@ def test_timer():
         ("'hello world'", ["hello world"]),
         ('''hello"world"''', ["helloworld"]),
         (r'''hello\"world"''', [r"hello\world"]),
-        (r'"\\"', [r"\\"]),
+        (r'"\\"', ["\\"]),
         (r"\\", [r"\\"]),
         (r"\abcd ef", [r"\abcd", "ef"]),
         # quotes in quotes
@@ -52,7 +52,7 @@ def test_timer():
         (r""" "hello\"world" """, ['hello"world']),
         (r"''", [""]),  # set foo "" is a legal command
         (r'""', [""]),  # set foo "" is a legal command
-        (r"\\", ["\\\\"]),  # blackslash are legal
+        (r"foo ''", ["foo", ""]),  # set foo "" is a legal command
         ("\\hello\\", ["\\hello\\"]),  # blackslash are legal
     ],
 )

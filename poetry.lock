@@ -425,6 +425,17 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 version = "1.14.0"
 
 [[package]]
+category = "main"
+description = "SLY - Sly Lex Yacc"
+name = "sly"
+optional = false
+python-versions = "*"
+version = "0.3"
+
+[package.extras]
+test = ["pytest"]
+
+[[package]]
 category = "dev"
 description = "Traitlets Python config system"
 name = "traitlets"
@@ -475,7 +486,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools"]
 
 [metadata]
-content-hash = "c40132bf36ca414e570c567fe70ef64dcbc74369e0c31e54fb9899f5ed3aa91d"
+content-hash = "fca8e353272cc094dd30c1401ed697b7d7c8d744b45680e268ccea6d2c989ea1"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -652,6 +663,9 @@ requests = [
 six = [
     {file = "six-1.14.0-py2.py3-none-any.whl", hash = "sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"},
     {file = "six-1.14.0.tar.gz", hash = "sha256:236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a"},
+]
+sly = [
+    {file = "sly-0.3.tar.gz", hash = "sha256:be6a3825b042a9e1b6f5730fc747e6d983c917f0f002d798d0b9f86ca5c05ad9"},
 ]
 traitlets = [
     {file = "traitlets-4.3.3-py2.py3-none-any.whl", hash = "sha256:70b4c6a1d9019d7b4f6846832288f86998aa3b9207c6821f3578a6a6a467fe44"},
