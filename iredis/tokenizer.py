@@ -1,4 +1,5 @@
 # flake8: noqa
+import logging
 from enum import Enum
 
 from sly import Lexer, Parser
@@ -20,11 +21,9 @@ class IRedisLexer(Lexer):
 
 class IRedisParser(Parser):
     tokens = IRedisLexer.tokens
+    log = logging.getLogger(__name__)
 
     precedence = (
-        ("right", "ESCAPE"),
-        # ("left", "ESCAPE", "QUOTE"),
-        # ("left", "SPACE"),
     )
 
     """
