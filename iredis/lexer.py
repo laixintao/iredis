@@ -43,6 +43,7 @@ def get_lexer_mapping():
         "s_end_id": SimpleLexer("class:integer"),
         "s_latest_id": SimpleLexer("class:integer"),
 
+        "group": SimpleLexer("class:group"),
         "delta": SimpleLexer("class:integer"),
         "offset": SimpleLexer("class:integer"),
         "count": SimpleLexer("class:integer"),

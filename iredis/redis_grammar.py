@@ -345,10 +345,12 @@ NEW_GRAMMAR = {
         (\s+ {COUNT_CONST} \s+ {COUNT})?
         \s*""",
     "command_xgroup": fr"""\s* (?P<command>xxin)
-        (\s+ {STREAM_CREATE} \s+ {KEY} \s+ {GROUP} \s+ {S_LATEST_ID})?
-        (\s+ {STREAM_SETID} \s+ {KEY} \s+ {GROUP} \s+ {S_LATEST_ID})?
-        (\s+ {STREAM_DESTROY} \s+ {KEY} \s+ {GROUP})?
-        (\s+ {STREAM_DELCONSUMER} \s+ {KEY} \s+ {GROUP} \s+ {CONSUMER})?
+        (
+            (\s+ {STREAM_CREATE} \s+ {KEY} \s+ {GROUP} \s+ {S_LATEST_ID})|
+            (\s+ {STREAM_SETID} \s+ {KEY} \s+ {GROUP} \s+ {S_LATEST_ID})|
+            (\s+ {STREAM_DESTROY} \s+ {KEY} \s+ {GROUP})|
+            (\s+ {STREAM_DELCONSUMER} \s+ {KEY} \s+ {GROUP} \s+ {CONSUMER})
+        )
         \s*""",
 }
 
