@@ -184,7 +184,7 @@ sorted_set,ZREVRANK,command_key_member,render_int
 sorted_set,ZSCAN,command_key_cursor_match_pattern_count,command_sscan
 sorted_set,ZSCORE,command_key_member,render_bulk_string
 sorted_set,ZUNIONSTORE,command_any,render_int
-stream,XACK,command_pass,
+stream,XACK,command_key_group_ids,render_int
 stream,XADD,command_pass,
 stream,XCLAIM,command_pass,
 stream,XDEL,command_pass,
