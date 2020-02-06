@@ -10,6 +10,7 @@ from prompt_toolkit.completion import (
 )
 from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 from prompt_toolkit.document import Document
+from prompt_toolkit.completion import Completer
 
 from .commands_csv_loader import all_commands, commands_summary
 from .config import config
@@ -45,6 +46,31 @@ class LatestUsedFirstWordCompleter(FuzzyWordCompleter):
     def touch_words(self, words):
         for word in words:
             self.touch(word)
+
+
+def TimestampCompleter(Completer):
+    """
+    Completer for timestamp based on input.
+    Features:
+    * Auto complete humanize time, like 3 -> 3 minutes ago, 3 hours ago.
+    * Auto guess datetime, complete by its timestamp. 2020-01-01 12:00
+        -> 1577851200.
+    """
+
+    def _completion_humanize_time(self, document: Document) -> Iterable[Completion]:
+        text = document.text
+        if not text.isnumeric():
+            return
+
+    def _completion_formatted_time(self, document: Document) -> Iterable[Completion]:
+        text = document.text
+        return
+
+    def get_completions(
+        self, document: Document, complete_event: CompleteEvent
+    ) -> Iterable[Completion]:
+        yield from self._completion_humanize_time(document)
+        yield from self._completion_formatted_time(document)
 
 
 def get_completer_mapping():
