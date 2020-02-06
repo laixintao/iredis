@@ -130,3 +130,15 @@ def test_xgroup_delconsumer(judge_command):
         },
     )
     judge_command("XGROUP delconsumer mykey mygroup", None)
+
+
+def test_xgroup_stream(judge_command):
+    judge_command(
+        "XACK mystream group1 123123",
+        {
+            "command": "XACK",
+            "key": "mystream",
+            "group": "group1",
+            "stream_ids": "123123",
+        },
+    )

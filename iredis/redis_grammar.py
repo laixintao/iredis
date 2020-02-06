@@ -130,12 +130,13 @@ END = fr"(?P<end>{NNUM})"
 # please see:
 # https://redis.io/topics/streams-intro#special-ids-in-the-streams-api
 # stream id, DO NOT use r"" here, or the \+ will be two string
-STREAMID = """
+# NOTE: if miss the outer (), multi IDS won't work.
+STREAMID = """(
 (\d+)       |# Incomplete id
 (\d+-\d+)    # full id
+)
 """
-STREAM_ID = fr"(?P<stream_id>{STREAMID})"
-STREAM_IDS = fr"(?P<stream_id>{STREAMID}(\s+{STREAM_ID})*)"
+STREAM_IDS = fr"(?P<stream_ids>{STREAMID}(\s+{STREAMID})*)"
 S_START_ID = fr"(?P<s_start_id>{STREAMID}|-)"
 S_END_ID = f"(?P<s_end_id>{STREAMID}|\+)"
 S_LATEST_ID = f"(?P<s_latest_id>{STREAMID}|\$)"
@@ -355,7 +356,7 @@ NEW_GRAMMAR = {
         )
         \s*""",
     "command_key_group_ids": fr"""\s* (?P<command>xxin)
-        \sx+* {KEY} \s+ {GROUP} \s+ {STREAM_IDS} \s*""",
+        \s+ {KEY} \s+ {GROUP} \s+ {STREAM_IDS} \s*""",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"
