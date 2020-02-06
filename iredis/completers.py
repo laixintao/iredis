@@ -1,6 +1,7 @@
 import logging
 from typing import Iterable
 
+import pendulum
 from prompt_toolkit.completion import (
     CompleteEvent,
     Completer,
@@ -10,7 +11,6 @@ from prompt_toolkit.completion import (
 )
 from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 from prompt_toolkit.document import Document
-from prompt_toolkit.completion import Completer
 
 from .commands_csv_loader import all_commands, commands_summary
 from .config import config
@@ -48,7 +48,7 @@ class LatestUsedFirstWordCompleter(FuzzyWordCompleter):
             self.touch(word)
 
 
-def TimestampCompleter(Completer):
+class TimestampCompleter(Completer):
     """
     Completer for timestamp based on input.
     Features:
@@ -57,19 +57,28 @@ def TimestampCompleter(Completer):
         -> 1577851200.
     """
 
+    # FIXME __init__ with timezone
     def _completion_humanize_time(self, document: Document) -> Iterable[Completion]:
         text = document.text
         if not text.isnumeric():
             return
+        yield Completion("123")
 
     def _completion_formatted_time(self, document: Document) -> Iterable[Completion]:
         text = document.text
-        return
+        logger.debug(f"[Timestamp Completer] text={text}")
+        try:
+            dt = pendulum.parse(text)
+        except pendulum.parsing.exceptions.ParserError:
+            return
+        yield Completion(str(dt))
 
     def get_completions(
         self, document: Document, complete_event: CompleteEvent
     ) -> Iterable[Completion]:
+        logger.debug("[Timestamp Completer] run...")
         yield from self._completion_humanize_time(document)
+        logger.debug("[Timestamp Completer] run format time...")
         yield from self._completion_formatted_time(document)
 
 
@@ -85,6 +94,7 @@ def get_completer_mapping():
     member_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     field_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     group_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+    timestamp_completer = TimestampCompleter()
 
     completer_mapping.update(
         {
@@ -101,6 +111,8 @@ def get_completer_mapping():
             "fields": field_completer,
             # stream groups
             "group": group_completer,
+            # stream id
+            "stream_ids": timestamp_completer,
         }
     )
     # patch command completer with hint
