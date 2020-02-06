@@ -142,3 +142,16 @@ def test_xgroup_stream(judge_command):
             "stream_ids": "123123",
         },
     )
+    judge_command(
+        "XACK mystream group1 123123 111",
+        {
+            "command": "XACK",
+            "key": "mystream",
+            "group": "group1",
+            "stream_ids": "123123 111",
+        },
+    )
+    judge_command("XACK mystream group1 $", None)
+    judge_command("XACK mystream group1 -", None)
+    judge_command("XACK mystream group1 +", None)
+    judge_command("XACK mystream group1 >", None)
