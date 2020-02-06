@@ -132,8 +132,7 @@ END = fr"(?P<end>{NNUM})"
 # stream id, DO NOT use r"" here, or the \+ will be two string
 # NOTE: if miss the outer (), multi IDS won't work.
 STREAMID = """(
-(\d+)       |# Incomplete id
-(\d+-\d+)    # full id
+.+
 )
 """
 STREAM_IDS = fr"(?P<stream_ids>{STREAMID}(\s+{STREAMID})*)"

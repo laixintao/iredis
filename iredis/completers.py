@@ -69,7 +69,7 @@ class TimestampCompleter(Completer):
         logger.debug(f"[Timestamp Completer] text={text}")
         try:
             dt = pendulum.parse(text)
-        except pendulum.parsing.exceptions.ParserError:
+        except Exception:
             return
         yield Completion(str(dt))
 
