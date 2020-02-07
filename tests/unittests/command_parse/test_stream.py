@@ -134,3 +134,26 @@ def test_xgroup_stream(judge_command):
         "XACK mystream group1 123123 111",
         {"command": "XACK", "key": "mystream", "group": "group1", "stream_id": "111"},
     )
+
+
+def test_xinfo(judge_command):
+    judge_command(
+        "XINFO consumers mystream mygroup",
+        {
+            "command": "XINFO",
+            "stream_consumers": "consumers",
+            "key": "mystream",
+            "group": "mygroup",
+        },
+    )
+    judge_command(
+        "XINFO GROUPS mystream",
+        {"command": "XINFO", "stream_groups": "GROUPS", "key": "mystream"},
+    )
+    judge_command(
+        "XINFO STREAM mystream",
+        {"command": "XINFO", "stream": "STREAM", "key": "mystream"},
+    )
+    judge_command("XINFO HELP", {"command": "XINFO", "help": "HELP"})
+    judge_command("XINFO consumers mystream mygroup GROUPS mystream", None)
+    judge_command("XINFO groups mystream mygroup", None)
