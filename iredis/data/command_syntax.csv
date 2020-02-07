@@ -189,7 +189,7 @@ stream,XADD,command_pass,
 stream,XCLAIM,command_pass,
 stream,XDEL,command_pass,
 stream,XGROUP,command_xgroup,render_string_or_int
-stream,XINFO,command_pass,
+stream,XINFO,command_xinfo,render_list
 stream,XLEN,command_key,render_int
 stream,XPENDING,command_pass,
 stream,XRANGE,command_key_start_end_countx,render_list

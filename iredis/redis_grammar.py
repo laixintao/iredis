@@ -50,10 +50,14 @@ CONST = {
     "order": "ASC DESC",
     "pubsubcmd": "CHANNELS NUMSUB NUMPAT",
     "scriptdebug": "YES NO SYNC",
+    "help": "HELP",
+    "stream": "STREAM",
     "stream_create": "CREATE",
     "stream_setid": "SETID",
     "stream_destroy": "DESTROY",
     "stream_delconsumer": "DELCONSUMER",
+    "stream_consumers": "CONSUMERS",
+    "stream_groups": "GROUPS",
 }
 
 
@@ -188,6 +192,10 @@ CONST_STORE = fr"(?P<const_store>{c('const_store')})"
 CONST_STOREDIST = fr"(?P<const_storedist>{c('const_storedist')})"
 PUBSUBCMD = fr"(?P<pubsubcmd>{c('pubsubcmd')})"
 SCRIPTDEBUG = fr"(?P<scriptdebug>{c('scriptdebug')})"
+HELP = fr"(?P<help>{c('help')})"
+STREAM = fr"(?P<stream>{c('stream')})"
+STREAM_GROUPS = fr"(?P<stream_groups>{c('stream_groups')})"
+STREAM_CONSUMERS = fr"(?P<stream_consumers>{c('stream_consumers')})"
 STREAM_CREATE = fr"(?P<stream_create>{c('stream_create')})"
 STREAM_SETID = fr"(?P<stream_setid>{c('stream_setid')})"
 STREAM_DESTROY = fr"(?P<stream_destroy>{c('stream_destroy')})"
@@ -349,6 +357,14 @@ NEW_GRAMMAR = {
         \s*""",
     "command_key_group_ids": fr"""\s* (?P<command>xxin)
         \s+ {KEY} \s+ {GROUP} (\s+ {STREAM_ID})+ \s*""",
+    "command_xinfo": fr"""\s*  (?P<command>xxin)
+        (
+            (\s+ {STREAM_CONSUMERS} \s+ {KEY} \s+ {GROUP})|
+            (\s+ {STREAM_GROUPS} \s+ {KEY})|
+            (\s+ {STREAM} \s+ {KEY})|
+            (\s+ {HELP})
+        )
+        \s*"""
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"
