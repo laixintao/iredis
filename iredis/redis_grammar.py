@@ -379,7 +379,7 @@ NEW_GRAMMAR = {
         \s+ {KEY}
         (\s+ {MAXLEN} (\s+ {APPROXIMATELY})? \s+ {COUNT})?
         \s+ {STREAM_ID}
-        (\s+ {SFIELD} \s+ {SVALUE})+ \s*"""
+        (\s+ {SFIELD} \s+ {SVALUE})+ \s*""",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"
