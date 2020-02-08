@@ -7,12 +7,7 @@ from prompt_toolkit.completion import Completion
 
 from iredis.completers import LatestUsedFirstWordCompleter
 from iredis.redis_grammar import command_grammar
-from iredis.completers import (
-    get_completer_mapping,
-    IRedisCompleter,
-    TimestampCompleter,
-    default_completer,
-)
+from iredis.completers import get_completer_mapping, IRedisCompleter, TimestampCompleter
 
 
 def test_LUF_completer_touch():
