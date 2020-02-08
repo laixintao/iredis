@@ -131,7 +131,7 @@ class OutputRender:
     @staticmethod
     def render_list(text):
         """
-        Render callback for redis Array Reply, can't render nested list
+        Render callback for redis Array Reply
         Note: Cloud be null in it.
         """
         str_items = []

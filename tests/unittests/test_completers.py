@@ -7,7 +7,12 @@ from prompt_toolkit.completion import Completion
 
 from iredis.completers import LatestUsedFirstWordCompleter
 from iredis.redis_grammar import command_grammar
-from iredis.completers import get_completer_mapping, IRedisCompleter, TimestampCompleter
+from iredis.completers import (
+    get_completer_mapping,
+    IRedisCompleter,
+    TimestampCompleter,
+    default_completer,
+)
 
 
 def test_LUF_completer_touch():
@@ -63,6 +68,30 @@ def test_newbie_mode_complete_with_meta_dict():
             ]
         ),
     ]
+
+
+def test_iredis_completer_update_for_response():
+    c = IRedisCompleter()
+    c.update_completer_for_response(
+        "HGETALL",
+        [
+            b"Behave",
+            b"misbehave",
+            b"Interpret",
+            b"misinterpret",
+            b"Lead",
+            b"mislead",
+            b"Trust",
+            b"mistrust",
+        ],
+    )
+    assert c.field_completer.words == ["Trust", "Lead", "Interpret", "Behave"]
+
+
+def test_iredis_completer_no_exception_for_none_response():
+    c = IRedisCompleter()
+    c.update_completer_for_response("XPENDING", None)
+    c.update_completer_for_response("KEYS", None)
 
 
 def test_group_completer():
