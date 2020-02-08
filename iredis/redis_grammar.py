@@ -58,6 +58,7 @@ CONST = {
     "stream_delconsumer": "DELCONSUMER",
     "stream_consumers": "CONSUMERS",
     "stream_groups": "GROUPS",
+    "maxlen": "MAXLEN",
 }
 
 
@@ -137,7 +138,7 @@ END = fr"(?P<end>{NNUM})"
 # https://redis.io/topics/streams-intro#special-ids-in-the-streams-api
 # stream id, DO NOT use r"" here, or the \+ will be two string
 # NOTE: if miss the outer (), multi IDS won't work.
-STREAM_ID = fr"(?P<stream_id>{VALID_TOKEN})"
+STREAM_ID = "(?P<stream_id>[T\d:>+*\-\$]+)"
 
 DELTA = fr"(?P<delta>{NNUM})"
 OFFSET = fr"(?P<offset>{NUM})"  # string offset, can't be negative
@@ -202,6 +203,8 @@ STREAM_CREATE = fr"(?P<stream_create>{c('stream_create')})"
 STREAM_SETID = fr"(?P<stream_setid>{c('stream_setid')})"
 STREAM_DESTROY = fr"(?P<stream_destroy>{c('stream_destroy')})"
 STREAM_DELCONSUMER = fr"(?P<stream_delconsumer>{c('stream_delconsumer')})"
+MAXLEN = fr"(?P<maxlen>{c('maxlen')})"
+APPROXIMATELY = r"(?P<approximately>~)"
 
 # TODO test lexer & completer for multi spaces in command
 # FIXME invalid command like "aaa bbb ccc"
@@ -373,7 +376,9 @@ NEW_GRAMMAR = {
         (\s+ {CONSUMER})?
         \s*""",
     "command_xadd": fr"""\s* (?P<command>xxin)
-        \s+ {KEY} \s+ {STREAM_ID}
+        \s+ {KEY}
+        (\s+ {MAXLEN} (\s+ {APPROXIMATELY})? \s+ {COUNT})?
+        \s+ {STREAM_ID}
         (\s+ {SFIELD} \s+ {SVALUE})+ \s*"""
 }
 
