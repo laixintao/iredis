@@ -92,6 +92,8 @@ VALUE = fr"(?P<value>{VALID_TOKEN})"
 VALUES = fr"(?P<values>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 FIELDS = fr"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 FIELD = fr"(?P<field>{VALID_TOKEN})"
+SFIELD = fr"(?P<sfield>{VALID_TOKEN})"
+SVALUE = fr"(?P<svalue>{VALID_TOKEN})"
 MEMBER = fr"(?P<member>{VALID_TOKEN})"
 MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 COUNT = fr"(?P<count>{NNUM})"
@@ -370,6 +372,9 @@ NEW_GRAMMAR = {
         (\s+ {STREAM_ID} \s+ {STREAM_ID} \s+ {COUNT})?
         (\s+ {CONSUMER})?
         \s*""",
+    "command_xadd": fr"""\s* (?P<command>xxin)
+        \s+ {KEY} \s+ {STREAM_ID}
+        (\s+ {SFIELD} \s+ {SVALUE})+ \s*"""
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"
