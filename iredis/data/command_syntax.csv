@@ -186,7 +186,7 @@ sorted_set,ZSCORE,command_key_member,render_bulk_string
 sorted_set,ZUNIONSTORE,command_any,render_int
 stream,XACK,command_key_group_ids,render_int
 stream,XADD,command_xadd,render_bulk_string
-stream,XCLAIM,command_pass,
+stream,XCLAIM,command_xclaim,render_list
 stream,XDEL,command_key_ids,render_int
 stream,XGROUP,command_xgroup,render_string_or_int
 stream,XINFO,command_xinfo,render_list

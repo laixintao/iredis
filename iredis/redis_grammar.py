@@ -59,6 +59,11 @@ CONST = {
     "stream_consumers": "CONSUMERS",
     "stream_groups": "GROUPS",
     "maxlen": "MAXLEN",
+    "idel": "IDEL",
+    "time": "TIME",
+    "retrycount": "RETRYCOUNT",
+    "force": "FORCE",
+    "justid": "JUSTID",
 }
 
 
@@ -205,6 +210,12 @@ STREAM_DESTROY = fr"(?P<stream_destroy>{c('stream_destroy')})"
 STREAM_DELCONSUMER = fr"(?P<stream_delconsumer>{c('stream_delconsumer')})"
 MAXLEN = fr"(?P<maxlen>{c('maxlen')})"
 APPROXIMATELY = r"(?P<approximately>~)"
+IDEL = fr"(?P<idel>{c('idel')})"
+TIME = fr"(?P<time>{c('time')})"
+RETRYCOUNT = fr"(?P<retrycount>{c('retrycount')})"
+FORCE = fr"(?P<force>{c('force')})"
+JUSTID = fr"(?P<justid>{c('justid')})"
+
 
 # TODO test lexer & completer for multi spaces in command
 # FIXME invalid command like "aaa bbb ccc"
@@ -384,6 +395,15 @@ NEW_GRAMMAR = {
         (\s+ {SFIELD} \s+ {SVALUE})+ \s*""",
     "command_key_maxlen": fr"""\s* (?P<command>xxin)
         \s+ {KEY} \s+ {MAXLEN} (\s+ {APPROXIMATELY})? \s+ {COUNT}
+        \s*""",
+    "command_xclaim": fr"""\s* (?P<command>xxin)
+        \s+ {KEY} \s+ {GROUP} \s+ {CONSUMER} \s+ {MILLISECOND}
+        (\s+ {STREAM_ID})+
+        (\s+ {IDEL} \s+ {MILLISECOND})?
+        (\s+ {TIME} \s+ {TIMESTAMP})?
+        (\s+ {RETRYCOUNT} \s+ {COUNT})?
+        (\s+ {FORCE})?
+        (\s+ {JUSTID})?
         \s*""",
 }
 

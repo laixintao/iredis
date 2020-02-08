@@ -284,3 +284,90 @@ def test_xdel(judge_command):
         "XDEL mystream 1581165000000",
         {"command": "XDEL", "key": "mystream", "stream_id": "1581165000000"},
     )
+
+
+def test_xclaim(judge_command):
+    judge_command(
+        "XCLAIM mystream mygroup Alice 3600000 1526569498055-0",
+        {
+            "command": "XCLAIM",
+            "key": "mystream",
+            "group": "mygroup",
+            "consumer": "Alice",
+            "millisecond": "3600000",
+            "stream_id": "1526569498055-0",
+        },
+    )
+    judge_command(
+        "XCLAIM mystream mygroup Alice 3600000 1526569498055-0 123 456 789",
+        {
+            "command": "XCLAIM",
+            "key": "mystream",
+            "group": "mygroup",
+            "consumer": "Alice",
+            "millisecond": "3600000",
+            "stream_id": "789",
+        },
+    )
+    judge_command(
+        "XCLAIM mystream mygroup Alice 3600000 1526569498055-0 IDEL 300",
+        {
+            "command": "XCLAIM",
+            "key": "mystream",
+            "group": "mygroup",
+            "consumer": "Alice",
+            "millisecond": ["3600000", "300"],
+            "stream_id": "1526569498055-0",
+            "idel": "IDEL",
+        },
+    )
+    judge_command(
+        "XCLAIM mystream mygroup Alice 3600000 1526569498055-0 retrycount 7",
+        {
+            "command": "XCLAIM",
+            "key": "mystream",
+            "group": "mygroup",
+            "consumer": "Alice",
+            "millisecond": "3600000",
+            "stream_id": "1526569498055-0",
+            "retrycount": "retrycount",
+            "count": "7",
+        },
+    )
+    judge_command(
+        "XCLAIM mystream mygroup Alice 3600000 1526569498055-0 TIME 123456789",
+        {
+            "command": "XCLAIM",
+            "key": "mystream",
+            "group": "mygroup",
+            "consumer": "Alice",
+            "millisecond": "3600000",
+            "stream_id": "1526569498055-0",
+            "time": "TIME",
+            "timestamp": "123456789",
+        },
+    )
+    judge_command(
+        "XCLAIM mystream mygroup Alice 3600000 1526569498055-0 FORCE",
+        {
+            "command": "XCLAIM",
+            "key": "mystream",
+            "group": "mygroup",
+            "consumer": "Alice",
+            "millisecond": "3600000",
+            "stream_id": "1526569498055-0",
+            "force": "FORCE",
+        },
+    )
+    judge_command(
+        "XCLAIM mystream mygroup Alice 3600000 1526569498055-0 JUSTID",
+        {
+            "command": "XCLAIM",
+            "key": "mystream",
+            "group": "mygroup",
+            "consumer": "Alice",
+            "millisecond": "3600000",
+            "stream_id": "1526569498055-0",
+            "justid": "JUSTID",
+        },
+    )
