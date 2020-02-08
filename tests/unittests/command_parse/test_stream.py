@@ -195,3 +195,63 @@ def test_xpending(judge_command):
         },
     )
     judge_command("XPENDING mystream group55 - + ", None)
+
+
+def test_xadd(judge_command):
+    judge_command(
+        "xadd mystream MAXLEN ~ 1000 * key value",
+        {
+            "command": "xadd",
+            "key": "mystream",
+            "maxlen": "MAXLEN",
+            "approximately": "~",
+            "count": "1000",
+            "sfield": "key",
+            "svalue": "value",
+            "stream_id": "*",
+        },
+    )
+    # test for MAXLEN option
+    judge_command(
+        "xadd mystream MAXLEN 1000 * key value",
+        {
+            "command": "xadd",
+            "key": "mystream",
+            "maxlen": "MAXLEN",
+            "count": "1000",
+            "sfield": "key",
+            "svalue": "value",
+            "stream_id": "*",
+        },
+    )
+    judge_command(
+        "xadd mystream * key value",
+        {
+            "command": "xadd",
+            "key": "mystream",
+            "sfield": "key",
+            "svalue": "value",
+            "stream_id": "*",
+        },
+    )
+    # spcify stream id
+    judge_command(
+        "xadd mystream 123-123 key value",
+        {
+            "command": "xadd",
+            "key": "mystream",
+            "sfield": "key",
+            "svalue": "value",
+            "stream_id": "123-123",
+        },
+    )
+    judge_command(
+        "xadd mystream 123-123 key value foo bar hello world",
+        {
+            "command": "xadd",
+            "key": "mystream",
+            "sfield": "hello",
+            "svalue": "world",
+            "stream_id": "123-123",
+        },
+    )
