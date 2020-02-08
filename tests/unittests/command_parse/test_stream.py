@@ -157,3 +157,41 @@ def test_xinfo(judge_command):
     judge_command("XINFO HELP", {"command": "XINFO", "help": "HELP"})
     judge_command("XINFO consumers mystream mygroup GROUPS mystream", None)
     judge_command("XINFO groups mystream mygroup", None)
+
+
+def test_xpending(judge_command):
+    judge_command(
+        "XPENDING mystream group55",
+        {"command": "XPENDING", "key": "mystream", "group": "group55"},
+    )
+    judge_command(
+        "XPENDING mystream group55 myconsumer",
+        {
+            "command": "XPENDING",
+            "key": "mystream",
+            "group": "group55",
+            "consumer": "myconsumer",
+        },
+    )
+    judge_command(
+        "XPENDING mystream group55 - + 10",
+        {
+            "command": "XPENDING",
+            "key": "mystream",
+            "group": "group55",
+            "stream_id": ["-", "+"],
+            "count": "10",
+        },
+    )
+    judge_command(
+        "XPENDING mystream group55 - + 10 myconsumer",
+        {
+            "command": "XPENDING",
+            "key": "mystream",
+            "group": "group55",
+            "stream_id": ["-", "+"],
+            "count": "10",
+            "consumer": "myconsumer",
+        },
+    )
+    judge_command("XPENDING mystream group55 - + ", None)
