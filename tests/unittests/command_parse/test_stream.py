@@ -255,3 +255,21 @@ def test_xadd(judge_command):
             "stream_id": "123-123",
         },
     )
+
+
+def test_xtrim(judge_command):
+    judge_command(
+        "  XTRIM mystream MAXLEN 2",
+        {"command": "XTRIM", "key": "mystream", "maxlen": "MAXLEN", "count": "2"},
+    )
+    judge_command(
+        "  XTRIM mystream MAXLEN ~ 2",
+        {
+            "command": "XTRIM",
+            "key": "mystream",
+            "maxlen": "MAXLEN",
+            "count": "2",
+            "approximately": "~",
+        },
+    )
+    judge_command("  XTRIM mystream", None)
