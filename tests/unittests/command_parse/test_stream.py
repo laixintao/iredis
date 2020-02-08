@@ -273,3 +273,14 @@ def test_xtrim(judge_command):
         },
     )
     judge_command("  XTRIM mystream", None)
+
+
+def test_xdel(judge_command):
+    judge_command(
+        "XDEL mystream 1581165000000 1549611229000 1581060831000",
+        {"command": "XDEL", "key": "mystream", "stream_id": "1581060831000"},
+    )
+    judge_command(
+        "XDEL mystream 1581165000000",
+        {"command": "XDEL", "key": "mystream", "stream_id": "1581165000000"},
+    )

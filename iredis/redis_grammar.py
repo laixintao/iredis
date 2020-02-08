@@ -362,6 +362,8 @@ NEW_GRAMMAR = {
         \s*""",
     "command_key_group_ids": fr"""\s* (?P<command>xxin)
         \s+ {KEY} \s+ {GROUP} (\s+ {STREAM_ID})+ \s*""",
+    "command_key_ids": fr"""\s* (?P<command>xxin)
+        \s+ {KEY} (\s+ {STREAM_ID})+ \s*""",
     "command_xinfo": fr"""\s* (?P<command>xxin)
         (
             (\s+ {STREAM_CONSUMERS} \s+ {KEY} \s+ {GROUP})|
