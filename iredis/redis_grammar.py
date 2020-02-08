@@ -357,14 +357,19 @@ NEW_GRAMMAR = {
         \s*""",
     "command_key_group_ids": fr"""\s* (?P<command>xxin)
         \s+ {KEY} \s+ {GROUP} (\s+ {STREAM_ID})+ \s*""",
-    "command_xinfo": fr"""\s*  (?P<command>xxin)
+    "command_xinfo": fr"""\s* (?P<command>xxin)
         (
             (\s+ {STREAM_CONSUMERS} \s+ {KEY} \s+ {GROUP})|
             (\s+ {STREAM_GROUPS} \s+ {KEY})|
             (\s+ {STREAM} \s+ {KEY})|
             (\s+ {HELP})
         )
-        \s*"""
+        \s*""",
+    "command_xpending": fr"""\s* (?P<command>xxin)
+        \s+ {KEY} \s+ {GROUP}
+        (\s+ {STREAM_ID} \s+ {STREAM_ID} \s+ {COUNT})?
+        (\s+ {CONSUMER})?
+        \s*""",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"
