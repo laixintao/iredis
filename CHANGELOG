@@ -2,6 +2,11 @@
 
 * Refactor: split completer update and response render; Move cli tests to 
 travis ci.
+* Support stream commands.
+	* Timestamp completer support.
+	* Stream command renders and lexers.
+* Bugfix: When response is None,
+	`iredis.completers.udpate_completer_for_responase` will raise Exception.
 
 ### 0.8.12
 
