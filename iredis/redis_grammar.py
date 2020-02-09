@@ -52,6 +52,7 @@ CONST = {
     "scriptdebug": "YES NO SYNC",
     "help": "HELP",
     "stream": "STREAM",
+    "streams": "STREAMS",
     "stream_create": "CREATE",
     "stream_setid": "SETID",
     "stream_destroy": "DESTROY",
@@ -64,6 +65,7 @@ CONST = {
     "retrycount": "RETRYCOUNT",
     "force": "FORCE",
     "justid": "JUSTID",
+    "block": "BLOCK",
 }
 
 
@@ -215,7 +217,8 @@ TIME = fr"(?P<time>{c('time')})"
 RETRYCOUNT = fr"(?P<retrycount>{c('retrycount')})"
 FORCE = fr"(?P<force>{c('force')})"
 JUSTID = fr"(?P<justid>{c('justid')})"
-
+BLOCK = fr"(?P<block>{c('block')})"
+STREAMS = fr"(?P<streams>{c('streams')})"
 
 # TODO test lexer & completer for multi spaces in command
 # FIXME invalid command like "aaa bbb ccc"
@@ -404,6 +407,13 @@ NEW_GRAMMAR = {
         (\s+ {RETRYCOUNT} \s+ {COUNT})?
         (\s+ {FORCE})?
         (\s+ {JUSTID})?
+        \s*""",
+    "command_xread": fr"""\s* (?P<command>xxin)
+        (\s+ {COUNT_CONST} \s+ {COUNT})?
+        (\s+ {BLOCK} \s+ {MILLISECOND})?
+        \s+ {STREAMS}
+        \s+ {KEYS}
+        (\s+ {STREAM_ID})+
         \s*""",
 }
 
