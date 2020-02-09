@@ -28,6 +28,7 @@ def get_lexer_mapping():
         "member": SimpleLexer("class:member"),
         "members": SimpleLexer("class:member"),
         "value": SimpleLexer("class:string"),
+        "svalue": SimpleLexer("class:string"),
         "values": SimpleLexer("class:string"),
         "lexmin": SimpleLexer("class:string"),
         "lexmax": SimpleLexer("class:string"),
@@ -38,6 +39,9 @@ def get_lexer_mapping():
         "start": SimpleLexer("class:integer"),
         "float": SimpleLexer("class:integer"),
         "end": SimpleLexer("class:integer"),
+        # stream id
+        "stream_id": SimpleLexer("class:integer"),
+        "group": SimpleLexer("class:group"),
         "delta": SimpleLexer("class:integer"),
         "offset": SimpleLexer("class:integer"),
         "count": SimpleLexer("class:integer"),
@@ -54,11 +58,13 @@ def get_lexer_mapping():
         "type": SimpleLexer("class:string"),
         "fields": SimpleLexer("class:field"),
         "field": SimpleLexer("class:field"),
+        "sfield": SimpleLexer("class:field"),
         "parameter": SimpleLexer("class:field"),
         "channel": SimpleLexer("class:channel"),
         "double_lua": PygmentsLexer(LuaLexer),
         "single_lua": PygmentsLexer(LuaLexer),
         "command": SimpleLexer("class:command"),
+        "approximately": SimpleLexer("class:const"),
     }
 
     lexers_dict.update({key: SimpleLexer("class:const") for key in CONST})

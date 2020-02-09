@@ -234,6 +234,8 @@ def ensure_str(origin, decode=None):
     Note: this method do not handle nil, make sure check (nil)
           out of this method.
     """
+    if origin is None:
+        return None
     if isinstance(origin, str):
         return origin
     if isinstance(origin, int):

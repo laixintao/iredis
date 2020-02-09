@@ -50,6 +50,24 @@ CONST = {
     "order": "ASC DESC",
     "pubsubcmd": "CHANNELS NUMSUB NUMPAT",
     "scriptdebug": "YES NO SYNC",
+    "help": "HELP",
+    "stream": "STREAM",
+    "streams": "STREAMS",
+    "stream_create": "CREATE",
+    "stream_setid": "SETID",
+    "stream_destroy": "DESTROY",
+    "stream_delconsumer": "DELCONSUMER",
+    "stream_consumers": "CONSUMERS",
+    "stream_groups": "GROUPS",
+    "stream_group": "GROUP",
+    "maxlen": "MAXLEN",
+    "idel": "IDEL",
+    "time": "TIME",
+    "retrycount": "RETRYCOUNT",
+    "force": "FORCE",
+    "justid": "JUSTID",
+    "block": "BLOCK",
+    "noack": "NOACK",
 }
 
 
@@ -84,11 +102,15 @@ VALUE = fr"(?P<value>{VALID_TOKEN})"
 VALUES = fr"(?P<values>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 FIELDS = fr"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 FIELD = fr"(?P<field>{VALID_TOKEN})"
+SFIELD = fr"(?P<sfield>{VALID_TOKEN})"
+SVALUE = fr"(?P<svalue>{VALID_TOKEN})"
 MEMBER = fr"(?P<member>{VALID_TOKEN})"
 MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 COUNT = fr"(?P<count>{NNUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 CHANNEL = fr"(?P<channel>{VALID_TOKEN})"
+GROUP = fr"(?P<group>{VALID_TOKEN})"
+CONSUMER = fr"(?P<consumer>{VALID_TOKEN})"
 BIT = r"(?P<bit>0|1)"
 FLOAT = fr"(?P<float>{_FLOAT})"
 LONGITUDE = fr"(?P<longitude>{_FLOAT})"
@@ -119,6 +141,14 @@ TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
 ANY = r"(?P<any>.*)"  # TODO deleted
 START = fr"(?P<start>{NNUM})"
 END = fr"(?P<end>{NNUM})"
+
+# for stream ids, special ids include:  -, +, $, > and *
+# please see:
+# https://redis.io/topics/streams-intro#special-ids-in-the-streams-api
+# stream id, DO NOT use r"" here, or the \+ will be two string
+# NOTE: if miss the outer (), multi IDS won't work.
+STREAM_ID = "(?P<stream_id>[T\d:>+*\-\$]+)"
+
 DELTA = fr"(?P<delta>{NNUM})"
 OFFSET = fr"(?P<offset>{NUM})"  # string offset, can't be negative
 MIN = fr"(?P<min>{NNUM})"
@@ -174,6 +204,25 @@ CONST_STORE = fr"(?P<const_store>{c('const_store')})"
 CONST_STOREDIST = fr"(?P<const_storedist>{c('const_storedist')})"
 PUBSUBCMD = fr"(?P<pubsubcmd>{c('pubsubcmd')})"
 SCRIPTDEBUG = fr"(?P<scriptdebug>{c('scriptdebug')})"
+HELP = fr"(?P<help>{c('help')})"
+STREAM = fr"(?P<stream>{c('stream')})"
+STREAM_GROUPS = fr"(?P<stream_groups>{c('stream_groups')})"
+STREAM_GROUP = fr"(?P<stream_group>{c('stream_group')})"
+STREAM_CONSUMERS = fr"(?P<stream_consumers>{c('stream_consumers')})"
+STREAM_CREATE = fr"(?P<stream_create>{c('stream_create')})"
+STREAM_SETID = fr"(?P<stream_setid>{c('stream_setid')})"
+STREAM_DESTROY = fr"(?P<stream_destroy>{c('stream_destroy')})"
+STREAM_DELCONSUMER = fr"(?P<stream_delconsumer>{c('stream_delconsumer')})"
+MAXLEN = fr"(?P<maxlen>{c('maxlen')})"
+APPROXIMATELY = r"(?P<approximately>~)"
+IDEL = fr"(?P<idel>{c('idel')})"
+TIME = fr"(?P<time>{c('time')})"
+RETRYCOUNT = fr"(?P<retrycount>{c('retrycount')})"
+FORCE = fr"(?P<force>{c('force')})"
+JUSTID = fr"(?P<justid>{c('justid')})"
+BLOCK = fr"(?P<block>{c('block')})"
+STREAMS = fr"(?P<streams>{c('streams')})"
+NOACK = fr"(?P<noack>{c('noack')})"
 
 # TODO test lexer & completer for multi spaces in command
 # FIXME invalid command like "aaa bbb ccc"
@@ -316,6 +365,69 @@ NEW_GRAMMAR = {
     "command_lua_any": fr"""\s* (?P<command>xxin) (\s+"{DOUBLE_LUA}")? (\s+'{SINGLE_LUA}')? \s+ {ANY} \s*""",
     "command_scriptdebug": fr"\s* (?P<command>xxin) \s+ {SCRIPTDEBUG} \s*",
     "command_shutdown": fr"\s* (?P<command>xxin) \s+ {SHUTDOWN} \s*",
+    "command_key_start_end_countx": fr"""\s* (?P<command>xxin) \s+ {KEY}
+        \s+ {STREAM_ID}
+        \s+ {STREAM_ID}
+        (\s+ {COUNT_CONST} \s+ {COUNT})?
+        \s*""",
+    "command_xgroup": fr"""\s* (?P<command>xxin)
+        (
+            (\s+ {STREAM_CREATE} \s+ {KEY} \s+ {GROUP} \s+ {STREAM_ID})|
+            (\s+ {STREAM_SETID} \s+ {KEY} \s+ {GROUP} \s+ {STREAM_ID})|
+            (\s+ {STREAM_DESTROY} \s+ {KEY} \s+ {GROUP})|
+            (\s+ {STREAM_DELCONSUMER} \s+ {KEY} \s+ {GROUP} \s+ {CONSUMER})
+        )
+        \s*""",
+    "command_key_group_ids": fr"""\s* (?P<command>xxin)
+        \s+ {KEY} \s+ {GROUP} (\s+ {STREAM_ID})+ \s*""",
+    "command_key_ids": fr"""\s* (?P<command>xxin)
+        \s+ {KEY} (\s+ {STREAM_ID})+ \s*""",
+    "command_xinfo": fr"""\s* (?P<command>xxin)
+        (
+            (\s+ {STREAM_CONSUMERS} \s+ {KEY} \s+ {GROUP})|
+            (\s+ {STREAM_GROUPS} \s+ {KEY})|
+            (\s+ {STREAM} \s+ {KEY})|
+            (\s+ {HELP})
+        )
+        \s*""",
+    "command_xpending": fr"""\s* (?P<command>xxin)
+        \s+ {KEY} \s+ {GROUP}
+        (\s+ {STREAM_ID} \s+ {STREAM_ID} \s+ {COUNT})?
+        (\s+ {CONSUMER})?
+        \s*""",
+    "command_xadd": fr"""\s* (?P<command>xxin)
+        \s+ {KEY}
+        (\s+ {MAXLEN} (\s+ {APPROXIMATELY})? \s+ {COUNT})?
+        \s+ {STREAM_ID}
+        (\s+ {SFIELD} \s+ {SVALUE})+ \s*""",
+    "command_key_maxlen": fr"""\s* (?P<command>xxin)
+        \s+ {KEY} \s+ {MAXLEN} (\s+ {APPROXIMATELY})? \s+ {COUNT}
+        \s*""",
+    "command_xclaim": fr"""\s* (?P<command>xxin)
+        \s+ {KEY} \s+ {GROUP} \s+ {CONSUMER} \s+ {MILLISECOND}
+        (\s+ {STREAM_ID})+
+        (\s+ {IDEL} \s+ {MILLISECOND})?
+        (\s+ {TIME} \s+ {TIMESTAMP})?
+        (\s+ {RETRYCOUNT} \s+ {COUNT})?
+        (\s+ {FORCE})?
+        (\s+ {JUSTID})?
+        \s*""",
+    "command_xread": fr"""\s* (?P<command>xxin)
+        (\s+ {COUNT_CONST} \s+ {COUNT})?
+        (\s+ {BLOCK} \s+ {MILLISECOND})?
+        \s+ {STREAMS}
+        \s+ {KEYS}
+        (\s+ {STREAM_ID})+
+        \s*""",
+    "command_xreadgroup": fr"""\s* (?P<command>xxin)
+        \s+ {STREAM_GROUP} \s+ {GROUP} \s+ {CONSUMER}
+        (\s+ {COUNT_CONST} \s+ {COUNT})?
+        (\s+ {BLOCK} \s+ {MILLISECOND})?
+        (\s+ {NOACK})?
+        \s+ {STREAMS}
+        \s+ {KEYS}
+        (\s+ {STREAM_ID})+
+        \s*""",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"

@@ -1,6 +1,7 @@
 import logging
 from typing import Iterable
 
+import pendulum
 from prompt_toolkit.completion import (
     CompleteEvent,
     Completer,
@@ -47,6 +48,67 @@ class LatestUsedFirstWordCompleter(FuzzyWordCompleter):
             self.touch(word)
 
 
+class TimestampCompleter(Completer):
+    """
+    Completer for timestamp based on input.
+
+    Features:
+    * Auto complete humanize time, like 3 -> 3 minutes ago, 3 hours ago.
+    * Auto guess datetime, complete by its timestamp. 2020-01-01 12:00
+        -> 1577851200.
+
+    The timezone is read from system.
+    """
+
+    when_lower_than = {
+        "year": 20,
+        "month": 12,
+        "day": 31,
+        "hour": 100,
+        "minute": 1000,
+        "second": 1000_000,
+    }
+
+    def _completion_humanize_time(self, document: Document) -> Iterable[Completion]:
+        text = document.text
+        if not text.isnumeric():
+            return
+        current = int(text)
+        now = pendulum.now()
+        for unit, minium in self.when_lower_than.items():
+            if current <= minium:
+                dt = now.subtract(**{f"{unit}s": current})
+                meta = f"{text} {unit}{'s' if current > 1 else ''} ago ({dt.format('YYYY-MM-DD HH:mm:ss')})"
+                yield Completion(
+                    str(dt.int_timestamp * 1000),
+                    start_position=-len(document.text_before_cursor),
+                    display_meta=meta,
+                )
+
+    def _completion_formatted_time(self, document: Document) -> Iterable[Completion]:
+        text = document.text
+        try:
+            dt = pendulum.parse(text)
+        except Exception:
+            return
+        yield Completion(
+            str(dt.int_timestamp * 1000),
+            start_position=-len(document.text_before_cursor),
+            display_meta=str(dt),
+        )
+
+    def get_completions(
+        self, document: Document, complete_event: CompleteEvent
+    ) -> Iterable[Completion]:
+        completions = list(self._completion_humanize_time(document)) + list(
+            self._completion_formatted_time(document)
+        )
+
+        # here we yield bigger timestamp first.
+        for completion in sorted(completions, key=lambda a: a.text):
+            yield completion
+
+
 def get_completer_mapping():
     completer_mapping = {}
     completer_mapping.update(
@@ -58,6 +120,8 @@ def get_completer_mapping():
     key_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     member_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     field_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+    group_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+    timestamp_completer = TimestampCompleter()
 
     completer_mapping.update(
         {
@@ -72,6 +136,10 @@ def get_completer_mapping():
             # hash fields
             "field": field_completer,
             "fields": field_completer,
+            # stream groups
+            "group": group_completer,
+            # stream id
+            "stream_id": timestamp_completer,
         }
     )
     # patch command completer with hint
@@ -109,6 +177,10 @@ class IRedisCompleter(Completer):
     @property
     def field_completer(self) -> LatestUsedFirstWordCompleter:
         return self.completer_mapping["field"]
+
+    @property
+    def group_completer(self) -> LatestUsedFirstWordCompleter:
+        return self.completer_mapping["group"]
 
     def get_completer(self, input_text):
         try:
