@@ -371,3 +371,30 @@ def test_xclaim(judge_command):
             "justid": "JUSTID",
         },
     )
+
+
+def test_xread(judge_command):
+    judge_command(
+        "XREAD COUNT 2 STREAMS mystream writers 0-0 0-0",
+        {
+            "command": "XREAD",
+            "count_const": "COUNT",
+            "count": "2",
+            "streams": "STREAMS",
+            # FIXME current grammar can't support multiple tokens
+            # so the ids will be recongized to keys.
+            "keys": "mystream writers 0-0",
+        },
+    )
+    judge_command(
+        "XREAD COUNT 2 BLOCK 1000 STREAMS mystream writers 0-0 0-0",
+        {
+            "command": "XREAD",
+            "count_const": "COUNT",
+            "count": "2",
+            "streams": "STREAMS",
+            "keys": "mystream writers 0-0",
+            "block": "BLOCK",
+            "millisecond": "1000",
+        },
+    )
