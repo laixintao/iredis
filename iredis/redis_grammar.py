@@ -59,6 +59,7 @@ CONST = {
     "stream_delconsumer": "DELCONSUMER",
     "stream_consumers": "CONSUMERS",
     "stream_groups": "GROUPS",
+    "stream_group": "GROUP",
     "maxlen": "MAXLEN",
     "idel": "IDEL",
     "time": "TIME",
@@ -66,6 +67,7 @@ CONST = {
     "force": "FORCE",
     "justid": "JUSTID",
     "block": "BLOCK",
+    "noack": "NOACK",
 }
 
 
@@ -205,6 +207,7 @@ SCRIPTDEBUG = fr"(?P<scriptdebug>{c('scriptdebug')})"
 HELP = fr"(?P<help>{c('help')})"
 STREAM = fr"(?P<stream>{c('stream')})"
 STREAM_GROUPS = fr"(?P<stream_groups>{c('stream_groups')})"
+STREAM_GROUP = fr"(?P<stream_group>{c('stream_group')})"
 STREAM_CONSUMERS = fr"(?P<stream_consumers>{c('stream_consumers')})"
 STREAM_CREATE = fr"(?P<stream_create>{c('stream_create')})"
 STREAM_SETID = fr"(?P<stream_setid>{c('stream_setid')})"
@@ -219,6 +222,7 @@ FORCE = fr"(?P<force>{c('force')})"
 JUSTID = fr"(?P<justid>{c('justid')})"
 BLOCK = fr"(?P<block>{c('block')})"
 STREAMS = fr"(?P<streams>{c('streams')})"
+NOACK = fr"(?P<noack>{c('noack')})"
 
 # TODO test lexer & completer for multi spaces in command
 # FIXME invalid command like "aaa bbb ccc"
@@ -411,6 +415,15 @@ NEW_GRAMMAR = {
     "command_xread": fr"""\s* (?P<command>xxin)
         (\s+ {COUNT_CONST} \s+ {COUNT})?
         (\s+ {BLOCK} \s+ {MILLISECOND})?
+        \s+ {STREAMS}
+        \s+ {KEYS}
+        (\s+ {STREAM_ID})+
+        \s*""",
+    "command_xreadgroup": fr"""\s* (?P<command>xxin)
+        \s+ {STREAM_GROUP} \s+ {GROUP} \s+ {CONSUMER}
+        (\s+ {COUNT_CONST} \s+ {COUNT})?
+        (\s+ {BLOCK} \s+ {MILLISECOND})?
+        (\s+ {NOACK})?
         \s+ {STREAMS}
         \s+ {KEYS}
         (\s+ {STREAM_ID})+

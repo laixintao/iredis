@@ -194,7 +194,7 @@ stream,XLEN,command_key,render_int
 stream,XPENDING,command_xpending,render_list
 stream,XRANGE,command_key_start_end_countx,render_list
 stream,XREAD,command_xread,render_list
-stream,XREADGROUP,command_pass,
+stream,XREADGROUP,command_xreadgroup,render_list
 stream,XREVRANGE,command_key_start_end_countx,render_list
 stream,XTRIM,command_key_maxlen,render_int
 string,APPEND,command_key_value,render_int

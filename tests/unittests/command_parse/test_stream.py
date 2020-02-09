@@ -384,6 +384,7 @@ def test_xread(judge_command):
             # FIXME current grammar can't support multiple tokens
             # so the ids will be recongized to keys.
             "keys": "mystream writers 0-0",
+            "stream_id": "0-0",
         },
     )
     judge_command(
@@ -396,5 +397,40 @@ def test_xread(judge_command):
             "keys": "mystream writers 0-0",
             "block": "BLOCK",
             "millisecond": "1000",
+            "stream_id": "0-0",
         },
     )
+
+
+def test_xreadgroup(judge_command):
+    judge_command(
+        "XREADGROUP GROUP mygroup1 Bob COUNT 1 BLOCK 100 NOACK STREAMS key1 1 key2 2",
+        {
+            "command": "XREADGROUP",
+            "stream_group": "GROUP",
+            "group": "mygroup1",
+            "consumer": "Bob",
+            "count_const": "COUNT",
+            "count": "1",
+            "block": "BLOCK",
+            "millisecond": "100",
+            "noack": "NOACK",
+            "streams": "STREAMS",
+            "keys": "key1 1 key2",
+            "stream_id": "2",
+        },
+    )
+    judge_command(
+        "XREADGROUP GROUP mygroup1 Bob STREAMS key1 1 key2 2",
+        {
+            "command": "XREADGROUP",
+            "stream_group": "GROUP",
+            "group": "mygroup1",
+            "consumer": "Bob",
+            "streams": "STREAMS",
+            "keys": "key1 1 key2",
+            "stream_id": "2",
+        },
+    )
+
+    judge_command("XREADGROUP GROUP group consumer", None)
