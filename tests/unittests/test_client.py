@@ -24,9 +24,9 @@ def completer():
 )
 def test_send_command(_input, command_name, expect_args):
     client = Client("127.0.0.1", "6379", None)
-    client.execute_command_and_read_response = MagicMock()
+    client.execute = MagicMock()
     next(client.send_command(_input, None))
-    args, kwargs = client.execute_command_and_read_response.call_args
+    args, kwargs = client.execute.call_args
     assert args == (command_name, *expect_args)
 
 
@@ -105,7 +105,7 @@ def test_on_connection_error_retry(iredis_client, config):
     ]
     original_connection = iredis_client.connection
     iredis_client.connection = mock_connection
-    value = iredis_client.execute_command_and_read_response("None", "GET", ["foo"])
+    value = iredis_client.execute("None", "GET", ["foo"])
     assert value == "hello"  # be rendered
 
     mock_connection.disconnect.assert_called_once()
@@ -125,7 +125,7 @@ def test_on_connection_error_retry_without_retrytimes(iredis_client, config):
     ]
     iredis_client.connection = mock_connection
     with pytest.raises(redis.exceptions.ConnectionError):
-        iredis_client.execute_command_and_read_response("None", "GET", ["foo"])
+        iredis_client.execute("None", "GET", ["foo"])
 
     mock_connection.disconnect.assert_not_called()
     mock_connection.connect.assert_not_called()
@@ -154,7 +154,7 @@ def test_not_retry_on_authentication_error(iredis_client, config):
     ]
     iredis_client.connection = mock_connection
     with pytest.raises(redis.exceptions.ConnectionError):
-        iredis_client.execute_command_and_read_response("None", "GET", ["foo"])
+        iredis_client.execute("None", "GET", ["foo"])
 
 
 def test_auto_select_db_and_auth_for_reconnect(iredis_client, config):
