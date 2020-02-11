@@ -33,8 +33,16 @@ IRedis is an alternative for redis-cli. In most cases IRedis behaves exactly the
 
 ## Install
 
+Install via pip:
+
 ```
 pip install iredis
+```
+
+Recommended to use [pipx](https://github.com/pipxproject/pipx):
+
+```
+pipx install iredis
 ```
 
 ## Usage
