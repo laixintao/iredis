@@ -145,10 +145,6 @@ class Client:
             rendered = self._dynamic_render(command_name, response)
         return rendered
 
-    def update_completer(self, response, completer: IRedisCompleter, command_name):
-        """Update completer for LRU usage."""
-        completer.update_completer_for_response(command_name, response)
-
     def monitor(self):
         """Redis' MONITOR command:
         https://redis.io/commands/monitor
@@ -237,11 +233,10 @@ class Client:
                 else:
                     stdin = redis_resp
                 run(shell_command, input=stdin, stdout=sys.stdout, shell=True)
-
                 return
 
             self.after_hook(raw_command, command_name, args)
-            self.update_completer(redis_resp, completer, command_name)
+            completer.update_completer_for_response(command_name, response)
             yield self.render_response(redis_resp, command_name)
 
             # FIXME generator response do not support pipeline
