@@ -236,7 +236,7 @@ class Client:
                 return
 
             self.after_hook(raw_command, command_name, args)
-            completer.update_completer_for_response(command_name, response)
+            completer.update_completer_for_response(command_name, redis_resp)
             yield self.render_response(redis_resp, command_name)
 
             # FIXME generator response do not support pipeline
