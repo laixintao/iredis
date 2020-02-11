@@ -295,6 +295,13 @@ class Client:
         if command_name.upper() in ["ZSCAN", "ZPOPMAX", "ZPOPMIN"]:
             config.withscores = True
 
+        # not a tty
+        if not completer:
+            logger.warning(
+                "[Pre patch completer] Complter is None, not a tty, "
+                "not patch completers, not set withscores"
+            )
+            return
         completer.update_completer_for_input(command)
 
         redis_grammar = completer.get_completer(command).compiled_grammar
