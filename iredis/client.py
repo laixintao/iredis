@@ -235,8 +235,7 @@ class Client:
                 run(shell_command, input=stdin, stdout=sys.stdout, shell=True)
                 return
 
-            self.after_hook(raw_command, command_name, args)
-            completer.update_completer_for_response(command_name, redis_resp)
+            self.after_hook(raw_command, command_name, args, completer, redis_resp)
             yield self.render_response(redis_resp, command_name)
 
             # FIXME generator response do not support pipeline
@@ -260,7 +259,7 @@ class Client:
         finally:
             config.withscores = False
 
-    def after_hook(self, command, command_name, args):
+    def after_hook(self, command, command_name, args, completer, response):
         # === After hook ===
         # SELECT db on AUTH
         if command_name.upper() == "AUTH":
@@ -275,9 +274,12 @@ class Client:
             self.db = int(args[0])
             # When the connection is TimeoutError or ConnectionError, reconnect the connection will use it
             self.connection.db = self.db
-        if command_name.upper() == "MULTI":
+        elif command_name.upper() == "MULTI":
             logger.debug("[After hook] Command is MULTI, start transaction.")
             config.transaction = True
+
+        if completer:
+            completer.update_completer_for_response(command_name, response)
 
     def pre_hook(self, command, command_name, args, completer: IRedisCompleter):
         """
