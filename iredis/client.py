@@ -12,7 +12,7 @@ from prompt_toolkit.formatted_text import FormattedText
 from redis.connection import Connection
 from redis.exceptions import AuthenticationError, ConnectionError, TimeoutError
 
-from . import markdown, project_data, renders, utils
+from . import markdown, project_data, renders
 from .commands_csv_loader import all_commands, command2callback, commands_summary
 from .completers import IRedisCompleter
 from .config import config
@@ -22,7 +22,7 @@ from .utils import compose_command_syntax, nativestr, split_command_args
 from .warning import confirm_dangerous_command
 
 logger = logging.getLogger(__name__)
-CLIENT_COMMANDS = ["HELP"]
+CLIENT_COMMANDS = ["HELP", "PEEK"]
 
 
 class Client:
@@ -86,7 +86,9 @@ class Client:
     def client_execute_command(self, command_name, *args):
         command = command_name.upper()
         if command == "HELP":
-            return self.do_help(*args)
+            yield self.do_help(*args)
+        if command == "PEEK":
+            yield from self.do_peek(*args)
 
     def execute(self, command_name, *args, **options):
         """Execute a command and return a parsed response
@@ -218,12 +220,13 @@ class Client:
                 if confirm is True:
                     yield FormattedText([("class:warning", "Your Call!!")])
 
+            self.pre_hook(raw_command, command_name, args, completer)
             # if raw_command is not supposed to send to server
             if input_command_upper in CLIENT_COMMANDS:
-                redis_resp = self.client_execute_command(command_name, *args)
-                yield redis_resp
+                logger.info(f"{input_command_upper} is an iredis command.")
+                yield from self.client_execute_command(command_name, *args)
                 return
-            self.pre_hook(raw_command, command_name, args, completer)
+
             redis_resp = self.execute(command_name, *args)
             # if shell, do not render, just run in shell pipe and show the
             # subcommand's stdout/stderr
@@ -296,11 +299,6 @@ class Client:
         # score display for sorted set
         if command_name.upper() in ["ZSCAN", "ZPOPMAX", "ZPOPMIN"]:
             config.withscores = True
-
-        # patch completers
-        if not completer:
-            logger.warning("[Pre patch completer] Complter not ready, not patched...")
-            return
 
         completer.update_completer_for_input(command)
 
@@ -387,7 +385,8 @@ class Client:
         """
 
         def _string(key):
-            pass
+            value = self.execute("GET", key)
+            yield renders.OutputRender.render_bulk_string(value)
 
         def _list(key):
             pass
@@ -404,4 +403,17 @@ class Client:
         def _stream(key):
             pass
 
-        # self.connection.send_command
+        def _none(key):
+            yield f"Key {key} doesn't exist."
+
+        resp = nativestr(self.execute("TYPE", key))
+        yield resp
+        yield from {
+            "string": _string,
+            "list": _list,
+            "set": _set,
+            "zset": _zset,
+            "hash": _hash,
+            "stream": _stream,
+            "none": _none,
+        }[resp](key)
