@@ -32,7 +32,7 @@ class Config:
         # show command hint?
         self.newbie_mode = None
         self.rainbow = None
-        self.retry_times = None
+        self.retry_times = 2
         self.socket_keepalive = None
         self.decode = None
         self.no_info = None
