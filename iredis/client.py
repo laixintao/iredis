@@ -427,6 +427,12 @@ class Client:
         # FIXME raw write_result parse FormattedText
         yield FormattedText([("class:dockey", "type: "), ("", resp)])
 
+        encoding = nativestr(self.execute("object encoding", key))
+        yield FormattedText([("class:dockey", "object encoding: "), ("", encoding)])
+
+        memory_usage = str(self.execute("memory usage", key))
+        yield FormattedText([("class:dockey", "memory usage(bytes): "), ("", memory_usage)])
+
         ttl = str(self.execute("ttl", key))
         yield FormattedText([("class:dockey", "ttl: "), ("", ttl)])
 
