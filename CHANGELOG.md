@@ -1,3 +1,7 @@
+### 0.9.1
+
+* Feature: Support `PEEK` Command.
+
 ## 0.9
 
 * Refactor: split completer update and response render; Move cli tests to 
@@ -16,7 +20,7 @@ commands now.
 
 ### 0.8.11
 
-* Bugfix: Fix HELP command can not render markdown with a <h3> header.
+* Bugfix: Fix HELP command can not render markdown with a `<h3>` header.
 * Bugfix: Pipeline using a builtin Python API.
 
 ### 0.8.10
