@@ -45,7 +45,7 @@ def judge_command():
     return judge_command_func
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def clean_redis():
     """
     Return a empty redis db. (redis-py client)
@@ -64,6 +64,7 @@ def iredis_client():
 def config():
     newconfig = Config()
     global_config.__dict__ = newconfig.__dict__
+    config.raw = False
     return global_config
 
 

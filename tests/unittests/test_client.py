@@ -209,7 +209,8 @@ def test_can_not_connect_on_startup(capfd):
     assert "connecting to localhost:16111." in err
 
 
-def test_peek_non_exist(iredis_client, clean_redis):
+def test_peek_non_exist(iredis_client, clean_redis, config):
+    config.raw = False
     peek_result = list(iredis_client.do_peek("non-exist-key"))
     assert peek_result == [FormattedText([("class:dockey", "type: "), ("", "none")])]
 
@@ -224,7 +225,7 @@ def test_peek_string(iredis_client, clean_redis):
         FormattedText([("class:dockey", "memory usage(bytes): "), ("", "50")]),
         FormattedText([("class:dockey", "ttl: "), ("", "-1")]),
         FormattedText([("class:dockey", "strlen: "), ("", "3")]),
-        FormattedText([("class:dockey", "value: "), ("", b"bar")]),
+        FormattedText([("class:dockey", "value: "), ("", '"bar"')]),
     ]
 
 
@@ -239,13 +240,36 @@ def test_peek_list_fetch_all(iredis_client, clean_redis):
         FormattedText([("class:dockey", "ttl: "), ("", "-1")]),
         FormattedText([("class:dockey", "llen: "), ("", "5")]),
         FormattedText([("class:dockey", "elements: ")]),
-        b"hello-4\nhello-3\nhello-2\nhello-1\nhello-0",
+        FormattedText(
+            [
+                ("", "1)"),
+                ("", " "),
+                ("class:string", '"hello-4"'),
+                ("", "\n"),
+                ("", "2)"),
+                ("", " "),
+                ("class:string", '"hello-3"'),
+                ("", "\n"),
+                ("", "3)"),
+                ("", " "),
+                ("class:string", '"hello-2"'),
+                ("", "\n"),
+                ("", "4)"),
+                ("", " "),
+                ("class:string", '"hello-1"'),
+                ("", "\n"),
+                ("", "5)"),
+                ("", " "),
+                ("class:string", '"hello-0"'),
+            ]
+        ),
     ]
 
 
 def test_peek_list_fetch_part(iredis_client, clean_redis):
     clean_redis.lpush("mylist", *[f"hello-{index}" for index in range(40)])
     peek_result = list(iredis_client.do_peek("mylist"))
+    print(peek_result)
     assert len(peek_result[6]) == 83
 
 
@@ -290,3 +314,53 @@ def test_peek_set_fetch_part(iredis_client, clean_redis):
     clean_redis.sadd("myset", *[f"hello-{index}" for index in range(40)])
     peek_result = list(iredis_client.do_peek("myset"))
     assert len(peek_result[6]) == 79
+
+
+def test_peek_zset_fetch_all(iredis_client, clean_redis):
+    clean_redis.zadd(
+        "myzset", dict(zip([f"hello-{index}" for index in range(3)], range(3)))
+    )
+    peek_result = list(iredis_client.do_peek("myzset"))
+    assert peek_result == [
+        FormattedText([("class:dockey", "type: "), ("", "zset")]),
+        FormattedText([("class:dockey", "object encoding: "), ("", "ziplist")]),
+        FormattedText([("class:dockey", "memory usage(bytes): "), ("", "92")]),
+        FormattedText([("class:dockey", "ttl: "), ("", "-1")]),
+        FormattedText([("class:dockey", "zcount: "), ("", "3")]),
+        FormattedText([("class:dockey", "members: ")]),
+        FormattedText(
+            [
+                ("", "1)"),
+                ("", " "),
+                ("class:member", '"hello-0"'),
+                ("", "\n"),
+                ("", "2)"),
+                ("", " "),
+                ("class:member", '"0"'),
+                ("", "\n"),
+                ("", "3)"),
+                ("", " "),
+                ("class:member", '"hello-1"'),
+                ("", "\n"),
+                ("", "4)"),
+                ("", " "),
+                ("class:member", '"1"'),
+                ("", "\n"),
+                ("", "5)"),
+                ("", " "),
+                ("class:member", '"hello-2"'),
+                ("", "\n"),
+                ("", "6)"),
+                ("", " "),
+                ("class:member", '"2"'),
+            ]
+        ),
+    ]
+
+
+def test_peek_zset_fetch_part(iredis_client, clean_redis):
+    clean_redis.zadd(
+        "myzset", dict(zip([f"hello-{index}" for index in range(40)], range(40)))
+    )
+    peek_result = list(iredis_client.do_peek("myzset"))
+    assert len(peek_result[6]) == 199
