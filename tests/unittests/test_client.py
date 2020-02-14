@@ -277,43 +277,22 @@ def test_peek_set_fetch_all(iredis_client, clean_redis):
     clean_redis.sadd("myset", *[f"hello-{index}" for index in range(5)])
     peek_result = list(iredis_client.do_peek("myset"))
 
-    assert peek_result == [
+    assert peek_result[0:6] == [
         FormattedText([("class:dockey", "type: "), ("", "set")]),
         FormattedText([("class:dockey", "object encoding: "), ("", "hashtable")]),
         FormattedText([("class:dockey", "memory usage(bytes): "), ("", "404")]),
         FormattedText([("class:dockey", "ttl: "), ("", "-1")]),
         FormattedText([("class:dockey", "cardinality: "), ("", "5")]),
         FormattedText([("class:dockey", "members: ")]),
-        FormattedText(
-            [
-                ("", "1)"),
-                ("", " "),
-                ("class:string", '"hello-3"'),
-                ("", "\n"),
-                ("", "2)"),
-                ("", " "),
-                ("class:string", '"hello-1"'),
-                ("", "\n"),
-                ("", "3)"),
-                ("", " "),
-                ("class:string", '"hello-2"'),
-                ("", "\n"),
-                ("", "4)"),
-                ("", " "),
-                ("class:string", '"hello-0"'),
-                ("", "\n"),
-                ("", "5)"),
-                ("", " "),
-                ("class:string", '"hello-4"'),
-            ]
-        ),
     ]
 
 
 def test_peek_set_fetch_part(iredis_client, clean_redis):
     clean_redis.sadd("myset", *[f"hello-{index}" for index in range(40)])
     peek_result = list(iredis_client.do_peek("myset"))
-    assert len(peek_result[6]) == 79
+
+    assert ('class:member', '"hello-1"') in peek_result[6]
+    assert ('class:member', '"hello-10"') in peek_result[6]
 
 
 def test_peek_zset_fetch_all(iredis_client, clean_redis):
@@ -413,5 +392,5 @@ def test_peek_hash_fetch_part(iredis_client, clean_redis):
     ):
         clean_redis.hset("myhash", key, value)
     peek_result = list(iredis_client.do_peek("myhash"))
-    print(peek_result[6])
-    assert len(peek_result[6]) == 699
+    assert ('class:string', '"hi-10"') in peek_result[6]
+    assert ('class:field', '"hello-10"') in peek_result[6]
