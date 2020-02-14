@@ -291,8 +291,8 @@ def test_peek_set_fetch_part(iredis_client, clean_redis):
     clean_redis.sadd("myset", *[f"hello-{index}" for index in range(40)])
     peek_result = list(iredis_client.do_peek("myset"))
 
-    assert ("class:member", '"hello-1"') in peek_result[6]
-    assert ("class:member", '"hello-10"') in peek_result[6]
+    assert peek_result[6][10][0] == "class:member"
+    assert peek_result[6][10][1].startswith('"hello-')
 
 
 def test_peek_zset_fetch_all(iredis_client, clean_redis):
