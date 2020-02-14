@@ -226,3 +226,67 @@ def test_peek_string(iredis_client, clean_redis):
         FormattedText([("class:dockey", "strlen: "), ("", "3")]),
         FormattedText([("class:dockey", "value: "), ("", b"bar")]),
     ]
+
+
+def test_peek_list_fetch_all(iredis_client, clean_redis):
+    clean_redis.lpush("mylist", *[f"hello-{index}" for index in range(5)])
+    peek_result = list(iredis_client.do_peek("mylist"))
+
+    assert peek_result == [
+        FormattedText([("class:dockey", "type: "), ("", "list")]),
+        FormattedText([("class:dockey", "object encoding: "), ("", "quicklist")]),
+        FormattedText([("class:dockey", "memory usage(bytes): "), ("", "176")]),
+        FormattedText([("class:dockey", "ttl: "), ("", "-1")]),
+        FormattedText([("class:dockey", "llen: "), ("", "5")]),
+        FormattedText([("class:dockey", "elements: ")]),
+        b"hello-4\nhello-3\nhello-2\nhello-1\nhello-0",
+    ]
+
+
+def test_peek_list_fetch_part(iredis_client, clean_redis):
+    clean_redis.lpush("mylist", *[f"hello-{index}" for index in range(40)])
+    peek_result = list(iredis_client.do_peek("mylist"))
+    assert len(peek_result[6]) == 83
+
+
+def test_peek_set_fetch_all(iredis_client, clean_redis):
+    clean_redis.sadd("myset", *[f"hello-{index}" for index in range(5)])
+    peek_result = list(iredis_client.do_peek("myset"))
+
+    assert peek_result == [
+        FormattedText([("class:dockey", "type: "), ("", "set")]),
+        FormattedText([("class:dockey", "object encoding: "), ("", "hashtable")]),
+        FormattedText([("class:dockey", "memory usage(bytes): "), ("", "404")]),
+        FormattedText([("class:dockey", "ttl: "), ("", "-1")]),
+        FormattedText([("class:dockey", "cardinality: "), ("", "5")]),
+        FormattedText([("class:dockey", "members: ")]),
+        FormattedText(
+            [
+                ("", "1)"),
+                ("", " "),
+                ("class:string", '"hello-3"'),
+                ("", "\n"),
+                ("", "2)"),
+                ("", " "),
+                ("class:string", '"hello-1"'),
+                ("", "\n"),
+                ("", "3)"),
+                ("", " "),
+                ("class:string", '"hello-2"'),
+                ("", "\n"),
+                ("", "4)"),
+                ("", " "),
+                ("class:string", '"hello-0"'),
+                ("", "\n"),
+                ("", "5)"),
+                ("", " "),
+                ("class:string", '"hello-4"'),
+            ]
+        ),
+    ]
+
+
+def test_peek_set_fetch_part(iredis_client, clean_redis):
+    clean_redis.sadd("myset", *[f"hello-{index}" for index in range(40)])
+    peek_result = list(iredis_client.do_peek("myset"))
+    assert len(peek_result[6]) == 79
