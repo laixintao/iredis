@@ -364,3 +364,54 @@ def test_peek_zset_fetch_part(iredis_client, clean_redis):
     )
     peek_result = list(iredis_client.do_peek("myzset"))
     assert len(peek_result[6]) == 199
+
+
+def test_peek_hash_fetch_all(iredis_client, clean_redis):
+    for key, value in zip(
+        [f"hello-{index}" for index in range(3)], [f"hi-{index}" for index in range(3)]
+    ):
+        clean_redis.hset("myhash", key, value)
+    peek_result = list(iredis_client.do_peek("myhash"))
+    assert peek_result == [
+        FormattedText([("class:dockey", "type: "), ("", "hash")]),
+        FormattedText([("class:dockey", "object encoding: "), ("", "ziplist")]),
+        FormattedText([("class:dockey", "memory usage(bytes): "), ("", "104")]),
+        FormattedText([("class:dockey", "ttl: "), ("", "-1")]),
+        FormattedText([("class:dockey", "hlen: "), ("", "3")]),
+        FormattedText([("class:dockey", "fields: ")]),
+        FormattedText(
+            [
+                ("", "1)"),
+                ("", " "),
+                ("class:field", '"hello-0"'),
+                ("", "\n"),
+                ("", "   "),
+                ("class:string", '"hi-0"'),
+                ("", "\n"),
+                ("", "2)"),
+                ("", " "),
+                ("class:field", '"hello-1"'),
+                ("", "\n"),
+                ("", "   "),
+                ("class:string", '"hi-1"'),
+                ("", "\n"),
+                ("", "3)"),
+                ("", " "),
+                ("class:field", '"hello-2"'),
+                ("", "\n"),
+                ("", "   "),
+                ("class:string", '"hi-2"'),
+            ]
+        ),
+    ]
+
+
+def test_peek_hash_fetch_part(iredis_client, clean_redis):
+    for key, value in zip(
+        [f"hello-{index}" for index in range(100)],
+        [f"hi-{index}" for index in range(100)],
+    ):
+        clean_redis.hset("myhash", key, value)
+    peek_result = list(iredis_client.do_peek("myhash"))
+    print(peek_result[6])
+    assert len(peek_result[6]) == 699

@@ -451,7 +451,7 @@ class Client:
                 contents = self.execute(f"hgetall {key}")
                 yield FormattedText([("class:dockey", "fields: ")])
             else:
-                contents = self.execute(f"hscan {key} 0 count 20")
+                _, contents = self.execute(f"hscan {key} 0 count 20")
                 first_n = len(contents) // 2
                 yield FormattedText([("class:dockey", f"fields (first {first_n}): ")])
             yield renders.OutputRender.render_hash_pairs(contents)
