@@ -1,4 +1,5 @@
 import re
+import sys
 import time
 import logging
 
@@ -264,3 +265,11 @@ def double_quotes(unquoted):
         return f'"{escaped}"'  # add outter double quotes
     elif isinstance(unquoted, list):
         return [double_quotes(item) for item in unquoted]
+
+
+def exit():
+    """
+    Exit IRedis REPL
+    """
+    print("Goodbye!")
+    sys.exit()

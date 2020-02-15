@@ -9,20 +9,26 @@ from subprocess import run
 
 import redis
 from prompt_toolkit.formatted_text import FormattedText
+from prompt_toolkit.shortcuts import clear
 from redis.connection import Connection
 from redis.exceptions import AuthenticationError, ConnectionError, TimeoutError
 
 from . import markdown, project_data, renders
-from .commands_csv_loader import all_commands, command2callback, commands_summary
+from .commands_csv_loader import (
+    all_commands,
+    command2callback,
+    commands_summary,
+    groups,
+)
 from .completers import IRedisCompleter
 from .config import config
 from .exceptions import NotRedisCommand
 from .renders import OutputRender
-from .utils import compose_command_syntax, nativestr, split_command_args
+from .utils import compose_command_syntax, nativestr, split_command_args, exit
 from .warning import confirm_dangerous_command
 
 logger = logging.getLogger(__name__)
-CLIENT_COMMANDS = ["HELP", "PEEK"]
+CLIENT_COMMANDS = groups["iredis"]
 
 
 class Client:
@@ -89,6 +95,10 @@ class Client:
             yield self.do_help(*args)
         if command == "PEEK":
             yield from self.do_peek(*args)
+        if command == "CLEAR":
+            clear()
+        if command == "EXIT":
+            exit()
 
     def execute(self, command_name, *args, **options):
         """Execute a command and return a parsed response

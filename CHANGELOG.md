@@ -1,3 +1,8 @@
+### 0.9.2
+
+* Feature: Support `EXIT` to exit iredis REPL.
+* Feature: Support `CLEAR` to clear screen.
+
 ### 0.9.1
 
 * Feature: Support `PEEK` Command.

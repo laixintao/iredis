@@ -71,6 +71,16 @@ https://raw.githubusercontent.com/laixintao/iredis/master/iredis/data/iredisrc
 
 And then make your own changes.
 
+### Keys
+
+IRedis was compatible with unix-style REPL, which means keys like
+<kbd>Ctrl</kbd> + <kbd>F</kbd> to forward works.
+
+Also:
+
+- <kbd>Ctrl</kbd> + <kbd>F</kbd> (i.e. EOF) to exit, you can also use `exit` command.
+- <kbd>Ctrl</kbd> + <kbd>L</kbd> to clear screen, you can also use `clear` command.
+
 ## Development
 
 ### Release Strategy

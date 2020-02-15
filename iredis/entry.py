@@ -17,7 +17,7 @@ from .style import STYLE
 from .config import config, load_config_files
 from .processors import UserInputCommand, GetCommandProcessor
 from .bottom import BottomToolbar
-from .utils import timer
+from .utils import timer, exit
 from .completers import default_completer
 from .lexer import default_lexer
 from . import __version__
@@ -132,8 +132,7 @@ def repl(client, session, start_time):
             logger.warning("KeyboardInterrupt!")
             continue
         except EOFError:
-            print("Goodbye!")
-            sys.exit()
+            exit()
         command = command.strip()
         logger.info(f"[Command] {command}")
 
