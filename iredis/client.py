@@ -9,6 +9,7 @@ from subprocess import run
 
 import redis
 from prompt_toolkit.formatted_text import FormattedText
+from prompt_toolkit.shortcuts import clear
 from redis.connection import Connection
 from redis.exceptions import AuthenticationError, ConnectionError, TimeoutError
 
@@ -22,7 +23,7 @@ from .utils import compose_command_syntax, nativestr, split_command_args
 from .warning import confirm_dangerous_command
 
 logger = logging.getLogger(__name__)
-CLIENT_COMMANDS = ["HELP", "PEEK"]
+CLIENT_COMMANDS = ["HELP", "PEEK", "CLEAR"]
 
 
 class Client:
@@ -89,6 +90,8 @@ class Client:
             yield self.do_help(*args)
         if command == "PEEK":
             yield from self.do_peek(*args)
+        if command == "CLEAR":
+            clear()
 
     def execute(self, command_name, *args, **options):
         """Execute a command and return a parsed response

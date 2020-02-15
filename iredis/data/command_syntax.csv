@@ -228,3 +228,4 @@ transactions,UNWATCH,command,render_simple_string
 transactions,WATCH,command_keys,render_simple_string
 iredis,HELP,command_commandname,
 iredis,PEEK,command_key,
+iredis,CLEAR,command,
