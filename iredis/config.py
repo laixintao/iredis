@@ -46,6 +46,7 @@ class Config:
         self.withscores = False
         self.version = "Unknown"
         self.no_version_reason = None
+        self.log_location = None
 
         self.warning = True
 
@@ -96,17 +97,14 @@ def load_config_files(iredisrc):
 
     config.raw = config_obj["main"].as_bool("raw")
     config.completer_max = config_obj["main"].as_int("completer_max")
+    config.retry_times = config_obj["main"].as_int("retry_times")
     config.newbie_mode = config_obj["main"].as_bool("newbie_mode")
     config.rainbow = config_obj["main"].as_bool("rainbow")
-    config.retry_times = config_obj["main"].as_int("retry_times")
     config.socket_keepalive = config_obj["main"].as_bool("socket_keepalive")
-    config.decode = config_obj["main"]["decode"]
     config.no_info = config_obj["main"].as_bool("no_info")
     config.bottom_bar = config_obj["main"].as_bool("bottom_bar")
     config.warning = config_obj["main"].as_bool("warning")
-
-    logger.info(
-        f"[config] retry_times={config.retry_times}({type(config.retry_times)})."
-    )
+    config.decode = config_obj["main"]["decode"]
+    config.log_location = config_obj["main"]["log_location"]
 
     return config_obj
