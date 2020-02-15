@@ -2,6 +2,7 @@
 
 * Feature: Support `EXIT` to exit iredis REPL.
 * Feature: Support `CLEAR` to clear screen.
+* Feature: Support config log location in iredisrc file, default to None.
 
 ### 0.9.1
 
