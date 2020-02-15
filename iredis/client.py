@@ -97,6 +97,8 @@ class Client:
             yield from self.do_peek(*args)
         if command == "CLEAR":
             clear()
+        if command == "EXIT":
+            sys.exit(0)
 
     def execute(self, command_name, *args, **options):
         """Execute a command and return a parsed response
