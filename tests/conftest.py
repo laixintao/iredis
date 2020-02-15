@@ -1,5 +1,3 @@
-import sys
-
 import pexpect
 import pytest
 import redis

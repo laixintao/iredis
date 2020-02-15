@@ -73,8 +73,8 @@ And then make your own changes.
 
 ### Keys
 
-IRedis was compatible with unix-style REPL, which means keys like <kbd>Ctrl</kbd>
- + <kbd>F</kbd> to forward works.
+IRedis was compatible with unix-style REPL, which means keys like
+<kbd>Ctrl</kbd> + <kbd>F</kbd> to forward works.
 
 Also:
 
