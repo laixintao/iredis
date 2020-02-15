@@ -23,8 +23,18 @@ from .lexer import default_lexer
 from . import __version__
 
 logger = logging.getLogger(__name__)
-
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
+
+
+def setup_log():
+    if config.log_location:
+        logging.basicConfig(
+            filename=os.path.expanduser(config.log_location),
+            filemode="a",
+            format="%(levelname)5s %(message)s",
+            level="DEBUG",
+        )
+    logger.info("------ iRedis ------")
 
 
 def greetings():
@@ -200,12 +210,13 @@ def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, 
     Type "help" in interactive mode for information on available commands
     and settings.
     """
+    load_config_files(iredisrc)
+    setup_log()
     logger.info(
         f"[commandline args] host={h}, port={p}, db={n}, newbie={newbie}, "
         f"iredisrc={iredisrc}, decode={decode}, raw={raw}, "
         f"cmd={cmd}, rainbow={rainbow}."
     )
-    load_config_files(iredisrc)
     # raw config
     if raw is not None:
         config.raw = raw

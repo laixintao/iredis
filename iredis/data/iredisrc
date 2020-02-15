@@ -33,3 +33,7 @@ bottom_bar = True
 # command, that may cause harm to the redis-server or hang server,
 # such as "KEYS", "DEL" or "SHUTDOWN".
 warning = True
+
+# IRedis log for debugging, leave this black will disable log.
+# eg. ~/.iredis.log
+log_location = ~/.iredis1.log
