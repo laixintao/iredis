@@ -24,7 +24,7 @@ from .completers import IRedisCompleter
 from .config import config
 from .exceptions import NotRedisCommand
 from .renders import OutputRender
-from .utils import compose_command_syntax, nativestr, split_command_args
+from .utils import compose_command_syntax, nativestr, split_command_args, exit
 from .warning import confirm_dangerous_command
 
 logger = logging.getLogger(__name__)
@@ -98,7 +98,7 @@ class Client:
         if command == "CLEAR":
             clear()
         if command == "EXIT":
-            sys.exit(0)
+            exit()
 
     def execute(self, command_name, *args, **options):
         """Execute a command and return a parsed response

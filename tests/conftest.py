@@ -72,7 +72,7 @@ def config():
 def cli():
     """Open iredis subprocess to test"""
     child = pexpect.spawn("iredis -n 15", timeout=TIMEOUT)
-    child.logfile_read = open("debug.log", "ab")
+    child.logfile_read = open("cli_test.log", "ab")
     child.expect(["https://iredis.io/issues", "127.0.0.1"])
     yield child
     child.close()
