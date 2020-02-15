@@ -14,7 +14,12 @@ from redis.connection import Connection
 from redis.exceptions import AuthenticationError, ConnectionError, TimeoutError
 
 from . import markdown, project_data, renders
-from .commands_csv_loader import all_commands, command2callback, commands_summary
+from .commands_csv_loader import (
+    all_commands,
+    command2callback,
+    commands_summary,
+    groups,
+)
 from .completers import IRedisCompleter
 from .config import config
 from .exceptions import NotRedisCommand
@@ -23,7 +28,7 @@ from .utils import compose_command_syntax, nativestr, split_command_args
 from .warning import confirm_dangerous_command
 
 logger = logging.getLogger(__name__)
-CLIENT_COMMANDS = ["HELP", "PEEK", "CLEAR"]
+CLIENT_COMMANDS = groups["iredis"]
 
 
 class Client:

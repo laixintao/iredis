@@ -25,6 +25,7 @@ def load_command():
     first_line = True
     command2callback = {}
     command2syntax = {}
+    groups = {}
     with open(syntax_path) as command_syntax:
         csvreader = csv.reader(command_syntax)
         for line in csvreader:
@@ -34,8 +35,9 @@ def load_command():
             group, command, syntax, func_name = line
             command2callback[command] = func_name
             command2syntax[command] = syntax
+            groups.setdefault(group, []).append(command)
 
-    return command2callback, command2syntax
+    return command2callback, command2syntax, groups
 
 
 def load_dangerous():
@@ -57,7 +59,7 @@ def load_dangerous():
 
 
 timer("[Loader] Start loading commands file...")
-command2callback, command2syntax = load_command()
+command2callback, command2syntax, groups = load_command()
 # all redis command strings, in UPPER case
 # NOTE: Must sort by length, to match longest command first
 all_commands = sorted(
