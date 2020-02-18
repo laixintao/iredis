@@ -160,3 +160,5 @@ If you like iredis, you may also like other cli tools by [dbcli](https://www.dbc
 - [athenacli](https://github.com/dbcli/athenacli) - AWS Athena Client with Auto-completion and Syntax Highlighting
 - [vcli](https://github.com/dbcli/vcli) - VerticaDB client
 - [iredis](https://github.com/laixintao/iredis/) -  Client for Redis with AutoCompletion and Syntax Highlighting
+
+IRedis is build on the top of [prompt_toolkit](https://github.com/jonathanslenders/python-prompt-toolkit), a Python library (by [Jonathan Slenders](https://twitter.com/jonathan_s)) for building rich commandline applications.
