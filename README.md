@@ -1,6 +1,8 @@
-# IRedis (Interactive Redis)
+<p align="center">
 
-<img align="right" width="100" height="100" src="https://raw.githubusercontent.com/laixintao/iredis/master/docs/assets/logo.png" />
+<img width="100" height="100" src="https://raw.githubusercontent.com/laixintao/iredis/master/docs/assets/logo.png" />
+
+# IRedis (Interactive Redis)
 
 [![CircleCI](https://circleci.com/gh/laixintao/iredis.svg?style=svg)](https://circleci.com/gh/laixintao/iredis)
 [![TravisCI](https://travis-ci.org/laixintao/iredis.svg?branch=master)](https://travis-ci.org/laixintao/iredis)
@@ -9,7 +11,9 @@
 [![Chat on telegram](https://badgen.net/badge/icon/join?icon=telegram&label=usergroup)](https://t.me/iredis_users)
 [![Open in Cloud Shell](https://badgen.net/badge/run/GoogleCloudShell/blue?icon=terminal)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/laixintao/iredis&cloudshell_print=docs/cloudshell/run-in-docker.txt)
 
-![demo](./docs/assets/demo.svg)
+<img align="right" width="100" height="100" src="./docs/assets/demo.svg" />
+
+</p>
 
 IRedis is a terminal client for redis with auto-completion and syntax highlighting. IRedis lets you type Redis commands smoothly, and displays results in a user-friendly format.
 
