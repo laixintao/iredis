@@ -23,7 +23,7 @@ IRedis is an alternative for redis-cli. In most cases, IRedis behaves exactly th
 - Command highlighting, fully based on redis grammar. Any valid command in IRedis shell is a valid redis command.
 - Human-friendly result display.
 - `peek` command to check the key's type then automatically call `get`/`lrange`/`sscan`, etc, depending on types. You don't need to call the `type` command then type another command to get the value. `peek` will also display the key's length and memory usage.
-- <kbd>Ctrl</kbd> + <kbd>C</kbd> to clear the current line, won't exit redis-cli. Use <kbd>Ctrl</kbd> + <kbd>D</kbd>
+- <kbd>Ctrl</kbd> + <kbd>C</kbd> to cancel the current typed command, this won't exit iredis, exactly like bash behaviour. Use <kbd>Ctrl</kbd> + <kbd>D</kbd> to send a EOF to exit iredis.
 - Says "Goodbye!" to you when you exit!
 - <kbd>Ctrl</kbd> + <kbd>R</kbd> to open **reverse-i-search** to search through your command history.
 - Auto suggestions. (Like [fish shell](http://fishshell.com/).)
