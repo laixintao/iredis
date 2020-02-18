@@ -1,4 +1,8 @@
-### 0.9.2
+### 1.0.1
+
+* Bugfix: Fix info command decode error on decode=utf-8 #[266](https://github.com/laixintao/iredis/pull/266)
+
+## 1.0
 
 * Feature: Support `EXIT` to exit iredis REPL.
 * Feature: Support `CLEAR` to clear screen.
