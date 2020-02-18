@@ -1,9 +1,10 @@
-<h1 align="center">
+<p align="center">
   <img width="100" height="100" src="https://raw.githubusercontent.com/laixintao/iredis/master/docs/assets/logo.png" />
-</h1>
+</p>
 
 <h3 align="center">Interactive Redis: A Cli for Redis with AutoCompletion and Syntax Highlighting.</h4>
-<br />
+
+---
 
 <p align="center">
   <img src="./docs/assets/demo.svg" alt="demo">
