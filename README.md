@@ -3,6 +3,8 @@
 </h1>
 
 <h3 align="center">Interactive Redis: A Cli for Redis with AutoCompletion and Syntax Highlighting.</h4>
+<br />
+
 <p align="center">
   <img src="./docs/assets/demo.svg" alt="demo">
 </p>
