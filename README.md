@@ -13,8 +13,6 @@
 <a href="https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/laixintao/iredis&amp;cloudshell_print=docs/cloudshell/run-in-docker.txt"><img src="https://badgen.net/badge/run/GoogleCloudShell/blue?icon=terminal" alt="Open in Cloud Shell"></a>
 </p>
 
----
-
 <p align="center">
   <img src="./docs/assets/demo.svg" alt="demo">
 </p>
