@@ -346,6 +346,12 @@ def test_render_bulk_string_decoded():
     assert renders.OutputRender.render_bulk_string_decode(_input) == EXPECTED_RENDER
 
 
+def test_render_bulk_string_decoded_with_decoded_utf8():
+    EXPECTED_RENDER = """# Server\nredis_version:5.0.5\nredis_git_sha1:00000000\nredis_git_dirty:0\nredis_build_id:31cd6e21ec924b46"""  # noqa
+    _input = "# Server\r\nredis_version:5.0.5\r\nredis_git_sha1:00000000\r\nredis_git_dirty:0\r\nredis_build_id:31cd6e21ec924b46"  # noqa
+    assert renders.OutputRender.render_bulk_string_decode(_input) == EXPECTED_RENDER
+
+
 def test_render_time():
     config.raw = False
     value = [b"1571305643", b"765481"]
