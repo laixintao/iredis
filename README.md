@@ -1,18 +1,20 @@
+<h1 align="center">
+  <img width="100" height="100" src="https://raw.githubusercontent.com/laixintao/iredis/master/docs/assets/logo.png" />
+  <br>IRedis<br>
+</h1>
+
+<h4 align="center">Interactive Redis: A Cli for Redis with AutoCompletion and Syntax Highlighting.</h4>
 <p align="center">
+  <img src="./docs/assets/demo.svg" alt="demo">
+</p>
 
-<img width="100" height="100" src="https://raw.githubusercontent.com/laixintao/iredis/master/docs/assets/logo.png" />
-
-# IRedis (Interactive Redis)
-
-[![CircleCI](https://circleci.com/gh/laixintao/iredis.svg?style=svg)](https://circleci.com/gh/laixintao/iredis)
-[![TravisCI](https://travis-ci.org/laixintao/iredis.svg?branch=master)](https://travis-ci.org/laixintao/iredis)
-[![PyPI version](https://badge.fury.io/py/iredis.svg)](https://badge.fury.io/py/iredis)
-![Python version](https://badgen.net/badge/python/3.6%20|%203.7%20|%203.8/)
-[![Chat on telegram](https://badgen.net/badge/icon/join?icon=telegram&label=usergroup)](https://t.me/iredis_users)
-[![Open in Cloud Shell](https://badgen.net/badge/run/GoogleCloudShell/blue?icon=terminal)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/laixintao/iredis&cloudshell_print=docs/cloudshell/run-in-docker.txt)
-
-<img align="right" width="100" height="100" src="./docs/assets/demo.svg" />
-
+<p align="center">
+<a href="https://circleci.com/gh/laixintao/iredis"><img src="https://circleci.com/gh/laixintao/iredis.svg?style=svg" alt="CircleCI"></a>
+<a href="https://travis-ci.org/laixintao/iredis"><img src="https://travis-ci.org/laixintao/iredis.svg?branch=master" alt="TravisCI"></a>
+<a href="https://badge.fury.io/py/iredis"><img src="https://badge.fury.io/py/iredis.svg" alt="PyPI version"></a>
+<img src="https://badgen.net/badge/python/3.6%20|%203.7%20|%203.8/" alt="Python version">
+<a href="https://t.me/iredis_users"><img src="https://badgen.net/badge/icon/join?icon=telegram&amp;label=usergroup" alt="Chat on telegram"></a>
+<a href="https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/laixintao/iredis&amp;cloudshell_print=docs/cloudshell/run-in-docker.txt"><img src="https://badgen.net/badge/run/GoogleCloudShell/blue?icon=terminal" alt="Open in Cloud Shell"></a>
 </p>
 
 IRedis is a terminal client for redis with auto-completion and syntax highlighting. IRedis lets you type Redis commands smoothly, and displays results in a user-friendly format.
