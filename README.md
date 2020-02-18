@@ -150,3 +150,13 @@ Please see the repository issues. You are welcome to submit new issues.
 ## Related Projects
 
 - [redis-tui](https://github.com/mylxsw/redis-tui)
+
+If you like iredis, you may also like other cli tools by [dbcli](https://www.dbcli.com/):
+
+- [pgcli](https://www.pgcli.com) - Postgres Client with Auto-completion and Syntax Highlighting
+- [mycli](https://www.mycli.net) - MySQL/MariaDB/Percona Client with Auto-completion and Syntax Highlighting
+- [litecli](https://litecli.com) - SQLite Client with Auto-completion and Syntax Highlighting
+- [mssql-cli](https://github.com/dbcli/mssql-cli) - Microsoft SQL Server Client with Auto-completion and Syntax Highlighting
+- [athenacli](https://github.com/dbcli/athenacli) - AWS Athena Client with Auto-completion and Syntax Highlighting
+- [vcli](https://github.com/dbcli/vcli) - VerticaDB client
+- [iredis](https://github.com/laixintao/iredis/) -  Client for Redis with AutoCompletion and Syntax Highlighting
