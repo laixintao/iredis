@@ -12,7 +12,7 @@ from prompt_toolkit.formatted_text import FormattedText
 
 from .commands_csv_loader import command2callback
 from .config import config
-from .utils import double_quotes, ensure_str
+from .utils import double_quotes, ensure_str, nativestr
 
 logger = logging.getLogger(__name__)
 NEWLINE_TUPLE = ("", "\n")
@@ -63,11 +63,12 @@ class OutputRender:
 
     @staticmethod
     def render_bulk_string_decode(value):
-        """Only for server group commands, no double quoted,  displayed.
-        Display use UTF-8.
         """
-        decoded = value.decode()
-        splitted = "\n".join(decoded.splitlines())
+        Only for server group commands, no double quoted, always displayed as
+        utf-8 decoded.
+        """
+        decoded = nativestr(value)
+        splitted = "\n".join(decoded.splitlines())  # get rid of last newline
         return splitted
 
     @staticmethod
