@@ -4,12 +4,6 @@
 
 <h3 align="center">Interactive Redis: A Cli for Redis with AutoCompletion and Syntax Highlighting.</h4>
 
----
-
-<p align="center">
-  <img src="./docs/assets/demo.svg" alt="demo">
-</p>
-
 <p align="center">
 <a href="https://circleci.com/gh/laixintao/iredis"><img src="https://circleci.com/gh/laixintao/iredis.svg?style=svg" alt="CircleCI"></a>
 <a href="https://travis-ci.org/laixintao/iredis"><img src="https://travis-ci.org/laixintao/iredis.svg?branch=master" alt="TravisCI"></a>
@@ -17,6 +11,12 @@
 <img src="https://badgen.net/badge/python/3.6%20|%203.7%20|%203.8/" alt="Python version">
 <a href="https://t.me/iredis_users"><img src="https://badgen.net/badge/icon/join?icon=telegram&amp;label=usergroup" alt="Chat on telegram"></a>
 <a href="https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/laixintao/iredis&amp;cloudshell_print=docs/cloudshell/run-in-docker.txt"><img src="https://badgen.net/badge/run/GoogleCloudShell/blue?icon=terminal" alt="Open in Cloud Shell"></a>
+</p>
+
+---
+
+<p align="center">
+  <img src="./docs/assets/demo.svg" alt="demo">
 </p>
 
 IRedis is a terminal client for redis with auto-completion and syntax highlighting. IRedis lets you type Redis commands smoothly, and displays results in a user-friendly format.
