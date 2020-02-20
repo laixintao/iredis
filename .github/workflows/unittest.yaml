@@ -9,12 +9,18 @@ jobs:
     # This job runs on Linux
     runs-on: ubuntu-latest
     steps:
-      # This step uses GitHub's hello-world-javascript-action: https://github.com/actions/hello-world-javascript-action
-      - name: Hello world
-        uses: actions/hello-world-javascript-action@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
         with:
-          who-to-greet: 'Mona the Octocat'
-        id: hello
-      # This step prints an output (time) from the previous step's action.
-      - name: Echo the greeting's time
-        run: echo 'The time was ${{ steps.hello.outputs.time }}.'
+          python-version: '3.7'
+          architecture: 'x64'
+      - name: Install Dependencies
+        run: |
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install poetry pip==19
+          poetry install
+      - name: Pytest
+        run: |
+          . venv/bin/activate
+          pytest tests/unittests
