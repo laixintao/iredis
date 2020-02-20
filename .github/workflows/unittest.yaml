@@ -25,7 +25,8 @@ jobs:
           architecture: 'x64'
       - name: Install Dependencies
         run: |
-          pip install wheel poetry pip==19
+          pip install -U pip wheel setuptools
+          pip install poetry
           poetry install
       - name: Pytest
         run: |
