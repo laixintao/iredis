@@ -1,20 +1,28 @@
 name: Greet Everyone
-# This workflow is triggered on pushes to the repository.
 on: [push]
 
 jobs:
-  build:
-    # Job name is Greeting
-    name: Greeting
-    # This job runs on Linux
-    runs-on: ubuntu-latest
+  test:
+    name: Pytest
+    matrix:
+      os: [ubuntu-latest, ubuntu-16.04]
+      python: ['3.6', '3.7', '3.8']
+    runs-on: ${{ matrix.os }}
+
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+        options: --entrypoint redis-server
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
         with:
-          python-version: '3.7'
+          python-version: ${{ matrix.python-version }}
           architecture: 'x64'
-      - name: Redis Server in GitHub Actions
+      - name: Setup Redis Server.
         uses: supercharge/redis-github-action@1.1.0
       - name: Install Dependencies
         run: |
