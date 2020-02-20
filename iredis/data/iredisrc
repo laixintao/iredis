@@ -42,3 +42,5 @@ warning = True
 log_location =
 [alias_dsn]
 # example_dsn = redis://[user[:password]]@][host][:port][/db]
+# example_dsn = rediss://[user[:password]]@][host][:port][/db]
+# example_dsn = unix://[path][:port][/db]

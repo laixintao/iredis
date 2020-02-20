@@ -184,6 +184,13 @@ RAINBOW = "Display colorful prompt."
 @click.option("-n", help="Database number.", default=None)
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
 @click.option(
+    "-d",
+    "--dsn",
+    default="",
+    envvar="DSN",
+    help="Use DSN configured into the [alias_dsn] section of iredisrc file.",
+)
+@click.option(
     "--newbie/--no-newbie",
     default=None,
     is_flag=True,
@@ -199,7 +206,6 @@ RAINBOW = "Display colorful prompt."
 @click.option("--rainbow/--no-rainbow", default=None, is_flag=True, help=RAINBOW)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
-@click.argument("dsn", default="", nargs=1)
 def gather_args(
     ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, cmd, dsn
 ):
@@ -211,7 +217,7 @@ def gather_args(
     \b
     Examples:
       - iredis
-      - iredis dsn
+      - iredis -d dsn
       - iredis -h 127.0.0.1 -p 6379
       - iredis -h 127.0.0.1 -p 6379 -a <password>
 
@@ -252,20 +258,7 @@ def gather_args(
                 fg="red",
             )
             exit(1)
-
-    if dsn_uri:
-        uri = urlparse(dsn_uri)
-        n = uri.path[1:]  # ignore the leading fwd slash
-        password = unquote(uri.password)
-        h = uri.hostname
-        p = uri.port
-
-    ctx.params["h"], ctx.params["p"], ctx.params["n"], ctx.params["password"] = (
-        h,
-        p,
-        n,
-        password,
-    )
+    config.dsn_uri = dsn_uri
     return ctx
 
 
@@ -300,9 +293,15 @@ def main():
     # ignore None value
 
     # redis client
-    client = Client(
-        ctx.params["h"], ctx.params["p"], ctx.params["n"], ctx.params["password"]
-    )
+    if config.dsn_uri:
+        client = Client.from_url(config.dsn_uri)
+    else:
+        client = Client(
+            host=ctx.params["h"],
+            port=ctx.params["p"],
+            db=ctx.params["n"],
+            password=ctx.params["password"],
+        )
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():
             logger.debug(f"[Command stdin] {line}")
