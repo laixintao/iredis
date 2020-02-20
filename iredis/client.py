@@ -57,6 +57,8 @@ URL_QUERY_ARGUMENT_PARSERS = {
 
 
 class Client:
+    "construct Client from url"
+
     @classmethod
     def from_url(cls, url, db=None, decode_components=False, **kwargs):
         """
@@ -234,7 +236,10 @@ class Client:
             self.connection_kwargs["encoding_errors"] = "replace"
         else:
             self.connection_kwargs["decode_responses"] = False
-        self.connection_kwargs["socket_keepalive"] = config.socket_keepalive
+
+        if not isinstance(connection_class, UnixDomainSocketConnection):
+            self.connection_kwargs["socket_keepalive"] = config.socket_keepalive
+
         self.connection = self.connection_class(**self.connection_kwargs)
 
         # all command upper case
