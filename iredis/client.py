@@ -237,7 +237,7 @@ class Client:
         else:
             self.connection_kwargs["decode_responses"] = False
 
-        if not isinstance(connection_class, UnixDomainSocketConnection):
+        if connection_class != UnixDomainSocketConnection:
             self.connection_kwargs["socket_keepalive"] = config.socket_keepalive
 
         self.connection = self.connection_class(**self.connection_kwargs)
