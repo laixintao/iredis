@@ -138,8 +138,7 @@ def repl(client, session, start_time):
                 bottom_toolbar=BottomToolbar(command_holder).render
                 if config.bottom_bar
                 else None,
-                input_processors=[GetCommandProcessor(
-                    command_holder, session)],
+                input_processors=[GetCommandProcessor(command_holder, session)],
                 rprompt=lambda: "<transaction>" if config.transaction else None,
             )
 
@@ -200,8 +199,10 @@ RAINBOW = "Display colorful prompt."
 @click.option("--rainbow/--no-rainbow", default=None, is_flag=True, help=RAINBOW)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
-@click.argument('dsn', default='', nargs=1)
-def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, cmd, dsn):
+@click.argument("dsn", default="", nargs=1)
+def gather_args(
+    ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, cmd, dsn
+):
     """
     IRedis: Interactive Redis
 
@@ -239,13 +240,17 @@ def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, 
 
     dsn_uri = None
 
-    if (config_obj['alias_dsn'] and dsn):
+    if config_obj["alias_dsn"] and dsn:
         try:
-            dsn_uri = config_obj['alias_dsn'][dsn]
+            dsn_uri = config_obj["alias_dsn"][dsn]
         except KeyError:
-            click.secho('Could not find the specified DSN in the config file. '
-                        'Please check the "[alias_dsn]" section in your '
-                        'iredisrc.', err=True, fg='red')
+            click.secho(
+                "Could not find the specified DSN in the config file. "
+                'Please check the "[alias_dsn]" section in your '
+                "iredisrc.",
+                err=True,
+                fg="red",
+            )
             exit(1)
 
     if dsn_uri:
@@ -255,7 +260,12 @@ def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, 
         h = uri.hostname
         p = uri.port
 
-    ctx.params["h"], ctx.params["p"], ctx.params["n"], ctx.params["password"] = h, p, n, password
+    ctx.params["h"], ctx.params["p"], ctx.params["n"], ctx.params["password"] = (
+        h,
+        p,
+        n,
+        password,
+    )
     return ctx
 
 
