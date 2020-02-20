@@ -25,4 +25,4 @@ jobs:
       - name: Pytest
         run: |
           . venv/bin/activate
-          pytest tests/unittests
+          pytest
