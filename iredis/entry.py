@@ -297,10 +297,7 @@ def main():
         client = Client.from_url(config.dsn_uri)
     else:
         client = Client(
-            host=ctx.params["h"],
-            port=ctx.params["p"],
-            db=ctx.params["n"],
-            password=ctx.params["password"],
+            ctx.params["h"], ctx.params["p"], ctx.params["n"], ctx.params["password"],
         )
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():

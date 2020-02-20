@@ -189,25 +189,44 @@ class Client:
                 )
             )
             kwargs["encoding_errors"] = kwargs.pop("errors")
-        return cls(**kwargs)
+        try:
+            host = kwargs["host"]
+            del kwargs["host"]
+        except KeyError:
+            host = kwargs["path"]
+
+        try:
+            port = kwargs["port"]
+            del kwargs["port"]
+        except KeyError:
+            port = None
+
+        return cls(host, port, **kwargs)
 
     """
     iRedis client, hold a redis-py Client to interact with Redis.
     """
 
     def __init__(
-        self, connection_class=Connection, **connection_kwargs,
+        self,
+        host,
+        port,
+        db,
+        password=None,
+        connection_class=Connection,
+        **connection_kwargs,
     ):
+        self.host = host
+        self.port = port
+        self.db = db
         self.connection_class = connection_class
         self.connection_kwargs = connection_kwargs
 
-        try:
-            self.db = self.connection_kwargs["db"]
-            self.host = self.connection_kwargs["host"]
-            self.port = self.connection_kwargs["port"]
-        except KeyError:
-            self.host = self.connection_kwargs["path"]
-            self.port = ""
+        if not connection_kwargs:
+            self.connection_kwargs["host"] = host
+            self.connection_kwargs["port"] = port
+            self.connection_kwargs["db"] = db
+            self.connection_kwargs["password"] = password
 
         if config.decode:
             self.connection_kwargs["encoding"] = config.decode
@@ -215,7 +234,7 @@ class Client:
             self.connection_kwargs["encoding_errors"] = "replace"
         else:
             self.connection_kwargs["decode_responses"] = False
-
+        self.connection_kwargs["socket_keepalive"] = config.socket_keepalive
         self.connection = self.connection_class(**self.connection_kwargs)
 
         # all command upper case
