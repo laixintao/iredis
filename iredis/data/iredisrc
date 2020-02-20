@@ -40,3 +40,5 @@ warning = True
 # IRedis log for debugging, leave this blank will disable log.
 # eg. ~/.iredis.log
 log_location =
+[alias_dsn]
+# example_dsn = redis://[user[:password]]@][host][:port][/db]

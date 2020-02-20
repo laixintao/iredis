@@ -4,6 +4,7 @@ import logging
 import sys
 import time
 from pathlib import Path
+from urllib.parse import unquote, urlparse
 import platform
 
 import click
@@ -137,7 +138,8 @@ def repl(client, session, start_time):
                 bottom_toolbar=BottomToolbar(command_holder).render
                 if config.bottom_bar
                 else None,
-                input_processors=[GetCommandProcessor(command_holder, session)],
+                input_processors=[GetCommandProcessor(
+                    command_holder, session)],
                 rprompt=lambda: "<transaction>" if config.transaction else None,
             )
 
@@ -198,7 +200,8 @@ RAINBOW = "Display colorful prompt."
 @click.option("--rainbow/--no-rainbow", default=None, is_flag=True, help=RAINBOW)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
-def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, cmd):
+@click.argument('dsn', default='', nargs=1)
+def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, cmd, dsn):
     """
     IRedis: Interactive Redis
 
@@ -207,13 +210,14 @@ def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, 
     \b
     Examples:
       - iredis
+      - iredis dsn
       - iredis -h 127.0.0.1 -p 6379
       - iredis -h 127.0.0.1 -p 6379 -a <password>
 
     Type "help" in interactive mode for information on available commands
     and settings.
     """
-    load_config_files(iredisrc)
+    config_obj = load_config_files(iredisrc)
     setup_log()
     logger.info(
         f"[commandline args] host={h}, port={p}, db={n}, newbie={newbie}, "
@@ -233,6 +237,25 @@ def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, 
     if rainbow is not None:
         config.rainbow = rainbow
 
+    dsn_uri = None
+
+    if (config_obj['alias_dsn'] and dsn):
+        try:
+            dsn_uri = config_obj['alias_dsn'][dsn]
+        except KeyError:
+            click.secho('Could not find the specified DSN in the config file. '
+                        'Please check the "[alias_dsn]" section in your '
+                        'iredisrc.', err=True, fg='red')
+            exit(1)
+
+    if dsn_uri:
+        uri = urlparse(dsn_uri)
+        n = uri.path[1:]  # ignore the leading fwd slash
+        password = unquote(uri.password)
+        h = uri.hostname
+        p = uri.port
+
+    ctx.params["h"], ctx.params["p"], ctx.params["n"], ctx.params["password"] = h, p, n, password
     return ctx
 
 
