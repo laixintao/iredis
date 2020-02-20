@@ -26,8 +26,8 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get install gcc libpq-dev -y
-          pip install -U pip wheel setuptools
-          pip install poetry
+          pip3 install -U pip wheel setuptools
+          pip3 install poetry
           poetry install
       - name: Pytest
         run: |
