@@ -23,8 +23,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: 'x64'
-      - name: Setup Redis Server.
-        uses: supercharge/redis-github-action@1.1.0
       - name: Install Dependencies
         run: |
           python3 -m venv venv
