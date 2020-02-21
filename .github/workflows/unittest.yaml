@@ -6,8 +6,8 @@ jobs:
     name: Pytest
     strategy:
       matrix:
-        os: [ubuntu-latest, ubuntu-16.04]
-        python: ['3.6', '3.7', '3.8']
+        os: [ubuntu-16.04]
+        python: ['3.7']
     runs-on: ${{ matrix.os }}
 
     services:
@@ -25,10 +25,11 @@ jobs:
           architecture: 'x64'
       - name: Install Dependencies
         run: |
-          sudo apt-get install gcc libpq-dev -y
-          pip3 install -U pip wheel setuptools
-          pip3 install poetry
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install poetry pip==19
           poetry install
       - name: Pytest
         run: |
+          . venv/bin/activate
           pytest
