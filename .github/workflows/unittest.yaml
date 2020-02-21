@@ -25,10 +25,13 @@ jobs:
           architecture: 'x64'
       - name: Install Dependencies
         run: |
+          apt-get install python3-venv
           python3 -m venv venv
           . venv/bin/activate
           pip install poetry pip==19
           poetry install
+          python -c "import sys; print(sys.version)"
+          pip list
       - name: Pytest
         run: |
           . venv/bin/activate
