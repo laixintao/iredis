@@ -34,6 +34,6 @@ bottom_bar = True
 # such as "KEYS", "DEL" or "SHUTDOWN".
 warning = True
 
-# IRedis log for debugging, leave this black will disable log.
+# IRedis log for debugging, leave this blank will disable log.
 # eg. ~/.iredis.log
-log_location = ~/.iredis1.log
+log_location =
