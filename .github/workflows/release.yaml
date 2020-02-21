@@ -1,9 +1,10 @@
 name: Release
-on: [push]
-  # push:
-  #   - master
-  # tags:
-  #   - v*
+
+on:
+  push:
+    - master
+  tags:
+    - v*
 
 jobs:
   release-pypi:
