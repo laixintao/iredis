@@ -50,4 +50,6 @@ jobs:
       - name: Upload to Pypi
         env:
           PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: poetry publish --username __token__ --password ${PASSWORD}
+        run: |
+          . venv/bin/activate
+          poetry publish --username __token__ --password ${PASSWORD}
