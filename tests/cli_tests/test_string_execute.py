@@ -1,15 +1,15 @@
 def test_set(cli):
     cli.sendline("set foo bar")
-    cli.expect("OK", "127.0.0.1")
+    cli.expect(["OK", "127.0.0.1"])
 
     cli.sendline("set foo bar nx")
-    cli.expect("(nil)", "127.0.0.1")
+    cli.expect(["(nil)", "127.0.0.1"])
 
     cli.sendline("set foo bar xx")
-    cli.expect("OK", "127.0.0.1")
+    cli.expect(["OK", "127.0.0.1"])
 
     cli.sendline("set foo1 bar xx")
-    cli.expect("(nil)", "127.0.0.1")
+    cli.expect(["(nil)", "127.0.0.1"])
 
 
 def test_get(cli):
