@@ -1,3 +1,7 @@
+### 1.0.2
+
+* Internal: Migrate CI from travis and circleci to github action.
+
 ### 1.0.1
 
 * Bugfix: Fix info command decode error on decode=utf-8 #[266](https://github.com/laixintao/iredis/pull/266)
