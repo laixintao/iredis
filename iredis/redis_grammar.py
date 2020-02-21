@@ -76,7 +76,7 @@ CONST = {
     "set": "SET",
     "incrby": "INCRBY",
     "overflow": "OVERFLOW",
-    "overflow_option": "WRAP SAT FAIL"
+    "overflow_option": "WRAP SAT FAIL",
 }
 
 
