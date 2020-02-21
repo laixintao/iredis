@@ -28,6 +28,15 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
           architecture: 'x64'
+      - name: Cache venv
+        uses: actions/cache@v1
+        with:
+          path: venv
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ matrix.os }}-pip-${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            ${{ matrix.os }}-pip-
+            ${{ matrix.os }}-
       - name: Install Dependencies
         run: |
           python3 -m venv venv
@@ -51,6 +60,15 @@ jobs:
         with:
           python-version: 3.7
           architecture: 'x64'
+      - name: Cache venv
+        uses: actions/cache@v1
+        with:
+          path: venv
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ matrix.os }}-pip-v1
+          restore-keys: |
+            ${{ matrix.os }}-pip-
+            ${{ matrix.os }}-
       - name: Install Dependencies
         run: |
           python3 -m venv venv
