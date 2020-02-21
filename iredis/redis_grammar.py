@@ -128,7 +128,7 @@ CURSOR = fr"(?P<cursor>{NUM})"
 PARAMETER = fr"(?P<parameter>{VALID_TOKEN})"
 DOUBLE_LUA = fr'(?P<double_lua>[^"]*)'
 SINGLE_LUA = fr"(?P<single_lua>[^']*)"
-INTTYPE = r"(?P(<inttype>(i|u)\d+))"
+INTTYPE = r"(?P<inttype>(i|u)\d+)"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
 IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
@@ -161,7 +161,7 @@ STREAM_ID = "(?P<stream_id>[T\d:>+*\-\$]+)"
 
 DELTA = fr"(?P<delta>{NNUM})"
 OFFSET = fr"(?P<offset>{NUM})"  # string offset, can't be negative
-SHARP_OFFSET = fr"(?P<offset>#?{NUM})"  # for bitfield command
+SHARP_OFFSET = f"(?P<offset>\#?{NUM})"  # for bitfield command
 MIN = fr"(?P<min>{NNUM})"
 MAX = fr"(?P<max>{NNUM})"
 POSITION = fr"(?P<position>{NNUM})"
