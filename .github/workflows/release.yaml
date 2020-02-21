@@ -20,8 +20,6 @@ jobs:
         options: --entrypoint redis-server
 
     steps:
-      env:
-        PASSWORD: ${{ secrets.PYPI_TOKEN }}
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
         with:
@@ -50,4 +48,6 @@ jobs:
           iredis help GET
 
       - name: Upload to Pypi
+        env:
+          PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: poetry publish --username __token__ --password ${PASSWORD}
