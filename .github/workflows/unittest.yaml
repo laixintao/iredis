@@ -1,5 +1,5 @@
-name: Greet Everyone
-on: [push]
+name: Tests
+on: [push, pull_request]
 
 jobs:
   test:
@@ -36,3 +36,26 @@ jobs:
         run: |
           . venv/bin/activate
           pytest
+  lint:
+    name: flake8 & black
+    runs-on: ubuntu-16.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+          architecture: 'x64'
+      - name: Install Dependencies
+        run: |
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install -U pip flake8 black
+      - name: Flake8 test
+        run: |
+          . venv/bin/activate
+          flake8 .
+      - name: Black test
+        run: |
+          . venv/bin/activate
+          black --check .
