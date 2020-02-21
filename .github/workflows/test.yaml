@@ -1,0 +1,78 @@
+name: Test
+
+on: 
+  pull_request:
+  push:
+    branches:    
+      - master 
+
+jobs:
+  test:
+    name: Pytest
+    strategy:
+      matrix:
+        os: [ubuntu-16.04]
+        python: ['3.6', '3.7', '3.8']
+    runs-on: ${{ matrix.os }}
+
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+        options: --entrypoint redis-server
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+          architecture: 'x64'
+      - name: Cache venv
+        uses: actions/cache@v1
+        with:
+          path: venv
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ matrix.os }}-poetryenv-${{ hashFiles('poetry.lock') }}
+      - name: Install Dependencies
+        run: |
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install -U pip
+          pip install poetry
+          poetry install
+          python -c "import sys; print(sys.version)"
+          pip list
+      - name: Pytest
+        run: |
+          . venv/bin/activate
+          pytest
+  lint:
+    name: flake8 & black
+    runs-on: ubuntu-16.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+          architecture: 'x64'
+      - name: Cache venv
+        uses: actions/cache@v1
+        with:
+          path: venv
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: lintenv-v1
+      - name: Install Dependencies
+        run: |
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install -U pip flake8 black
+      - name: Flake8 test
+        run: |
+          . venv/bin/activate
+          flake8 .
+      - name: Black test
+        run: |
+          . venv/bin/activate
+          black --check .
