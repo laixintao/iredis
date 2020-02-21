@@ -7,7 +7,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-16.04]
-        python: ['3.7']
+        python: ['3.6', '3.7', '3.8']
     runs-on: ${{ matrix.os }}
 
     services:
@@ -27,7 +27,8 @@ jobs:
         run: |
           python3 -m venv venv
           . venv/bin/activate
-          pip install poetry pip==19
+          pip install -U pip
+          pip install poetry
           poetry install
           python -c "import sys; print(sys.version)"
           pip list
