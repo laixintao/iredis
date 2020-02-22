@@ -230,9 +230,9 @@ class IRedisCompleter(Completer):
             return
         variables = m.variables()
 
-        # auto update LatestUsedFirstWordCompleter
+        # auto update completion words, if it's LRU strategy.
         for _token, _completer in self.completer_mapping.items():
-            if not isinstance(_completer, LatestUsedFirstWordCompleter):
+            if not isinstance(_completer, LatestUsedFirstWordMixin):
                 continue
 
             # getall always returns a []
