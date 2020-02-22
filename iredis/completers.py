@@ -62,7 +62,7 @@ class IntegerTypeCompleter(LatestUsedFirstWordMixin, WordCompleter):
             words.append(f"i{i}")  # signed integer, 64 bit max
             words.append(f"u{i}")  # unsigned integer, 63 bit max
         words.append("i64")
-        super().__init__(len(words), reversed(words))
+        super().__init__(len(words), list(reversed(words)))
 
 
 class TimestampCompleter(Completer):
