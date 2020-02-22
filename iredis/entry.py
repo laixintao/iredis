@@ -282,10 +282,6 @@ def gather_args(
 
     return ctx
 
-
-FALSE_STRINGS = ("0", "F", "FALSE", "N", "NO")
-
-
 def to_bool(value):
     if value is None or value == "":
         return None
@@ -412,19 +408,8 @@ def parse_url(url):
     for k, v in url_options.items():
         if k not in config.connection_kwargs:
             config.connection_kwargs[k] = v
-=======
->>>>>>> prevent running command immediately when exit editor editing.
-@prompt_register("edit-and-execute-command")
-def edit_and_execute(event):
-    """Different from the prompt-toolkit default, we want to have a choice not
-    to execute a query after editing, hence validate_and_handle=False."""
-    buff = event.current_buffer
-    # this will prevent running command immediately when exit editor.
-    buff.open_in_editor(validate_and_handle=False)
-<<<<<<< HEAD
-=======
->>>>>>> prevent running command immediately when exit editor editing.
->>>>>>> prevent running command immediately when exit editor editing.
+>>>>>>> support dsn with connection_kwargs and connection_class
+>>>>>>> support dsn with connection_kwargs and connection_class
 
 
 def main():
