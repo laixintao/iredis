@@ -21,8 +21,11 @@ from .utils import _strip_quote_args, split_command_args, ensure_str
 logger = logging.getLogger(__name__)
 
 
-class LatestUsedFirstWordCompleter(FuzzyWordCompleter):
+class LatestUsedFirstWrodMixin:
     """
+    A Mixin for WordCompleter, with a `touch()` method can make latest used
+    word appears first. And evict old completion word when `max_words` reached.
+
     Not thread safe.
     """
 
@@ -48,7 +51,11 @@ class LatestUsedFirstWordCompleter(FuzzyWordCompleter):
             self.touch(word)
 
 
-class IntegerTypeCompleter(LatestUsedFirstWordCompleter):
+class LatestUsedFirstWordCompleter(LatestUsedFirstWrodMixin, FuzzyWordCompleter):
+    pass
+
+
+class IntegerTypeCompleter(LatestUsedFirstWrodMixin, WordCompleter):
     def __init__(self):
         words = []
         for i in range(1, 64):
