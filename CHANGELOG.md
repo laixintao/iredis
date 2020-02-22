@@ -1,3 +1,7 @@
+### 1.0.3
+
+* Feature: Support `bitfield` command, and a new completer for int type.
+
 ### 1.0.2
 
 * Internal: Migrate CI from travis and circleci to github action.

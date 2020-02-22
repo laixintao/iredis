@@ -237,3 +237,42 @@ def test_bitpos(judge_command):
         "BITPOS mykey 1 3",
         {"command": "BITPOS", "key": "mykey", "bit": "1", "start": "3"},
     )
+
+
+def test_bitfield(judge_command):
+    judge_command(
+        "BITFIELD mykey INCRBY i5 100 1 GET u4 0",
+        {
+            "command": "BITFIELD",
+            "key": "mykey",
+            "incrby": "INCRBY",
+            "inttype": ["i5", "u4"],
+            "offset": ["100", "0"],
+            "value": "1",
+            "get": "GET",
+        },
+    )
+    judge_command(
+        "BITFIELD mystring SET i8 #0 100",
+        {
+            "command": "BITFIELD",
+            "key": "mystring",
+            "set": "SET",
+            "inttype": "i8",
+            "offset": "#0",
+            "value": "100",
+        },
+    )
+    judge_command(
+        "BITFIELD mykey incrby u2 100 1 OVERFLOW SAT incrby u2 102 1",
+        {
+            "command": "BITFIELD",
+            "key": "mykey",
+            "incrby": "incrby",
+            "inttype": "u2",
+            "offset": "102",
+            "value": "1",
+            "overflow": "OVERFLOW",
+            "overflow_option": "SAT",
+        },
+    )

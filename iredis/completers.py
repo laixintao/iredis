@@ -21,8 +21,11 @@ from .utils import _strip_quote_args, split_command_args, ensure_str
 logger = logging.getLogger(__name__)
 
 
-class LatestUsedFirstWordCompleter(FuzzyWordCompleter):
+class LatestUsedFirstWordMixin:
     """
+    A Mixin for WordCompleter, with a `touch()` method can make latest used
+    word appears first. And evict old completion word when `max_words` reached.
+
     Not thread safe.
     """
 
@@ -46,6 +49,20 @@ class LatestUsedFirstWordCompleter(FuzzyWordCompleter):
     def touch_words(self, words):
         for word in words:
             self.touch(word)
+
+
+class LatestUsedFirstWordCompleter(LatestUsedFirstWordMixin, FuzzyWordCompleter):
+    pass
+
+
+class IntegerTypeCompleter(LatestUsedFirstWordMixin, WordCompleter):
+    def __init__(self):
+        words = []
+        for i in range(1, 64):
+            words.append(f"i{i}")  # signed integer, 64 bit max
+            words.append(f"u{i}")  # unsigned integer, 63 bit max
+        words.append("i64")
+        super().__init__(len(words), list(reversed(words)))
 
 
 class TimestampCompleter(Completer):
@@ -122,6 +139,7 @@ def get_completer_mapping():
     field_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     group_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
     timestamp_completer = TimestampCompleter()
+    integer_type_completer = IntegerTypeCompleter()
 
     completer_mapping.update(
         {
@@ -140,6 +158,7 @@ def get_completer_mapping():
             "group": group_completer,
             # stream id
             "stream_id": timestamp_completer,
+            "inttype": integer_type_completer,
         }
     )
     # patch command completer with hint
@@ -185,7 +204,7 @@ class IRedisCompleter(Completer):
     def get_completer(self, input_text):
         try:
             command, _ = split_command_args(input_text, all_commands)
-            # compile grammar for this command
+            # here will compile grammar for this command
             grammar = get_command_grammar(command)
             completer = GrammarCompleter(
                 compiled_grammar=grammar, completers=self.completer_mapping
@@ -211,9 +230,9 @@ class IRedisCompleter(Completer):
             return
         variables = m.variables()
 
-        # auto update LatestUsedFirstWordCompleter
+        # auto update completion words, if it's LRU strategy.
         for _token, _completer in self.completer_mapping.items():
-            if not isinstance(_completer, LatestUsedFirstWordCompleter):
+            if not isinstance(_completer, LatestUsedFirstWordMixin):
                 continue
 
             # getall always returns a []

@@ -1,5 +1,9 @@
 """
+This module describes how to match a redis command to grammar token based on
+regex.
+
 command_nodex: x means node?
+command_keys: ends with s means there can be multiple <key>
 """
 import logging
 from functools import lru_cache
@@ -68,6 +72,11 @@ CONST = {
     "justid": "JUSTID",
     "block": "BLOCK",
     "noack": "NOACK",
+    "get": "GET",
+    "set": "SET",
+    "incrby": "INCRBY",
+    "overflow": "OVERFLOW",
+    "overflow_option": "WRAP SAT FAIL",
 }
 
 
@@ -119,6 +128,7 @@ CURSOR = fr"(?P<cursor>{NUM})"
 PARAMETER = fr"(?P<parameter>{VALID_TOKEN})"
 DOUBLE_LUA = fr'(?P<double_lua>[^"]*)'
 SINGLE_LUA = fr"(?P<single_lua>[^']*)"
+INTTYPE = r"(?P<inttype>(i|u)\d+)"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
 IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
@@ -151,6 +161,7 @@ STREAM_ID = "(?P<stream_id>[T\d:>+*\-\$]+)"
 
 DELTA = fr"(?P<delta>{NNUM})"
 OFFSET = fr"(?P<offset>{NUM})"  # string offset, can't be negative
+SHARP_OFFSET = f"(?P<offset>\#?{NUM})"  # for bitfield command
 MIN = fr"(?P<min>{NNUM})"
 MAX = fr"(?P<max>{NNUM})"
 POSITION = fr"(?P<position>{NNUM})"
@@ -223,6 +234,11 @@ JUSTID = fr"(?P<justid>{c('justid')})"
 BLOCK = fr"(?P<block>{c('block')})"
 STREAMS = fr"(?P<streams>{c('streams')})"
 NOACK = fr"(?P<noack>{c('noack')})"
+GET = fr"(?P<get>{c('get')})"
+SET = fr"(?P<set>{c('set')})"
+INCRBY = fr"(?P<incrby>{c('incrby')})"
+OVERFLOW = fr"(?P<overflow>{c('overflow')})"
+OVERFLOW_OPTION = fr"(?P<overflow_option>{c('overflow_option')})"
 
 # TODO test lexer & completer for multi spaces in command
 # FIXME invalid command like "aaa bbb ccc"
@@ -427,6 +443,15 @@ NEW_GRAMMAR = {
         \s+ {STREAMS}
         \s+ {KEYS}
         (\s+ {STREAM_ID})+
+        \s*""",
+    "command_bitfield": fr"""\s* (?P<command>xxin)
+        \s+ {KEY}
+        (
+            (\s+ {GET} \s+ {INTTYPE} \s+ {SHARP_OFFSET})|
+            (\s+ {SET} \s+ {INTTYPE} \s+ {SHARP_OFFSET} \s+ {VALUE})|
+            (\s+ {INCRBY} \s+ {INTTYPE} \s+ {SHARP_OFFSET} \s+ {VALUE})|
+            (\s+ {OVERFLOW} \s+ {OVERFLOW_OPTION})
+        )+
         \s*""",
 }
 
