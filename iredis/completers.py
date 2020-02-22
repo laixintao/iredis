@@ -21,7 +21,7 @@ from .utils import _strip_quote_args, split_command_args, ensure_str
 logger = logging.getLogger(__name__)
 
 
-class LatestUsedFirstWrodMixin:
+class LatestUsedFirstWordMixin:
     """
     A Mixin for WordCompleter, with a `touch()` method can make latest used
     word appears first. And evict old completion word when `max_words` reached.
@@ -51,18 +51,18 @@ class LatestUsedFirstWrodMixin:
             self.touch(word)
 
 
-class LatestUsedFirstWordCompleter(LatestUsedFirstWrodMixin, FuzzyWordCompleter):
+class LatestUsedFirstWordCompleter(LatestUsedFirstWordMixin, FuzzyWordCompleter):
     pass
 
 
-class IntegerTypeCompleter(LatestUsedFirstWrodMixin, WordCompleter):
+class IntegerTypeCompleter(LatestUsedFirstWordMixin, WordCompleter):
     def __init__(self):
         words = []
         for i in range(1, 64):
             words.append(f"i{i}")  # signed integer, 64 bit max
             words.append(f"u{i}")  # unsigned integer, 63 bit max
         words.append("i64")
-        super().__init__(len(words), words)
+        super().__init__(len(words), reversed(words))
 
 
 class TimestampCompleter(Completer):
