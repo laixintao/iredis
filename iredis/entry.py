@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 import os
 import logging
+import warnings
 import sys
 import time
 from pathlib import Path
+from urllib.parse import parse_qs, unquote, urlparse
 import platform
 
 import click
+
+from redis.connection import Connection, SSLConnection, UnixDomainSocketConnection
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
@@ -24,6 +28,7 @@ from .utils import timer, exit
 from .completers import IRedisCompleter
 from .lexer import IRedisLexer
 from . import __version__
+
 
 logger = logging.getLogger(__name__)
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
@@ -243,11 +248,25 @@ def gather_args(
     if rainbow is not None:
         config.rainbow = rainbow
 
-    dsn_uri = None
+    # gather connection_kwargs
+    config.connection_class = Connection
+    config.connection_kwargs = {}
+    config.connection_kwargs["host"] = h or config.hostname
+    config.connection_kwargs["port"] = p or config.port
+    config.connection_kwargs["password"] = password or config.password
+    config.connection_kwargs["socket_keepalive"] = config.socket_keepalive
 
+    if config.decode:
+        config.connection_kwargs["encoding"] = config.decode
+        config.connection_kwargs["decode_responses"] = True
+        config.connection_kwargs["encoding_errors"] = "replace"
+    else:
+        config.connection_kwargs["decode_responses"] = False
+
+    dsn_uri = None
     if config_obj["alias_dsn"] and dsn:
         try:
-            dsn_uri = config_obj["alias_dsn"][dsn]
+            dsn_uri = config_obj["alias_dsn"].get(dsn)
         except KeyError:
             click.secho(
                 "Could not find the specified DSN in the config file. "
@@ -257,10 +276,14 @@ def gather_args(
                 fg="red",
             )
             exit(1)
-    config.dsn_uri = dsn_uri
+
+    if dsn_uri:
+        parse_url(dsn_uri)
+
     return ctx
 
 
+<<<<<<< HEAD
 @prompt_register("edit-and-execute-command")
 def edit_and_execute(event):
     """Different from the prompt-toolkit default, we want to have a choice not
@@ -268,6 +291,137 @@ def edit_and_execute(event):
     buff = event.current_buffer
     # this will prevent running command immediately when exit editor.
     buff.open_in_editor(validate_and_handle=False)
+=======
+FALSE_STRINGS = ("0", "F", "FALSE", "N", "NO")
+
+
+def to_bool(value):
+    if value is None or value == "":
+        return None
+    if isinstance(value, str) and value.upper() in FALSE_STRINGS:
+        return False
+    return bool(value)
+
+
+URL_QUERY_ARGUMENT_PARSERS = {
+    "socket_timeout": float,
+    "socket_connect_timeout": float,
+    "socket_keepalive": to_bool,
+    "retry_on_timeout": to_bool,
+    "max_connections": int,
+    "health_check_interval": int,
+    "ssl_check_hostname": to_bool,
+}
+
+
+def parse_url(url):
+    """
+    Update config.connection_kwargs and config.connection_class from the given URL.
+
+    For example::
+
+        redis://[[username]:[password]]@localhost:6379/0
+        rediss://[[username]:[password]]@localhost:6379/0
+        unix://[[username]:[password]]@/path/to/socket.sock?db=0
+
+    Three URL schemes are supported:
+
+    - ```redis://``
+        <https://www.iana.org/assignments/uri-schemes/prov/redis>`_ creates a
+        normal TCP socket connection
+    - ```rediss://``
+        <https://www.iana.org/assignments/uri-schemes/prov/rediss>`_ creates
+        a SSL wrapped TCP socket connection
+    - ``unix://`` creates a Unix Domain Socket connection
+
+    There are several ways to specify a database number. The parse function
+    will return the first specified option:
+        1. A ``db`` querystring option, e.g. redis://localhost?db=0
+        2. If using the redis:// scheme, the path argument of the url, e.g.
+            redis://localhost/0
+        3. The ``db`` argument to this function.
+
+    If none of these options are specified, db=0 is used.
+
+    The ``decode_components`` argument allows this function to work with
+    percent-encoded URLs. If this argument is set to ``True`` all ``%xx``
+    escapes will be replaced by their single-character equivalents after
+    the URL has been parsed. This only applies to the ``hostname``,
+    ``path``, ``username`` and ``password`` components.
+
+    Any additional querystring arguments and keyword arguments will be
+    passed along to the ConnectionPool class's initializer. The querystring
+    arguments ``socket_connect_timeout`` and ``socket_timeout`` if supplied
+    are parsed as float values. The arguments ``socket_keepalive`` and
+    ``retry_on_timeout`` are parsed to boolean values that accept
+    True/False, Yes/No values to indicate state. Invalid types cause a
+    ``UserWarning`` to be raised. In the case of conflicting arguments,
+    querystring arguments always win.
+
+    """
+    url = urlparse(url)
+    url_options = {}
+
+    for name, value in parse_qs(url.query):
+        if value and len(value) > 0:
+            parser = URL_QUERY_ARGUMENT_PARSERS.get(name)
+            if parser:
+                try:
+                    url_options[name] = parser(value[0])
+                except (TypeError, ValueError):
+                    warnings.warn(
+                        UserWarning("Invalid value for `%s` in connection URL." % name)
+                    )
+            else:
+                url_options[name] = value[0]
+
+    username = unquote(url.username) if url.username else None
+    password = unquote(url.password) if url.password else None
+    path = unquote(url.path) if url.path else None
+    hostname = unquote(url.hostname) if url.hostname else None
+
+    # We only support redis://, rediss:// and unix:// schemes.
+    if url.scheme == "unix":
+        config.connection_class = UnixDomainSocketConnection
+        config.connection_kwargs.pop("host", None)
+        config.connection_kwargs.pop("port", None)
+        config.connection_kwargs.pop("socket_keepalive", None)
+        url_options.update({"username": username, "password": password, "path": path})
+
+    elif url.scheme in ("redis", "rediss"):
+        url_options.update(
+            {
+                "host": hostname,
+                "port": int(url.port or 6379),
+                "username": username,
+                "password": password,
+            }
+        )
+
+        # If there's a path argument, use it as the db argument if a
+        # querystring value wasn't specified
+        if "db" not in url_options and path:
+            try:
+                url_options["db"] = int(path.replace("/", ""))
+            except (AttributeError, ValueError):
+                pass
+
+        if url.scheme == "rediss":
+            config.connection_class = SSLConnection
+    else:
+        valid_schemes = ", ".join(("redis://", "rediss://", "unix://"))
+        raise ValueError(
+            "Redis URL must specify one of the following" "schemes (%s)" % valid_schemes
+        )
+
+    # last shot at the db value
+    url_options["db"] = int(url_options.get("db", 0))
+
+    # update the arguments from the URL values
+    for k, v in url_options.items():
+        if k not in config.connection_kwargs:
+            config.connection_kwargs[k] = v
+>>>>>>> support dsn with connection_kwargs and connection_class
 
 
 def main():
@@ -292,12 +446,10 @@ def main():
     # ignore None value
 
     # redis client
-    if config.dsn_uri:
-        client = Client.from_url(config.dsn_uri)
-    else:
-        client = Client(
-            ctx.params["h"], ctx.params["p"], ctx.params["n"], ctx.params["password"],
-        )
+    client = Client(
+        ctx.params["h"], ctx.params["p"], ctx.params["n"], ctx.params["password"]
+    )
+
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():
             logger.debug(f"[Command stdin] {line}")

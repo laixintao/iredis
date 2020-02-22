@@ -4,16 +4,13 @@ IRedis client.
 import logging
 import re
 import sys
-import warnings
 from distutils.version import StrictVersion
 from importlib_resources import read_text
 from subprocess import run
-from urllib.parse import parse_qs, unquote, urlparse
 
 import redis
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.shortcuts import clear
-from redis.connection import Connection, SSLConnection, UnixDomainSocketConnection
 from redis.exceptions import AuthenticationError, ConnectionError, TimeoutError
 
 from . import markdown, renders
@@ -34,213 +31,18 @@ from .warning import confirm_dangerous_command
 logger = logging.getLogger(__name__)
 CLIENT_COMMANDS = groups["iredis"]
 
-FALSE_STRINGS = ("0", "F", "FALSE", "N", "NO")
-
-
-def to_bool(value):
-    if value is None or value == "":
-        return None
-    if isinstance(value, str) and value.upper() in FALSE_STRINGS:
-        return False
-    return bool(value)
-
-
-URL_QUERY_ARGUMENT_PARSERS = {
-    "socket_timeout": float,
-    "socket_connect_timeout": float,
-    "socket_keepalive": to_bool,
-    "retry_on_timeout": to_bool,
-    "max_connections": int,
-    "health_check_interval": int,
-    "ssl_check_hostname": to_bool,
-}
-
 
 class Client:
-    "construct Client from url"
-
-    @classmethod
-    def from_url(cls, url, db=None, decode_components=False, **kwargs):
-        """
-        Return a connection pool configured from the given URL.
-
-        For example::
-
-            redis://[[username]:[password]]@localhost:6379/0
-            rediss://[[username]:[password]]@localhost:6379/0
-            unix://[[username]:[password]]@/path/to/socket.sock?db=0
-
-        Three URL schemes are supported:
-
-        - ```redis://``
-          <https://www.iana.org/assignments/uri-schemes/prov/redis>`_ creates a
-          normal TCP socket connection
-        - ```rediss://``
-          <https://www.iana.org/assignments/uri-schemes/prov/rediss>`_ creates
-          a SSL wrapped TCP socket connection
-        - ``unix://`` creates a Unix Domain Socket connection
-
-        There are several ways to specify a database number. The parse function
-        will return the first specified option:
-            1. A ``db`` querystring option, e.g. redis://localhost?db=0
-            2. If using the redis:// scheme, the path argument of the url, e.g.
-               redis://localhost/0
-            3. The ``db`` argument to this function.
-
-        If none of these options are specified, db=0 is used.
-
-        The ``decode_components`` argument allows this function to work with
-        percent-encoded URLs. If this argument is set to ``True`` all ``%xx``
-        escapes will be replaced by their single-character equivalents after
-        the URL has been parsed. This only applies to the ``hostname``,
-        ``path``, ``username`` and ``password`` components.
-
-        Any additional querystring arguments and keyword arguments will be
-        passed along to the ConnectionPool class's initializer. The querystring
-        arguments ``socket_connect_timeout`` and ``socket_timeout`` if supplied
-        are parsed as float values. The arguments ``socket_keepalive`` and
-        ``retry_on_timeout`` are parsed to boolean values that accept
-        True/False, Yes/No values to indicate state. Invalid types cause a
-        ``UserWarning`` to be raised. In the case of conflicting arguments,
-        querystring arguments always win.
-
-        """
-        url = urlparse(url)
-        url_options = {}
-
-        for name, value in parse_qs(url.query):
-            if value and len(value) > 0:
-                parser = URL_QUERY_ARGUMENT_PARSERS.get(name)
-                if parser:
-                    try:
-                        url_options[name] = parser(value[0])
-                    except (TypeError, ValueError):
-                        warnings.warn(
-                            UserWarning(
-                                "Invalid value for `%s` in connection URL." % name
-                            )
-                        )
-                else:
-                    url_options[name] = value[0]
-
-        if decode_components:
-            username = unquote(url.username) if url.username else None
-            password = unquote(url.password) if url.password else None
-            path = unquote(url.path) if url.path else None
-            hostname = unquote(url.hostname) if url.hostname else None
-        else:
-            username = url.username or None
-            password = url.password or None
-            path = url.path
-            hostname = url.hostname
-
-        # We only support redis://, rediss:// and unix:// schemes.
-        if url.scheme == "unix":
-            url_options.update(
-                {
-                    "username": username,
-                    "password": password,
-                    "path": path,
-                    "connection_class": UnixDomainSocketConnection,
-                }
-            )
-
-        elif url.scheme in ("redis", "rediss"):
-            url_options.update(
-                {
-                    "host": hostname,
-                    "port": int(url.port or 6379),
-                    "username": username,
-                    "password": password,
-                }
-            )
-
-            # If there's a path argument, use it as the db argument if a
-            # querystring value wasn't specified
-            if "db" not in url_options and path:
-                try:
-                    url_options["db"] = int(path.replace("/", ""))
-                except (AttributeError, ValueError):
-                    pass
-
-            if url.scheme == "rediss":
-                url_options["connection_class"] = SSLConnection
-        else:
-            valid_schemes = ", ".join(("redis://", "rediss://", "unix://"))
-            raise ValueError(
-                "Redis URL must specify one of the following"
-                "schemes (%s)" % valid_schemes
-            )
-
-        # last shot at the db value
-        url_options["db"] = int(url_options.get("db", db or 0))
-
-        # update the arguments from the URL values
-        kwargs.update(url_options)
-
-        # backwards compatability
-        if "charset" in kwargs:
-            warnings.warn(
-                DeprecationWarning('"charset" is deprecated. Use "encoding" instead')
-            )
-            kwargs["encoding"] = kwargs.pop("charset")
-        if "errors" in kwargs:
-            warnings.warn(
-                DeprecationWarning(
-                    '"errors" is deprecated. Use "encoding_errors" instead'
-                )
-            )
-            kwargs["encoding_errors"] = kwargs.pop("errors")
-        try:
-            host = kwargs["host"]
-            del kwargs["host"]
-        except KeyError:
-            host = kwargs["path"]
-
-        try:
-            port = kwargs["port"]
-            del kwargs["port"]
-        except KeyError:
-            port = None
-
-        return cls(host, port, **kwargs)
-
     """
     iRedis client, hold a redis-py Client to interact with Redis.
     """
 
-    def __init__(
-        self,
-        host,
-        port,
-        db,
-        password=None,
-        connection_class=Connection,
-        **connection_kwargs,
-    ):
-        self.host = host
-        self.port = port
-        self.db = db
-        self.connection_class = connection_class
-        self.connection_kwargs = connection_kwargs
-
-        if not connection_kwargs:
-            self.connection_kwargs["host"] = host
-            self.connection_kwargs["port"] = port
-            self.connection_kwargs["db"] = db
-            self.connection_kwargs["password"] = password
-
-        if config.decode:
-            self.connection_kwargs["encoding"] = config.decode
-            self.connection_kwargs["decode_responses"] = True
-            self.connection_kwargs["encoding_errors"] = "replace"
-        else:
-            self.connection_kwargs["decode_responses"] = False
-
-        if connection_class != UnixDomainSocketConnection:
-            self.connection_kwargs["socket_keepalive"] = config.socket_keepalive
-
-        self.connection = self.connection_class(**self.connection_kwargs)
+    def __init__(self, host, port, db, password=None):
+        self.host = config.connection_kwargs.get("host")
+        self.port = config.connection_kwargs.get("port")
+        self.db = config.connection_kwargs.get("db")
+        self.path = config.connection_kwargs.get("path")
+        self.connection = config.connection_class(**config.connection_kwargs)
 
         # all command upper case
         self.answer_callbacks = command2callback
@@ -267,6 +69,12 @@ class Client:
         config.version = version
 
     def __str__(self):
+        if self.path:
+            if self.db:
+                return f"{self.path}[{self.db}]"
+            else:
+                return f"{self.path}"
+
         if self.db:
             return f"{self.host}:{self.port}[{self.db}]"
         return f"{self.host}:{self.port}"
