@@ -61,6 +61,8 @@ and `-p` for port.
 $ iredis --help
 ```
 
+### Configuration
+
 IRedis supports config files. Command-line options will always take precedence
 over config. Configuration resolution from highest to lowest precedence is:
 
@@ -70,7 +72,7 @@ over config. Configuration resolution from highest to lowest precedence is:
 - `/etc/iredisrc`
 - default config in IRedis package.
 
-You can copy the self-explained default config here: 
+You can copy the *self-explained* default config here: 
 
 https://raw.githubusercontent.com/laixintao/iredis/master/iredis/data/iredisrc
 
@@ -110,7 +112,7 @@ Then run (which is similar to `pip install -e .`):
 poetry install
 ```
 
-**Be careful running testcases, it may flush you db!!!**
+**Be careful running testcases locally, it may flush you db!!!**
 
 ### Development Logs
 
@@ -139,10 +141,6 @@ python scripts/download_redis_commands.py > data/commands.csv
 `commands.csv` is here only for test if redis.io was updated, do not package it into release.
 
 Current implemented commands: [command_syntax.csv](iredis/data/command_syntax.csv).
-
-## Planned Features
-
-Please see the repository issues. You are welcome to submit new issues.
 
 ## Related Projects
 
