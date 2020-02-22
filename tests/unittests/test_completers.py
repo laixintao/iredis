@@ -7,7 +7,12 @@ from prompt_toolkit.completion import Completion
 
 from iredis.completers import LatestUsedFirstWordCompleter
 from iredis.redis_grammar import command_grammar
-from iredis.completers import get_completer_mapping, IRedisCompleter, TimestampCompleter
+from iredis.completers import (
+    get_completer_mapping,
+    IRedisCompleter,
+    TimestampCompleter,
+    IntegerTypeCompleter,
+)
 
 
 def test_LUF_completer_touch():
@@ -207,3 +212,18 @@ def test_timestamp_completer_datetime_format_time_completion():
             display_meta="2020-02-07T00:00:00+00:00",
         )
     ]
+
+
+def test_integer_type_completer():
+    c = IntegerTypeCompleter()
+    fake_document = MagicMock()
+    fake_document.text = fake_document.get_word_before_cursor.return_value = "i"
+    completions = list(c.get_completions(fake_document, None))
+    assert len(completions) == 64
+
+    fake_document.text = fake_document.get_word_before_cursor.return_value = "u"
+    completions = list(c.get_completions(fake_document, None))
+    assert len(completions) == 63
+
+    c.touch("u4")
+    assert list(c.get_completions(fake_document, None))[0].text == "u4"
