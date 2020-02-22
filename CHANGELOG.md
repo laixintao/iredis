@@ -1,5 +1,6 @@
 ## Upcoming...
 
+* Bugfix: command completions when a command is substring of another command. #275
 
 ### 1.0.3
 
