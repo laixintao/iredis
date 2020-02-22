@@ -165,7 +165,7 @@ def get_completer_mapping():
     command_hint = {key: info["summary"] for key, info in commands_summary.items()}
     hint = {command: command_hint.get(command.upper()) for command in all_commands}
 
-    completer_mapping["command_pending"] = WordCompleter(
+    completer_mapping["command_pending"] = completer_mapping['command'] = WordCompleter(
         all_commands[::-1], ignore_case=True, sentence=True, meta_dict=hint
     )
     return completer_mapping
