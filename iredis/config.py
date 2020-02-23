@@ -38,15 +38,20 @@ class Config:
         self.no_info = None
         self.bottom_bar = None
 
-        # dynamic
+        self.no_version_reason = None
+        self.log_location = None
+        self.completion_casing = None
+
+        # ===bad code===
+        # below are not configs, it's global state, it's wrong to write this
+        # please do not add more global state.
+
         # for transaction render
         self.queued_commands = []
         self.transaction = False
         # display zset withscores?
         self.withscores = False
         self.version = "Unknown"
-        self.no_version_reason = None
-        self.log_location = None
 
         self.warning = True
 
@@ -95,6 +100,7 @@ def load_config_files(iredisrc):
             config_obj.merge(_config)
             config_obj.filename = _config.filename
 
+    # TODO grouping them, don't put all to "main"
     config.raw = config_obj["main"].as_bool("raw")
     config.completer_max = config_obj["main"].as_int("completer_max")
     config.retry_times = config_obj["main"].as_int("retry_times")
@@ -106,5 +112,6 @@ def load_config_files(iredisrc):
     config.warning = config_obj["main"].as_bool("warning")
     config.decode = config_obj["main"]["decode"]
     config.log_location = config_obj["main"]["log_location"]
+    config.completion_casing = config_obj["main"]["completion_casing"]
 
     return config_obj
