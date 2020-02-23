@@ -5,7 +5,7 @@
 <h3 align="center">Interactive Redis: A Cli for Redis with AutoCompletion and Syntax Highlighting.</h4>
 
 <p align="center">
-<img src="https://github.com/laixintao/iredis/workflows/Test/badge.svg" alt="Github Action">
+<a href="https://github.com/laixintao/iredis/actions"><img src="https://github.com/laixintao/iredis/workflows/Test/badge.svg" alt="Github Action"></a>
 <a href="https://badge.fury.io/py/iredis"><img src="https://badge.fury.io/py/iredis.svg" alt="PyPI version"></a>
 <img src="https://badgen.net/badge/python/3.6%20|%203.7%20|%203.8/" alt="Python version">
 <a href="https://t.me/iredis_users"><img src="https://badgen.net/badge/icon/join?icon=telegram&amp;label=usergroup" alt="Chat on telegram"></a>
