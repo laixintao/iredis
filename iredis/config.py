@@ -38,6 +38,8 @@ class Config:
         self.no_info = None
         self.bottom_bar = None
 
+        self.warning = True
+
         self.no_version_reason = None
         self.log_location = None
         self.completion_casing = None
@@ -45,6 +47,9 @@ class Config:
         # ===bad code===
         # below are not configs, it's global state, it's wrong to write this
         # please do not add more global state.
+        # FIXME this should be removed.
+        # use client attributes instead.
+        # use kwargs in render functions.
 
         # for transaction render
         self.queued_commands = []
@@ -52,8 +57,6 @@ class Config:
         # display zset withscores?
         self.withscores = False
         self.version = "Unknown"
-
-        self.warning = True
 
     def __setter__(self, name, value):
         # for every time start a transaction
