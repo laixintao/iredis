@@ -87,6 +87,8 @@ Also:
 
 - <kbd>Ctrl</kbd> + <kbd>F</kbd> (i.e. EOF) to exit; you can also use the `exit` command.
 - <kbd>Ctrl</kbd> + <kbd>L</kbd> to clear screen; you can also use the `clear` command.
+- <kbd>Ctrl</kbd> + <kbd>X</kbd> <kbd>Ctrl</kbd> + <kbd>X</kbd> to open an editor
+to edit command, or <kbd>V</kbd> in vi-mode.
 
 ## Development
 

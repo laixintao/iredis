@@ -11,6 +11,9 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit import print_formatted_text
+from prompt_toolkit.key_binding.bindings.named_commands import (
+    register as prompt_register,
+)
 
 from .client import Client
 from .style import STYLE
@@ -236,6 +239,15 @@ def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, 
     return ctx
 
 
+@prompt_register("edit-and-execute-command")
+def edit_and_execute(event):
+    """Different from the prompt-toolkit default, we want to have a choice not
+    to execute a query after editing, hence validate_and_handle=False."""
+    buff = event.current_buffer
+    # this will prevent running command immediately when exit editor.
+    buff.open_in_editor(validate_and_handle=False)
+
+
 def main():
     enter_main_time = time.time()  # just for logs
 
@@ -289,6 +301,8 @@ def main():
         complete_while_typing=True,
         lexer=default_lexer,
         completer=default_completer,
+        enable_open_in_editor=True,
+        tempfile_suffix=".redis",
     )
 
     # print hello message
