@@ -344,12 +344,10 @@ def main():
         style=STYLE,
         auto_suggest=AutoSuggestFromHistory(),
         complete_while_typing=True,
-        lexer=IRedisLexer(),
-        completer=IRedisCompleter(
-            hint=config.newbie_mode, completion_casing=config.completion_casing
-        ),
+        lexer=default_lexer,
+        completer=default_completer,
         enable_open_in_editor=True,
-        tempfile_suffix=".redis",
+        tempfile_suffix=".redis"
     )
 
     # print hello message
