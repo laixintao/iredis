@@ -1,4 +1,4 @@
-## Upcoming
+## 1.0.5
 
 * Feature: <kbd>Ctrl - X</kbd> then <kbd>Ctrl -E</kbd> to open an editor to edit
 command.
