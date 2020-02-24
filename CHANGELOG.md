@@ -2,6 +2,7 @@
 
 * Feature: <kbd>Ctrl - X</kbd> then <kbd>Ctrl -E</kbd> to open an editor to edit
 command.
+* Feature: Support `completion_casing` config.
 
 ### 1.0.4
 
