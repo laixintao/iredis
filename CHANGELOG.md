@@ -1,3 +1,8 @@
+## Upcoming
+
+* Feature: <kbd>Ctrl - X</kbd> then <kbd>Ctrl -E</kbd> to open an editor to edit
+command.
+
 ### 1.0.4
 
 * Bugfix: command completions when a command is substring of another command. [issue#198](https://github.com/laixintao/iredis/issues/198)
