@@ -72,11 +72,17 @@ over config. Configuration resolution from highest to lowest precedence is:
 - `/etc/iredisrc`
 - default config in IRedis package.
 
-You can copy the *self-explained* default config here: 
+You can copy the *self-explained* default config here:
 
 https://raw.githubusercontent.com/laixintao/iredis/master/iredis/data/iredisrc
 
+
 And then make your own changes.
+
+(If you are using an old verions of iredis, please use the config file below,
+and change the version in url):
+
+https://raw.githubusercontent.com/laixintao/iredis/v1.0.4/iredis/data/iredisrc
 
 ### Keys
 
