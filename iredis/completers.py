@@ -181,7 +181,6 @@ def get_completer_mapping(hint_on, completion_casing):
         "lower": lower_commands,
     }.get(completion_casing)
 
-
     completer_mapping["command_pending"] = completer_mapping["command"] = WordCompleter(
         command_completions, ignore_case=ignore_case, sentence=True, meta_dict=hint
     )

@@ -71,8 +71,6 @@ def get_lexer_mapping():
     return lexers_dict
 
 
-
-
 class IRedisLexer(Lexer):
     """
     Lexer class that can dynamically returns any Lexer.

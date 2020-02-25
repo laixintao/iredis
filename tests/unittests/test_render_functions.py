@@ -6,7 +6,6 @@ from iredis.config import config
 from iredis.completers import IRedisCompleter
 
 
-
 def strip_formatted_text(formatted_text):
     return "".join(text[1] for text in formatted_text)
 
