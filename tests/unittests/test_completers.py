@@ -2,17 +2,10 @@ from unittest.mock import MagicMock, patch
 
 import pendulum
 from prompt_toolkit.formatted_text import FormattedText
-from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 from prompt_toolkit.completion import Completion
 
 from iredis.completers import LatestUsedFirstWordCompleter
-from iredis.redis_grammar import command_grammar
-from iredis.completers import (
-    get_completer_mapping,
-    IRedisCompleter,
-    TimestampCompleter,
-    IntegerTypeCompleter,
-)
+from iredis.completers import IRedisCompleter, TimestampCompleter, IntegerTypeCompleter
 
 
 def test_LUF_completer_touch():
@@ -231,3 +224,41 @@ def test_integer_type_completer():
 
     c.touch("u4")
     assert list(c.get_completions(fake_document, None))[0].text == "u4"
+
+
+def test_completion_casing():
+    c = IRedisCompleter(completion_casing="auto")
+    fake_document = MagicMock()
+    fake_document.text = fake_document.text_before_cursor = "ge"
+    assert [
+        completion.text for completion in c.get_completions(fake_document, None)
+    ] == [
+        "get",
+        "getset",
+        "getbit",
+        "geopos",
+        "geoadd",
+        "geohash",
+        "geodist",
+        "getrange",
+        "georadius",
+        "georadiusbymember",
+    ]
+
+    c = IRedisCompleter(completion_casing="auto")
+    fake_document.text = fake_document.text_before_cursor = "GET"
+    assert [
+        completion.text for completion in c.get_completions(fake_document, None)
+    ] == ["GET", "GETSET", "GETBIT", "GETRANGE"]
+
+    c = IRedisCompleter(completion_casing="upper")
+    fake_document.text = fake_document.text_before_cursor = "get"
+    assert [
+        completion.text for completion in c.get_completions(fake_document, None)
+    ] == ["GET", "GETSET", "GETBIT", "GETRANGE"]
+
+    c = IRedisCompleter(completion_casing="lower")
+    fake_document.text = fake_document.text_before_cursor = "GET"
+    assert [
+        completion.text for completion in c.get_completions(fake_document, None)
+    ] == ["get", "getset", "getbit", "getrange"]
