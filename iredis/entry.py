@@ -19,7 +19,7 @@ from .processors import UserInputCommand, GetCommandProcessor
 from .bottom import BottomToolbar
 from .utils import timer, exit
 from .completers import IRedisCompleter
-from .lexer import default_lexer
+from .lexer import IRedisLexer
 from . import __version__
 
 logger = logging.getLogger(__name__)
@@ -284,7 +284,7 @@ def main():
         style=STYLE,
         auto_suggest=AutoSuggestFromHistory(),
         complete_while_typing=True,
-        lexer=default_lexer,
+        lexer=IRedisLexer(),
         completer=IRedisCompleter(
             hint=config.newbie_mode, completion_casing=config.completion_casing
         ),

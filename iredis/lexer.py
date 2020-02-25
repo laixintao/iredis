@@ -102,4 +102,3 @@ class IRedisLexer(Lexer):
         return id(lexer)
 
 
-default_lexer = IRedisLexer()
