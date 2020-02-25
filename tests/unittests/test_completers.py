@@ -42,6 +42,10 @@ def test_newbie_mode_complete_without_meta_dict():
     completer = IRedisCompleter(hint=False)
     completions = list(completer.get_completions(fake_document, None))
     assert [word.text for word in completions] == ["GEORADIUS", "GEORADIUSBYMEMBER"]
+    assert [word.display_meta for word in completions] == [
+        FormattedText([("", "")]),
+        FormattedText([("", "")]),
+    ]
 
 
 def test_newbie_mode_complete_with_meta_dict():
