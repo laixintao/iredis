@@ -126,7 +126,7 @@ class TimestampCompleter(Completer):
             yield completion
 
 
-def get_completer_mapping():
+def get_completer_mapping(hint_on, completion_casing):
     completer_mapping = {}
     completer_mapping.update(
         {
@@ -161,12 +161,28 @@ def get_completer_mapping():
             "inttype": integer_type_completer,
         }
     )
-    # patch command completer with hint
-    command_hint = {key: info["summary"] for key, info in commands_summary.items()}
-    hint = {command: command_hint.get(command.upper()) for command in all_commands}
+
+    # command completer
+    if hint_on:
+        command_hint = {key: info["summary"] for key, info in commands_summary.items()}
+        hint = {command: command_hint.get(command.upper()) for command in all_commands}
+    else:
+        hint = {}
+
+    upper_commands = all_commands[::-1]
+    lower_commands = [command.lower() for command in all_commands[::-1]]
+    auto_commands = upper_commands + lower_commands
+
+    ignore_case = config.completion_casing != "auto"
+
+    command_completions = {
+        "auto": auto_commands,
+        "upper": upper_commands,
+        "lower": lower_commands,
+    }.get(config.completion_casing)
 
     completer_mapping["command_pending"] = completer_mapping["command"] = WordCompleter(
-        all_commands[::-1], ignore_case=True, sentence=True, meta_dict=hint
+        command_completions, ignore_case=ignore_case, sentence=True, meta_dict=hint
     )
     return completer_mapping
 
@@ -178,9 +194,9 @@ class IRedisCompleter(Completer):
     :param get_completer: Callable that returns a :class:`.Completer` instance.
     """
 
-    def __init__(self):
+    def __init__(self, hint=False, completion_casing="upper"):
         super().__init__()
-        self.completer_mapping = get_completer_mapping()
+        self.completer_mapping = get_completer_mapping(hint, completion_casing)
         self.current_completer = self.root_completer = GrammarCompleter(
             command_grammar, self.completer_mapping
         )
@@ -305,6 +321,3 @@ class IRedisCompleter(Completer):
             self.get_completer,
             self.current_completer,
         )
-
-
-default_completer = IRedisCompleter()

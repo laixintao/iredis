@@ -18,7 +18,7 @@ from .config import config, load_config_files
 from .processors import UserInputCommand, GetCommandProcessor
 from .bottom import BottomToolbar
 from .utils import timer, exit
-from .completers import default_completer
+from .completers import IRedisCompleter
 from .lexer import default_lexer
 from . import __version__
 
@@ -224,9 +224,6 @@ def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, 
         config.raw = True
 
     config.newbie_mode = newbie
-    if not config.newbie_mode:
-        # cancel hints in meta_dict
-        default_completer.completer_mapping["command_pending"].meta_dict = {}
 
     if decode is not None:
         config.decode = decode
@@ -288,7 +285,9 @@ def main():
         auto_suggest=AutoSuggestFromHistory(),
         complete_while_typing=True,
         lexer=default_lexer,
-        completer=default_completer,
+        completer=IRedisCompleter(
+            hint=config.newbie_mode, completion_casing=config.completion_casing
+        ),
     )
 
     # print hello message
