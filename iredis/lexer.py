@@ -97,3 +97,5 @@ class IRedisLexer(Lexer):
     def invalidation_hash(self) -> Hashable:
         lexer = self.get_lexer() or self._dummy
         return id(lexer)
+
+
