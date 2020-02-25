@@ -1,6 +1,11 @@
+import os
+import tempfile
+from textwrap import dedent
+
 import pexpect
 import pytest
 import redis
+
 from iredis.client import Client
 from iredis.commands_csv_loader import all_commands
 from iredis.utils import split_command_args
@@ -69,8 +74,39 @@ def config():
 @pytest.fixture(scope="function")
 def cli():
     """Open iredis subprocess to test"""
-    child = pexpect.spawn("iredis -n 15", timeout=TIMEOUT)
+    f = tempfile.TemporaryFile("w")
+    config_content = dedent(
+        """
+        [main]
+        log_location =
+        warning = True
+        """
+    )
+    f.write(config_content)
+    f.close()
+
+    child = pexpect.spawn(f"iredis -n 15 --iredisrc {f.name}", timeout=TIMEOUT)
     child.logfile_read = open("cli_test.log", "ab")
     child.expect(["https://iredis.io/issues", "127.0.0.1"])
     yield child
     child.close()
+
+
+@pytest.fixture(scope="function")
+def cli_without_warning():
+    f = tempfile.TemporaryFile("w")
+    config_content = dedent(
+        """
+        [main]
+        log_location = /tmp/iredis1.log
+        warning = False
+        """
+    )
+    f.write(config_content)
+    f.close()
+
+    cli = pexpect.spawn(f"iredis -n 15 --iredisrc {f.name}", timeout=1)
+    cli.logfile_read = open("cli_test.log", "ab")
+    yield cli
+    cli.close()
+    os.remove("/tmp/iredisrc")

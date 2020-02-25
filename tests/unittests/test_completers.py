@@ -39,7 +39,7 @@ def test_LUF_completer_touch_words():
 def test_newbie_mode_complete_without_meta_dict():
     fake_document = MagicMock()
     fake_document.text_before_cursor = "GEOR"
-    completer = GrammarCompleter(command_grammar, get_completer_mapping())
+    completer = IRedisCompleter(hint=False)
     completions = list(completer.get_completions(fake_document, None))
     assert [word.text for word in completions] == ["GEORADIUS", "GEORADIUSBYMEMBER"]
 
@@ -47,7 +47,7 @@ def test_newbie_mode_complete_without_meta_dict():
 def test_newbie_mode_complete_with_meta_dict():
     fake_document = MagicMock()
     fake_document.text_before_cursor = "GEOR"
-    completer = GrammarCompleter(command_grammar, get_completer_mapping())
+    completer = IRedisCompleter(hint=True)
     completions = list(completer.get_completions(fake_document, None))
 
     assert sorted([completion.display_meta for completion in completions]) == [

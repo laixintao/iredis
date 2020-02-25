@@ -179,7 +179,9 @@ def get_completer_mapping(hint_on, completion_casing):
         "auto": auto_commands,
         "upper": upper_commands,
         "lower": lower_commands,
-    }.get(config.completion_casing)
+    }.get(completion_casing)
+
+    logger.debug(f"command_completions: {command_completions[:10]}")
 
     completer_mapping["command_pending"] = completer_mapping["command"] = WordCompleter(
         command_completions, ignore_case=ignore_case, sentence=True, meta_dict=hint

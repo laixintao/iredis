@@ -20,7 +20,8 @@ def test_get(cli):
     cli.expect('"bar"')
 
 
-def test_delete_string(clean_redis, cli):
+def test_delete_string(clean_redis, cli, config):
+    config.warning = True
     cli.sendline("set foo bar")
     cli.expect("OK")
     cli.sendline("del foo")
@@ -32,6 +33,7 @@ def test_delete_string(clean_redis, cli):
     cli.expect("(nil)")
 
 
-def test_on_dangerous_commands(cli):
+def test_on_dangerous_commands(cli, config):
+    config.warning = True
     cli.sendline("keys *")
     cli.expect("KEYS will hang redis server, use SCAN instead")
