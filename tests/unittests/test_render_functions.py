@@ -3,7 +3,8 @@ import time
 from prompt_toolkit.formatted_text import FormattedText
 from iredis import renders
 from iredis.config import config
-from iredis.completers import default_completer as completer
+from iredis.completers import IRedisCompleter
+
 
 
 def strip_formatted_text(formatted_text):
@@ -161,6 +162,7 @@ def test_list_or_string():
 
 
 def test_command_keys():
+    completer = IRedisCompleter()
     completer.key_completer.words = []
     config.raw = False
     rendered = renders.OutputRender.command_keys([b"cat", b"dog", b"banana"])
@@ -185,6 +187,7 @@ def test_command_keys():
 
 
 def test_command_scan():
+    completer = IRedisCompleter()
     completer.key_completer.words = []
     config.raw = False
     rendered = renders.OutputRender.command_scan(
@@ -220,6 +223,7 @@ def test_command_scan():
 
 
 def test_command_sscan():
+    completer = IRedisCompleter()
     completer.member_completer.words = []
     config.raw = False
     rendered = renders.OutputRender.command_sscan(
@@ -260,6 +264,7 @@ def test_command_sscan():
 
 
 def test_command_sscan_config_raw():
+    completer = IRedisCompleter()
     completer.member_completer.words = []
     config.raw = True
     rendered = renders.OutputRender.command_sscan(
@@ -279,6 +284,7 @@ def test_command_sscan_config_raw():
 
 
 def test_render_members():
+    completer = IRedisCompleter()
     completer.member_completer.words = []
     config.raw = False
     config.withscores = True
@@ -303,6 +309,7 @@ def test_render_members():
 
 
 def test_render_members_config_raw():
+    completer = IRedisCompleter()
     completer.member_completer.words = []
     config.raw = True
     config.withscores = True

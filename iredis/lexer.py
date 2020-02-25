@@ -71,7 +71,6 @@ def get_lexer_mapping():
     return lexers_dict
 
 
-lexers_mapping = get_lexer_mapping()
 
 
 class IRedisLexer(Lexer):
@@ -91,7 +90,7 @@ class IRedisLexer(Lexer):
             command, _ = split_command_args(input_text, all_commands)
             # compile grammar for this command
             grammar = get_command_grammar(command)
-            self._current_lexer = GrammarLexer(grammar, lexers=lexers_mapping)
+            self._current_lexer = GrammarLexer(grammar, lexers=get_lexer_mapping())
         except InvalidArguments:
             self._current_lexer = self._dummy
 
@@ -100,5 +99,3 @@ class IRedisLexer(Lexer):
     def invalidation_hash(self) -> Hashable:
         lexer = self.get_lexer() or self._dummy
         return id(lexer)
-
-
