@@ -334,7 +334,7 @@ class Client:
         command_docs_name = "-".join(args).lower()
         command_summary_name = " ".join(args).upper()
         try:
-            doc = read_text(commands_data, f"commands/{command_docs_name}.md")
+            doc = read_text(commands_data, f"{command_docs_name}.md")
         except FileNotFoundError:
             raise NotRedisCommand(
                 f"{command_summary_name} is not a valide Redis command."
