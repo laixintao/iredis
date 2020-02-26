@@ -5,7 +5,7 @@
 <h3 align="center">Interactive Redis: A Cli for Redis with AutoCompletion and Syntax Highlighting.</h4>
 
 <p align="center">
-<img src="https://github.com/laixintao/iredis/workflows/Test/badge.svg" alt="Github Action">
+<a href="https://github.com/laixintao/iredis/actions"><img src="https://github.com/laixintao/iredis/workflows/Test/badge.svg" alt="Github Action"></a>
 <a href="https://badge.fury.io/py/iredis"><img src="https://badge.fury.io/py/iredis.svg" alt="PyPI version"></a>
 <img src="https://badgen.net/badge/python/3.6%20|%203.7%20|%203.8/" alt="Python version">
 <a href="https://t.me/iredis_users"><img src="https://badgen.net/badge/icon/join?icon=telegram&amp;label=usergroup" alt="Chat on telegram"></a>
@@ -72,11 +72,17 @@ over config. Configuration resolution from highest to lowest precedence is:
 - `/etc/iredisrc`
 - default config in IRedis package.
 
-You can copy the *self-explained* default config here: 
+You can copy the *self-explained* default config here:
 
 https://raw.githubusercontent.com/laixintao/iredis/master/iredis/data/iredisrc
 
+
 And then make your own changes.
+
+(If you are using an old verions of iredis, please use the config file below,
+and change the version in url):
+
+https://raw.githubusercontent.com/laixintao/iredis/v1.0.4/iredis/data/iredisrc
 
 ### Keys
 
@@ -87,6 +93,8 @@ Also:
 
 - <kbd>Ctrl</kbd> + <kbd>F</kbd> (i.e. EOF) to exit; you can also use the `exit` command.
 - <kbd>Ctrl</kbd> + <kbd>L</kbd> to clear screen; you can also use the `clear` command.
+- <kbd>Ctrl</kbd> + <kbd>X</kbd> <kbd>Ctrl</kbd> + <kbd>E</kbd> to open an editor
+to edit command, or <kbd>V</kbd> in vi-mode.
 
 ## Development
 
