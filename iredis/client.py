@@ -11,6 +11,7 @@ from subprocess import run
 import redis
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.shortcuts import clear
+from redis.connection import Connection, SSLConnection, UnixDomainSocketConnection
 from redis.exceptions import AuthenticationError, ConnectionError, TimeoutError
 
 from . import markdown, renders
@@ -37,12 +38,46 @@ class Client:
     iRedis client, hold a redis-py Client to interact with Redis.
     """
 
-    def __init__(self, host, port, db, password=None):
-        self.host = config.connection_kwargs.get("host")
-        self.port = config.connection_kwargs.get("port")
-        self.db = config.connection_kwargs.get("db")
-        self.path = config.connection_kwargs.get("path")
-        self.connection = config.connection_class(**config.connection_kwargs)
+    def __init__(
+        self,
+        host=None,
+        port=None,
+        db=0,
+        username=None,
+        path=None,
+        password=None,
+        scheme="redis",
+    ):
+        self.host = host
+        self.port = port
+        self.path = path
+        self.db = db
+        self.username = username
+        connection_class = Connection
+        connection_kwargs = {
+            "db": db,
+            "password": password,
+            "socket_keepalive": config.socket_keepalive,
+        }
+        if scheme in ("redis", "rediss"):
+            connection_kwargs["host"] = host
+            connection_kwargs["port"] = port
+            if scheme == "rediss":
+                connection_class = SSLConnection
+        else:
+            connection_class = UnixDomainSocketConnection
+            connection_kwargs["path"] = path
+            del connection_kwargs["socket_keepalive"]
+
+        if config.decode:
+            connection_kwargs["encoding"] = config.decode
+            connection_kwargs["decode_responses"] = True
+            connection_kwargs["encoding_errors"] = "replace"
+
+        logger.debug(
+            f"connection_class={connection_class}, connection_kwargs={connection_kwargs}"
+        )
+        self.connection = connection_class(**connection_kwargs)
 
         # all command upper case
         self.answer_callbacks = command2callback

@@ -65,9 +65,6 @@ class Config:
             self.queued_commands = []
         super().__setattr__(name, value)
 
-    def __getattr__(self, attr):
-        return None
-
 
 config = Config()
 
