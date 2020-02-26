@@ -33,7 +33,7 @@ command.
 ## 0.9
 
 * Refactor: split completer update and response render; Move cli tests to 
-travis ci.
+travis ci. (Thanks: [ruohan.chen])
 * Support stream commands.
 	* Timestamp completer support.
 	* Stream command renders and lexers.
@@ -69,6 +69,6 @@ to [Wooden-Robot].
 
 * Support connect shell utilities with pipeline
 
-# Contributors
 
 [Wooden-Robot]: https://github.com/Wooden-Robot
+[ruohan.chen]: https://github.com/crhan
