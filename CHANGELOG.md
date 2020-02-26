@@ -63,8 +63,12 @@ commands now.
 ### 0.8.8
 
 * Bugfix: pipeline in iredis can run shell command include pipes. thanks
-to [Wooden-Robot](https://github.com/Wooden-Robot)
+to [Wooden-Robot].
 
 ### 0.8.7
 
 * Support connect shell utilities with pipeline
+
+# Contributors
+
+[Wooden-Robot]: https://github.com/Wooden-Robot
