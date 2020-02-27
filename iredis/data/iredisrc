@@ -38,5 +38,8 @@ bottom_bar = True
 warning = True
 
 # IRedis log for debugging, leave this blank will disable log.
+# You don't need this unless you are debuging iredis.
+# Be careful this will log your commands input (include AUTH with password) to
+# log file.
 # eg. ~/.iredis.log
 log_location =
