@@ -53,9 +53,51 @@ jobs:
           iredis -h
           iredis help GET
 
+      - name: Cache cargo registry
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry
+
+      - name: Executable Build
+        run: |
+          # pyoxidizer doesn't know the wheel path, and it doesn't support passing env vars
+          export WHEEL_PATH=`ls ./dist/iredis*.whl`
+          envsubst '$WHEEL_PATH' < pyoxidizer.template.bzl > pyoxidizer.bzl
+          cargo install pyoxidizer --vers 0.6.0
+          pyoxidizer build --release install
+          cd ./build/x86*/release/install
+          tar -zcf ../../../iredis.tar.gz lib/ iredis
+          cd -
+
+      - name: Test Executable
+        run: |
+          ./build/x86*/release/install/iredis -h
+          ./build/x86*/release/install/iredis help GET
+
       - name: Upload to Pypi
         env:
           PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
           . venv/bin/activate
           poetry publish --username __token__ --password ${PASSWORD}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/iredis.tar.gz
+          asset_name: iredis.tar.gz
+          asset_content_type: application/gzip

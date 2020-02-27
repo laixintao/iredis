@@ -1,15 +1,13 @@
 import csv
+from importlib_resources import read_text, open_text
 import json
 
 from .utils import timer
-from . import project_data
+from . import data as project_data
 
 
 def load_command_summary():
-    commands_json_path = project_data / "commands.json"
-
-    with open(commands_json_path) as jsonfile:
-        commands_summary = json.load(jsonfile)
+    commands_summary = json.loads(read_text(project_data, "commands.json"))
     return commands_summary
 
 
@@ -20,13 +18,11 @@ def load_command():
         - original_commans: dict, command name : Command
         - command_group: dict, group_name: command_names
     """
-    syntax_path = project_data / "command_syntax.csv"
-
     first_line = True
     command2callback = {}
     command2syntax = {}
     groups = {}
-    with open(syntax_path) as command_syntax:
+    with open_text(project_data, "command_syntax.csv") as command_syntax:
         csvreader = csv.reader(command_syntax)
         for line in csvreader:
             if first_line:
@@ -45,9 +41,8 @@ def load_dangerous():
     Load dangerous commands from csv file.
     """
     first_line = True
-    dangerous_file_path = project_data / "dangerous_commands.csv"
     dangerous_command = {}
-    with open(dangerous_file_path) as dangerous_file:
+    with open_text(project_data, "dangerous_commands.csv") as dangerous_file:
         csvreader = csv.reader(dangerous_file)
         for line in csvreader:
             if first_line:
