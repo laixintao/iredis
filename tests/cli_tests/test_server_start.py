@@ -2,7 +2,7 @@ import pexpect
 
 
 def test_short_help_option(config):
-    c = pexpect.spawn("iredis -h", timeout=0.5)
+    c = pexpect.spawn("iredis -h", timeout=2)
 
     c.expect("Show this message and exit.")
 
@@ -13,6 +13,6 @@ def test_short_help_option(config):
 
 
 def test_server_version_in_starting():
-    c = pexpect.spawn("iredis", timeout=0.5)
+    c = pexpect.spawn("iredis", timeout=2)
     c.expect("redis-server  5")
     c.close()
