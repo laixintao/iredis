@@ -35,7 +35,7 @@ IRedis is an alternative for redis-cli. In most cases, IRedis behaves exactly th
 - Support `--encode=utf-8`, to decode Redis' bytes responses.
 - Command hint on bottom, include command syntax, supported redis version, and time complexity.
 - Offcial docs with built-in `HELP` command, try `HELP SET`!
-- Writen in pure Python, but IRedis was packaged into a single binary with
+- Written in pure Python, but IRedis was packaged into a single binary with
 [PyOxidizer](https://github.com/indygreg/PyOxidizer), you can use cURL to
 download and run, it just works, even you don't have a Python interpreter.
 - For full features, please see: [iredis.io/show](https://www.iredis.io/show/)
@@ -64,7 +64,7 @@ wget https://github.com/laixintao/iredis/releases/download/latest/iredis.tar.gz 
  && ./iredis
 ```
 
-(Please replace `latest` in the URL to `v1.x.x` if you want to use a old vertion
+(Please replace `latest` in the URL to `v1.x.x` if you want to use an old version 
 of iredis)
 
 ## Usage
