@@ -59,13 +59,13 @@ It is especially useful when you don't have a python interpreter(E.g. the
 official docker image of redis doesn't have python):
 
 ```
-wget https://github.com/laixintao/iredis/releases/download/latest/iredis.tar.gz \
- && tar -xzf iredis.tar.gz  \
+wget  https://github.com/laixintao/iredis/releases/latest/download/iredis.tar.gz \
+ && tar -xzf iredis.tar.gz \
  && ./iredis
 ```
 
-(Please replace `latest` in the URL to `v1.x.x` if you want to use an old version 
-of iredis)
+(Check the [release page](https://github.com/laixintao/iredis/releases) if you
+want to download an old version of IRedis.)
 
 ## Usage
 
