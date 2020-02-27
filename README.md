@@ -56,7 +56,8 @@ pipx install iredis
 
 Or you can download the executable binary with cURL(or wget), untar, then run.
 It is especially useful when you don't have a python interpreter(E.g. the
-official docker image of redis doesn't have python):
+[official Redis docker image](https://hub.docker.com/_/redis/) which doesn't
+have Python installed.):
 
 ```
 wget  https://github.com/laixintao/iredis/releases/latest/download/iredis.tar.gz \
