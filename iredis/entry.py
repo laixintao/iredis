@@ -4,12 +4,11 @@ import logging
 import sys
 import time
 from pathlib import Path
+from collections import namedtuple
 from urllib.parse import parse_qs, unquote, urlparse
 import platform
 
 import click
-
-
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
@@ -27,7 +26,6 @@ from .utils import timer, exit
 from .completers import IRedisCompleter
 from .lexer import IRedisLexer
 from . import __version__
-
 
 logger = logging.getLogger(__name__)
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
@@ -178,51 +176,40 @@ DECODE_HELP = (
 )
 RAINBOW = "Display colorful prompt."
 
+DSN = namedtuple("DSN", "scheme host port path db username password")
 
-def parse_url(ctx, url):
-    """
-    Update config.connection_kwargs and config.connection_class from the given URL.
-    """
+
+def parse_url(url):
     url = urlparse(url)
-    username = unquote(url.username) if url.username else None
-    password = unquote(url.password) if url.password else None
-    path = unquote(url.path) if url.path else None
-    hostname = unquote(url.hostname) if url.hostname else None
 
-    if ctx.params:
-        ctx.params["username"] = username
-    if ctx.params:
-        ctx.params["password"] = password
-
+    scheme = url.scheme
     db = 0
+    path = unquote(url.path) if url.path else None
     # We only support redis://, rediss:// and unix:// schemes.
     if url.scheme == "unix":
-        ctx.params["scheme"] = "unix"
-        ctx.params["path"] = path
         qs = parse_qs(url.query)
         if "db" in qs:
             db = int(qs["db"][0] or 0)
     elif url.scheme in ("redis", "rediss"):
-        ctx.params["scheme"] = "redis"
-        if "h" not in ctx.params:
-            ctx.params["h"] = hostname
-        if "p" not in ctx.params:
-            ctx.params["p"] = int(url.port or 6379)
+        scheme = url.scheme
         if path:
             try:
                 db = int(path.replace("/", ""))
+                path = None
             except (AttributeError, ValueError):
                 pass
-        if url.scheme == "rediss":
-            ctx.params["scheme"] = "rediss"
     else:
         valid_schemes = ", ".join(("redis://", "rediss://", "unix://"))
         raise ValueError(
             "Redis URL must specify one of the following" "schemes (%s)" % valid_schemes
         )
 
-    if not ctx.params["n"]:
-        ctx.params["n"] = db
+    username = unquote(url.username) if url.username else None
+    password = unquote(url.password) if url.password else None
+    hostname = unquote(url.hostname) if url.hostname else None
+    port = url.port
+
+    return DSN(scheme, hostname, port, path, db, username, password)
 
 
 # command line entry here...
@@ -235,7 +222,7 @@ def parse_url(ctx, url):
 @click.option(
     "-d",
     "--dsn",
-    default="",
+    default=None,
     envvar="DSN",
     help="Use DSN configured into the [alias_dsn] section of iredisrc file.",
 )
@@ -308,9 +295,9 @@ def gather_args(
             exit(1)
 
     if dsn_uri:
-        parse_url(ctx, dsn_uri)
+        dsn = parse_url(dsn_uri)
 
-    return ctx
+    return ctx, dsn
 
 
 @prompt_register("edit-and-execute-command")
@@ -327,8 +314,9 @@ def main():
 
     # invoke in non-standalone mode to gather args
     ctx = None
+    dsn = None
     try:
-        ctx = gather_args.main(standalone_mode=False)
+        ctx, dsn = gather_args.main(standalone_mode=False)
     except click.exceptions.NoSuchOption as nosuchoption:
         nosuchoption.show()
     except click.exceptions.BadOptionUsage as badoption:
@@ -344,16 +332,25 @@ def main():
     # ignore None value
 
     # redis client
-    print(ctx.params)
-    client = Client(
-        host=ctx.params["h"],
-        port=ctx.params["p"],
-        db=ctx.params.get("n", 0),
-        path=ctx.params.get("path"),
-        username=ctx.params.get("username"),
-        password=ctx.params.get("password"),
-        scheme=ctx.params.get("scheme", "redis")
-    )
+    host = ctx.params["h"]
+    port = ctx.params["p"]
+    db = ctx.params["n"]
+    password = ctx.params["password"]
+
+    if not isinstance(dsn, tuple):
+        client = Client(host=host, port=port, db=db, password=password)
+    else:
+        db = db if db else dsn.db
+        password = password if password else dsn.password
+        client = Client(
+            host=dsn.host,
+            port=dsn.port,
+            db=db,
+            password=password,
+            path=dsn.path,
+            scheme=dsn.scheme,
+            username=dsn.username,
+        )
 
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():

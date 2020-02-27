@@ -43,15 +43,15 @@ class Client:
         host=None,
         port=None,
         db=0,
-        username=None,
-        path=None,
         password=None,
+        path=None,
         scheme="redis",
+        username=None,
     ):
         self.host = host
         self.port = port
-        self.path = path
         self.db = db
+        self.path = path
         self.username = username
         connection_class = Connection
         connection_kwargs = {
