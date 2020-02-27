@@ -1,4 +1,8 @@
-## 1.0.5
+### 1.1.0
+
+* Feature: Package into a single binary with PyOxidizer (thanks [Mac Chaffee])
+
+### 1.0.5
 
 * Feature: <kbd>Ctrl - X</kbd> then <kbd>Ctrl -E</kbd> to open an editor to edit
 command.
@@ -72,3 +76,4 @@ to [Wooden-Robot].
 
 [Wooden-Robot]: https://github.com/Wooden-Robot
 [ruohan.chen]: https://github.com/crhan
+[Mac Chaffee]: https://github.com/mac-chaffee
