@@ -12,7 +12,7 @@ from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit import print_formatted_text
 from prompt_toolkit.key_binding.bindings.named_commands import (
-    register as prompt_register
+    register as prompt_register,
 )
 
 from .client import Client
