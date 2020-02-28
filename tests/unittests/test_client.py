@@ -279,7 +279,7 @@ def test_peek_set_fetch_all(iredis_client, clean_redis):
     clean_redis.sadd("myset", *[f"hello-{index}" for index in range(5)])
     peek_result = list(iredis_client.do_peek("myset"))
 
-    assert peek_result[0:6] == [
+    assert peek_result[0:3] == [
         FormattedText(
             [
                 ("class:dockey", "key: "),
@@ -288,6 +288,8 @@ def test_peek_set_fetch_all(iredis_client, clean_redis):
         ),
         FormattedText([("class:dockey", "cardinality: "), ("", "5")]),
         FormattedText([("class:dockey", "members: ")]),
+    ]
+    assert sorted(peek_result[3]) == sorted(
         FormattedText(
             [
                 ("", "1)"),
@@ -310,8 +312,8 @@ def test_peek_set_fetch_all(iredis_client, clean_redis):
                 ("", " "),
                 ("class:string", '"hello-4"'),
             ]
-        ),
-    ]
+        )
+    )
 
 
 def test_peek_set_fetch_part(iredis_client, clean_redis):
