@@ -1,3 +1,9 @@
+### 1.1.3
+
+* Feature: Peek command now displays more friendly, before each "info" will
+take one line, now type/encoding/ttl/memory usage will display in one line,
+makes the result looks more clear.
+
 ### 1.1.2
 
 * Feature: support history location config.
@@ -44,7 +50,7 @@ command.
 
 ## 0.9
 
-* Refactor: split completer update and response render; Move cli tests to 
+* Refactor: split completer update and response render; Move cli tests to
 travis ci. (Thanks: [ruohan.chen])
 * Support stream commands.
 	* Timestamp completer support.
