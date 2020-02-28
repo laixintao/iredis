@@ -473,23 +473,19 @@ class Client:
         def _none(key):
             yield f"Key {key} doesn't exist."
 
-        resp = nativestr(self.execute("type", key))
-        # FIXME raw write_result parse FormattedText
-        yield FormattedText([("class:dockey", "type: "), ("", resp)])
-
-        if resp == "none":
+        key_type = nativestr(self.execute("type", key))
+        if key_type == "none":
+            yield FormattedText([("class:dockey", f"{key} doesn't exist.")])
             return
 
         encoding = nativestr(self.execute("object encoding", key))
-        yield FormattedText([("class:dockey", "object encoding: "), ("", encoding)])
-
         memory_usage = str(self.execute("memory usage", key))
-        yield FormattedText(
-            [("class:dockey", "memory usage(bytes): "), ("", memory_usage)]
-        )
-
         ttl = str(self.execute("ttl", key))
-        yield FormattedText([("class:dockey", "ttl: "), ("", ttl)])
+
+        key_info = f"{key_type} ({encoding})  mem: {memory_usage} bytes, ttl: {ttl}"
+
+        # FIXME raw write_result parse FormattedText
+        yield FormattedText([("class:dockey", "key: "), ("", key_info)])
 
         yield from {
             "string": _string,
@@ -499,4 +495,4 @@ class Client:
             "hash": _hash,
             "stream": _stream,
             "none": _none,
-        }[resp](key)
+        }[key_type](key)
