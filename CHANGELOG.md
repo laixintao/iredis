@@ -1,3 +1,7 @@
+### 1.1.2
+
+* Feature: support history location config.
+
 ### 1.1.1
 
 * This release is for testing the binary build, nothing else changed.

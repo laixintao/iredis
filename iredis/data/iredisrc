@@ -43,3 +43,6 @@ warning = True
 # log file.
 # eg. ~/.iredis.log
 log_location =
+
+# History file location
+history_location = ~/.iredis_history

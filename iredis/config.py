@@ -42,6 +42,7 @@ class Config:
 
         self.no_version_reason = None
         self.log_location = None
+        self.history_location = None
         self.completion_casing = None
 
         # ===bad code===
@@ -117,5 +118,6 @@ def load_config_files(iredisrc):
     config.decode = config_obj["main"]["decode"]
     config.log_location = config_obj["main"]["log_location"]
     config.completion_casing = config_obj["main"]["completion_casing"]
+    config.history_location = config_obj["main"]["history_location"]
 
     return config_obj
