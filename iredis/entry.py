@@ -4,6 +4,8 @@ import logging
 import sys
 import time
 from pathlib import Path
+from collections import namedtuple
+from urllib.parse import parse_qs, unquote, urlparse
 import platform
 
 import click
@@ -183,6 +185,41 @@ DECODE_HELP = (
 )
 RAINBOW = "Display colorful prompt."
 
+DSN = namedtuple("DSN", "scheme host port path db username password")
+
+
+def parse_url(url):
+    url = urlparse(url)
+
+    scheme = url.scheme
+    db = 0
+    path = unquote(url.path) if url.path else None
+    # We only support redis://, rediss:// and unix:// schemes.
+    if url.scheme == "unix":
+        qs = parse_qs(url.query)
+        if "db" in qs:
+            db = int(qs["db"][0] or 0)
+    elif url.scheme in ("redis", "rediss"):
+        scheme = url.scheme
+        if path:
+            try:
+                db = int(path.replace("/", ""))
+                path = None
+            except (AttributeError, ValueError):
+                pass
+    else:
+        valid_schemes = ", ".join(("redis://", "rediss://", "unix://"))
+        raise ValueError(
+            "Redis URL must specify one of the following" "schemes (%s)" % valid_schemes
+        )
+
+    username = unquote(url.username) if url.username else None
+    password = unquote(url.password) if url.password else None
+    hostname = unquote(url.hostname) if url.hostname else None
+    port = url.port
+
+    return DSN(scheme, hostname, port, path, db, username, password)
+
 
 # command line entry here...
 @click.command()
@@ -191,6 +228,13 @@ RAINBOW = "Display colorful prompt."
 @click.option("-p", help="Server port (default: 6379).", default="6379")
 @click.option("-n", help="Database number.", default=None)
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
+@click.option(
+    "-d",
+    "--dsn",
+    default=None,
+    envvar="DSN",
+    help="Use DSN configured into the [alias_dsn] section of iredisrc file.",
+)
 @click.option(
     "--newbie/--no-newbie",
     default=None,
@@ -207,7 +251,9 @@ RAINBOW = "Display colorful prompt."
 @click.option("--rainbow/--no-rainbow", default=None, is_flag=True, help=RAINBOW)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
-def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, cmd):
+def gather_args(
+    ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, cmd, dsn
+):
     """
     IRedis: Interactive Redis
 
@@ -216,13 +262,14 @@ def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, 
     \b
     Examples:
       - iredis
+      - iredis -d dsn
       - iredis -h 127.0.0.1 -p 6379
       - iredis -h 127.0.0.1 -p 6379 -a <password>
 
     Type "help" in interactive mode for information on available commands
     and settings.
     """
-    load_config_files(iredisrc)
+    config_obj = load_config_files(iredisrc)
     setup_log()
     logger.info(
         f"[commandline args] host={h}, port={p}, db={n}, newbie={newbie}, "
@@ -242,7 +289,24 @@ def gather_args(ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, 
     if rainbow is not None:
         config.rainbow = rainbow
 
-    return ctx
+    dsn_uri = None
+    if config_obj["alias_dsn"] and dsn:
+        try:
+            dsn_uri = config_obj["alias_dsn"].get(dsn)
+        except KeyError:
+            click.secho(
+                "Could not find the specified DSN in the config file. "
+                'Please check the "[alias_dsn]" section in your '
+                "iredisrc.",
+                err=True,
+                fg="red",
+            )
+            exit(1)
+
+    if dsn_uri:
+        dsn = parse_url(dsn_uri)
+
+    return ctx, dsn
 
 
 @prompt_register("edit-and-execute-command")
@@ -259,8 +323,9 @@ def main():
 
     # invoke in non-standalone mode to gather args
     ctx = None
+    dsn = None
     try:
-        ctx = gather_args.main(standalone_mode=False)
+        ctx, dsn = gather_args.main(standalone_mode=False)
     except click.exceptions.NoSuchOption as nosuchoption:
         nosuchoption.show()
     except click.exceptions.BadOptionUsage as badoption:
@@ -276,9 +341,26 @@ def main():
     # ignore None value
 
     # redis client
-    client = Client(
-        ctx.params["h"], ctx.params["p"], ctx.params["n"], ctx.params["password"]
-    )
+    host = ctx.params["h"]
+    port = ctx.params["p"]
+    db = ctx.params["n"]
+    password = ctx.params["password"]
+
+    if not isinstance(dsn, tuple):
+        client = Client(host=host, port=port, db=db, password=password)
+    else:
+        db = db if db else dsn.db
+        password = password if password else dsn.password
+        client = Client(
+            host=dsn.host,
+            port=dsn.port,
+            db=db,
+            password=password,
+            path=dsn.path,
+            scheme=dsn.scheme,
+            username=dsn.username,
+        )
+
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():
             logger.debug(f"[Command stdin] {line}")

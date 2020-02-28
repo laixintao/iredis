@@ -46,3 +46,8 @@ log_location =
 
 # History file location
 history_location = ~/.iredis_history
+
+[alias_dsn]
+# example_dsn = redis://[[username]:[password]]@localhost:6379/0
+# example_dsn = rediss://[[username]:[password]]@localhost:6379/0
+# example_dsn = unix://[[username]:[password]]@/path/to/socket.sock?db=0
