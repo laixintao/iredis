@@ -12,7 +12,7 @@ from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit import print_formatted_text
 from prompt_toolkit.key_binding.bindings.named_commands import (
-    register as prompt_register,
+    register as prompt_register
 )
 
 from .client import Client
@@ -27,6 +27,16 @@ from . import __version__
 
 logger = logging.getLogger(__name__)
 HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
+
+
+class SkipAuthFileHistory(FileHistory):
+    """Exactlly like FileHistory, but won't save `AUTH` command into history
+    file."""
+
+    def store_string(self, string: str) -> None:
+        if string.lstrip().upper().startswith("AUTH"):
+            return
+        super().store_string(string)
 
 
 def setup_log():
@@ -292,7 +302,7 @@ def main():
 
     # prompt session
     session = PromptSession(
-        history=FileHistory(HISTORY_FILE),
+        history=SkipAuthFileHistory(HISTORY_FILE),
         style=STYLE,
         auto_suggest=AutoSuggestFromHistory(),
         complete_while_typing=True,
