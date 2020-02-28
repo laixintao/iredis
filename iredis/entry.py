@@ -26,7 +26,6 @@ from .lexer import IRedisLexer
 from . import __version__
 
 logger = logging.getLogger(__name__)
-HISTORY_FILE = Path(os.path.expanduser("~")) / ".iredis_history"
 
 
 class SkipAuthFileHistory(FileHistory):
@@ -294,15 +293,9 @@ def main():
         logger.warning("[OVER] command executed, exit...")
         return
 
-    # Create history file if not exists.
-    if not os.path.exists(HISTORY_FILE):
-        logger.info(f"History file {HISTORY_FILE} not exists, create now...")
-        f = open(HISTORY_FILE, "w+")
-        f.close()
-
     # prompt session
     session = PromptSession(
-        history=SkipAuthFileHistory(HISTORY_FILE),
+        history=SkipAuthFileHistory(Path(os.path.expanduser(config.history_location))),
         style=STYLE,
         auto_suggest=AutoSuggestFromHistory(),
         complete_while_typing=True,
