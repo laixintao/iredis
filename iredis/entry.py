@@ -28,6 +28,7 @@ from .lexer import IRedisLexer
 from . import __version__
 
 logger = logging.getLogger(__name__)
+DSN = namedtuple("DSN", "scheme host port path db username password")
 
 
 class SkipAuthFileHistory(FileHistory):
@@ -185,20 +186,47 @@ DECODE_HELP = (
 )
 RAINBOW = "Display colorful prompt."
 
-DSN = namedtuple("DSN", "scheme host port path db username password")
 
+def parse_url(url, db=0):
+    """
+    Return a Redis client object configured from the given URL
 
-def parse_url(url):
+    For example::
+
+        redis://[[username]:[password]]@localhost:6379/0
+        rediss://[[username]:[password]]@localhost:6379/0
+        unix://[[username]:[password]]@/path/to/socket.sock?db=0
+
+    Three URL schemes are supported:
+
+    - ```redis://``
+      <http://www.iana.org/assignments/uri-schemes/prov/redis>`_ creates a
+      normal TCP socket connection
+    - ```rediss://``
+      <http://www.iana.org/assignments/uri-schemes/prov/rediss>`_ creates a
+      SSL wrapped TCP socket connection
+    - ``unix://`` creates a Unix Domain Socket connection
+
+    There are several ways to specify a database number. The parse function
+    will return the first specified option:
+        1. A ``db`` querystring option, e.g. redis://localhost?db=0
+        2. If using the redis:// scheme, the path argument of the url, e.g.
+           redis://localhost/0
+        3. The ``db`` argument to this function.
+
+    If none of these options are specified, db=0 is used.
+    """
     url = urlparse(url)
 
     scheme = url.scheme
-    db = 0
     path = unquote(url.path) if url.path else None
     # We only support redis://, rediss:// and unix:// schemes.
+    # if scheme is ``unix``, read ``db`` from query string
+    # otherwise read ``db`` from path
     if url.scheme == "unix":
         qs = parse_qs(url.query)
         if "db" in qs:
-            db = int(qs["db"][0] or 0)
+            db = int(qs["db"][0] or db)
     elif url.scheme in ("redis", "rediss"):
         scheme = url.scheme
         if path:
@@ -226,13 +254,17 @@ def parse_url(url):
 @click.pass_context
 @click.option("-h", help="Server hostname (default: 127.0.0.1).", default="127.0.0.1")
 @click.option("-p", help="Server port (default: 6379).", default="6379")
-@click.option("-n", help="Database number.", default=None)
+@click.option(
+    "-n",
+    help="Database number.(This option will overwrite dsn's db number, is dsn is used)",
+    default=None,
+)
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
 @click.option(
     "-d",
     "--dsn",
     default=None,
-    envvar="DSN",
+    envvar="IREDIS_DSN",
     help="Use DSN configured into the [alias_dsn] section of iredisrc file.",
 )
 @click.option(
@@ -269,7 +301,7 @@ def gather_args(
     Type "help" in interactive mode for information on available commands
     and settings.
     """
-    config_obj = load_config_files(iredisrc)
+    load_config_files(iredisrc)
     setup_log()
     logger.info(
         f"[commandline args] host={h}, port={p}, db={n}, newbie={newbie}, "
@@ -289,24 +321,7 @@ def gather_args(
     if rainbow is not None:
         config.rainbow = rainbow
 
-    dsn_uri = None
-    if config_obj["alias_dsn"] and dsn:
-        try:
-            dsn_uri = config_obj["alias_dsn"].get(dsn)
-        except KeyError:
-            click.secho(
-                "Could not find the specified DSN in the config file. "
-                'Please check the "[alias_dsn]" section in your '
-                "iredisrc.",
-                err=True,
-                fg="red",
-            )
-            exit(1)
-
-    if dsn_uri:
-        dsn = parse_url(dsn_uri)
-
-    return ctx, dsn
+    return ctx
 
 
 @prompt_register("edit-and-execute-command")
@@ -318,14 +333,28 @@ def edit_and_execute(event):
     buff.open_in_editor(validate_and_handle=False)
 
 
+def resolve_dsn(dsn):
+    try:
+        dsn_uri = config["alias_dsn"].get(dsn)
+    except KeyError:
+        click.secho(
+            "Could not find the specified DSN in the config file. "
+            'Please check the "[alias_dsn]" section in your '
+            "iredisrc.",
+            err=True,
+            fg="red",
+        )
+        exit(1)
+    return dsn_uri
+
+
 def main():
     enter_main_time = time.time()  # just for logs
 
     # invoke in non-standalone mode to gather args
     ctx = None
-    dsn = None
     try:
-        ctx, dsn = gather_args.main(standalone_mode=False)
+        ctx = gather_args.main(standalone_mode=False)
     except click.exceptions.NoSuchOption as nosuchoption:
         nosuchoption.show()
     except click.exceptions.BadOptionUsage as badoption:
@@ -346,11 +375,14 @@ def main():
     db = ctx.params["n"]
     password = ctx.params["password"]
 
-    if not isinstance(dsn, tuple):
-        client = Client(host=host, port=port, db=db, password=password)
-    else:
-        db = db if db else dsn.db
-        password = password if password else dsn.password
+    dsn = ctx.params["dsn"]
+    if config.alias_dsn and dsn:
+        dsn_uri = resolve_dsn(dsn)
+        _dsn = parse_url(dsn_uri)
+
+        # db from command lint options should be high priority
+        db = db if db else _dsn.db
+        password = _dsn.password
         client = Client(
             host=dsn.host,
             port=dsn.port,
@@ -360,6 +392,8 @@ def main():
             scheme=dsn.scheme,
             username=dsn.username,
         )
+    else:
+        client = Client(host=host, port=port, db=db, password=password)
 
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():
