@@ -255,9 +255,7 @@ def parse_url(url, db=0):
 @click.option("-h", help="Server hostname (default: 127.0.0.1).", default="127.0.0.1")
 @click.option("-p", help="Server port (default: 6379).", default="6379")
 @click.option(
-    "-n",
-    help="Database number.(This option will overwrite dsn's db number, is dsn is used)",
-    default=None,
+    "-n", help="Database number.(overwrites dsn/url's db number)", default=None
 )
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
 @click.option(
@@ -335,7 +333,7 @@ def edit_and_execute(event):
 
 def resolve_dsn(dsn):
     try:
-        dsn_uri = config["alias_dsn"].get(dsn)
+        dsn_uri = config.alias_dsn.get(dsn)
     except KeyError:
         click.secho(
             "Could not find the specified DSN in the config file. "
@@ -382,15 +380,14 @@ def main():
 
         # db from command lint options should be high priority
         db = db if db else _dsn.db
-        password = _dsn.password
         client = Client(
-            host=dsn.host,
-            port=dsn.port,
+            host=_dsn.host,
+            port=_dsn.port,
             db=db,
-            password=password,
-            path=dsn.path,
-            scheme=dsn.scheme,
-            username=dsn.username,
+            password=_dsn.password,
+            path=_dsn.path,
+            scheme=_dsn.scheme,
+            username=_dsn.username,
         )
     else:
         client = Client(host=host, port=port, db=db, password=password)
