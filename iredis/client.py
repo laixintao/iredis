@@ -52,22 +52,25 @@ class Client:
         self.port = port
         self.db = db
         self.path = path
+        # FIXME username is not using...
         self.username = username
-        connection_class = Connection
-        connection_kwargs = {
-            "db": db,
-            "password": password,
-            "socket_keepalive": config.socket_keepalive,
-        }
+        self.scheme = scheme
+
         if scheme in ("redis", "rediss"):
-            connection_kwargs["host"] = host
-            connection_kwargs["port"] = port
+            connection_kwargs = {
+                "host": host,
+                "port": port,
+                "db": db,
+                "password": password,
+                "socket_keepalive": config.socket_keepalive,
+            }
             if scheme == "rediss":
                 connection_class = SSLConnection
+            else:
+                connection_class = Connection
         else:
+            connection_kwargs = {"db": db, "password": password, "path": path}
             connection_class = UnixDomainSocketConnection
-            connection_kwargs["path"] = path
-            del connection_kwargs["socket_keepalive"]
 
         if config.decode:
             connection_kwargs["encoding"] = config.decode
@@ -104,15 +107,14 @@ class Client:
         config.version = version
 
     def __str__(self):
-        if self.path:
-            if self.db:
-                return f"{self.path}[{self.db}]"
-            else:
-                return f"{self.path}"
+        if self.scheme == "unix":
+            prompt = self.path
+        else:
+            prompt = f"{self.host}:{self.port}"
 
         if self.db:
-            return f"{self.host}:{self.port}[{self.db}]"
-        return f"{self.host}:{self.port}"
+            prompt = f"{prompt}[{self.db}]"
+        return prompt
 
     def client_execute_command(self, command_name, *args):
         command = command_name.upper()
