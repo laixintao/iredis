@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch
 
-from iredis.entry import gather_args
+from iredis.entry import gather_args, parse_url, DSN
 
 
 @pytest.mark.parametrize(
@@ -40,3 +40,25 @@ def test_command_with_decode_utf_8():
 
     gather_args.main(["iredis"], standalone_mode=False)
     assert config.decode == ""
+
+
+@pytest.mark.parametrize(
+    "url,dsn",
+    [
+        (
+            "redis://localhost:6379/3",
+            DSN(
+                scheme="redis",
+                host="localhost",
+                port=6379,
+                path=None,
+                db=3,
+                username=None,
+                password=None,
+            ),
+        )
+    ],
+)
+def test_parse_url(url, dsn):
+    assert parse_url(url) == dsn
+    # TODO more on www.iana.org/assignments/uri-schemes/prov/redis
