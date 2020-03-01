@@ -176,17 +176,6 @@ def repl(client, session, start_time):
             print("(error)", str(e))
 
 
-RAW_HELP = """
-Use raw formatting for replies (default when STDOUT is not a tty). \
-However, you can use --no-raw to force formatted output even \
-when STDOUT is not a tty.
-"""
-DECODE_HELP = (
-    "decode response, defult is No decode, which will output all bytes literals."
-)
-RAINBOW = "Display colorful prompt."
-
-
 def parse_url(url, db=0):
     """
     Return a Redis client object configured from the given URL
@@ -249,6 +238,26 @@ def parse_url(url, db=0):
     return DSN(scheme, hostname, port, path, db, username, password)
 
 
+RAW_HELP = """
+Use raw formatting for replies (default when STDOUT is not a tty). \
+However, you can use --no-raw to force formatted output even \
+when STDOUT is not a tty.
+"""
+DECODE_HELP = """
+decode response, defult is No decode, which will output all bytes literals.
+"""
+RAINBOW = "Display colorful prompt."
+DSN_HELP = """
+Use DSN configured into the [alias_dsn] section of iredisrc file. \
+(Can set with env `IREDIS_DSN`)
+"""
+URL_HELP = """
+Use Redis URL to indicate connection(Can set with env `IREDIS_URL`), Example:
+    redis://[[username]:[password]]@localhost:6379/0
+    rediss://[[username]:[password]]@localhost:6379/0
+    unix://[[username]:[password]]@/path/to/socket.sock?db=0
+"""
+
 # command line entry here...
 @click.command()
 @click.pass_context
@@ -258,13 +267,8 @@ def parse_url(url, db=0):
     "-n", help="Database number.(overwrites dsn/url's db number)", default=None
 )
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
-@click.option(
-    "-d",
-    "--dsn",
-    default=None,
-    envvar="IREDIS_DSN",
-    help="Use DSN configured into the [alias_dsn] section of iredisrc file.",
-)
+@click.option("-d", "--dsn", default=None, envvar="IREDIS_DSN", help=DSN_HELP)
+@click.option("--url", default=None, envvar="IREDIS_URL", help=URL_HELP)
 @click.option(
     "--newbie/--no-newbie",
     default=None,
@@ -282,7 +286,7 @@ def parse_url(url, db=0):
 @click.version_option()
 @click.argument("cmd", nargs=-1)
 def gather_args(
-    ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, cmd, dsn
+    ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, cmd, dsn, url
 ):
     """
     IRedis: Interactive Redis
@@ -295,6 +299,7 @@ def gather_args(
       - iredis -d dsn
       - iredis -h 127.0.0.1 -p 6379
       - iredis -h 127.0.0.1 -p 6379 -a <password>
+      - iredis --url redis://localhost:7890/3
 
     Type "help" in interactive mode for information on available commands
     and settings.
@@ -373,21 +378,24 @@ def main():
     db = ctx.params["n"]
     password = ctx.params["password"]
 
+    dsn_from_url = None
     dsn = ctx.params["dsn"]
     if config.alias_dsn and dsn:
         dsn_uri = resolve_dsn(dsn)
-        _dsn = parse_url(dsn_uri)
-
+        dsn_from_url = parse_url(dsn_uri)
+    if ctx.params['url']:
+        dsn_from_url = parse_url(ctx.params['url'])
+    if dsn_from_url:
         # db from command lint options should be high priority
-        db = db if db else _dsn.db
+        db = db if db else dsn_from_url.db
         client = Client(
-            host=_dsn.host,
-            port=_dsn.port,
+            host=dsn_from_url.host,
+            port=dsn_from_url.port,
             db=db,
-            password=_dsn.password,
-            path=_dsn.path,
-            scheme=_dsn.scheme,
-            username=_dsn.username,
+            password=dsn_from_url.password,
+            path=dsn_from_url.path,
+            scheme=dsn_from_url.scheme,
+            username=dsn_from_url.username,
         )
     else:
         client = Client(host=host, port=port, db=db, password=password)
@@ -398,8 +406,8 @@ def main():
             for answer in client.send_command(line, None):
                 write_result(answer)
         return
-
-    if ctx.params["cmd"]:  # no interactive mode
+    # no interactive mode, directly run a command
+    if ctx.params["cmd"]:
         answers = client.send_command(" ".join(ctx.params["cmd"]), None)
         for answer in answers:
             write_result(answer)
