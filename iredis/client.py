@@ -108,7 +108,7 @@ class Client:
 
     def __str__(self):
         if self.scheme == "unix":
-            prompt = self.path
+            prompt = f"redis {self.path}"
         else:
             prompt = f"{self.host}:{self.port}"
 
