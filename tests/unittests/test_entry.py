@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch
 
-from iredis.entry import gather_args
+from iredis.entry import gather_args, parse_url, DSN
 
 
 @pytest.mark.parametrize(
@@ -40,3 +40,133 @@ def test_command_with_decode_utf_8():
 
     gather_args.main(["iredis"], standalone_mode=False)
     assert config.decode == ""
+
+
+@pytest.mark.parametrize(
+    "url,dsn",
+    [
+        (
+            "redis://localhost:6379/3",
+            DSN(
+                scheme="redis",
+                host="localhost",
+                port=6379,
+                path=None,
+                db=3,
+                username=None,
+                password=None,
+            ),
+        ),
+        (
+            "redis://localhost:6379",
+            DSN(
+                scheme="redis",
+                host="localhost",
+                port=6379,
+                path=None,
+                db=0,
+                username=None,
+                password=None,
+            ),
+        ),
+        (
+            "rediss://localhost:6379",
+            DSN(
+                scheme="rediss",
+                host="localhost",
+                port=6379,
+                path=None,
+                db=0,
+                username=None,
+                password=None,
+            ),
+        ),
+        (
+            "redis://username:password@localhost:6379",
+            DSN(
+                scheme="redis",
+                host="localhost",
+                port=6379,
+                path=None,
+                db=0,
+                username="username",
+                password="password",
+            ),
+        ),
+        (
+            "redis://:password@localhost:6379",
+            DSN(
+                scheme="redis",
+                host="localhost",
+                port=6379,
+                path=None,
+                db=0,
+                username=None,
+                password="password",
+            ),
+        ),
+        (
+            "redis://username@localhost:12345",
+            DSN(
+                scheme="redis",
+                host="localhost",
+                port=12345,
+                path=None,
+                db=0,
+                username="username",
+                password=None,
+            ),
+        ),
+        (
+            # query string won't work for redis://
+            "redis://username@localhost:6379?db=2",
+            DSN(
+                scheme="redis",
+                host="localhost",
+                port=6379,
+                path=None,
+                db=0,
+                username="username",
+                password=None,
+            ),
+        ),
+        (
+            "unix://username:password2@/tmp/to/socket.sock?db=0",
+            DSN(
+                scheme="unix",
+                host=None,
+                port=None,
+                path="/tmp/to/socket.sock",
+                db=0,
+                username="username",
+                password="password2",
+            ),
+        ),
+        (
+            "unix://:password3@/path/to/socket.sock",
+            DSN(
+                scheme="unix",
+                host=None,
+                port=None,
+                path="/path/to/socket.sock",
+                db=0,
+                username=None,
+                password="password3",
+            ),
+        ),
+        (
+            "unix:///tmp/socket.sock",
+            DSN(
+                scheme="unix",
+                host=None,
+                port=None,
+                path="/tmp/socket.sock",
+                db=0,
+                username=None,
+                password=None,
+            ),
+        ),
+    ],
+)
+def test_parse_url(url, dsn):
+    assert parse_url(url) == dsn

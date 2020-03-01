@@ -44,6 +44,7 @@ class Config:
         self.log_location = None
         self.history_location = None
         self.completion_casing = None
+        self.alias_dsn = None
 
         # ===bad code===
         # below are not configs, it's global state, it's wrong to write this
@@ -105,7 +106,6 @@ def load_config_files(iredisrc):
             config_obj.merge(_config)
             config_obj.filename = _config.filename
 
-    # TODO grouping them, don't put all to "main"
     config.raw = config_obj["main"].as_bool("raw")
     config.completer_max = config_obj["main"].as_int("completer_max")
     config.retry_times = config_obj["main"].as_int("retry_times")
@@ -119,5 +119,6 @@ def load_config_files(iredisrc):
     config.log_location = config_obj["main"]["log_location"]
     config.completion_casing = config_obj["main"]["completion_casing"]
     config.history_location = config_obj["main"]["history_location"]
+    config.alias_dsn = config_obj["alias_dsn"]
 
     return config_obj

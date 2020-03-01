@@ -38,6 +38,8 @@ IRedis is an alternative for redis-cli. In most cases, IRedis behaves exactly th
 - Written in pure Python, but IRedis was packaged into a single binary with
 [PyOxidizer](https://github.com/indygreg/PyOxidizer), you can use cURL to
 download and run, it just works, even you don't have a Python interpreter.
+- Support url, `iredis --url redis://example.com:6379/1`.
+- Store server configuration: `iredis -d prod-redis` (see [dsn](#using-dsn) for more).
 - For full features, please see: [iredis.io/show](https://www.iredis.io/show/)
 
 ## Install
@@ -77,6 +79,20 @@ and `-p` for port.
 ```
 $ iredis --help
 ```
+
+### Using DSN
+
+IRedis support sotring server configuration in config file. Here is a DSN
+config:
+
+```
+[alias_dsn]
+dev=redis://localhost:6379/4
+staging=redis://username:password@staging-redis.example.com:6379/1
+```
+
+Put this in your `iredisrc` then connect via `iredis -d staging` or
+`iredis -d dev`.
 
 ### Configuration
 
