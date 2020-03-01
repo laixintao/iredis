@@ -39,7 +39,7 @@ IRedis is an alternative for redis-cli. In most cases, IRedis behaves exactly th
 [PyOxidizer](https://github.com/indygreg/PyOxidizer), you can use cURL to
 download and run, it just works, even you don't have a Python interpreter.
 - Support url, `iredis --url redis://example.com:6379/1`.
-- Store server configuration: `iredis -d prod-redis` (see [dsn](using-dsn) for more).
+- Store server configuration: `iredis -d prod-redis` (see [dsn](#using-dsn) for more).
 - For full features, please see: [iredis.io/show](https://www.iredis.io/show/)
 
 ## Install
