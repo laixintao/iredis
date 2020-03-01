@@ -20,9 +20,6 @@ jobs:
         image: redis
         ports:
           - 6379:6379
-        volumes:
-          - ./tests/redis.conf:/etc/redis.conf
-          - /tmp:/tmp
         options: --entrypoint redis-server
 
     steps:

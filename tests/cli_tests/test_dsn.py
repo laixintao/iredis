@@ -38,6 +38,4 @@ def test_using_dsn_unix():
     cli.logfile_read = open("cli_test.log", "ab")
     cli.expect(["iredis", "redis /tmp/redis.sock[3]>"])
 
-    cli.sendline("set foo bar")
-    cli.expect("OK")
     cli.close()
