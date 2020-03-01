@@ -28,13 +28,16 @@ def test_using_dsn_unix():
     config_content = dedent(
         """
         [alias_dsn]
-        unix = unix:///tmp/redis.sock/3
+        unix = unix:///tmp/redis.sock?db=3
         """
     )
     with open("/tmp/iredisrc", "w+") as etc_config:
         etc_config.write(config_content)
 
-    cli = pexpect.spawn("iredis --iredisrc /tmp/iredisrc --dsn unix", timeout=1)
+    cli = pexpect.spawn("iredis --iredisrc /tmp/iredisrc --dsn unix", timeout=2)
     cli.logfile_read = open("cli_test.log", "ab")
     cli.expect(["iredis", "redis /tmp/redis.sock[3]>"])
+
+    cli.sendline("set foo bar")
+    cli.expect("OK")
     cli.close()
