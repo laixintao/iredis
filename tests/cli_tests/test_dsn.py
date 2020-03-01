@@ -16,3 +16,9 @@ def test_using_dsn():
     cli.logfile_read = open("cli_test.log", "ab")
     cli.expect(["iredis", "localhost:6379[15]>"])
     cli.close()
+
+    # dsn not exists
+    cli = pexpect.spawn("iredis --iredisrc /tmp/iredisrc --dsn ghost-dsn", timeout=1)
+    cli.expect(["Could not find the specified DSN in the config file."])
+    cli.close()
+    assert cli.status == 1

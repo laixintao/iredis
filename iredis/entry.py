@@ -333,7 +333,7 @@ def edit_and_execute(event):
 
 def resolve_dsn(dsn):
     try:
-        dsn_uri = config.alias_dsn.get(dsn)
+        dsn_uri = config.alias_dsn[dsn]
     except KeyError:
         click.secho(
             "Could not find the specified DSN in the config file. "
@@ -342,7 +342,7 @@ def resolve_dsn(dsn):
             err=True,
             fg="red",
         )
-        exit(1)
+        sys.exit(1)
     return dsn_uri
 
 
