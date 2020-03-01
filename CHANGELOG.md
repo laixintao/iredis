@@ -1,4 +1,4 @@
-### 1.2.0
+## 1.2.0
 
 * Feature: Peek command now displays more friendly, before each "info" will
 take one line, now type/encoding/ttl/memory usage will display in one line,
