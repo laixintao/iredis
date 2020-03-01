@@ -367,6 +367,42 @@ def resolve_dsn(dsn):
     return dsn_uri
 
 
+def create_client(params):
+    """
+    Create a Client.
+    :param params: commandline params.
+    """
+    host = params["h"]
+    port = params["p"]
+    db = params["n"]
+    password = params["password"]
+
+    dsn_from_url = None
+    dsn = params["dsn"]
+    if config.alias_dsn and dsn:
+        dsn_uri = resolve_dsn(dsn)
+        dsn_from_url = parse_url(dsn_uri)
+    if params["url"]:
+        dsn_from_url = parse_url(params["url"])
+    if dsn_from_url:
+        # db from command lint options should be high priority
+        db = db if db else dsn_from_url.db
+        client = Client(
+            host=dsn_from_url.host,
+            port=dsn_from_url.port,
+            db=db,
+            password=dsn_from_url.password,
+            path=dsn_from_url.path,
+            scheme=dsn_from_url.scheme,
+            username=dsn_from_url.username,
+        )
+    if params["socket"]:
+        client = Client(scheme="unix", path=params["socket"], db=db, password=password)
+    else:
+        client = Client(host=host, port=port, db=db, password=password)
+    return client
+
+
 def main():
     enter_main_time = time.time()  # just for logs
 
@@ -384,41 +420,9 @@ def main():
         return
     if not ctx:  # called help
         return
-    # TODO merge config file and commandline options here
-    # ctx.params > pwd config > user conifg > system config > default
-    # ignore None value
 
     # redis client
-    host = ctx.params["h"]
-    port = ctx.params["p"]
-    db = ctx.params["n"]
-    password = ctx.params["password"]
-
-    dsn_from_url = None
-    dsn = ctx.params["dsn"]
-    if config.alias_dsn and dsn:
-        dsn_uri = resolve_dsn(dsn)
-        dsn_from_url = parse_url(dsn_uri)
-    if ctx.params["url"]:
-        dsn_from_url = parse_url(ctx.params["url"])
-    if dsn_from_url:
-        # db from command lint options should be high priority
-        db = db if db else dsn_from_url.db
-        client = Client(
-            host=dsn_from_url.host,
-            port=dsn_from_url.port,
-            db=db,
-            password=dsn_from_url.password,
-            path=dsn_from_url.path,
-            scheme=dsn_from_url.scheme,
-            username=dsn_from_url.username,
-        )
-    if ctx.params["socket"]:
-        client = Client(
-            scheme="unix", path=ctx.params["socket"], db=db, password=password
-        )
-    else:
-        client = Client(host=host, port=port, db=db, password=password)
+    client = create_client(ctx.params)
 
     if not sys.stdin.isatty():
         for line in sys.stdin.readlines():
