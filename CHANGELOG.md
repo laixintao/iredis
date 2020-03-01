@@ -1,8 +1,11 @@
-### 1.1.3
+### 1.2.0
 
 * Feature: Peek command now displays more friendly, before each "info" will
 take one line, now type/encoding/ttl/memory usage will display in one line,
 makes the result looks more clear.
+* Support DSN. (Thanks [lyqscmy]).
+* Support URL.
+* Support socket connection.
 
 ### 1.1.2
 
@@ -91,3 +94,4 @@ to [Wooden-Robot].
 [Wooden-Robot]: https://github.com/Wooden-Robot
 [ruohan.chen]: https://github.com/crhan
 [Mac Chaffee]: https://github.com/mac-chaffee
+[lyqscmy]: https://github.com/lyqscmy

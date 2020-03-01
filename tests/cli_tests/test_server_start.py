@@ -30,7 +30,7 @@ def test_connection_using_url(clean_redis):
 
 def test_connection_using_url_from_env(clean_redis):
     envs = os.environ
-    envs['IREDIS_URL'] = "redis://localhost:6379/7"
+    envs["IREDIS_URL"] = "redis://localhost:6379/7"
     c = pexpect.spawn("iredis", timeout=2, env=envs)
     c.logfile_read = open("cli_test.log", "ab")
     c.expect(["iredis", "127.0.0.1:6379[7]>"])

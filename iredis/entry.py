@@ -383,8 +383,8 @@ def main():
     if config.alias_dsn and dsn:
         dsn_uri = resolve_dsn(dsn)
         dsn_from_url = parse_url(dsn_uri)
-    if ctx.params['url']:
-        dsn_from_url = parse_url(ctx.params['url'])
+    if ctx.params["url"]:
+        dsn_from_url = parse_url(ctx.params["url"])
     if dsn_from_url:
         # db from command lint options should be high priority
         db = db if db else dsn_from_url.db
