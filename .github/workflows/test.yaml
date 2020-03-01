@@ -24,7 +24,6 @@ jobs:
           - ./tests/redis.conf:/etc/redis.conf
           - /tmp:/tmp
         options: --entrypoint redis-server
-        command: redis-server /etc/redis.conf
 
     steps:
       - uses: actions/checkout@v2
