@@ -37,3 +37,9 @@ def test_connection_using_url_from_env(clean_redis):
     c.sendline("set current-db 7")
     c.expect("OK")
     c.close()
+
+
+def test_connect_via_socket():
+    c = pexpect.spawn("iredis -s /tmp/iredis9.sock", timeout=2)
+    c.logfile_read = open("cli_test.log", "ab")
+    c.expect("redis /tmp/iredis9.sock")

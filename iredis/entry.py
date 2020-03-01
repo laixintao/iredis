@@ -264,11 +264,14 @@ Use Redis URL to indicate connection(Can set with env `IREDIS_URL`), Example:
 @click.option("-h", help="Server hostname (default: 127.0.0.1).", default="127.0.0.1")
 @click.option("-p", help="Server port (default: 6379).", default="6379")
 @click.option(
+    "-s", "--socket", default=None, help="Server socket (overrides hostname and port)."
+)
+@click.option(
     "-n", help="Database number.(overwrites dsn/url's db number)", default=None
 )
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
-@click.option("-d", "--dsn", default=None, envvar="IREDIS_DSN", help=DSN_HELP)
 @click.option("--url", default=None, envvar="IREDIS_URL", help=URL_HELP)
+@click.option("-d", "--dsn", default=None, envvar="IREDIS_DSN", help=DSN_HELP)
 @click.option(
     "--newbie/--no-newbie",
     default=None,
@@ -286,7 +289,20 @@ Use Redis URL to indicate connection(Can set with env `IREDIS_URL`), Example:
 @click.version_option()
 @click.argument("cmd", nargs=-1)
 def gather_args(
-    ctx, h, p, n, password, newbie, iredisrc, decode, raw, rainbow, cmd, dsn, url
+    ctx,
+    h,
+    p,
+    n,
+    password,
+    newbie,
+    iredisrc,
+    decode,
+    raw,
+    rainbow,
+    cmd,
+    dsn,
+    url,
+    socket,
 ):
     """
     IRedis: Interactive Redis
@@ -396,6 +412,10 @@ def main():
             path=dsn_from_url.path,
             scheme=dsn_from_url.scheme,
             username=dsn_from_url.username,
+        )
+    if ctx.params["socket"]:
+        client = Client(
+            scheme="unix", path=ctx.params["socket"], db=db, password=password
         )
     else:
         client = Client(host=host, port=port, db=db, password=password)
