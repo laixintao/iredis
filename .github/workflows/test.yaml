@@ -22,6 +22,7 @@ jobs:
           - 6379:6379
         volumes:
           - ./tests/redis.conf:/etc/redis.conf
+          - /tmp:/tmp
         options: --entrypoint redis-server
         command: redis-server /etc/redis.conf
 
