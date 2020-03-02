@@ -171,7 +171,7 @@
     "group": "list"
   },
   "BRPOPLPUSH": {
-    "summary": "Pop a value from a list, push it to another list and return it; or block until one is available",
+    "summary": "Pop an element from a list, push it to another list and return it; or block until one is available",
     "complexity": "O(1)",
     "arguments": [
       {
@@ -330,7 +330,7 @@
     "arguments": [
       {
         "name": "client-id",
-        "type": "string"
+        "type": "integer"
       },
       {
         "name": "unblock-type",
@@ -352,6 +352,12 @@
         "multiple": true
       }
     ],
+    "since": "3.0.0",
+    "group": "cluster"
+  },
+  "CLUSTER BUMPEPOCH": {
+    "summary": "Advance the cluster config epoch",
+    "complexity": "O(1)",
     "since": "3.0.0",
     "group": "cluster"
   },
@@ -403,6 +409,12 @@
         "optional": true
       }
     ],
+    "since": "3.0.0",
+    "group": "cluster"
+  },
+  "CLUSTER FLUSHSLOTS": {
+    "summary": "Delete a node's own slots information",
+    "complexity": "O(1)",
     "since": "3.0.0",
     "group": "cluster"
   },
@@ -465,6 +477,12 @@
         "type": "integer"
       }
     ],
+    "since": "3.0.0",
+    "group": "cluster"
+  },
+  "CLUSTER MYID": {
+    "summary": "Return the node id",
+    "complexity": "O(1)",
     "since": "3.0.0",
     "group": "cluster"
   },
@@ -925,7 +943,8 @@
       },
       {
         "name": "unit",
-        "type": "string",
+        "type": "enum",
+        "enum": ["m", "km", "ft", "mi"],
         "optional": true
       }
     ],
@@ -1478,7 +1497,7 @@
         "type": "string"
       },
       {
-        "name": "value",
+        "name": "element",
         "type": "string"
       }
     ],
@@ -1510,15 +1529,15 @@
     "group": "list"
   },
   "LPUSH": {
-    "summary": "Prepend one or multiple values to a list",
-    "complexity": "O(1)",
+    "summary": "Prepend one or multiple elements to a list",
+    "complexity": "O(1) for each element added, so O(N) to add N elements when the command is called with multiple arguments.",
     "arguments": [
       {
         "name": "key",
         "type": "key"
       },
       {
-        "name": "value",
+        "name": "element",
         "type": "string",
         "multiple": true
       }
@@ -1527,16 +1546,17 @@
     "group": "list"
   },
   "LPUSHX": {
-    "summary": "Prepend a value to a list, only if the list exists",
-    "complexity": "O(1)",
+    "summary": "Prepend an element to a list, only if the list exists",
+    "complexity": "O(1) for each element added, so O(N) to add N elements when the command is called with multiple arguments.",
     "arguments": [
       {
         "name": "key",
         "type": "key"
       },
       {
-        "name": "value",
-        "type": "string"
+        "name": "element",
+        "type": "string",
+        "multiple": true
       }
     ],
     "since": "2.2.0",
@@ -1564,7 +1584,7 @@
   },
   "LREM": {
     "summary": "Remove elements from a list",
-    "complexity": "O(N) where N is the length of the list.",
+    "complexity": "O(N+M) where N is the length of the list and M is the number of elements removed.",
     "arguments": [
       {
         "name": "key",
@@ -1575,7 +1595,7 @@
         "type": "integer"
       },
       {
-        "name": "value",
+        "name": "element",
         "type": "string"
       }
     ],
@@ -1595,7 +1615,7 @@
         "type": "integer"
       },
       {
-        "name": "value",
+        "name": "element",
         "type": "string"
       }
     ],
@@ -1731,6 +1751,42 @@
     ],
     "since": "2.6.0",
     "group": "generic"
+  },
+  "MODULE LIST": {
+    "summary": "List all modules loaded by the server",
+    "complexity": "O(N) where N is the number of loaded modules.",
+    "since": "4.0.0",
+    "group": "server"
+  },
+  "MODULE LOAD": {
+    "summary": "Load a module",
+    "complexity": "O(1)",
+    "arguments": [
+      {
+        "name": "path",
+        "type": "string"
+      },
+      {
+        "name": "arg",
+        "type": "string",
+        "variadic": true,
+        "optional": true
+      }
+    ],
+    "since": "4.0.0",
+    "group": "server"
+  },
+  "MODULE UNLOAD": {
+    "summary": "Unload a module",
+    "complexity": "O(1)",
+    "arguments": [
+      {
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "since": "4.0.0",
+    "group": "server"
   },
   "MONITOR": {
     "summary": "Listen for all requests received by the server in real time",
@@ -2131,15 +2187,15 @@
     "group": "list"
   },
   "RPUSH": {
-    "summary": "Append one or multiple values to a list",
-    "complexity": "O(1)",
+    "summary": "Append one or multiple elements to a list",
+    "complexity": "O(1) for each element added, so O(N) to add N elements when the command is called with multiple arguments.",
     "arguments": [
       {
         "name": "key",
         "type": "key"
       },
       {
-        "name": "value",
+        "name": "element",
         "type": "string",
         "multiple": true
       }
@@ -2148,16 +2204,17 @@
     "group": "list"
   },
   "RPUSHX": {
-    "summary": "Append a value to a list, only if the list exists",
-    "complexity": "O(1)",
+    "summary": "Append an element to a list, only if the list exists",
+    "complexity": "O(1) for each element added, so O(N) to add N elements when the command is called with multiple arguments.",
     "arguments": [
       {
         "name": "key",
         "type": "key"
       },
       {
-        "name": "value",
-        "type": "string"
+        "name": "element",
+        "type": "string",
+        "multiple": true
       }
     ],
     "since": "2.2.0",
@@ -2301,7 +2358,7 @@
         "type": "string"
       },
       {
-        "command": "expiration",
+        "name": "expiration",
         "type": "enum",
         "enum": ["EX seconds", "PX milliseconds"],
         "optional": true
@@ -2310,6 +2367,12 @@
         "name": "condition",
         "type": "enum",
         "enum": ["NX", "XX"],
+        "optional": true
+      },
+      {
+        "name": "keepttl",
+        "type": "enum",
+        "enum": ["KEEPTTL"],
         "optional": true
       }
     ],
@@ -2330,7 +2393,7 @@
       },
       {
         "name": "value",
-        "type": "string"
+        "type": "integer"
       }
     ],
     "since": "2.2.0",
@@ -2646,8 +2709,8 @@
     "complexity": "O(N) where N is the number of channels to subscribe to.",
     "arguments": [
       {
-        "name": ["channel"],
-        "type": ["string"],
+        "name": "channel",
+        "type": "string",
         "multiple": true
       }
     ],
@@ -2688,11 +2751,11 @@
     "summary": "Swaps two Redis databases",
     "arguments": [
       {
-        "name": "index",
+        "name": "index1",
         "type": "integer"
       },
       {
-        "name": "index",
+        "name": "index2",
         "type": "integer"
       }
     ],
@@ -2702,6 +2765,21 @@
   "SYNC": {
     "summary": "Internal command used for replication",
     "since": "1.0.0",
+    "group": "server"
+  },
+  "PSYNC": {
+    "summary": "Internal command used for replication",
+    "arguments": [
+      {
+        "name": "replicationid",
+        "type": "integer"
+      },
+      {
+        "name": "offset",
+        "type": "integer"
+      }
+    ],
+    "since": "2.8.0",
     "group": "server"
   },
   "TIME": {
@@ -3472,8 +3550,8 @@
         "type": "string"
       },
       {
-        "name": ["field", "string"],
-        "type": ["value", "string"],
+        "name": ["field", "value"],
+        "type": ["string", "string"],
         "multiple": true
       }
     ],
@@ -3590,7 +3668,7 @@
   },
   "XREAD": {
     "summary": "Return never seen elements in multiple streams, with IDs greater than the ones reported by the caller for each stream. Can block.",
-    "complexity": "For each stream mentioned: O(N) with N being the number of elements being returned, it menas that XREAD-ing with a fixed COUNT is O(1). Note that when the BLOCK option is used, XADD will pay O(M) time in order to serve the M clients blocked on the stream getting new data.",
+    "complexity": "For each stream mentioned: O(N) with N being the number of elements being returned, it means that XREAD-ing with a fixed COUNT is O(1). Note that when the BLOCK option is used, XADD will pay O(M) time in order to serve the M clients blocked on the stream getting new data.",
     "arguments": [
       {
         "command": "COUNT",
@@ -3615,7 +3693,7 @@
         "multiple": true
       },
       {
-        "name": "ID",
+        "name": "id",
         "type": "string",
         "multiple": true
       }
@@ -3804,5 +3882,54 @@
     ],
     "since": "5.0.0",
     "group": "stream"
+  },
+  "LATENCY DOCTOR": {
+    "summary": "Return a human readable latency analysis report.",
+    "since": "2.8.13",
+    "group": "server"
+  },
+  "LATENCY GRAPH": {
+    "summary": "Return a latency graph for the event.",
+    "arguments": [
+      {
+        "name": "event",
+        "type": "string"
+      }
+    ],
+    "since": "2.8.13",
+    "group": "server"
+  },
+  "LATENCY HISTORY": {
+    "summary": "Return timestamp-latency samples for the event.",
+    "arguments": [
+      {
+        "name": "event",
+        "type": "string"
+      }
+    ],
+    "since": "2.8.13",
+    "group": "server"
+  },
+  "LATENCY LATEST": {
+    "summary": "Return the latest latency samples for all events.",
+    "since": "2.8.13",
+    "group": "server"
+  },
+  "LATENCY RESET": {
+    "summary": "Reset latency data for one or more events.",
+    "arguments": [
+      {
+        "name": "event",
+        "type": "string",
+        "optional": true
+      }
+    ],
+    "since": "2.8.13",
+    "group": "server"
+  },
+  "LATENCY HELP": {
+    "summary": "Show helpful text about the different subcommands.",
+    "since": "2.8.13",
+    "group": "server"
   }
 }
