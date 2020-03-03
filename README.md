@@ -185,31 +185,6 @@ This is a command-line tool, so we don't write logs to stdout.
 You can `tail -f ~/.iredis.log` to see logs, the log is pretty clear, you can
 see what actually happens from log files.
 
-### CI
-
-We use [pexpect](https://pexpect.readthedocs.io/en/stable/) to test command-line
-behavior. And since there are problems with CircleCI's tty, we run
-pexpect-related tests on travis, and run unittest/black style check/flake8 check
-on CircleCI.
-
-For local development, just run `pytest`. If all tests pass locally, CI shall
-pass.
-
-### Command Reference
-
-There is a full Redis command list in [commands.csv](docs/commands.csv) file,
-downloaded by:
-
-```
-python scripts/download_redis_commands.py > data/commands.csv
-```
-
-`commands.csv` is here only for test if redis.io was updated, do not package it
-into release.
-
-Current implemented commands:
-[command_syntax.csv](iredis/data/command_syntax.csv).
-
 ## Related Projects
 
 - [redis-tui](https://github.com/mylxsw/redis-tui)
