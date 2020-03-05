@@ -18,6 +18,7 @@ CONST = {
     "limit": "LIMIT",
     "expiration": "EX PX",
     "condition": "NX XX",
+    "keepttl": "KEEPTTL",
     "operation": "AND OR XOR NOT",
     "changed": "CH",
     "incr": "INCR",
@@ -239,6 +240,7 @@ SET = fr"(?P<set>{c('set')})"
 INCRBY = fr"(?P<incrby>{c('incrby')})"
 OVERFLOW = fr"(?P<overflow>{c('overflow')})"
 OVERFLOW_OPTION = fr"(?P<overflow_option>{c('overflow_option')})"
+KEEPTTL = fr"(?P<keepttl>{c('keepttl')})"
 
 # TODO test lexer & completer for multi spaces in command
 # For now, redis command can have one space at most
@@ -304,11 +306,12 @@ NEW_GRAMMAR = {
         \s+ {KEY} \s+ {POSITION_CHOICE} \s+ {VALUE} \s+ {VALUE} \s*""",
     "command_pass": fr"\s+ {ANY} \s*",
     "command_any": fr"\s+ {ANY} \s*",
-    "command_key_value_expiration_condition": fr"""
+    "command_set": fr"""
         \s+ {KEY} \s+ {VALUE}
         (
             (\s+ {EXPIRATION} \s+ {MILLISECOND})|
-            (\s+ {CONDITION})
+            (\s+ {CONDITION})|
+            (\s+ {KEEPTTL})
         )*
         \s*""",
     "command_key_start_end_x": fr"\s+ {KEY} (\s+ {START} \s+ {END})? \s*",

@@ -215,7 +215,7 @@ string,MGET,command_keys,render_list
 string,MSET,command_key_valuess,render_simple_string
 string,MSETNX,command_key_valuess,render_int
 string,PSETEX,command_key_millisecond_value,render_bulk_string
-string,SET,command_key_value_expiration_condition,render_simple_string
+string,SET,command_set,render_simple_string
 string,SETBIT,command_key_offset_bit,render_int
 string,SETEX,command_key_second_value,render_bulk_string
 string,SETNX,command_key_value,render_int
