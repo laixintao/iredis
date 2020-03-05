@@ -306,7 +306,11 @@ NEW_GRAMMAR = {
     "command_any": fr"\s+ {ANY} \s*",
     "command_key_value_expiration_condition": fr"""
         \s+ {KEY} \s+ {VALUE}
-        (\s+ {EXPIRATION} \s+ {MILLISECOND})? (\s+ {CONDITION})? \s*""",
+        (
+            (\s+ {EXPIRATION} \s+ {MILLISECOND})|
+            (\s+ {CONDITION})
+        )*
+        \s*""",
     "command_key_start_end_x": fr"\s+ {KEY} (\s+ {START} \s+ {END})? \s*",
     "command_key_start_end": fr"\s+ {KEY} \s+ {START} \s+ {END} \s*",
     "command_key_delta": fr"\s+ {KEY} \s+ {DELTA} \s*",
