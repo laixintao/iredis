@@ -10,9 +10,27 @@ def strip_formatted_text(formatted_text):
     return "".join(text[1] for text in formatted_text)
 
 
-def test_render_list_index():
-    from iredis.config import config
+def test_render_simple_string_raw(config):
+    config.raw = True
+    assert renders.OutputRender.render_simple_string(b"OK") == b"OK"
+    assert renders.OutputRender.render_simple_string(b"BUMPED 1") == b"BUMPED 1"
+    assert renders.OutputRender.render_simple_string(b"STILL 1") == b"STILL 1"
 
+
+def test_render_simple_string(config):
+    config.raw = False
+    assert renders.OutputRender.render_simple_string(b"OK") == FormattedText(
+        [("class:success", "OK")]
+    )
+    assert renders.OutputRender.render_simple_string(b"BUMPED 1") == FormattedText(
+        [("class:success", "BUMPED 1")]
+    )
+    assert renders.OutputRender.render_simple_string(b"STILL 1") == FormattedText(
+        [("class:success", "STILL 1")]
+    )
+
+
+def test_render_list_index(config):
     config.raw = False
     raw = ["hello", "world", "foo"]
     out = renders._render_list([item.encode() for item in raw], raw)
@@ -23,9 +41,7 @@ def test_render_list_index():
     assert "4)" not in out
 
 
-def test_render_list_index_const_width():
-    from iredis.config import config
-
+def test_render_list_index_const_width(config):
     config.raw = False
     raw = ["hello"] * 100
     out = renders._render_list([item.encode() for item in raw], raw)
@@ -109,16 +125,6 @@ def test_double_quotes():
     assert renders.double_quotes("'") == '"\'"'
     assert renders.double_quotes("\\") == '"\\"'
     assert renders.double_quotes('"') == '"\\""'
-
-
-def test_simple_string_reply():
-    config.raw = False
-    assert renders.OutputRender.render_bulk_string(b"'\"") == '''"'\\""'''
-
-
-def test_simple_string_reply_raw():
-    config.raw = True
-    assert renders.OutputRender.render_bulk_string(b"hello") == b"hello"
 
 
 def test_render_int():
@@ -344,6 +350,16 @@ def test_render_unixtime():
     rendered = renders.OutputRender.render_unixtime(1570469891)
 
     assert rendered == b"1570469891"
+
+
+def test_bulk_string_reply():
+    config.raw = False
+    assert renders.OutputRender.render_bulk_string(b"'\"") == '''"'\\""'''
+
+
+def test_bulk_string_reply_raw():
+    config.raw = True
+    assert renders.OutputRender.render_bulk_string(b"hello") == b"hello"
 
 
 def test_render_bulk_string_decoded():

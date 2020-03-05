@@ -1,5 +1,6 @@
 Group,Command,Syntax,Callback
 cluster,CLUSTER ADDSLOTS,command_slots,render_simple_string
+cluster,CLUSTER BUMPEPOCH,command,render_simple_string
 cluster,CLUSTER COUNT-FAILURE-REPORTS,command_node,render_int
 cluster,CLUSTER COUNTKEYSINSLOT,command_slot,render_int
 cluster,CLUSTER DELSLOTS,command_slots,render_simple_string

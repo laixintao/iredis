@@ -22,8 +22,7 @@ EMPTY_LIST = FormattedText([("class:type", "(empty list or set)")])
 
 
 class OutputRender:
-    """Render redis output
-    """
+    """Render redis output"""
 
     @staticmethod
     def dynamic_render(command_name, response):
@@ -170,8 +169,8 @@ class OutputRender:
     @staticmethod
     def render_simple_string(text):
         """
-        If response is b'OK', render ok with success color.
-        else render message with Error color.
+        If response is b'OK', render simple string always with success color.
+        If Error happend, error will be rendered by ``render_error``
         """
         if config.raw:
             return text
