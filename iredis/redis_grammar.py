@@ -241,14 +241,15 @@ OVERFLOW = fr"(?P<overflow>{c('overflow')})"
 OVERFLOW_OPTION = fr"(?P<overflow_option>{c('overflow_option')})"
 
 # TODO test lexer & completer for multi spaces in command
-# FIXME invalid command like "aaa bbb ccc"
-# redis command can have one space at most
-# FIXME inital value should be command, not blob, user can type anything...
+# For now, redis command can have one space at most
 COMMAND = "(\s*  (?P<command_pending>[\w -]+))"
 command_grammar = compile(COMMAND)
 
-# xxin is a placeholder, when compile to grammar, it will
-# be replaced to user typed command
+# Here are the core grammars, those are tokens after ``command``.
+# E.g. SET command's syntax is "SET key value"
+# Then it's grammar here is r"\s+ key \s+ value \s*", we needn't add `command`
+# here because every syntaxes starts with `command` so we will prepend `command`
+# in get_command_grammar function.
 NEW_GRAMMAR = {
     "command_key": fr"\s* (?P<command>xxin) \s+ {KEY} \s*",
     "command_pattern": fr"\s* (?P<command>xxin) \s+ {PATTERN} \s*",
@@ -467,7 +468,9 @@ def get_command_grammar(command):
     syntax_name = command2syntax[command.upper()]
     syntax = NEW_GRAMMAR.get(syntax_name)
 
-    # TODO this should be deleted
+    # If a command is not supported yet, (e.g. command from latest version added
+    # by Redis recently, or command from third Redis module.) return a defualt
+    # grammar, so the lexer and completion won't be activated.
     if syntax is None:
         return command_grammar
     syntax = syntax.replace(r"xxin", command.replace(r" ", r"\s+"))
