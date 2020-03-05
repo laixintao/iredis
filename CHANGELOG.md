@@ -1,3 +1,8 @@
+## 1.3.0
+
+* Feature: Support Redis 6.0.
+  * `SET` command support `KEEPTTL` option.
+
 ## 1.2.0
 
 * Feature: Peek command now displays more friendly, before each "info" will
