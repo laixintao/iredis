@@ -9,8 +9,8 @@ call.
 
 A multi bulk reply containing two elements:
 
-* unix time in seconds.
-* microseconds.
+- unix time in seconds.
+- microseconds.
 
 @examples
 

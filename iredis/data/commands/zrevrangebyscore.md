@@ -1,7 +1,7 @@
 Returns all the elements in the sorted set at `key` with a score between `max`
-and `min` (including elements with score equal to `max` or `min`).
-In contrary to the default ordering of sorted sets, for this command the
-elements are considered to be ordered from high to low scores.
+and `min` (including elements with score equal to `max` or `min`). In contrary
+to the default ordering of sorted sets, for this command the elements are
+considered to be ordered from high to low scores.
 
 The elements having the same score are returned in reverse lexicographical
 order.
@@ -11,8 +11,8 @@ Apart from the reversed ordering, `ZREVRANGEBYSCORE` is similar to
 
 @return
 
-@array-reply: list of elements in the specified score range (optionally
-with their scores).
+@array-reply: list of elements in the specified score range (optionally with
+their scores).
 
 @examples
 

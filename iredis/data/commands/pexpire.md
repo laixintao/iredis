@@ -5,8 +5,8 @@ specified in milliseconds instead of seconds.
 
 @integer-reply, specifically:
 
-* `1` if the timeout was set.
-* `0` if `key` does not exist.
+- `1` if the timeout was set.
+- `0` if `key` does not exist.
 
 @examples
 

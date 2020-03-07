@@ -30,6 +30,21 @@ class TerminalRender(mistune.Renderer):
             return super().header(header_text, 2)
         return super().header(self._to_title(text), level)
 
+    def list(self, body, ordered=True):
+        """Rendering list tags like ``<ul>`` and ``<ol>``.
+
+        :param body: body contents of the list.
+        :param ordered: whether this list is ordered or not.
+        """
+        tag = "ul"
+        if ordered:
+            tag = "ol"
+        return "<%s>%s</%s>\n" % (tag, body, tag)
+
+    def list_item(self, text):
+        """Rendering list item snippet. Like ``<li>``."""
+        return "<li>* %s</li>\n" % text
+
 
 class RedisDocLexer(mistune.BlockLexer):
     def enable_at_title(self):

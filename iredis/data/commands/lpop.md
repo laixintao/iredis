@@ -2,7 +2,8 @@ Removes and returns the first element of the list stored at `key`.
 
 @return
 
-@bulk-string-reply: the value of the first element, or `nil` when `key` does not exist.
+@bulk-string-reply: the value of the first element, or `nil` when `key` does not
+exist.
 
 @examples
 

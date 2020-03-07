@@ -1,16 +1,14 @@
-Set a timeout on `key`.
-After the timeout has expired, the key will automatically be deleted.
-A key with an associated timeout is often said to be _volatile_ in Redis
-terminology.
+Set a timeout on `key`. After the timeout has expired, the key will
+automatically be deleted. A key with an associated timeout is often said to be
+_volatile_ in Redis terminology.
 
 The timeout will only be cleared by commands that delete or overwrite the
 contents of the key, including `DEL`, `SET`, `GETSET` and all the `*STORE`
-commands.
-This means that all the operations that conceptually _alter_ the value stored at
-the key without replacing it with a new one will leave the timeout untouched.
-For instance, incrementing the value of a key with `INCR`, pushing a new value
-into a list with `LPUSH`, or altering the field value of a hash with `HSET` are
-all operations that will leave the timeout untouched.
+commands. This means that all the operations that conceptually _alter_ the value
+stored at the key without replacing it with a new one will leave the timeout
+untouched. For instance, incrementing the value of a key with `INCR`, pushing a
+new value into a list with `LPUSH`, or altering the field value of a hash with
+`HSET` are all operations that will leave the timeout untouched.
 
 The timeout can also be cleared, turning the key back into a persistent key,
 using the `PERSIST` command.
@@ -34,17 +32,16 @@ will be `del`, not `expired`).
 ## Refreshing expires
 
 It is possible to call `EXPIRE` using as argument a key that already has an
-existing expire set.
-In this case the time to live of a key is _updated_ to the new value.
-There are many useful applications for this, an example is documented in the
-_Navigation session_ pattern section below.
+existing expire set. In this case the time to live of a key is _updated_ to the
+new value. There are many useful applications for this, an example is documented
+in the _Navigation session_ pattern section below.
 
 ## Differences in Redis prior 2.1.3
 
 In Redis versions prior **2.1.3** altering a key with an expire set using a
-command altering its value had the effect of removing the key entirely.
-This semantics was needed because of limitations in the replication layer that
-are now fixed.
+command altering its value had the effect of removing the key entirely. This
+semantics was needed because of limitations in the replication layer that are
+now fixed.
 
 `EXPIRE` would return 0 and not alter the timeout for a key with a timeout set.
 
@@ -52,8 +49,8 @@ are now fixed.
 
 @integer-reply, specifically:
 
-* `1` if the timeout was set.
-* `0` if `key` does not exist.
+- `1` if the timeout was set.
+- `0` if `key` does not exist.
 
 @examples
 
@@ -69,11 +66,10 @@ TTL mykey
 
 Imagine you have a web service and you are interested in the latest N pages
 _recently_ visited by your users, such that each adjacent page view was not
-performed more than 60 seconds after the previous.
-Conceptually you may consider this set of page views as a _Navigation session_
-of your user, that may contain interesting information about what kind of
-products he or she is looking for currently, so that you can recommend related
-products.
+performed more than 60 seconds after the previous. Conceptually you may consider
+this set of page views as a _Navigation session_ of your user, that may contain
+interesting information about what kind of products he or she is looking for
+currently, so that you can recommend related products.
 
 You can easily model this pattern in Redis using the following strategy: every
 time the user does a page view you call the following commands:
@@ -96,14 +92,14 @@ using `RPUSH`.
 
 ## Keys with an expire
 
-Normally Redis keys are created without an associated time to live.
-The key will simply live forever, unless it is removed by the user in an
-explicit way, for instance using the `DEL` command.
+Normally Redis keys are created without an associated time to live. The key will
+simply live forever, unless it is removed by the user in an explicit way, for
+instance using the `DEL` command.
 
 The `EXPIRE` family of commands is able to associate an expire to a given key,
-at the cost of some additional memory used by the key.
-When a key has an expire set, Redis will make sure to remove the key when the
-specified amount of time elapsed.
+at the cost of some additional memory used by the key. When a key has an expire
+set, Redis will make sure to remove the key when the specified amount of time
+elapsed.
 
 The key time to live can be updated or entirely removed using the `EXPIRE` and
 `PERSIST` command (or other strictly related commands).
@@ -118,13 +114,12 @@ Since Redis 2.6 the expire error is from 0 to 1 milliseconds.
 ## Expires and persistence
 
 Keys expiring information is stored as absolute Unix timestamps (in milliseconds
-in case of Redis version 2.6 or greater).
-This means that the time is flowing even when the Redis instance is not active.
+in case of Redis version 2.6 or greater). This means that the time is flowing
+even when the Redis instance is not active.
 
-For expires to work well, the computer time must be taken stable.
-If you move an RDB file from two computers with a big desync in their clocks,
-funny things may happen (like all the keys loaded to be expired at loading
-time).
+For expires to work well, the computer time must be taken stable. If you move an
+RDB file from two computers with a big desync in their clocks, funny things may
+happen (like all the keys loaded to be expired at loading time).
 
 Even running instances will always check the computer clock, so for instance if
 you set a key with a time to live of 1000 seconds, and then set your computer
@@ -139,10 +134,9 @@ A key is passively expired simply when some client tries to access it, and the
 key is found to be timed out.
 
 Of course this is not enough as there are expired keys that will never be
-accessed again.
-These keys should be expired anyway, so periodically Redis tests a few keys at
-random among keys with an expire set.
-All the keys that are already expired are deleted from the keyspace.
+accessed again. These keys should be expired anyway, so periodically Redis tests
+a few keys at random among keys with an expire set. All the keys that are
+already expired are deleted from the keyspace.
 
 Specifically this is what Redis does 10 times per second:
 
@@ -162,9 +156,8 @@ second divided by 4.
 
 In order to obtain a correct behavior without sacrificing consistency, when a
 key expires, a `DEL` operation is synthesized in both the AOF file and gains all
-the attached replicas nodes.
-This way the expiration process is centralized in the master instance, and there
-is no chance of consistency errors.
+the attached replicas nodes. This way the expiration process is centralized in
+the master instance, and there is no chance of consistency errors.
 
 However while the replicas connected to a master will not expire keys
 independently (but will wait for the `DEL` coming from the master), they'll

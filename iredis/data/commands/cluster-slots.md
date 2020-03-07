@@ -1,40 +1,48 @@
-`CLUSTER SLOTS` returns details about which cluster slots map to which
-Redis instances. The command is suitable to be used by Redis Cluster client
-libraries implementations in order to retrieve (or update when a redirection
-is received) the map associating cluster *hash slots* with actual nodes
-network coordinates (composed of an IP address and a TCP port), so that when
-a command is received, it can be sent to what is likely the right instance
-for the keys specified in the command.
+`CLUSTER SLOTS` returns details about which cluster slots map to which Redis
+instances. The command is suitable to be used by Redis Cluster client libraries
+implementations in order to retrieve (or update when a redirection is received)
+the map associating cluster _hash slots_ with actual nodes network coordinates
+(composed of an IP address and a TCP port), so that when a command is received,
+it can be sent to what is likely the right instance for the keys specified in
+the command.
 
 ## Nested Result Array
+
 Each nested result is:
 
-  - Start slot range
-  - End slot range
-  - Master for slot range represented as nested IP/Port array 
-  - First replica of master for slot range
-  - Second replica
-  - ...continues until all replicas for this master are returned.
+- Start slot range
+- End slot range
+- Master for slot range represented as nested IP/Port array
+- First replica of master for slot range
+- Second replica
+- ...continues until all replicas for this master are returned.
 
-Each result includes all active replicas of the master instance
-for the listed slot range.  Failed replicas are not returned.
+Each result includes all active replicas of the master instance for the listed
+slot range. Failed replicas are not returned.
 
-The third nested reply is guaranteed to be the IP/Port pair of
-the master instance for the slot range.
-All IP/Port pairs after the third nested reply are replicas
-of the master.
+The third nested reply is guaranteed to be the IP/Port pair of the master
+instance for the slot range. All IP/Port pairs after the third nested reply are
+replicas of the master.
 
 If a cluster instance has non-contiguous slots (e.g. 1-400,900,1800-6000) then
-master and replica IP/Port results will be duplicated for each top-level
-slot range reply.
+master and replica IP/Port results will be duplicated for each top-level slot
+range reply.
 
-**Warning:** Newer versions of Redis Cluster will output, for each Redis instance, not just the IP and port, but also the node ID as third element of the array. In future versions there could be more elements describing the node better. In general a client implementation should just rely on the fact that certain parameters are at fixed positions as specified, but more parameters may follow and should be ignored. Similarly a client library should try if possible to cope with the fact that older versions may just have the IP and port parameter.
+**Warning:** Newer versions of Redis Cluster will output, for each Redis
+instance, not just the IP and port, but also the node ID as third element of the
+array. In future versions there could be more elements describing the node
+better. In general a client implementation should just rely on the fact that
+certain parameters are at fixed positions as specified, but more parameters may
+follow and should be ignored. Similarly a client library should try if possible
+to cope with the fact that older versions may just have the IP and port
+parameter.
 
 @return
 
 @array-reply: nested list of slot ranges with IP/Port mappings.
 
 ### Sample Output (old version)
+
 ```
 127.0.0.1:7001> cluster slots
 1) 1) (integer) 0
@@ -63,8 +71,8 @@ slot range reply.
       2) (integer) 7006
 ```
 
-
 ### Sample Output (new version, includes IDs)
+
 ```
 127.0.0.1:30001> cluster slots
 1) 1) (integer) 0
@@ -92,4 +100,3 @@ slot range reply.
       2) (integer) 30006
       3) "58e6e48d41228013e5d9c1c37c5060693925e97e"
 ```
-
