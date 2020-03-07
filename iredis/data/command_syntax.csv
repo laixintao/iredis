@@ -134,6 +134,10 @@ server,INFO,command,render_bulk_string_decode
 server,LASTSAVE,command,render_unixtime
 server,LATENCY DOCTOR,command,render_bulk_string_decode
 server,LATENCY GRAPH,command_graphevent,render_bulk_string_decode
+server,LATENCY HELP,command,render_list
+server,LATENCY HISTORY,command_graphevent,render_list
+server,LATENCY LATEST,command,render_list
+server,LATENCY RESET,command_graphevents,render_int
 server,MEMORY DOCTOR,command,render_bulk_string_decode
 server,MEMORY HELP,command,render_list
 server,MEMORY MALLOC-STATS,command,render_bulk_string_decode

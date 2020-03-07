@@ -486,6 +486,7 @@ NEW_GRAMMAR = {
         \s*""",
     "command_replicationid_offset": fr"\s+ {REPLICATIONID} \s+ {OFFSET} \s*",
     "command_graphevent": fr"\s+ {GRAPHEVENT} \s*",
+    "command_graphevents": fr"(\s+ {GRAPHEVENT})* \s*",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"

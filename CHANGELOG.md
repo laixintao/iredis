@@ -13,6 +13,10 @@
     *  PSYNC
     *  LATENCY DOCTOR
     *  LATENCY GRAPH
+    *  LATENCY HISTORY
+    *  LATENCY LATEST
+    *  LATENCY RESET
+    *  LATENCY HELP
 
 ## 1.2.0
 

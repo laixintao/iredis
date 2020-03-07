@@ -115,3 +115,15 @@ def test_latency_graph(judge_command):
     judge_command(
         "latency graph fork", {"command": "latency graph", "graphevent": "fork"}
     )
+    judge_command("latency graph", None)
+
+
+def test_latency_reset(judge_command):
+    judge_command(
+        "latency reset command fork aof-fsync-always",
+        {"command": "latency reset", "graphevent": "aof-fsync-always"},
+    )
+    judge_command(
+        "latency reset fork", {"command": "latency reset", "graphevent": "fork"}
+    )
+    judge_command("latency reset", {"command": "latency reset"})
