@@ -142,6 +142,7 @@ IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
 PORT = r"(?P<port>[1-9]|[1-5]?\d\d\d?\d?|6[1-4][0-9]\d\d\d|65[1-4]\d\d|655[1-2][0-9]|6553[1-5])"
 EPOCH = fr"(?P<epoch>{NUM})"
 PASSWORD = fr"(?P<password>{VALID_TOKEN})"
+REPLICATIONID = fr"(?P<replicationid>{VALID_TOKEN})"
 INDEX = r"(?P<index>(1[0-5]|\d))"
 CLIENTID = fr"(?P<clientid>{NUM})"
 SECOND = fr"(?P<second>{NUM})"
@@ -461,6 +462,7 @@ NEW_GRAMMAR = {
             (\s+ {OVERFLOW} \s+ {OVERFLOW_OPTION})
         )+
         \s*""",
+    "command_replicationid_offset": fr"\s+ {REPLICATIONID} \s+ {OFFSET} \s*"
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"

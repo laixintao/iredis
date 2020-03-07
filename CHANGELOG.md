@@ -10,6 +10,7 @@
     *  MODULE LIST
     *  MODULE LOAD
     *  MODULE UNLOAD
+    *  PSYNC
 
 ## 1.2.0
 

@@ -100,3 +100,10 @@ def test_client_kill_unordered_arguments(judge_command):
             "conntype": "pubsub",
         },
     )
+
+
+def test_psync(judge_command):
+    judge_command(
+        "PSYNC abc 123", {"command": "PSYNC", "replicationid": "abc", "offset": "123"}
+    )
+    judge_command("PSYNC", None)
