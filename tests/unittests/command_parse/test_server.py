@@ -1,6 +1,3 @@
-import pytest
-
-
 def test_client_setname(judge_command):
     judge_command(
         "CLIENT SETNAME foobar", {"command": "CLIENT SETNAME", "value": "foobar"}
