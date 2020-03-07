@@ -138,6 +138,9 @@ server,MEMORY MALLOC-STATS,command,render_bulk_string_decode
 server,MEMORY PURGE,command,render_simple_string
 server,MEMORY STATS,command,render_nested_pair
 server,MEMORY USAGE,command_key_samples_count,render_int
+server,MODULE LIST,command,render_list
+server,MODULE LOAD,command_any,render_simple_string
+server,MODULE UNLOAD,command_any,render_simple_string
 server,MONITOR,command,render_simple_string
 server,REPLICAOF,command_any,render_simple_string
 server,ROLE,command,render_list

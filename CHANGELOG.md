@@ -2,6 +2,14 @@
 
 * Feature: Support Redis 6.0.
   * `SET` command support `KEEPTTL` option.
+  * `LPUSHX` accepts multiple elements.
+  * Add commands support for:
+    *  CLUSTER BUMPEPOCH
+    *  CLUSTER FLUSHSLOTS
+    *  CLUSTER MYID
+    *  MODULE LIST
+    *  MODULE LOAD
+    *  MODULE UNLOAD
 
 ## 1.2.0
 
