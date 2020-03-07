@@ -1,26 +1,29 @@
-The `LATENCY HISTORY` command returns the raw data of the `event`'s latency spikes time series.
+The `LATENCY HISTORY` command returns the raw data of the `event`'s latency
+spikes time series.
 
-This is useful to an application that wants to fetch raw data in order to perform monitoring, display graphs, and so forth.
+This is useful to an application that wants to fetch raw data in order to
+perform monitoring, display graphs, and so forth.
 
 The command will return up to 160 timestamp-latency pairs for the `event`.
 
 Valid values for `event` are:
-* `active-defrag-cycle`
-* `aof-fsync-always`
-* `aof-stat`
-* `aof-rewrite-diff-write`
-* `aof-rename`
-* `aof-write`
-* `aof-write-active-child`
-* `aof-write-alone`
-* `aof-write-pending-fsync`
-* `command`
-* `expire-cycle`
-* `eviction-cycle`
-* `eviction-del`
-* `fast-command`
-* `fork`
-* `rdb-unlink-temp-file`
+
+- `active-defrag-cycle`
+- `aof-fsync-always`
+- `aof-stat`
+- `aof-rewrite-diff-write`
+- `aof-rename`
+- `aof-write`
+- `aof-write-active-child`
+- `aof-write-alone`
+- `aof-write-pending-fsync`
+- `command`
+- `expire-cycle`
+- `eviction-cycle`
+- `eviction-del`
+- `fast-command`
+- `fork`
+- `rdb-unlink-temp-file`
 
 @example
 

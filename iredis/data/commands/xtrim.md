@@ -1,17 +1,17 @@
-`XTRIM` trims the stream to a given number of items, evicting older items
-(items with lower IDs) if needed. The command is conceived to accept multiple
-trimming strategies, however currently only a single one is implemented,
-which is `MAXLEN`, and works exactly as the `MAXLEN` option in `XADD`.
+`XTRIM` trims the stream to a given number of items, evicting older items (items
+with lower IDs) if needed. The command is conceived to accept multiple trimming
+strategies, however currently only a single one is implemented, which is
+`MAXLEN`, and works exactly as the `MAXLEN` option in `XADD`.
 
-For example the following command will trim the stream to exactly
-the latest 1000 items:
+For example the following command will trim the stream to exactly the latest
+1000 items:
 
 ```
 XTRIM mystream MAXLEN 1000
 ```
 
-It is possible to give the command in the following special form in
-order to make it more efficient:
+It is possible to give the command in the following special form in order to
+make it more efficient:
 
 ```
 XTRIM mystream MAXLEN ~ 1000

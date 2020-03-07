@@ -6,5 +6,5 @@ Returns information about the modules loaded to the server.
 module, and is in itself a list of property names and their values. The
 following properties is reported for each loaded module:
 
-*   `name`: Name of the module
-*   `ver`: Version of the module
+- `name`: Name of the module
+- `ver`: Version of the module

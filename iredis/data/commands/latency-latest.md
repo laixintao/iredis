@@ -2,13 +2,13 @@ The `LATENCY LATEST` command reports the latest latency events logged.
 
 Each reported event has the following fields:
 
-* Event name.
-* Unix timestamp of the latest latency spike for the event.
-* Latest event latency in millisecond.
-* All-time maximum latency for this event.
+- Event name.
+- Unix timestamp of the latest latency spike for the event.
+- Latest event latency in millisecond.
+- All-time maximum latency for this event.
 
-"All-time" means the maximum latency since the Redis instance was
-started, or the time that events were reset `LATENCY RESET`.
+"All-time" means the maximum latency since the Redis instance was started, or
+the time that events were reset `LATENCY RESET`.
 
 @example:
 
@@ -34,4 +34,5 @@ For more information refer to the [Latency Monitoring Framework page][lm].
 @array-reply: specifically:
 
 The command returns an array where each element is a four elements array
-representing the event's name, timestamp, latest and all-time latency measurements.
+representing the event's name, timestamp, latest and all-time latency
+measurements.

@@ -1,10 +1,10 @@
 This is an introspection command used in order to retrieve different information
 about the streams and associated consumer groups. Three forms are possible:
 
-* `XINFO STREAM <key>`
+- `XINFO STREAM <key>`
 
-In this form the command returns general information about the stream stored
-at the specified key.
+In this form the command returns general information about the stream stored at
+the specified key.
 
 ```
 > XINFO STREAM mystream
@@ -28,15 +28,15 @@ at the specified key.
        2) "value"
 ```
 
-In the above example you can see that the reported information are the number
-of elements of the stream, details about the radix tree representing the
-stream mostly useful for optimization and debugging tasks, the number of
-consumer groups associated with the stream, the last generated ID that may
-not be the same as the last entry ID in case some entry was deleted. Finally
-the full first and last entry in the stream are shown, in order to give some
-sense about what is the stream content.
+In the above example you can see that the reported information are the number of
+elements of the stream, details about the radix tree representing the stream
+mostly useful for optimization and debugging tasks, the number of consumer
+groups associated with the stream, the last generated ID that may not be the
+same as the last entry ID in case some entry was deleted. Finally the full first
+and last entry in the stream are shown, in order to give some sense about what
+is the stream content.
 
-* `XINFO GROUPS <key>`
+- `XINFO GROUPS <key>`
 
 In this form we just get as output all the consumer groups associated with the
 stream:
@@ -58,10 +58,10 @@ stream:
 ```
 
 For each consumer group listed the command also shows the number of consumers
-known in that group and the pending messages (delivered but not yet acknowledged)
-in that group.
+known in that group and the pending messages (delivered but not yet
+acknowledged) in that group.
 
-* `XINFO CONSUMERS <key> <group>`
+- `XINFO CONSUMERS <key> <group>`
 
 Finally it is possible to get the list of every consumer in a specific consumer
 group:
@@ -82,16 +82,15 @@ group:
    6) (integer) 83841983
 ```
 
-We can see the idle time in milliseconds (last field) together with the
-consumer name and the number of pending messages for this specific
-consumer.
+We can see the idle time in milliseconds (last field) together with the consumer
+name and the number of pending messages for this specific consumer.
 
 **Note that you should not rely on the fields exact position**, nor on the
 number of fields, new fields may be added in the future. So a well behaving
-client should fetch the whole list, and report it to the user, for example,
-as a dictionary data structure. Low level clients such as C clients where
-the items will likely be reported back in a linear array should document
-that the order is undefined.
+client should fetch the whole list, and report it to the user, for example, as a
+dictionary data structure. Low level clients such as C clients where the items
+will likely be reported back in a linear array should document that the order is
+undefined.
 
 Finally it is possible to get help from the command, in case the user can't
 remember the exact syntax, by using the `HELP` subcommand:
