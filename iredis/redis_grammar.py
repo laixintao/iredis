@@ -18,6 +18,7 @@ CONST = {
     "limit": "LIMIT",
     "expiration": "EX PX",
     "condition": "NX XX",
+    "keepttl": "KEEPTTL",
     "operation": "AND OR XOR NOT",
     "changed": "CH",
     "incr": "INCR",
@@ -77,6 +78,24 @@ CONST = {
     "incrby": "INCRBY",
     "overflow": "OVERFLOW",
     "overflow_option": "WRAP SAT FAIL",
+    "graphevent": (
+        "active-defrag-cycle "
+        "aof-fsync-always "
+        "aof-stat "
+        "aof-rewrite-diff-write "
+        "aof-rename "
+        "aof-write "
+        "aof-write-active-child "
+        "aof-write-alone "
+        "aof-write-pending-fsync "
+        "command "
+        "expire-cycle "
+        "eviction-cycle "
+        "eviction-del "
+        "fast-command "
+        "fork "
+        "rdb-unlink-temp-file"
+    ),
 }
 
 
@@ -141,6 +160,7 @@ IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
 PORT = r"(?P<port>[1-9]|[1-5]?\d\d\d?\d?|6[1-4][0-9]\d\d\d|65[1-4]\d\d|655[1-2][0-9]|6553[1-5])"
 EPOCH = fr"(?P<epoch>{NUM})"
 PASSWORD = fr"(?P<password>{VALID_TOKEN})"
+REPLICATIONID = fr"(?P<replicationid>{VALID_TOKEN})"
 INDEX = r"(?P<index>(1[0-5]|\d))"
 CLIENTID = fr"(?P<clientid>{NUM})"
 SECOND = fr"(?P<second>{NUM})"
@@ -239,20 +259,23 @@ SET = fr"(?P<set>{c('set')})"
 INCRBY = fr"(?P<incrby>{c('incrby')})"
 OVERFLOW = fr"(?P<overflow>{c('overflow')})"
 OVERFLOW_OPTION = fr"(?P<overflow_option>{c('overflow_option')})"
+KEEPTTL = fr"(?P<keepttl>{c('keepttl')})"
+GRAPHEVENT = fr"(?P<graphevent>{c('graphevent')})"
 
 # TODO test lexer & completer for multi spaces in command
-# FIXME invalid command like "aaa bbb ccc"
-# redis command can have one space at most
-# FIXME inital value should be command, not blob, user can type anything...
+# For now, redis command can have one space at most
 COMMAND = "(\s*  (?P<command_pending>[\w -]+))"
 command_grammar = compile(COMMAND)
 
-# xxin is a placeholder, when compile to grammar, it will
-# be replaced to user typed command
+# Here are the core grammars, those are tokens after ``command``.
+# E.g. SET command's syntax is "SET key value"
+# Then it's grammar here is r"\s+ key \s+ value \s*", we needn't add `command`
+# here because every syntaxes starts with `command` so we will prepend `command`
+# in get_command_grammar function.
 NEW_GRAMMAR = {
-    "command_key": fr"\s* (?P<command>xxin) \s+ {KEY} \s*",
-    "command_pattern": fr"\s* (?P<command>xxin) \s+ {PATTERN} \s*",
-    "command_georadiusbymember": fr"""\s* (?P<command>xxin)
+    "command_key": fr"\s+ {KEY} \s*",
+    "command_pattern": fr"\s+ {PATTERN} \s*",
+    "command_georadiusbymember": fr"""
         \s+ {KEY} \s+ {MEMBER}
         \s+ {FLOAT} \s+ {DISTUNIT}
         (\s+ {GEOCHOICE})*
@@ -260,133 +283,141 @@ NEW_GRAMMAR = {
         (\s+ {ORDER})?
         (\s+ {CONST_STORE} \s+ {KEY})?
         (\s+ {CONST_STOREDIST} \s+ {KEY})? \s*""",
-    "command_commandname": fr"\s* (?P<command>xxin) \s+ {COMMANDNAME} \s*",
-    "command_slots": fr"\s* (?P<command>xxin) \s+ {SLOTS} \s*",
-    "command_node": fr"\s* (?P<command>xxin) \s+ {NODE} \s*",
-    "command_slot": fr"\s* (?P<command>xxin) \s+ {SLOT} \s*",
-    "command_failoverchoice": fr"\s* (?P<command>xxin) \s+ {FAILOVERCHOICE} \s*",
-    "command_resetchoice": fr"\s* (?P<command>xxin) \s+ {RESETCHOICE} \s*",
-    "command_slot_count": fr"\s* (?P<command>xxin) \s+ {SLOT} \s+ {COUNT} \s*",
-    "command_key_samples_count": fr"""\s* (?P<command>xxin)
+    "command_commandname": fr"\s+ {COMMANDNAME} \s*",
+    "command_slots": fr"\s+ {SLOTS} \s*",
+    "command_node": fr"\s+ {NODE} \s*",
+    "command_slot": fr"\s+ {SLOT} \s*",
+    "command_failoverchoice": fr"\s+ {FAILOVERCHOICE} \s*",
+    "command_resetchoice": fr"\s+ {RESETCHOICE} \s*",
+    "command_slot_count": fr"\s+ {SLOT} \s+ {COUNT} \s*",
+    "command_key_samples_count": fr"""
         \s+ {KEY} \s+ {SAMPLES} \s+ {COUNT} \s*""",
-    "command": fr"\s* (?P<command>xxin) \s*",
-    "command_ip_port": fr"\s* (?P<command>xxin) \s+ {IP} \s+ {PORT} \s*",
-    "command_epoch": fr"\s* (?P<command>xxin) \s+ {EPOCH} \s*",
-    "command_asyncx": fr"\s* (?P<command>xxin) (\s+ {ASYNC})? \s*",
-    "command_slot_slotsubcmd_nodex": fr"""\s* (?P<command>xxin)
+    "command": fr"\s*",
+    "command_ip_port": fr"\s+ {IP} \s+ {PORT} \s*",
+    "command_epoch": fr"\s+ {EPOCH} \s*",
+    "command_asyncx": fr"(\s+ {ASYNC})? \s*",
+    "command_slot_slotsubcmd_nodex": fr"""
         \s+ {SLOT} \s+ {SLOTSUBCMD} (\s+ {NODE})? \s*""",
-    "command_password": fr"\s* (?P<command>xxin) \s+ {PASSWORD} \s*",
-    "command_message": fr"\s* (?P<command>xxin) \s+ {MESSAGE} \s*",
-    "command_messagex": fr"\s* (?P<command>xxin) (\s+{MESSAGE})? \s*",
-    "command_index": fr"\s* (?P<command>xxin) \s+ {INDEX} \s*",
-    "command_index_index": fr"\s* (?P<command>xxin) \s+ {INDEX} \s+ {INDEX} \s*",
-    "command_type_conntype_x": fr"""\s* (?P<command>xxin)
+    "command_password": fr"\s+ {PASSWORD} \s*",
+    "command_message": fr"\s+ {MESSAGE} \s*",
+    "command_messagex": fr"(\s+{MESSAGE})? \s*",
+    "command_index": fr"\s+ {INDEX} \s*",
+    "command_index_index": fr"\s+ {INDEX} \s+ {INDEX} \s*",
+    "command_type_conntype_x": fr"""
         (\s+ {TYPE_CONST} \s+ {CONNTYPE})? \s*""",
-    "command_clientid_errorx": fr"\s* (?P<command>xxin) \s+ {CLIENTID} (\s+ {ERROR})? \s*",
-    "command_keys": fr"\s* (?P<command>xxin) \s+ {KEYS} \s*",
-    "command_key_value": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {VALUE} \s*",
-    "command_parameter_value": fr"\s* (?P<command>xxin) \s+ {PARAMETER} \s+ {VALUE} \s*",
-    "command_parameter": fr"\s* (?P<command>xxin) \s+ {PARAMETER} \s+ {VALUE} \s*",
-    "command_value": fr"\s* (?P<command>xxin) \s+ {VALUE} \s*",
-    "command_key_second": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {SECOND} \s*",
-    "command_key_timestamp": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {TIMESTAMP} \s*",
-    "command_key_index": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {INDEX} \s*",
-    "command_key_millisecond": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {MILLISECOND} \s*",
-    "command_key_timestampms": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {TIMESTAMPMS} \s*",
-    "command_key_newkey": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {NEWKEY} \s*",
-    "command_newkey_keys": fr"\s* (?P<command>xxin) \s+ {NEWKEY} \s+ {KEYS} \s*",
-    "command_key_newkey_timeout": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {NEWKEY} \s+ {TIMEOUT} \s*",
-    "command_keys_timeout": fr"\s* (?P<command>xxin) \s+ {KEYS} \s+ {TIMEOUT} \s*",
-    "command_count_timeout": fr"\s* (?P<command>xxin) \s+ {COUNT} \s+ {TIMEOUT} \s*",
-    "command_timeout": fr"\s* (?P<command>xxin) \s+ {TIMEOUT} \s*",
-    "command_key_positionchoice_pivot_value": fr"""\s* (?P<command>xxin)
+    "command_clientid_errorx": fr"\s+ {CLIENTID} (\s+ {ERROR})? \s*",
+    "command_keys": fr"\s+ {KEYS} \s*",
+    "command_key_value": fr"\s+ {KEY} \s+ {VALUE} \s*",
+    "command_parameter_value": fr"\s+ {PARAMETER} \s+ {VALUE} \s*",
+    "command_parameter": fr"\s+ {PARAMETER} \s+ {VALUE} \s*",
+    "command_value": fr"\s+ {VALUE} \s*",
+    "command_key_second": fr"\s+ {KEY} \s+ {SECOND} \s*",
+    "command_key_timestamp": fr"\s+ {KEY} \s+ {TIMESTAMP} \s*",
+    "command_key_index": fr"\s+ {KEY} \s+ {INDEX} \s*",
+    "command_key_millisecond": fr"\s+ {KEY} \s+ {MILLISECOND} \s*",
+    "command_key_timestampms": fr"\s+ {KEY} \s+ {TIMESTAMPMS} \s*",
+    "command_key_newkey": fr"\s+ {KEY} \s+ {NEWKEY} \s*",
+    "command_newkey_keys": fr"\s+ {NEWKEY} \s+ {KEYS} \s*",
+    "command_key_newkey_timeout": fr"\s+ {KEY} \s+ {NEWKEY} \s+ {TIMEOUT} \s*",
+    "command_keys_timeout": fr"\s+ {KEYS} \s+ {TIMEOUT} \s*",
+    "command_count_timeout": fr"\s+ {COUNT} \s+ {TIMEOUT} \s*",
+    "command_timeout": fr"\s+ {TIMEOUT} \s*",
+    "command_key_positionchoice_pivot_value": fr"""
         \s+ {KEY} \s+ {POSITION_CHOICE} \s+ {VALUE} \s+ {VALUE} \s*""",
-    "command_pass": fr"\s* (?P<command>xxin) \s+ {ANY} \s*",
-    "command_any": fr"\s* (?P<command>xxin) \s+ {ANY} \s*",
-    "command_key_value_expiration_condition": fr"""\s* (?P<command>xxin)
+    "command_pass": fr"\s+ {ANY} \s*",
+    "command_any": fr"\s+ {ANY} \s*",
+    "command_set": fr"""
         \s+ {KEY} \s+ {VALUE}
-        (\s+ {EXPIRATION} \s+ {MILLISECOND})? (\s+ {CONDITION})? \s*""",
-    "command_key_start_end_x": fr"\s* (?P<command>xxin) \s+ {KEY} (\s+ {START} \s+ {END})? \s*",
-    "command_key_start_end": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {START} \s+ {END} \s*",
-    "command_key_delta": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {DELTA} \s*",
-    "command_key_offset_value": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {OFFSET} \s+ {VALUE} \s*",
-    "command_key_field_value": fr"\s* (?P<command>xxin) \s+ {KEY} (\s+ {FIELD} \s+ {VALUE})+ \s*",
-    "command_key_offset_bit": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {OFFSET} \s+ {BIT} \s*",
-    "command_key_offset": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {OFFSET} \s*",
-    "command_key_position": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {POSITION} \s*",
-    "command_key_position_value": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {POSITION} \s+ {VALUE} \s*",
-    "command_key_second_value": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {SECOND} \s+ {VALUE} \s*",
-    "command_key_float": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {FLOAT} \s*",
-    "command_key_valuess": fr"\s* (?P<command>xxin) (\s+ {KEY} \s+ {VALUE})+ \s*",
-    "command_key_values": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {VALUES} \s*",
-    "command_key_millisecond_value": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {MILLISECOND} \s+ {VALUE} \s*",
-    "command_operation_key_keys": fr"\s* (?P<command>xxin) \s+ {OPERATION} \s+ {KEY} \s+ {KEYS} \s*",
-    "command_key_bit_start_end": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {BIT} (\s+ {START})? (\s+ {END})? \s*",
-    "command_key_members": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {MEMBERS} \s*",
-    "command_geodist": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {MEMBER} \s+ {MEMBER} (\s+ {DISTUNIT})? \s*",
-    "command_key_longitude_latitude_members": fr"""\s* (?P<command>xxin)
+        (
+            (\s+ {EXPIRATION} \s+ {MILLISECOND})|
+            (\s+ {CONDITION})|
+            (\s+ {KEEPTTL})
+        )*
+        \s*""",
+    "command_key_start_end_x": fr"\s+ {KEY} (\s+ {START} \s+ {END})? \s*",
+    "command_key_start_end": fr"\s+ {KEY} \s+ {START} \s+ {END} \s*",
+    "command_key_delta": fr"\s+ {KEY} \s+ {DELTA} \s*",
+    "command_key_offset_value": fr"\s+ {KEY} \s+ {OFFSET} \s+ {VALUE} \s*",
+    "command_key_field_value": fr"\s+ {KEY} (\s+ {FIELD} \s+ {VALUE})+ \s*",
+    "command_key_offset_bit": fr"\s+ {KEY} \s+ {OFFSET} \s+ {BIT} \s*",
+    "command_key_offset": fr"\s+ {KEY} \s+ {OFFSET} \s*",
+    "command_key_position": fr"\s+ {KEY} \s+ {POSITION} \s*",
+    "command_key_position_value": fr"\s+ {KEY} \s+ {POSITION} \s+ {VALUE} \s*",
+    "command_key_second_value": fr"\s+ {KEY} \s+ {SECOND} \s+ {VALUE} \s*",
+    "command_key_float": fr"\s+ {KEY} \s+ {FLOAT} \s*",
+    "command_key_valuess": fr"(\s+ {KEY} \s+ {VALUE})+ \s*",
+    "command_key_values": fr"\s+ {KEY} \s+ {VALUES} \s*",
+    "command_key_millisecond_value": fr"\s+ {KEY} \s+ {MILLISECOND} \s+ {VALUE} \s*",
+    "command_operation_key_keys": fr"\s+ {OPERATION} \s+ {KEY} \s+ {KEYS} \s*",
+    "command_key_bit_start_end": fr"\s+ {KEY} \s+ {BIT} (\s+ {START})? (\s+ {END})? \s*",
+    "command_key_members": fr"\s+ {KEY} \s+ {MEMBERS} \s*",
+    "command_geodist": fr"\s+ {KEY} \s+ {MEMBER} \s+ {MEMBER} (\s+ {DISTUNIT})? \s*",
+    "command_key_longitude_latitude_members": fr"""
         \s+ {KEY} (\s+ {LONGITUDE} \s+ {LATITUDE} \s {MEMBER})+ \s*""",
-    "command_destination_keys": fr"\s* (?P<command>xxin) \s+ {DESTINATION} \s+ {KEYS} \s*",
-    "command_object_key": fr"\s* (?P<command>xxin) \s+ {OBJECT} \s+ {KEY} \s*",
-    "command_key_member": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {MEMBER} \s*",
-    "command_key_newkey_member": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {NEWKEY} \s+ {MEMBER} \s*",
-    "command_key_count_x": fr"\s* (?P<command>xxin) \s+ {KEY} (\s+ {COUNT})? \s*",
-    "command_key_min_max": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {MIN} \s+ {MAX} \s*",
-    "command_key_condition_changed_incr_score_members": fr"""\s* (?P<command>xxin)
+    "command_destination_keys": fr"\s+ {DESTINATION} \s+ {KEYS} \s*",
+    "command_object_key": fr"\s+ {OBJECT} \s+ {KEY} \s*",
+    "command_key_member": fr"\s+ {KEY} \s+ {MEMBER} \s*",
+    "command_key_newkey_member": fr"\s+ {KEY} \s+ {NEWKEY} \s+ {MEMBER} \s*",
+    "command_key_count_x": fr"\s+ {KEY} (\s+ {COUNT})? \s*",
+    "command_key_min_max": fr"\s+ {KEY} \s+ {MIN} \s+ {MAX} \s*",
+    "command_key_condition_changed_incr_score_members": fr"""
         \s+ {KEY} (\s+ {CONDITION})?
         (\s+ {CHANGED})?
         (\s+ {INCR})?
         (\s+ {SCORE} \s+ {MEMBER})+ \s*""",
-    "command_key_float_member": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {FLOAT} \s+ {MEMBER} \s*",
-    "command_key_lexmin_lexmax": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {LEXMIN} \s+ {LEXMAX} \s*",
-    "command_key_start_end_withscores_x": fr"""\s* (?P<command>xxin)
+    "command_key_float_member": fr"\s+ {KEY} \s+ {FLOAT} \s+ {MEMBER} \s*",
+    "command_key_lexmin_lexmax": fr"\s+ {KEY} \s+ {LEXMIN} \s+ {LEXMAX} \s*",
+    "command_key_start_end_withscores_x": fr"""
         \s+ {KEY} \s+ {START} \s+ {END} (\s+ {WITHSCORES})? \s*""",
-    "command_key_lexmin_lexmax_limit_offset_count": fr"""\s* (?P<command>xxin)
+    "command_key_lexmin_lexmax_limit_offset_count": fr"""
         \s+ {KEY} \s+ {LEXMIN} \s+ {LEXMAX}
         (\s+ {LIMIT} \s+ {OFFSET} \s+ {COUNT})? \s*""",
-    "command_key_min_max_withscore_x_limit_offset_count_x": fr"""\s* (?P<command>xxin)
+    "command_key_min_max_withscore_x_limit_offset_count_x": fr"""
         \s+ {KEY} \s+ {MIN} \s+ {MAX} (\s+ {WITHSCORES})?
         (\s+ {LIMIT} \s+ {OFFSET} \s+ {COUNT})? \s*""",
-    "command_cursor_match_pattern_count_type": fr"""\s* (?P<command>xxin)
+    "command_cursor_match_pattern_count_type": fr"""
         \s+ {CURSOR} (\s+ {MATCH} \s+ {PATTERN})?
         (\s+ {COUNT_CONST} \s+ {COUNT})? (\s+ {TYPE_CONST} \s+ {TYPE})? \s*""",
-    "command_key_cursor_match_pattern_count": fr"""\s* (?P<command>xxin) \s+ {KEY}
+    "command_key_cursor_match_pattern_count": fr"""\s+ {KEY}
         \s+ {CURSOR} (\s+ {MATCH} \s+ {PATTERN})? (\s+ {COUNT_CONST} \s+ {COUNT})? \s*""",
-    "command_key_fields": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {FIELDS} \s*",
-    "command_key_field": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {FIELD} \s*",
-    "command_key_field_delta": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {FIELD} \s+ {DELTA} \s*",
-    "command_key_field_float": fr"\s* (?P<command>xxin) \s+ {KEY} \s+ {FIELD} \s+ {FLOAT} \s*",
-    "command_key_fieldvalues": fr"\s* (?P<command>xxin) \s+ {KEY} (\s+ {FIELD} \s+ {VALUE})+ \s*",
-    "command_slowlog": fr"\s* (?P<command>xxin) \s+ {SLOWLOGSUB} \s+ {NUM} \s*",
-    "command_switch": fr"\s* (?P<command>xxin) \s+ {SWITCH} \s*",
-    "command_clientkill": fr"""\s* (?P<command>xxin) (\s+ {IP_PORT})?
-        (\s+ {ADDR} \s+ {IP_PORT})?
-        (\s+ {CONST_ID} \s+ {CLIENTID})?
-        (\s+ {TYPE_CONST} \s+ {CONNTYPE})?
-        (\s+ {SKIPME} \s+ {YES})? \s*""",
-    "command_migrate": fr"""\s* (?P<command>xxin) \s+ {HOST} \s+ {PORT}
+    "command_key_fields": fr"\s+ {KEY} \s+ {FIELDS} \s*",
+    "command_key_field": fr"\s+ {KEY} \s+ {FIELD} \s*",
+    "command_key_field_delta": fr"\s+ {KEY} \s+ {FIELD} \s+ {DELTA} \s*",
+    "command_key_field_float": fr"\s+ {KEY} \s+ {FIELD} \s+ {FLOAT} \s*",
+    "command_key_fieldvalues": fr"\s+ {KEY} (\s+ {FIELD} \s+ {VALUE})+ \s*",
+    "command_slowlog": fr"\s+ {SLOWLOGSUB} \s+ {NUM} \s*",
+    "command_switch": fr"\s+ {SWITCH} \s*",
+    "command_clientkill": fr"""
+        (
+            (\s+ {IP_PORT})|
+            (\s+ {ADDR} \s+ {IP_PORT})|
+            (\s+ {CONST_ID} \s+ {CLIENTID})|
+            (\s+ {TYPE_CONST} \s+ {CONNTYPE})|
+            (\s+ {SKIPME} \s+ {YES})
+        )+ \s*""",
+    "command_migrate": fr"""\s+ {HOST} \s+ {PORT}
         \s+ {KEY} \s+ {INDEX} \s+ {TIMEOUT} (\s+ {MIGRATECHOICE})?
         (\s+ {AUTH} \s+ {PASSWORD})? (\s+ {CONST_KEYS} \s+ {KEYS})? \s*""",
-    "command_radius": fr"""\s* (?P<command>xxin) \s+ {KEY}
+    "command_radius": fr"""\s+ {KEY}
         \s+ {LONGITUDE} \s+ {LATITUDE} \s+ {FLOAT} \s+ {DISTUNIT}
         (\s+ {GEOCHOICE})* (\s+ {COUNT_CONST} \s+ {COUNT})?
         (\s+ {ORDER})?
         (\s+ {CONST_STORE} \s+ {KEY})?
         (\s+ {CONST_STOREDIST} \s+ {KEY})? \s*""",
-    "command_restore": fr"""\s* (?P<command>xxin) \s+ {KEY}
+    "command_restore": fr"""\s+ {KEY}
         \s+ {TIMEOUT} \s+ {VALUE} (\s+ {SUBRESTORE} \s+ {SECOND})? \s*""",
-    "command_pubsubcmd_channels": fr"\s* (?P<command>xxin) \s+ {PUBSUBCMD} (\s+ {CHANNEL})+ \s*",
-    "command_channel_message": fr"\s* (?P<command>xxin) \s+ {CHANNEL} \s+ {MESSAGE} \s*",
-    "command_channels": fr"\s* (?P<command>xxin) (\s+ {CHANNEL})+ \s*",
-    "command_lua_any": fr"""\s* (?P<command>xxin) (\s+"{DOUBLE_LUA}")? (\s+'{SINGLE_LUA}')? \s+ {ANY} \s*""",
-    "command_scriptdebug": fr"\s* (?P<command>xxin) \s+ {SCRIPTDEBUG} \s*",
-    "command_shutdown": fr"\s* (?P<command>xxin) \s+ {SHUTDOWN} \s*",
-    "command_key_start_end_countx": fr"""\s* (?P<command>xxin) \s+ {KEY}
+    "command_pubsubcmd_channels": fr"\s+ {PUBSUBCMD} (\s+ {CHANNEL})+ \s*",
+    "command_channel_message": fr"\s+ {CHANNEL} \s+ {MESSAGE} \s*",
+    "command_channels": fr"(\s+ {CHANNEL})+ \s*",
+    "command_lua_any": fr"""(\s+"{DOUBLE_LUA}")? (\s+'{SINGLE_LUA}')? \s+ {ANY} \s*""",
+    "command_scriptdebug": fr"\s+ {SCRIPTDEBUG} \s*",
+    "command_shutdown": fr"\s+ {SHUTDOWN} \s*",
+    "command_key_start_end_countx": fr"""\s+ {KEY}
         \s+ {STREAM_ID}
         \s+ {STREAM_ID}
         (\s+ {COUNT_CONST} \s+ {COUNT})?
         \s*""",
-    "command_xgroup": fr"""\s* (?P<command>xxin)
+    "command_xgroup": fr"""
         (
             (\s+ {STREAM_CREATE} \s+ {KEY} \s+ {GROUP} \s+ {STREAM_ID})|
             (\s+ {STREAM_SETID} \s+ {KEY} \s+ {GROUP} \s+ {STREAM_ID})|
@@ -394,11 +425,11 @@ NEW_GRAMMAR = {
             (\s+ {STREAM_DELCONSUMER} \s+ {KEY} \s+ {GROUP} \s+ {CONSUMER})
         )
         \s*""",
-    "command_key_group_ids": fr"""\s* (?P<command>xxin)
+    "command_key_group_ids": fr"""
         \s+ {KEY} \s+ {GROUP} (\s+ {STREAM_ID})+ \s*""",
-    "command_key_ids": fr"""\s* (?P<command>xxin)
+    "command_key_ids": fr"""
         \s+ {KEY} (\s+ {STREAM_ID})+ \s*""",
-    "command_xinfo": fr"""\s* (?P<command>xxin)
+    "command_xinfo": fr"""
         (
             (\s+ {STREAM_CONSUMERS} \s+ {KEY} \s+ {GROUP})|
             (\s+ {STREAM_GROUPS} \s+ {KEY})|
@@ -406,20 +437,20 @@ NEW_GRAMMAR = {
             (\s+ {HELP})
         )
         \s*""",
-    "command_xpending": fr"""\s* (?P<command>xxin)
+    "command_xpending": fr"""
         \s+ {KEY} \s+ {GROUP}
         (\s+ {STREAM_ID} \s+ {STREAM_ID} \s+ {COUNT})?
         (\s+ {CONSUMER})?
         \s*""",
-    "command_xadd": fr"""\s* (?P<command>xxin)
+    "command_xadd": fr"""
         \s+ {KEY}
         (\s+ {MAXLEN} (\s+ {APPROXIMATELY})? \s+ {COUNT})?
         \s+ {STREAM_ID}
         (\s+ {SFIELD} \s+ {SVALUE})+ \s*""",
-    "command_key_maxlen": fr"""\s* (?P<command>xxin)
+    "command_key_maxlen": fr"""
         \s+ {KEY} \s+ {MAXLEN} (\s+ {APPROXIMATELY})? \s+ {COUNT}
         \s*""",
-    "command_xclaim": fr"""\s* (?P<command>xxin)
+    "command_xclaim": fr"""
         \s+ {KEY} \s+ {GROUP} \s+ {CONSUMER} \s+ {MILLISECOND}
         (\s+ {STREAM_ID})+
         (\s+ {IDEL} \s+ {MILLISECOND})?
@@ -428,14 +459,14 @@ NEW_GRAMMAR = {
         (\s+ {FORCE})?
         (\s+ {JUSTID})?
         \s*""",
-    "command_xread": fr"""\s* (?P<command>xxin)
+    "command_xread": fr"""
         (\s+ {COUNT_CONST} \s+ {COUNT})?
         (\s+ {BLOCK} \s+ {MILLISECOND})?
         \s+ {STREAMS}
         \s+ {KEYS}
         (\s+ {STREAM_ID})+
         \s*""",
-    "command_xreadgroup": fr"""\s* (?P<command>xxin)
+    "command_xreadgroup": fr"""
         \s+ {STREAM_GROUP} \s+ {GROUP} \s+ {CONSUMER}
         (\s+ {COUNT_CONST} \s+ {COUNT})?
         (\s+ {BLOCK} \s+ {MILLISECOND})?
@@ -444,7 +475,7 @@ NEW_GRAMMAR = {
         \s+ {KEYS}
         (\s+ {STREAM_ID})+
         \s*""",
-    "command_bitfield": fr"""\s* (?P<command>xxin)
+    "command_bitfield": fr"""
         \s+ {KEY}
         (
             (\s+ {GET} \s+ {INTTYPE} \s+ {SHARP_OFFSET})|
@@ -453,6 +484,9 @@ NEW_GRAMMAR = {
             (\s+ {OVERFLOW} \s+ {OVERFLOW_OPTION})
         )+
         \s*""",
+    "command_replicationid_offset": fr"\s+ {REPLICATIONID} \s+ {OFFSET} \s*",
+    "command_graphevent": fr"\s+ {GRAPHEVENT} \s*",
+    "command_graphevents": fr"(\s+ {GRAPHEVENT})* \s*",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"
@@ -467,10 +501,15 @@ def get_command_grammar(command):
     syntax_name = command2syntax[command.upper()]
     syntax = NEW_GRAMMAR.get(syntax_name)
 
-    # TODO this should be deleted
+    # If a command is not supported yet, (e.g. command from latest version added
+    # by Redis recently, or command from third Redis module.) return a defualt
+    # grammar, so the lexer and completion won't be activated.
     if syntax is None:
         return command_grammar
-    syntax = syntax.replace(r"xxin", command.replace(r" ", r"\s+"))
+    # prepend command token for this syntax
+    command_allow_multi_spaces = command.replace(r" ", r"\s+")
+    syntax = fr"\s* (?P<command>{command_allow_multi_spaces}) " + syntax
+    # allow user input pipeline to redirect to shell, like `get json | jq .`
     syntax += pipeline
 
     logger.info(f"syxtax: {syntax}")

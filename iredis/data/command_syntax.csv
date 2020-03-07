@@ -1,14 +1,17 @@
 Group,Command,Syntax,Callback
 cluster,CLUSTER ADDSLOTS,command_slots,render_simple_string
+cluster,CLUSTER BUMPEPOCH,command,render_simple_string
 cluster,CLUSTER COUNT-FAILURE-REPORTS,command_node,render_int
 cluster,CLUSTER COUNTKEYSINSLOT,command_slot,render_int
 cluster,CLUSTER DELSLOTS,command_slots,render_simple_string
 cluster,CLUSTER FAILOVER,command_failoverchoice,render_simple_string
+cluster,CLUSTER FLUSHSLOTS,command,render_simple_string
 cluster,CLUSTER FORGET,command_node,render_simple_string
 cluster,CLUSTER GETKEYSINSLOT,command_slot_count,render_list
 cluster,CLUSTER INFO,command,render_bulk_string_decode
 cluster,CLUSTER KEYSLOT,command_key,render_int
 cluster,CLUSTER MEET,command_ip_port,render_simple_string
+cluster,CLUSTER MYID,command,render_bulk_string_decode
 cluster,CLUSTER NODES,command,render_bulk_string_decode
 cluster,CLUSTER REPLICAS,command_node,render_bulk_string_decode
 cluster,CLUSTER REPLICATE,command_node,render_simple_string
@@ -82,7 +85,7 @@ list,LINSERT,command_key_positionchoice_pivot_value,render_int
 list,LLEN,command_key,render_int
 list,LPOP,command_key,render_bulk_string
 list,LPUSH,command_key_values,render_int
-list,LPUSHX,command_key_value,render_int
+list,LPUSHX,command_key_values,render_int
 list,LRANGE,command_key_start_end,render_list
 list,LREM,command_key_position_value,render_int
 list,LSET,command_key_position_value,render_simple_string
@@ -129,13 +132,23 @@ server,FLUSHALL,command_asyncx,render_simple_string
 server,FLUSHDB,command_asyncx,render_simple_string
 server,INFO,command,render_bulk_string_decode
 server,LASTSAVE,command,render_unixtime
+server,LATENCY DOCTOR,command,render_bulk_string_decode
+server,LATENCY GRAPH,command_graphevent,render_bulk_string_decode
+server,LATENCY HELP,command,render_list
+server,LATENCY HISTORY,command_graphevent,render_list
+server,LATENCY LATEST,command,render_list
+server,LATENCY RESET,command_graphevents,render_int
 server,MEMORY DOCTOR,command,render_bulk_string_decode
 server,MEMORY HELP,command,render_list
 server,MEMORY MALLOC-STATS,command,render_bulk_string_decode
 server,MEMORY PURGE,command,render_simple_string
 server,MEMORY STATS,command,render_nested_pair
 server,MEMORY USAGE,command_key_samples_count,render_int
+server,MODULE LIST,command,render_list
+server,MODULE LOAD,command_any,render_simple_string
+server,MODULE UNLOAD,command_any,render_simple_string
 server,MONITOR,command,render_simple_string
+server,PSYNC,command_replicationid_offset,render_bulk_string_decode
 server,REPLICAOF,command_any,render_simple_string
 server,ROLE,command,render_list
 server,SAVE,command,render_simple_string
@@ -215,7 +228,7 @@ string,MGET,command_keys,render_list
 string,MSET,command_key_valuess,render_simple_string
 string,MSETNX,command_key_valuess,render_int
 string,PSETEX,command_key_millisecond_value,render_bulk_string
-string,SET,command_key_value_expiration_condition,render_simple_string
+string,SET,command_set,render_simple_string
 string,SETBIT,command_key_offset_bit,render_int
 string,SETEX,command_key_second_value,render_bulk_string
 string,SETNX,command_key_value,render_int

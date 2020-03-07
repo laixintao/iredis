@@ -43,8 +43,52 @@ def test_set(judge_command):
         },
     )
     judge_command(
+        "SET abc bar XX px 10000",
+        {
+            "command": "SET",
+            "key": "abc",
+            "value": "bar",
+            "expiration": "px",
+            "millisecond": "10000",
+            "condition": "XX",
+        },
+    )
+    judge_command(
         "SET abc bar XX",
         {"command": "SET", "key": "abc", "value": "bar", "condition": "XX"},
+    )
+    # keepttl
+    judge_command(
+        "SET abc bar XX keepttl",
+        {
+            "command": "SET",
+            "key": "abc",
+            "value": "bar",
+            "condition": "XX",
+            "keepttl": "keepttl",
+        },
+    )
+    judge_command(
+        "SET abc bar keepttl XX",
+        {
+            "command": "SET",
+            "key": "abc",
+            "value": "bar",
+            "condition": "XX",
+            "keepttl": "keepttl",
+        },
+    )
+    judge_command(
+        "SET abc bar XX px 10000 KEEPTTL",
+        {
+            "command": "SET",
+            "key": "abc",
+            "value": "bar",
+            "expiration": "px",
+            "millisecond": "10000",
+            "condition": "XX",
+            "keepttl": "KEEPTTL",
+        },
     )
 
 

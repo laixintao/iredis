@@ -1,6 +1,3 @@
-import pytest
-
-
 def test_client_setname(judge_command):
     judge_command(
         "CLIENT SETNAME foobar", {"command": "CLIENT SETNAME", "value": "foobar"}
@@ -88,7 +85,6 @@ def test_client_kill(judge_command):
     )
 
 
-@pytest.mark.xfail(reason="currently no support arbitrary ordered command args")
 def test_client_kill_unordered_arguments(judge_command):
     judge_command(
         "CLIENT KILL type pubsub addr 127.0.0.1:12345",
@@ -100,3 +96,31 @@ def test_client_kill_unordered_arguments(judge_command):
             "conntype": "pubsub",
         },
     )
+
+
+def test_psync(judge_command):
+    judge_command(
+        "PSYNC abc 123", {"command": "PSYNC", "replicationid": "abc", "offset": "123"}
+    )
+    judge_command("PSYNC", None)
+
+
+def test_latency_graph(judge_command):
+    judge_command(
+        "latency graph command", {"command": "latency graph", "graphevent": "command"}
+    )
+    judge_command(
+        "latency graph fork", {"command": "latency graph", "graphevent": "fork"}
+    )
+    judge_command("latency graph", None)
+
+
+def test_latency_reset(judge_command):
+    judge_command(
+        "latency reset command fork aof-fsync-always",
+        {"command": "latency reset", "graphevent": "aof-fsync-always"},
+    )
+    judge_command(
+        "latency reset fork", {"command": "latency reset", "graphevent": "fork"}
+    )
+    judge_command("latency reset", {"command": "latency reset"})
