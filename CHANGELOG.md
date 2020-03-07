@@ -1,6 +1,6 @@
 ## 1.3.0
 
-* Feature: Support Redis 6.0.
+* Catch up with redis-doc: d19fb20..6927ef0:
   * `SET` command support `KEEPTTL` option.
   * `LPUSHX` accepts multiple elements.
   * Add commands support for:
