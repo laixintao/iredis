@@ -9,7 +9,7 @@ So new calls to `XREADGROUP` to grab the messages history for a consumer
 Similarly the pending message will be listed by the `XPENDING` command,
 that inspects the PEL.
 
-Once a consumer *succesfully* processes a message, it should call `XACK`
+Once a consumer *successfully* processes a message, it should call `XACK`
 so that such message does not get processed again, and as a side effect,
 the PEL entry about this message is also purged, releasing memory from the
 Redis server.

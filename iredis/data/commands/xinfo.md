@@ -94,7 +94,7 @@ the items will likely be reported back in a linear array should document
 that the order is undefined.
 
 Finally it is possible to get help from the command, in case the user can't
-remember the exact syntax, by using the `HELP` subcommnad:
+remember the exact syntax, by using the `HELP` subcommand:
 
 ```
 > XINFO HELP

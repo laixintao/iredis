@@ -46,7 +46,7 @@ An example of output when `ROLE` is called in a replica instance:
 
 The replica output is composed of the following parts:
 
-1. The string `slave`, because of backward compatbility (see note at the end of this page).
+1. The string `slave`, because of backward compatibility (see note at the end of this page).
 2. The IP of the master.
 3. The port number of the master.
 4. The state of the replication from the point of view of the master, that can be `connect` (the instance needs to connect to its master), `connecting` (the master-replica connection is in progress), `sync` (the master and replica are trying to perform the synchronization), `connected` (the replica is online).

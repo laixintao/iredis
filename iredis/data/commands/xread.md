@@ -89,7 +89,7 @@ To continue iterating the two streams I'll call:
          2) 1) "name"
             2) "Toni"
             3) "surname"
-            4) "Morris"
+            4) "Morrison"
       2) 1) 1526985712947-0
          2) 1) "name"
             2) "Agatha"
@@ -128,7 +128,7 @@ the command is able to block if it could not return any data, according
 to the specified streams and IDs, and automatically unblock once one of
 the requested keys accept data.
 
-It is important to understand that this command is *fans out* to all the
+It is important to understand that this command *fans out* to all the
 clients that are waiting for the same range of IDs, so every consumer will
 get a copy of the data, unlike to what happens when blocking list pop
 operations are used.
@@ -186,7 +186,7 @@ And so forth.
 ## How multiple clients blocked on a single stream are served
 
 Blocking list operations on lists or sorted sets have a *pop* behavior.
-Bascially, the element is removed from the list or sorted set in order
+Basically, the element is removed from the list or sorted set in order
 to be returned to the client. In this scenario you want the items
 to be consumed in a fair way, depending on the moment clients blocked
 on a given key arrived. Normally Redis uses the FIFO semantics in this

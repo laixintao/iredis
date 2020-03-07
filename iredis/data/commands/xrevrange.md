@@ -18,10 +18,10 @@ enough to send:
 
 Like `XRANGE` this command can be used in order to iterate the whole
 stream content, however note that in this case, the next command calls
-should use the ID of the last entry, with the sequence number decremneted
+should use the ID of the last entry, with the sequence number decremented
 by one. However if the sequence number is already 0, the time part of the
 ID should be decremented by 1, and the sequence part should be set to
-the maxium possible sequence number, that is, 18446744073709551615, or
+the maximum possible sequence number, that is, 18446744073709551615, or
 could be omitted at all, and the command will automatically assume it to
 be such a number (see `XRANGE` for more info about incomplete IDs).
 
@@ -51,7 +51,7 @@ be `1526985712946-18446744073709551615`, or just `18446744073709551615`:
    2) 1) "name"
       2) "Toni"
       3) "surname"
-      4) "Morris"
+      4) "Morrison"
 2) 1) 1526985685298-0
    2) 1) "name"
       2) "Jane"
@@ -77,7 +77,7 @@ their fields and values in the exact same order as `XADD` added them.
 ```cli
 XADD writers * name Virginia surname Woolf
 XADD writers * name Jane surname Austen
-XADD writers * name Toni surname Morris
+XADD writers * name Toni surname Morrison
 XADD writers * name Agatha surname Christie
 XADD writers * name Ngozi surname Adichie
 XLEN writers

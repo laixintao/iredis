@@ -16,7 +16,7 @@ containing `a` as first element, `b` as second element and `c` as third element.
 
 @history
 
-* `>= 2.4`: Accepts multiple `value` arguments.
+* `>= 2.4`: Accepts multiple `element` arguments.
   In Redis versions older than 2.4 it was possible to push a single value per
   command.
 

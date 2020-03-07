@@ -42,10 +42,17 @@ Manually issue the `QUIT` command to stop a `MONITOR` stream running via
 
 ## Commands not logged by MONITOR
 
-For security concerns, certain special administration commands like `CONFIG`
-are not logged into the `MONITOR` output.
+Because of security concerns, all administrative commands are not logged
+by `MONITOR`'s output.
 
-## Cost of running `MONITOR`
+Furthermore, the following commands are also not logged:
+
+ * `AUTH`
+ * `EXEC`
+ * `HELLO`
+ * `QUIT`
+
+## Cost of running MONITOR
 
 Because `MONITOR` streams back **all** commands, its use comes at a cost.
 The following (totally unscientific) benchmark numbers illustrate what the cost
@@ -81,3 +88,7 @@ Running more `MONITOR` clients will reduce throughput even more.
 
 **Non standard return value**, just dumps the received commands in an infinite
 flow.
+
+@history
+
+* `>=6.0`: `AUTH` excluded from the command's output.

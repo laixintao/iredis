@@ -1,5 +1,5 @@
 The command returns the stream entries matching a given range of IDs.
-The range is specified by a minimum and maximum ID. All the entires having
+The range is specified by a minimum and maximum ID. All the entries having
 an ID between the two specified or exactly one of the two IDs specified
 (closed interval) are returned.
 
@@ -7,7 +7,7 @@ The `XRANGE` command has a number of applications:
 
 * Returning items in a specific time range. This is possible because
   Stream IDs are [related to time](/topics/streams-intro).
-* Iteratating a stream incrementally, returning just
+* Iterating a stream incrementally, returning just
   a few items at every iteration. However it is semantically much more
   robust than the `SCAN` family of functions.
 * Fetching a single entry from a stream, providing the ID of the entry
@@ -122,7 +122,7 @@ sequence to obtain `1526985685298-1`, and continue our iteration:
    2) 1) "name"
       2) "Toni"
       3) "surname"
-      4) "Morris"
+      4) "Morrison"
 2) 1) 1526985712947-0
    2) 1) "name"
       2) "Agatha"
@@ -177,7 +177,7 @@ their fields and values in the exact same order as `XADD` added them.
 ```cli
 XADD writers * name Virginia surname Woolf
 XADD writers * name Jane surname Austen
-XADD writers * name Toni surname Morris
+XADD writers * name Toni surname Morrison
 XADD writers * name Agatha surname Christie
 XADD writers * name Ngozi surname Adichie
 XLEN writers

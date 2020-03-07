@@ -1,4 +1,4 @@
-Sets the list element at `index` to `value`.
+Sets the list element at `index` to `element`.
 For more information on the `index` argument, see `LINDEX`.
 
 An error is returned for out of range indexes.

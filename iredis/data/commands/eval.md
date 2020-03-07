@@ -109,12 +109,13 @@ Redis to Lua conversion rule:
 
 * Lua boolean true -> Redis integer reply with value of 1.
 
-**RESP3 mode conversion rules**: note that the Lua engine can work in RESP3 mode using the new Redis 6 protocol. In this case there are additional conversion rules, and certain conversions are also modified compared to the RESP2 mode. Please refer to the RESP3 section of this document for more information.
-
-Also there are two important rules to note:
+Lastly, there are three important rules to note:
 
 * Lua has a single numerical type, Lua numbers. There is no distinction between integers and floats. So we always convert Lua numbers into integer replies, removing the decimal part of the number if any. **If you want to return a float from Lua you should return it as a string**, exactly like Redis itself does (see for instance the `ZSCORE` command).
 * There is [no simple way to have nils inside Lua arrays](http://www.lua.org/pil/19.1.html), this is a result of Lua table semantics, so when Redis converts a Lua array into Redis protocol the conversion is stopped if a nil is encountered.
+* When a Lua table contains keys (and their values), the converted Redis reply will **not** include them.
+
+**RESP3 mode conversion rules**: note that the Lua engine can work in RESP3 mode using the new Redis 6 protocol. In this case there are additional conversion rules, and certain conversions are also modified compared to the RESP2 mode. Please refer to the RESP3 section of this document for more information.
 
 Here are a few conversion examples:
 
@@ -135,17 +136,17 @@ The last example shows how it is possible to receive the exact return value of
 `redis.call()` or `redis.pcall()` from Lua that would be returned if the command
 was called directly.
 
-In the following example we can see how floats and arrays with nils are handled:
+In the following example we can see how floats and arrays containing nils and keys are handled:
 
 ```
-> eval "return {1,2,3.3333,'foo',nil,'bar'}" 0
+> eval "return {1,2,3.3333,somekey='somevalue','foo',nil,'bar'}" 0
 1) (integer) 1
 2) (integer) 2
 3) (integer) 3
 4) "foo"
 ```
 
-As you can see 3.333 is converted into 3, and the *bar* string is never returned as there is a nil before.
+As you can see 3.333 is converted into 3, *somekey* is excluded, and the *bar* string is never returned as there is a nil before.
 
 ## Helper functions to return Redis types
 
@@ -608,7 +609,7 @@ new protocol using the `HELLO` command: this way the connection is put
 in RESP3 mode. In this mode certain commands, like for instance `HGETALL`,
 reply with a new data type (the Map data type in this specific case). The
 RESP3 protocol is semantically more powerful, however most scripts are ok
-with using just RESP3.
+with using just RESP2.
 
 The Lua engine always assumes to run in RESP2 mode when talking with Redis,
 so whatever the connection that is invoking the `EVAL` or `EVALSHA` command

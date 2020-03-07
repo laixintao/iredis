@@ -1,4 +1,4 @@
-Inserts `value` in the list stored at `key` either before or after the reference
+Inserts `element` in the list stored at `key` either before or after the reference
 value `pivot`.
 
 When `key` does not exist, it is considered an empty list and no operation is

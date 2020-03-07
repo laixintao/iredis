@@ -5,6 +5,10 @@ structures.
 The computed merged HyperLogLog is set to the destination variable, which is
 created if does not exist (defaulting to an empty HyperLogLog).
 
+If the destination variable exists, it is treated as one of the source sets 
+and its cardinality will be included in the cardinality of the computed
+HyperLogLog.
+
 @return
 
 @simple-string-reply: The command just returns `OK`.

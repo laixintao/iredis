@@ -4,13 +4,13 @@ Any previous time to live associated with the key is discarded on successful `SE
 
 ## Options
 
-Starting with Redis 2.6.12 `SET` supports a set of options that modify its
-behavior:
+The `SET` command supports a set of options that modify its behavior:
 
 * `EX` *seconds* -- Set the specified expire time, in seconds.
 * `PX` *milliseconds* -- Set the specified expire time, in milliseconds.
 * `NX` -- Only set the key if it does not already exist.
 * `XX` -- Only set the key if it already exist.
+* `KEEPTTL` -- Retain the time to live associated with the key.
 
 Note: Since the `SET` command options can replace `SETNX`, `SETEX`, `PSETEX`, it is possible that in future versions of Redis these three commands will be deprecated and finally removed.
 
@@ -19,11 +19,18 @@ Note: Since the `SET` command options can replace `SETNX`, `SETEX`, `PSETEX`, it
 @simple-string-reply: `OK` if `SET` was executed correctly.
 @nil-reply: a Null Bulk Reply is returned if the `SET` operation was not performed because the user specified the `NX` or `XX` option but the condition was not met.
 
+@history
+
+* `>= 2.6.12`: Added the `EX`, `PX`, `NX` and `XX` options.
+* `>= 6.0`: Added the `KEEPTTL` option.
+
 @examples
 
 ```cli
 SET mykey "Hello"
 GET mykey
+
+SET anotherkey "will expire in a minute" EX 60
 ```
 
 ## Patterns
