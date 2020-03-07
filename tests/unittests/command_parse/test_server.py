@@ -107,3 +107,12 @@ def test_psync(judge_command):
         "PSYNC abc 123", {"command": "PSYNC", "replicationid": "abc", "offset": "123"}
     )
     judge_command("PSYNC", None)
+
+
+def test_latency_graph(judge_command):
+    judge_command(
+        "latency graph command", {"command": "latency graph", "graphevent": "command"}
+    )
+    judge_command(
+        "latency graph fork", {"command": "latency graph", "graphevent": "fork"}
+    )

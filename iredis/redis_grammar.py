@@ -78,6 +78,24 @@ CONST = {
     "incrby": "INCRBY",
     "overflow": "OVERFLOW",
     "overflow_option": "WRAP SAT FAIL",
+    "graphevent": (
+        "active-defrag-cycle "
+        "aof-fsync-always "
+        "aof-stat "
+        "aof-rewrite-diff-write "
+        "aof-rename "
+        "aof-write "
+        "aof-write-active-child "
+        "aof-write-alone "
+        "aof-write-pending-fsync "
+        "command "
+        "expire-cycle "
+        "eviction-cycle "
+        "eviction-del "
+        "fast-command "
+        "fork "
+        "rdb-unlink-temp-file"
+    ),
 }
 
 
@@ -242,6 +260,7 @@ INCRBY = fr"(?P<incrby>{c('incrby')})"
 OVERFLOW = fr"(?P<overflow>{c('overflow')})"
 OVERFLOW_OPTION = fr"(?P<overflow_option>{c('overflow_option')})"
 KEEPTTL = fr"(?P<keepttl>{c('keepttl')})"
+GRAPHEVENT = fr"(?P<graphevent>{c('graphevent')})"
 
 # TODO test lexer & completer for multi spaces in command
 # For now, redis command can have one space at most
@@ -462,7 +481,8 @@ NEW_GRAMMAR = {
             (\s+ {OVERFLOW} \s+ {OVERFLOW_OPTION})
         )+
         \s*""",
-    "command_replicationid_offset": fr"\s+ {REPLICATIONID} \s+ {OFFSET} \s*"
+    "command_replicationid_offset": fr"\s+ {REPLICATIONID} \s+ {OFFSET} \s*",
+    "command_graphevent": fr"\s+ {GRAPHEVENT} \s*",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"

@@ -11,6 +11,8 @@
     *  MODULE LOAD
     *  MODULE UNLOAD
     *  PSYNC
+    *  LATENCY DOCTOR
+    *  LATENCY GRAPH
 
 ## 1.2.0
 
