@@ -11,6 +11,7 @@ cluster,CLUSTER GETKEYSINSLOT,command_slot_count,render_list
 cluster,CLUSTER INFO,command,render_bulk_string_decode
 cluster,CLUSTER KEYSLOT,command_key,render_int
 cluster,CLUSTER MEET,command_ip_port,render_simple_string
+cluster,CLUSTER MYID,command,render_bulk_string_decode
 cluster,CLUSTER NODES,command,render_bulk_string_decode
 cluster,CLUSTER REPLICAS,command_node,render_bulk_string_decode
 cluster,CLUSTER REPLICATE,command_node,render_simple_string
