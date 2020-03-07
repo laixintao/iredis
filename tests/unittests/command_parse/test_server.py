@@ -88,7 +88,6 @@ def test_client_kill(judge_command):
     )
 
 
-@pytest.mark.xfail(reason="currently no support arbitrary ordered command args")
 def test_client_kill_unordered_arguments(judge_command):
     judge_command(
         "CLIENT KILL type pubsub addr 127.0.0.1:12345",

@@ -387,11 +387,14 @@ NEW_GRAMMAR = {
     "command_key_fieldvalues": fr"\s+ {KEY} (\s+ {FIELD} \s+ {VALUE})+ \s*",
     "command_slowlog": fr"\s+ {SLOWLOGSUB} \s+ {NUM} \s*",
     "command_switch": fr"\s+ {SWITCH} \s*",
-    "command_clientkill": fr"""(\s+ {IP_PORT})?
-        (\s+ {ADDR} \s+ {IP_PORT})?
-        (\s+ {CONST_ID} \s+ {CLIENTID})?
-        (\s+ {TYPE_CONST} \s+ {CONNTYPE})?
-        (\s+ {SKIPME} \s+ {YES})? \s*""",
+    "command_clientkill": fr"""
+        (
+            (\s+ {IP_PORT})|
+            (\s+ {ADDR} \s+ {IP_PORT})|
+            (\s+ {CONST_ID} \s+ {CLIENTID})|
+            (\s+ {TYPE_CONST} \s+ {CONNTYPE})|
+            (\s+ {SKIPME} \s+ {YES})
+        )+ \s*""",
     "command_migrate": fr"""\s+ {HOST} \s+ {PORT}
         \s+ {KEY} \s+ {INDEX} \s+ {TIMEOUT} (\s+ {MIGRATECHOICE})?
         (\s+ {AUTH} \s+ {PASSWORD})? (\s+ {CONST_KEYS} \s+ {KEYS})? \s*""",
