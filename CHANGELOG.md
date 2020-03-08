@@ -1,6 +1,9 @@
 ### 1.3.1
 
-* Fix PyOxidizer binary build.
+* Bugfix: Fix PyOxidizer binary build.
+* Feature: Completer for HELP command.
+* Bugfix: Lowercase for `--newbie` mode.
+* Bugfix: Bottom hint for IRedis builtin commands.
 
 ## 1.3.0
 
