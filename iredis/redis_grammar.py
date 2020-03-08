@@ -165,7 +165,9 @@ INDEX = r"(?P<index>(1[0-5]|\d))"
 CLIENTID = fr"(?P<clientid>{NUM})"
 SECOND = fr"(?P<second>{NUM})"
 TIMESTAMP = fr"(?P<timestamp>{NUM})"
-COMMANDNAME = fr"(?P<commandname>[\w -]+)"
+# TODO test lexer & completer for multi spaces in command
+# For now, redis command can have one space at most
+COMMAND = "(\s*  (?P<command>[\w -]+))"
 MILLISECOND = fr"(?P<millisecond>{NUM})"
 TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
 ANY = r"(?P<any>.*)"  # TODO deleted
@@ -262,9 +264,6 @@ OVERFLOW_OPTION = fr"(?P<overflow_option>{c('overflow_option')})"
 KEEPTTL = fr"(?P<keepttl>{c('keepttl')})"
 GRAPHEVENT = fr"(?P<graphevent>{c('graphevent')})"
 
-# TODO test lexer & completer for multi spaces in command
-# For now, redis command can have one space at most
-COMMAND = "(\s*  (?P<command_pending>[\w -]+))"
 command_grammar = compile(COMMAND)
 
 # Here are the core grammars, those are tokens after ``command``.
@@ -283,7 +282,7 @@ NEW_GRAMMAR = {
         (\s+ {ORDER})?
         (\s+ {CONST_STORE} \s+ {KEY})?
         (\s+ {CONST_STOREDIST} \s+ {KEY})? \s*""",
-    "command_commandname": fr"\s+ {COMMANDNAME} \s*",
+    "command_command": fr"\s+ {COMMAND} \s*",
     "command_slots": fr"\s+ {SLOTS} \s*",
     "command_node": fr"\s+ {NODE} \s*",
     "command_slot": fr"\s+ {SLOT} \s*",

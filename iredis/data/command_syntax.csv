@@ -239,7 +239,7 @@ transactions,EXEC,command,render_list
 transactions,MULTI,command,render_simple_string
 transactions,UNWATCH,command,render_simple_string
 transactions,WATCH,command_keys,render_simple_string
-iredis,HELP,command_commandname,
+iredis,HELP,command_command,
 iredis,PEEK,command_key,
 iredis,CLEAR,command,
 iredis,EXIT,command,

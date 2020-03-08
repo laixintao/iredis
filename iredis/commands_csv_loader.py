@@ -60,6 +60,39 @@ command2callback, command2syntax, groups = load_command()
 all_commands = sorted(
     list(command2callback.keys()) + ["HELP"], key=lambda x: len(x), reverse=True
 )
+# load commands information from redis-doc/commands.json
 commands_summary = load_command_summary()
+# add iredis' commands' summary
+commands_summary.update(
+    {
+        "HELP": {
+            "summary": "Show documents for a Redis command.",
+            "complexity": "O(1).",
+            "arguments": [{"name": "command", "type": "string"}],
+            "since": "1.0",
+            "group": "iredis",
+        },
+        "CLEAR": {
+            "summary": "Clear the screen like bash clear.",
+            "complexity": "O(1).",
+            "since": "1.0",
+            "group": "iredis",
+        },
+        "EXIT": {
+            "summary": "Exit iredis.",
+            "complexity": "O(1).",
+            "since": "1.0",
+            "group": "iredis",
+        },
+        "PEEK": {
+            "summary": "Get the key's type and value.",
+            "arguments": [{"name": "key", "type": "key"}],
+            "since": "1.0",
+            "complexity": "O(1).",
+            "since": "1.0",
+            "group": "iredis",
+        },
+    }
+)
 timer("[Loader] Finished loading commands.")
 dangerous_commands = load_dangerous()
