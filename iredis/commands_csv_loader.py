@@ -60,7 +60,9 @@ command2callback, command2syntax, groups = load_command()
 all_commands = sorted(
     list(command2callback.keys()) + ["HELP"], key=lambda x: len(x), reverse=True
 )
+# load commands information from redis-doc/commands.json
 commands_summary = load_command_summary()
+# add iredis' commands' summary
 commands_summary.update(
     {
         "HELP": {

@@ -166,6 +166,12 @@ def get_completer_mapping(hint_on, completion_casing):
     if hint_on:
         command_hint = {key: info["summary"] for key, info in commands_summary.items()}
         hint = {command: command_hint.get(command.upper()) for command in all_commands}
+        hint.update(
+            {
+                command.lower(): command_hint.get(command.upper())
+                for command in all_commands
+            }
+        )
     else:
         hint = {}
 
@@ -181,7 +187,7 @@ def get_completer_mapping(hint_on, completion_casing):
         "lower": lower_commands,
     }.get(completion_casing)
 
-    completer_mapping["command_pending"] = completer_mapping["command"] = WordCompleter(
+    completer_mapping["command"] = WordCompleter(
         command_completions, ignore_case=ignore_case, sentence=True, meta_dict=hint
     )
     return completer_mapping

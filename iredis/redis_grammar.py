@@ -264,7 +264,7 @@ GRAPHEVENT = fr"(?P<graphevent>{c('graphevent')})"
 
 # TODO test lexer & completer for multi spaces in command
 # For now, redis command can have one space at most
-COMMAND = "(\s*  (?P<command_pending>[\w -]+))"
+COMMAND = "(\s*  (?P<command>[\w -]+))"
 command_grammar = compile(COMMAND)
 
 # Here are the core grammars, those are tokens after ``command``.
