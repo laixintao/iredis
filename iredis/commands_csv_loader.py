@@ -69,7 +69,27 @@ commands_summary.update(
             "arguments": [{"name": "command", "type": "string"}],
             "since": "1.0",
             "group": "iredis",
-        }
+        },
+        "CLEAR": {
+            "summary": "Clear the screen like bash clear.",
+            "complexity": "O(1).",
+            "since": "1.0",
+            "group": "iredis",
+        },
+        "EXIT": {
+            "summary": "Exit iredis.",
+            "complexity": "O(1).",
+            "since": "1.0",
+            "group": "iredis",
+        },
+        "PEEK": {
+            "summary": "Get the key's type and value.",
+            "arguments": [{"name": "key", "type": "key"}],
+            "since": "1.0",
+            "complexity": "O(1).",
+            "since": "1.0",
+            "group": "iredis",
+        },
     }
 )
 timer("[Loader] Finished loading commands.")
