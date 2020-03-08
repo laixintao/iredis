@@ -29,7 +29,7 @@ jobs:
           . venv/bin/activate
           pip install -U pip
           pip install poetry
-          poetry install
+          poetry install --no-dev
           python -c "import sys; print(sys.version)"
           pip list
       - name: Poetry Build
