@@ -50,8 +50,9 @@ version = "5.0.6"
 six = "*"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "Read metadata from Python packages"
+marker = "python_version < \"3.8\""
 name = "importlib-metadata"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
@@ -63,26 +64,6 @@ zipp = ">=0.5"
 [package.extras]
 docs = ["sphinx", "rst.linker"]
 testing = ["packaging", "importlib-resources"]
-
-[[package]]
-category = "main"
-description = "Read resources from Python packages"
-name = "importlib-resources"
-optional = false
-python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
-version = "1.3.1"
-
-[package.dependencies]
-[package.dependencies.importlib-metadata]
-python = "<3.8"
-version = "*"
-
-[package.dependencies.zipp]
-python = "<3.8"
-version = ">=0.4"
-
-[package.extras]
-docs = ["sphinx", "docutils (0.12)", "rst.linker"]
 
 [[package]]
 category = "main"
@@ -267,8 +248,9 @@ python-versions = "*"
 version = "0.1.8"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "Backport of pathlib-compatible object wrapper for zip files"
+marker = "python_version < \"3.8\""
 name = "zipp"
 optional = false
 python-versions = ">=3.6"
@@ -279,7 +261,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "bccbfcda9515a5f42d19bcbb6d3d3b2977e97e16af164f459a36bbbdadf4c178"
+content-hash = "8a3f7bb23bc0f40179efabe784421d622f409204f43c94ca9c9937179962ce75"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -305,10 +287,6 @@ configobj = [
 importlib-metadata = [
     {file = "importlib_metadata-1.5.0-py2.py3-none-any.whl", hash = "sha256:b97607a1a18a5100839aec1dc26a1ea17ee0d93b20b0f008d80a5a050afb200b"},
     {file = "importlib_metadata-1.5.0.tar.gz", hash = "sha256:06f5b3a99029c7134207dd882428a66992a9de2bef7c2b699b5641f9886c3302"},
-]
-importlib-resources = [
-    {file = "importlib_resources-1.3.1-py2.py3-none-any.whl", hash = "sha256:1dff36d42d94bd523eeb847c25c7dd327cb56686d74a26dfcc8d67c504922d59"},
-    {file = "importlib_resources-1.3.1.tar.gz", hash = "sha256:7f0e1b2b5f3981e39c52da0f99b2955353c5a139c314994d1126c2551ace9bdf"},
 ]
 mistune = [
     {file = "mistune-0.8.4-py2.py3-none-any.whl", hash = "sha256:88a1051873018da288eee8538d476dffe1262495144b33ecb586c4ab266bb8d4"},

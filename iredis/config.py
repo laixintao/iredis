@@ -1,15 +1,15 @@
-from importlib_resources import path
 import os
 import logging
 
 from configobj import ConfigObj, ConfigObjError
-from . import data as project_data
+from iredis import project_data
 
 # TODO verbose logger to print to stdout
 logger = logging.getLogger(__name__)
 
 
 system_config_file = "/etc/iredisrc"
+default_config_file = os.path.join(project_data, "iredisrc")
 pwd_config_file = os.path.join(os.getcwd(), ".iredisrc")
 
 
@@ -97,10 +97,9 @@ def read_config_file(f):
 def load_config_files(iredisrc):
     global config
 
-    with path(project_data, "iredisrc") as p:
-        config_obj = ConfigObj(str(p))
+    config_obj = ConfigObj()
 
-    for _file in [system_config_file, iredisrc, pwd_config_file]:
+    for _file in [default_config_file, system_config_file, iredisrc, pwd_config_file]:
         _config = read_config_file(_file)
         if bool(_config) is True:
             config_obj.merge(_config)
