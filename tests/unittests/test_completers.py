@@ -67,6 +67,32 @@ def test_newbie_mode_complete_with_meta_dict():
     ]
 
 
+def test_newbie_mode_complete_with_meta_dict_command_is_lowercase():
+    fake_document = MagicMock()
+    fake_document.text_before_cursor = "geor"
+    completer = IRedisCompleter(hint=True)
+    completions = list(completer.get_completions(fake_document, None))
+
+    assert sorted([completion.display_meta for completion in completions]) == [
+        FormattedText(
+            [
+                (
+                    "",
+                    "Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a member",  # noqa
+                )
+            ]
+        ),
+        FormattedText(
+            [
+                (
+                    "",
+                    "Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point",  # noqa
+                )
+            ]
+        ),
+    ]
+
+
 def test_iredis_completer_update_for_response():
     c = IRedisCompleter()
     c.update_completer_for_response(
