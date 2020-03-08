@@ -61,5 +61,16 @@ all_commands = sorted(
     list(command2callback.keys()) + ["HELP"], key=lambda x: len(x), reverse=True
 )
 commands_summary = load_command_summary()
+commands_summary.update(
+    {
+        "HELP": {
+            "summary": "Show documents for a Redis command.",
+            "complexity": "O(1).",
+            "arguments": [{"name": "command", "type": "string"}],
+            "since": "1.0",
+            "group": "iredis",
+        }
+    }
+)
 timer("[Loader] Finished loading commands.")
 dangerous_commands = load_dangerous()

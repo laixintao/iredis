@@ -1,7 +1,9 @@
+import logging
 from .commands_csv_loader import commands_summary
 from .utils import command_syntax
 
 BUTTOM_TEXT = "Ctrl-D to exit;"
+logger = logging.getLogger(__name__)
 
 
 class BottomToolbar:
@@ -27,6 +29,7 @@ class BottomToolbar:
             try:
                 command_info = commands_summary[self.command_holder.command]
                 text = command_syntax(self.command_holder.command, command_info)
-            except KeyError:
+            except KeyError as e:
+                logger.exception(e)
                 pass
         return text

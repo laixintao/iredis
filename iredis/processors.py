@@ -46,4 +46,5 @@ class GetCommandProcessor(Processor):
         else:
             self.command_holder.command = command.upper()
 
+        logger.debug(f"command holder {self.command_holder.command}")
         return Transformation(transformation_input.fragments)
