@@ -1,3 +1,7 @@
+### 1.4.1
+
+- This is a test release, nothing new.
+
 ## 1.4.0
 
 - Bugfix: Fix PyOxidizer binary build, by locking the importlib_resources
