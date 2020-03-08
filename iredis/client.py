@@ -5,7 +5,6 @@ import logging
 import re
 import sys
 from distutils.version import StrictVersion
-from importlib_resources import read_text
 from subprocess import run
 
 import redis
@@ -14,8 +13,7 @@ from prompt_toolkit.shortcuts import clear
 from redis.connection import Connection, SSLConnection, UnixDomainSocketConnection
 from redis.exceptions import AuthenticationError, ConnectionError, TimeoutError
 
-from . import markdown, renders
-from .data import commands as commands_data
+from . import markdown, project_data, renders
 from .commands_csv_loader import (
     all_commands,
     command2callback,
@@ -359,12 +357,15 @@ class Client:
         command_docs_name = "-".join(args).lower()
         command_summary_name = " ".join(args).upper()
         try:
-            doc = read_text(commands_data, f"{command_docs_name}.md")
+            doc_file = open(project_data / "commands" / f"{command_docs_name}.md")
         except FileNotFoundError:
             raise NotRedisCommand(
                 f"{command_summary_name} is not a valide Redis command."
             )
-        rendered_detail = markdown.render(doc)
+
+        with doc_file as doc_file:
+            doc = doc_file.read()
+            rendered_detail = markdown.render(doc)
         summary_dict = commands_summary[command_summary_name]
 
         avaiable_version = summary_dict.get("since", "?")
