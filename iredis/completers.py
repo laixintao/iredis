@@ -51,7 +51,9 @@ class MostRecentlyUsedFirstWordMixin:
             self.touch(word)
 
 
-class MostRecentlyUsedFirstWordCompleter(MostRecentlyUsedFirstWordMixin, FuzzyWordCompleter):
+class MostRecentlyUsedFirstWordCompleter(
+    MostRecentlyUsedFirstWordMixin, FuzzyWordCompleter
+):
     pass
 
 
@@ -126,75 +128,6 @@ class TimestampCompleter(Completer):
             yield completion
 
 
-def get_completer_mapping(hint_on, completion_casing):
-    completer_mapping = {}
-    completer_mapping.update(
-        {
-            key: WordCompleter(tokens.split(" "), ignore_case=True)
-            for key, tokens in CONST.items()
-        }
-    )
-    key_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
-    member_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
-    field_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
-    group_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
-    timestamp_completer = TimestampCompleter()
-    integer_type_completer = IntegerTypeCompleter()
-
-    completer_mapping.update(
-        {
-            # all key related completers share the same completer
-            "keys": key_completer,
-            "key": key_completer,
-            "destination": key_completer,
-            "newkey": key_completer,
-            # member
-            "member": member_completer,
-            "members": member_completer,
-            # zmember
-            # TODO sperate sorted set and set
-            # hash fields
-            "field": field_completer,
-            "fields": field_completer,
-            # stream groups
-            "group": group_completer,
-            # stream id
-            "stream_id": timestamp_completer,
-            "inttype": integer_type_completer,
-        }
-    )
-
-    # command completer
-    if hint_on:
-        command_hint = {key: info["summary"] for key, info in commands_summary.items()}
-        hint = {command: command_hint.get(command.upper()) for command in all_commands}
-        hint.update(
-            {
-                command.lower(): command_hint.get(command.upper())
-                for command in all_commands
-            }
-        )
-    else:
-        hint = {}
-
-    upper_commands = all_commands[::-1]
-    lower_commands = [command.lower() for command in all_commands[::-1]]
-    auto_commands = upper_commands + lower_commands
-
-    ignore_case = completion_casing != "auto"
-
-    command_completions = {
-        "auto": auto_commands,
-        "upper": upper_commands,
-        "lower": lower_commands,
-    }.get(completion_casing)
-
-    completer_mapping["command"] = WordCompleter(
-        command_completions, ignore_case=ignore_case, sentence=True, meta_dict=hint
-    )
-    return completer_mapping
-
-
 class IRedisCompleter(Completer):
     """
     Completer class that can dynamically returns any Completer.
@@ -204,7 +137,7 @@ class IRedisCompleter(Completer):
 
     def __init__(self, hint=False, completion_casing="upper"):
         super().__init__()
-        self.completer_mapping = get_completer_mapping(hint, completion_casing)
+        self.completer_mapping = self.get_completer_mapping(hint, completion_casing)
         self.current_completer = self.root_completer = GrammarCompleter(
             command_grammar, self.completer_mapping
         )
@@ -329,3 +262,75 @@ class IRedisCompleter(Completer):
             self.get_completer,
             self.current_completer,
         )
+
+    def get_completer_mapping(self, hint_on, completion_casing):
+        completer_mapping = {}
+        completer_mapping.update(
+            {
+                key: WordCompleter(tokens.split(" "), ignore_case=True)
+                for key, tokens in CONST.items()
+            }
+        )
+        key_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
+        member_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
+        field_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
+        group_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
+        timestamp_completer = TimestampCompleter()
+        integer_type_completer = IntegerTypeCompleter()
+
+        completer_mapping.update(
+            {
+                # all key related completers share the same completer
+                "keys": key_completer,
+                "key": key_completer,
+                "destination": key_completer,
+                "newkey": key_completer,
+                # member
+                "member": member_completer,
+                "members": member_completer,
+                # zmember
+                # TODO sperate sorted set and set
+                # hash fields
+                "field": field_completer,
+                "fields": field_completer,
+                # stream groups
+                "group": group_completer,
+                # stream id
+                "stream_id": timestamp_completer,
+                "inttype": integer_type_completer,
+            }
+        )
+
+        # command completer
+        if hint_on:
+            command_hint = {
+                key: info["summary"] for key, info in commands_summary.items()
+            }
+            hint = {
+                command: command_hint.get(command.upper()) for command in all_commands
+            }
+            hint.update(
+                {
+                    command.lower(): command_hint.get(command.upper())
+                    for command in all_commands
+                }
+            )
+        else:
+            hint = {}
+
+        upper_commands = all_commands[::-1]
+        lower_commands = [command.lower() for command in all_commands[::-1]]
+        auto_commands = upper_commands + lower_commands
+
+        ignore_case = completion_casing != "auto"
+
+        command_completions = {
+            "auto": auto_commands,
+            "upper": upper_commands,
+            "lower": lower_commands,
+        }.get(completion_casing)
+
+        completer_mapping["command"] = WordCompleter(
+            command_completions, ignore_case=ignore_case, sentence=True, meta_dict=hint
+        )
+        return completer_mapping
