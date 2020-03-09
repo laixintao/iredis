@@ -21,7 +21,7 @@ from .utils import _strip_quote_args, split_command_args, ensure_str
 logger = logging.getLogger(__name__)
 
 
-class LatestUsedFirstWordMixin:
+class MostRecentlyUsedFirstWordMixin:
     """
     A Mixin for WordCompleter, with a `touch()` method can make latest used
     word appears first. And evict old completion word when `max_words` reached.
@@ -51,11 +51,11 @@ class LatestUsedFirstWordMixin:
             self.touch(word)
 
 
-class LatestUsedFirstWordCompleter(LatestUsedFirstWordMixin, FuzzyWordCompleter):
+class MostRecentlyUsedFirstWordCompleter(MostRecentlyUsedFirstWordMixin, FuzzyWordCompleter):
     pass
 
 
-class IntegerTypeCompleter(LatestUsedFirstWordMixin, WordCompleter):
+class IntegerTypeCompleter(MostRecentlyUsedFirstWordMixin, WordCompleter):
     def __init__(self):
         words = []
         for i in range(1, 64):
@@ -134,10 +134,10 @@ def get_completer_mapping(hint_on, completion_casing):
             for key, tokens in CONST.items()
         }
     )
-    key_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
-    member_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
-    field_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
-    group_completer = LatestUsedFirstWordCompleter(config.completer_max, [])
+    key_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
+    member_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
+    field_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
+    group_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
     timestamp_completer = TimestampCompleter()
     integer_type_completer = IntegerTypeCompleter()
 
@@ -151,6 +151,8 @@ def get_completer_mapping(hint_on, completion_casing):
             # member
             "member": member_completer,
             "members": member_completer,
+            # zmember
+            # TODO sperate sorted set and set
             # hash fields
             "field": field_completer,
             "fields": field_completer,
@@ -208,19 +210,19 @@ class IRedisCompleter(Completer):
         )
 
     @property
-    def key_completer(self) -> LatestUsedFirstWordCompleter:
+    def key_completer(self) -> MostRecentlyUsedFirstWordCompleter:
         return self.completer_mapping["key"]
 
     @property
-    def member_completer(self) -> LatestUsedFirstWordCompleter:
+    def member_completer(self) -> MostRecentlyUsedFirstWordCompleter:
         return self.completer_mapping["member"]
 
     @property
-    def field_completer(self) -> LatestUsedFirstWordCompleter:
+    def field_completer(self) -> MostRecentlyUsedFirstWordCompleter:
         return self.completer_mapping["field"]
 
     @property
-    def group_completer(self) -> LatestUsedFirstWordCompleter:
+    def group_completer(self) -> MostRecentlyUsedFirstWordCompleter:
         return self.completer_mapping["group"]
 
     def get_completer(self, input_text):
@@ -254,7 +256,7 @@ class IRedisCompleter(Completer):
 
         # auto update completion words, if it's LRU strategy.
         for _token, _completer in self.completer_mapping.items():
-            if not isinstance(_completer, LatestUsedFirstWordMixin):
+            if not isinstance(_completer, MostRecentlyUsedFirstWordMixin):
                 continue
 
             # getall always returns a []

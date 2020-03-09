@@ -4,12 +4,12 @@ import pendulum
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.completion import Completion
 
-from iredis.completers import LatestUsedFirstWordCompleter
+from iredis.completers import MostRecentlyUsedFirstWordCompleter
 from iredis.completers import IRedisCompleter, TimestampCompleter, IntegerTypeCompleter
 
 
 def test_LUF_completer_touch():
-    c = LatestUsedFirstWordCompleter(3, ["one", "two"])
+    c = MostRecentlyUsedFirstWordCompleter(3, ["one", "two"])
     c.touch("hello")
     assert c.words == ["hello", "one", "two"]
 
@@ -21,7 +21,7 @@ def test_LUF_completer_touch():
 
 
 def test_LUF_completer_touch_words():
-    c = LatestUsedFirstWordCompleter(3, [])
+    c = MostRecentlyUsedFirstWordCompleter(3, [])
     c.touch_words(["hello", "world", "foo", "bar"])
     assert c.words == ["bar", "foo", "world"]
 
