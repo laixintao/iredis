@@ -1,4 +1,5 @@
 import logging
+
 from prompt_toolkit.layout.processors import (
     Processor,
     Transformation,
@@ -16,7 +17,7 @@ class UserInputCommand:
     """
     User inputted command in real time.
 
-    ``GetCommandProcessor`` update it, and ``BottomToolbar`` read it
+    ``UpdateBottomProcessor`` update it, and ``BottomToolbar`` read it
     """
 
     def __init__(self):
@@ -24,7 +25,7 @@ class UserInputCommand:
         self.command = None
 
 
-class GetCommandProcessor(Processor):
+class UpdateBottomProcessor(Processor):
     """
     Update Footer display text while user input.
     """
@@ -48,3 +49,34 @@ class GetCommandProcessor(Processor):
 
         logger.debug(f"command holder {self.command_holder.command}")
         return Transformation(transformation_input.fragments)
+
+
+class PasswordProcessor(Processor):
+    """
+    Processor that turns masks the input. (For passwords.)
+
+    :param char: (string) Character to be used. "*" by default.
+    """
+
+    def __init__(self, char: str = "*") -> None:
+        self.char = char
+
+    def apply_transformation(self, ti: TransformationInput) -> Transformation:
+        input_text = ti.document.text
+        default_transformation = Transformation(ti.fragments)
+        try:
+            command, _ = split_command_args(input_text, all_commands)
+        except InvalidArguments:
+            return default_transformation
+
+        if command.upper() != "AUTH":
+            return default_transformation
+
+        logger.debug(f"This is an auth command! I am going to hide the password.")
+        fragments = []
+        for style, text, *handler in ti.fragments:
+            if style == "class:password":
+                fragments.append((style, self.char * len(text), *handler))
+            else:
+                fragments.append((style, text, *handler))
+        return Transformation(fragments)
