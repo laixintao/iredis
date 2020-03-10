@@ -47,7 +47,6 @@ class UpdateBottomProcessor(Processor):
         else:
             self.command_holder.command = command.upper()
 
-        logger.debug(f"command holder {self.command_holder.command}")
         return Transformation(transformation_input.fragments)
 
 
@@ -72,7 +71,6 @@ class PasswordProcessor(Processor):
         if command.upper() != "AUTH":
             return default_transformation
 
-        logger.debug(f"This is an auth command! I am going to hide the password.")
         fragments = []
         for style, text, *handler in ti.fragments:
             if style == "class:password":
