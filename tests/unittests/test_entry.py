@@ -1,7 +1,8 @@
 import pytest
+import tempfile
 from unittest.mock import patch
 
-from iredis.entry import gather_args, parse_url, DSN
+from iredis.entry import gather_args, parse_url, DSN, SkipAuthFileHistory
 
 
 @pytest.mark.parametrize(
@@ -170,3 +171,21 @@ def test_command_with_decode_utf_8():
 )
 def test_parse_url(url, dsn):
     assert parse_url(url) == dsn
+
+
+@pytest.mark.parametrize(
+    "command,record",
+    [
+        ("set foo bar", True),
+        ("set auth bar", True),
+        ("auth 123", False),
+        ("AUTH hello", False),
+        ("AUTH hello world", False),
+    ],
+)
+def test_history(command, record):
+    f = tempfile.TemporaryFile("w+")
+    history = SkipAuthFileHistory(f.name)
+    assert history._loaded_strings == []
+    history.append_string(command)
+    assert (command in history._loaded_strings) is record

@@ -1,5 +1,4 @@
 import os
-from uuid import uuid4
 import pexpect
 from pathlib import Path
 from textwrap import dedent
@@ -16,21 +15,6 @@ def test_history_not_log_auth(cli):
 
     assert "set foo bar" in content
     assert "AUTH" not in content
-
-
-def test_in_memory_history(cli):
-    random_str = str(uuid4())
-    cli.sendline(f"set foo {random_str}")
-    cli.expect(["OK", "127.0.0.1"])
-    cli.send("set")
-    cli.expect(random_str)
-
-
-def test_in_memory_history_without_auth(cli):
-    cli.sendline(f"auth 12345")
-    cli.expect(["OK", "127.0.0.1"])
-    cli.send("auth")
-    cli.expect("auth$")
 
 
 def test_history_create_and_writing_with_config():
