@@ -35,10 +35,10 @@ class SkipAuthFileHistory(FileHistory):
     """Exactlly like FileHistory, but won't save `AUTH` command into history
     file."""
 
-    def store_string(self, string: str) -> None:
+    def append_string(self, string: str) -> None:
         if string.lstrip().upper().startswith("AUTH"):
             return
-        super().store_string(string)
+        super().append_string(string)
 
 
 def setup_log():
