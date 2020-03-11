@@ -20,7 +20,7 @@ from prompt_toolkit.key_binding.bindings.named_commands import (
 from .client import Client
 from .style import STYLE
 from .config import config, load_config_files
-from .processors import UserInputCommand, GetCommandProcessor
+from .processors import UserInputCommand, UpdateBottomProcessor, PasswordProcessor
 from .bottom import BottomToolbar
 from .utils import timer, exit
 from .completers import IRedisCompleter
@@ -35,10 +35,10 @@ class SkipAuthFileHistory(FileHistory):
     """Exactlly like FileHistory, but won't save `AUTH` command into history
     file."""
 
-    def store_string(self, string: str) -> None:
+    def append_string(self, string: str) -> None:
         if string.lstrip().upper().startswith("AUTH"):
             return
-        super().store_string(string)
+        super().append_string(string)
 
 
 def setup_log():
@@ -149,7 +149,10 @@ def repl(client, session, start_time):
                 bottom_toolbar=BottomToolbar(command_holder).render
                 if config.bottom_bar
                 else None,
-                input_processors=[GetCommandProcessor(command_holder, session)],
+                input_processors=[
+                    UpdateBottomProcessor(command_holder, session),
+                    PasswordProcessor(),
+                ],
                 rprompt=lambda: "<transaction>" if config.transaction else None,
             )
 

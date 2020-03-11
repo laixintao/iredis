@@ -1,3 +1,7 @@
+### 1.4.2
+
+- Password for auth command will be hidden as `*`.
+
 ### 1.4.1
 
 - This is a test release, nothing new.

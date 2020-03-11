@@ -56,6 +56,7 @@ like `KEYS *` (see
 - Written in pure Python, but IRedis was packaged into a single binary with
   [PyOxidizer](https://github.com/indygreg/PyOxidizer), you can use cURL to
   download and run, it just works, even you don't have a Python interpreter.
+- Hide password for `AUTH` command.
 - Says "Goodbye!" to you when you exit!
 - For full features, please see: [iredis.io/show](https://www.iredis.io/show/)
 
