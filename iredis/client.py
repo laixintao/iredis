@@ -404,7 +404,11 @@ class Client:
             ("", "\n\n"),
         ]
 
-        return FormattedText(summary + rendered_detail)
+        to_render = FormattedText(summary + rendered_detail)
+        if config.raw:
+            to_render = [text for style, text in to_render]
+            return "".join(to_render)
+        return to_render
 
     def do_peek(self, key):
         """

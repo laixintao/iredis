@@ -88,6 +88,9 @@ def write_result(text):
         sys.stdout.buffer.write(text)
         sys.stdout.write("\n")
     else:
+        # TODO
+        # FormattedText to Stringbuffer
+        # click.echo_via_pager if output is too long
         print_formatted_text(text, end="", style=STYLE)
         print_formatted_text()
 
