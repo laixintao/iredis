@@ -124,3 +124,15 @@ def test_latency_reset(judge_command):
         "latency reset fork", {"command": "latency reset", "graphevent": "fork"}
     )
     judge_command("latency reset", {"command": "latency reset"})
+
+
+def test_lolwut(judge_command):
+    judge_command("lolwut", {"command": "lolwut"})
+    # only works before redis 6
+    judge_command("lolwut 5", {"command": "lolwut", "any": "5"})
+    judge_command("lolwut 5 1", {"command": "lolwut", "any": "5 1"})
+    # redis 6
+    judge_command(
+        "lolwut VERSION 5 5",
+        {"command": "lolwut", "version": "VERSION", "version_num": "5", "any": "5"},
+    )
