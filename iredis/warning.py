@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 import sys
 import click
-from .commands_csv_loader import dangerous_commands
+from .commands import dangerous_commands
 
 
 class ConfirmBoolParamType(click.ParamType):

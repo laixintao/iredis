@@ -44,7 +44,7 @@ def _valide_token(words):
         yield token
 
 
-def _strip_quote_args(s):
+def strip_quote_args(s):
     """
     Given string s, split it into args.(Like bash paring)
     Handle with all quote cases.
@@ -91,30 +91,6 @@ def _strip_quote_args(s):
     # quote not close
     if in_quote:
         raise InvalidArguments("Invalid argument(s)")
-
-
-def split_command_args(command, all_commands):
-    """
-    Split Redis command text into command and args.
-
-    :param command: redis command string, with args
-    :param all_commands: full redis commands list
-    """
-    command = command.strip()
-    upper_command_list = command.upper().split()
-    for command_name in all_commands:
-        _command_name = command_name.split()
-        _command_length = len(_command_name)
-        if upper_command_list[:_command_length] == _command_name:
-            input_command = " ".join(command.split()[:_command_length])
-            input_args = " ".join(command.split()[_command_length:])
-            break
-    else:
-        raise InvalidArguments(f"`{command}` is not a valide Redis Command")
-
-    args = list(_strip_quote_args(input_args))
-
-    return input_command, args
 
 
 type_convert = {"posix time": "time"}

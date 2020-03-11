@@ -1,17 +1,19 @@
 import csv
-from importlib_resources import read_text, open_text
 import json
+import functools
+from importlib_resources import read_text, open_text
 
-from .utils import timer
+from .utils import timer, strip_quote_args
+from .exceptions import InvalidArguments
 from . import data as project_data
 
 
-def load_command_summary():
+def _load_command_summary():
     commands_summary = json.loads(read_text(project_data, "commands.json"))
     return commands_summary
 
 
-def load_command():
+def _load_command():
     """
     load command informations from file.
     :returns:
@@ -36,7 +38,7 @@ def load_command():
     return command2callback, command2syntax, groups
 
 
-def load_dangerous():
+def _load_dangerous():
     """
     Load dangerous commands from csv file.
     """
@@ -54,14 +56,14 @@ def load_dangerous():
 
 
 timer("[Loader] Start loading commands file...")
-command2callback, command2syntax, groups = load_command()
+command2callback, command2syntax, groups = _load_command()
 # all redis command strings, in UPPER case
 # NOTE: Must sort by length, to match longest command first
 all_commands = sorted(
     list(command2callback.keys()) + ["HELP"], key=lambda x: len(x), reverse=True
 )
 # load commands information from redis-doc/commands.json
-commands_summary = load_command_summary()
+commands_summary = _load_command_summary()
 # add iredis' commands' summary
 commands_summary.update(
     {
@@ -95,4 +97,30 @@ commands_summary.update(
     }
 )
 timer("[Loader] Finished loading commands.")
-dangerous_commands = load_dangerous()
+dangerous_commands = _load_dangerous()
+
+
+@functools.lru_cache(maxsize=2048)
+def split_command_args(command):
+    """
+    Split Redis command text into command and args.
+
+    :param command: redis command string, with args
+    """
+    global all_commands
+
+    command = command.strip()
+    upper_command_list = command.upper().split()
+    for command_name in all_commands:
+        _command_name = command_name.split()
+        _command_length = len(_command_name)
+        if upper_command_list[:_command_length] == _command_name:
+            input_command = " ".join(command.split()[:_command_length])
+            input_args = " ".join(command.split()[_command_length:])
+            break
+    else:
+        raise InvalidArguments(f"`{command}` is not a valide Redis Command")
+
+    args = list(strip_quote_args(input_args))
+
+    return input_command, args

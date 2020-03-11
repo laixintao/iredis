@@ -16,17 +16,12 @@ from redis.exceptions import AuthenticationError, ConnectionError, TimeoutError
 
 from . import markdown, renders
 from .data import commands as commands_data
-from .commands_csv_loader import (
-    all_commands,
-    command2callback,
-    commands_summary,
-    groups,
-)
+from .commands import command2callback, commands_summary, groups, split_command_args
 from .completers import IRedisCompleter
 from .config import config
 from .exceptions import NotRedisCommand
 from .renders import OutputRender
-from .utils import compose_command_syntax, nativestr, split_command_args, exit
+from .utils import compose_command_syntax, nativestr, exit
 from .warning import confirm_dangerous_command
 
 logger = logging.getLogger(__name__)
@@ -239,7 +234,7 @@ class Client:
             )
         logger.info(f"[Prepare command] Redis: {redis_command}, Shell: {shell_command}")
         try:
-            command_name, args = split_command_args(redis_command, all_commands)
+            command_name, args = split_command_args(redis_command)
             logger.info(f"[Split command] command: {command_name}, args: {args}")
             input_command_upper = command_name.upper()
             # Confirm for dangerous command

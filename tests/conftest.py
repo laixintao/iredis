@@ -7,8 +7,7 @@ import pytest
 import redis
 
 from iredis.client import Client
-from iredis.commands_csv_loader import all_commands
-from iredis.utils import split_command_args
+from iredis.commands import split_command_args
 from iredis.redis_grammar import get_command_grammar
 from iredis.exceptions import InvalidArguments
 from iredis.config import Config, config as global_config
@@ -23,10 +22,10 @@ def judge_command():
     def judge_command_func(input_text, expect):
         if expect == "invalid":
             with pytest.raises(InvalidArguments):
-                split_command_args(input_text, all_commands)
+                split_command_args(input_text)
             return
 
-        command, _ = split_command_args(input_text, all_commands)
+        command, _ = split_command_args(input_text)
         grammar = get_command_grammar(command)
 
         m = grammar.match(input_text)

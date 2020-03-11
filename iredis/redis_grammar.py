@@ -9,7 +9,7 @@ import logging
 from functools import lru_cache
 
 from prompt_toolkit.contrib.regular_languages.compiler import compile
-from .commands_csv_loader import command2syntax
+from .commands import command2syntax
 
 logger = logging.getLogger(__name__)
 CONST = {
