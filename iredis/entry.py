@@ -75,11 +75,14 @@ def print_help_msg(command):
 
 def write_result(text):
     """
+    When config.raw set to True, write text(must be bytes in that case)
+    directly to stdout, same if text is bytes.
+
     :param text: is_raw: bytes or str, not raw: FormattedText
     :is_raw: bool
     """
-    logger.info(f"write: {text}")
-    if config.raw:
+    logger.info(f"write{type(text)}: {text[:10]}")
+    if config.raw or isinstance(text, bytes):
         if isinstance(text, str):
             text = text.encode(config.decode)
         sys.stdout.buffer.write(text)

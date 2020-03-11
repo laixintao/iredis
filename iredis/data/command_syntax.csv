@@ -131,7 +131,7 @@ server,DEBUG SEGFAULT,command,render_simple_string
 server,FLUSHALL,command_asyncx,render_simple_string
 server,FLUSHDB,command_asyncx,render_simple_string
 server,INFO,command,render_bulk_string_decode
-server,LOLWUT,command_version,render_bulk_string_decode
+server,LOLWUT,command_version,render_bytes
 server,LASTSAVE,command,render_unixtime
 server,LATENCY DOCTOR,command,render_bulk_string_decode
 server,LATENCY GRAPH,command_graphevent,render_bulk_string_decode

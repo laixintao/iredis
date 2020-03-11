@@ -47,7 +47,7 @@ class OutputRender:
 
         callback = getattr(OutputRender, callback_name)
         rendered = callback(response)
-        logger.info(f"[rendered] {rendered}")
+        logger.info(f"[render] using {callback_name}, result: {rendered}")
         return rendered
 
     @staticmethod
@@ -315,6 +315,10 @@ class OutputRender:
     @staticmethod
     def command_hkeys(response):
         return _update_completer_then_render(response, "class:field")
+
+    @staticmethod
+    def render_bytes(response):
+        return response.rstrip(b"\n")  # there is a new line in `write_result`
 
     @staticmethod
     def default_render(text):
