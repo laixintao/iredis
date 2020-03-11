@@ -1,6 +1,7 @@
 import csv
-from importlib_resources import read_text, open_text
 import json
+import functools
+from importlib_resources import read_text, open_text
 
 from .utils import timer, strip_quote_args
 from .exceptions import InvalidArguments
@@ -99,6 +100,7 @@ timer("[Loader] Finished loading commands.")
 dangerous_commands = _load_dangerous()
 
 
+@functools.lru_cache(maxsize=2048)
 def split_command_args(command):
     """
     Split Redis command text into command and args.

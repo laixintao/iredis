@@ -63,7 +63,7 @@ class PasswordProcessor(Processor):
         input_text = ti.document.text
         default_transformation = Transformation(ti.fragments)
         try:
-            command, _ = split_command_args(input_text, all_commands)
+            command, _ = split_command_args(input_text)
         except InvalidArguments:
             return default_transformation
 
