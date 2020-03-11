@@ -10,7 +10,7 @@ from distutils.version import StrictVersion
 
 from prompt_toolkit.formatted_text import FormattedText
 
-from .commands_csv_loader import command2callback
+from .commands import command2callback
 from .config import config
 from .utils import double_quotes, ensure_str, nativestr
 

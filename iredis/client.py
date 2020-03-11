@@ -16,7 +16,7 @@ from redis.exceptions import AuthenticationError, ConnectionError, TimeoutError
 
 from . import markdown, renders
 from .data import commands as commands_data
-from .commands_csv_loader import (
+from .commands import (
     all_commands,
     command2callback,
     commands_summary,

@@ -8,7 +8,7 @@ from prompt_toolkit.layout.processors import (
 
 from .utils import split_command_args
 from .exceptions import InvalidArguments
-from .commands_csv_loader import all_commands
+from .commands import all_commands
 
 logger = logging.getLogger(__name__)
 

@@ -7,7 +7,7 @@ import pytest
 import redis
 
 from iredis.client import Client
-from iredis.commands_csv_loader import all_commands
+from iredis.commands import all_commands
 from iredis.utils import split_command_args
 from iredis.redis_grammar import get_command_grammar
 from iredis.exceptions import InvalidArguments

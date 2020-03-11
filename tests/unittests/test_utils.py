@@ -4,10 +4,10 @@ import pytest
 from unittest.mock import patch
 
 from iredis.utils import timer, _strip_quote_args, split_command_args
-from iredis.commands_csv_loader import all_commands
+from iredis.commands import all_commands
 from iredis.utils import command_syntax
 from iredis.style import STYLE
-from iredis.commands_csv_loader import commands_summary
+from iredis.commands import commands_summary
 from prompt_toolkit import print_formatted_text
 
 

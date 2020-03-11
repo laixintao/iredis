@@ -12,7 +12,7 @@ from prompt_toolkit.completion import (
 from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 from prompt_toolkit.document import Document
 
-from .commands_csv_loader import all_commands, commands_summary
+from .commands import all_commands, commands_summary
 from .config import config
 from .exceptions import InvalidArguments
 from .redis_grammar import CONST, command_grammar, get_command_grammar

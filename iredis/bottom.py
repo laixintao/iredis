@@ -1,5 +1,5 @@
 import logging
-from .commands_csv_loader import commands_summary
+from .commands import commands_summary
 from .utils import command_syntax
 
 BUTTOM_TEXT = "Ctrl-D to exit;"

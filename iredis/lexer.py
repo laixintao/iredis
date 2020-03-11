@@ -6,7 +6,7 @@ from prompt_toolkit.formatted_text.base import StyleAndTextTuples
 from prompt_toolkit.lexers import Lexer, PygmentsLexer, SimpleLexer
 from pygments.lexers.scripting import LuaLexer
 
-from .commands_csv_loader import all_commands
+from .commands import all_commands
 from .exceptions import InvalidArguments
 from .redis_grammar import CONST, get_command_grammar
 from .utils import split_command_args

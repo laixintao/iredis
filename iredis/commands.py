@@ -6,12 +6,12 @@ from .utils import timer
 from . import data as project_data
 
 
-def load_command_summary():
+def _load_command_summary():
     commands_summary = json.loads(read_text(project_data, "commands.json"))
     return commands_summary
 
 
-def load_command():
+def _load_command():
     """
     load command informations from file.
     :returns:
@@ -36,7 +36,7 @@ def load_command():
     return command2callback, command2syntax, groups
 
 
-def load_dangerous():
+def _load_dangerous():
     """
     Load dangerous commands from csv file.
     """
@@ -54,14 +54,14 @@ def load_dangerous():
 
 
 timer("[Loader] Start loading commands file...")
-command2callback, command2syntax, groups = load_command()
+command2callback, command2syntax, groups = _load_command()
 # all redis command strings, in UPPER case
 # NOTE: Must sort by length, to match longest command first
 all_commands = sorted(
     list(command2callback.keys()) + ["HELP"], key=lambda x: len(x), reverse=True
 )
 # load commands information from redis-doc/commands.json
-commands_summary = load_command_summary()
+commands_summary = _load_command_summary()
 # add iredis' commands' summary
 commands_summary.update(
     {
@@ -95,4 +95,4 @@ commands_summary.update(
     }
 )
 timer("[Loader] Finished loading commands.")
-dangerous_commands = load_dangerous()
+dangerous_commands = _load_dangerous()
