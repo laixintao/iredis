@@ -16,7 +16,7 @@ from .commands import split_command_args, commands_summary, all_commands
 from .config import config
 from .exceptions import InvalidArguments
 from .redis_grammar import CONST, command_grammar, get_command_grammar
-from .utils import _strip_quote_args, ensure_str
+from .utils import strip_quote_args, ensure_str
 
 logger = logging.getLogger(__name__)
 
@@ -198,7 +198,7 @@ class IRedisCompleter(Completer):
                 # prompt_toolkit didn't support multi tokens
                 # like DEL key1 key2 key3
                 # so we have to split them manualy
-                for single_token in _strip_quote_args(_token_in_command):
+                for single_token in strip_quote_args(_token_in_command):
                     _completer.touch(single_token)
 
     def update_completer_for_response(self, command_name, response):

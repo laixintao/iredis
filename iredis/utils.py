@@ -44,7 +44,7 @@ def _valide_token(words):
         yield token
 
 
-def _strip_quote_args(s):
+def strip_quote_args(s):
     """
     Given string s, split it into args.(Like bash paring)
     Handle with all quote cases.

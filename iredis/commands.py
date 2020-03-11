@@ -2,7 +2,7 @@ import csv
 from importlib_resources import read_text, open_text
 import json
 
-from .utils import timer, _strip_quote_args
+from .utils import timer, strip_quote_args
 from .exceptions import InvalidArguments
 from . import data as project_data
 
@@ -119,6 +119,6 @@ def split_command_args(command):
     else:
         raise InvalidArguments(f"`{command}` is not a valide Redis Command")
 
-    args = list(_strip_quote_args(input_args))
+    args = list(strip_quote_args(input_args))
 
     return input_command, args

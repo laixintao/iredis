@@ -3,7 +3,7 @@ import time
 import pytest
 from unittest.mock import patch
 
-from iredis.utils import timer, _strip_quote_args
+from iredis.utils import timer, strip_quote_args
 from iredis.commands import split_command_args
 from iredis.utils import command_syntax
 from iredis.style import STYLE
@@ -57,7 +57,7 @@ def test_timer():
     ],
 )
 def test_stipe_quote_escaple_in_quote(test_input, expected):
-    assert list(_strip_quote_args(test_input)) == expected
+    assert list(strip_quote_args(test_input)) == expected
 
 
 @pytest.mark.parametrize(
