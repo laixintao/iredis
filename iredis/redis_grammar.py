@@ -135,6 +135,7 @@ SVALUE = fr"(?P<svalue>{VALID_TOKEN})"
 MEMBER = fr"(?P<member>{VALID_TOKEN})"
 MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 COUNT = fr"(?P<count>{NNUM})"
+VERSION = fr"(?P<count>{NUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 CHANNEL = fr"(?P<channel>{VALID_TOKEN})"
 GROUP = fr"(?P<group>{VALID_TOKEN})"
@@ -486,6 +487,7 @@ NEW_GRAMMAR = {
     "command_replicationid_offset": fr"\s+ {REPLICATIONID} \s+ {OFFSET} \s*",
     "command_graphevent": fr"\s+ {GRAPHEVENT} \s*",
     "command_graphevents": fr"(\s+ {GRAPHEVENT})* \s*",
+    "command_version": fr"(\s+ {VERSION})* \s*",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"
