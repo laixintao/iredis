@@ -2,7 +2,8 @@ import csv
 from importlib_resources import read_text, open_text
 import json
 
-from .utils import timer
+from .utils import timer, _strip_quote_args
+from .exceptions import InvalidArguments
 from . import data as project_data
 
 
@@ -96,3 +97,28 @@ commands_summary.update(
 )
 timer("[Loader] Finished loading commands.")
 dangerous_commands = _load_dangerous()
+
+
+def split_command_args(command):
+    """
+    Split Redis command text into command and args.
+
+    :param command: redis command string, with args
+    """
+    global all_commands
+
+    command = command.strip()
+    upper_command_list = command.upper().split()
+    for command_name in all_commands:
+        _command_name = command_name.split()
+        _command_length = len(_command_name)
+        if upper_command_list[:_command_length] == _command_name:
+            input_command = " ".join(command.split()[:_command_length])
+            input_args = " ".join(command.split()[_command_length:])
+            break
+    else:
+        raise InvalidArguments(f"`{command}` is not a valide Redis Command")
+
+    args = list(_strip_quote_args(input_args))
+
+    return input_command, args

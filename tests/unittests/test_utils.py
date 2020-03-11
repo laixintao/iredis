@@ -3,8 +3,8 @@ import time
 import pytest
 from unittest.mock import patch
 
-from iredis.utils import timer, _strip_quote_args, split_command_args
-from iredis.commands import all_commands
+from iredis.utils import timer, _strip_quote_args
+from iredis.commands import split_command_args
 from iredis.utils import command_syntax
 from iredis.style import STYLE
 from iredis.commands import commands_summary
@@ -72,7 +72,7 @@ def test_stipe_quote_escaple_in_quote(test_input, expected):
     ],
 )
 def test_split_commands(command, expected):
-    assert split_command_args(command, all_commands)[0] == expected
+    assert split_command_args(command)[0] == expected
 
 
 def test_render_bottom_with_command_json():

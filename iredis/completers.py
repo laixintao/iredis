@@ -12,11 +12,11 @@ from prompt_toolkit.completion import (
 from prompt_toolkit.contrib.regular_languages.completion import GrammarCompleter
 from prompt_toolkit.document import Document
 
-from .commands import all_commands, commands_summary
+from .commands import split_command_args, commands_summary, all_commands
 from .config import config
 from .exceptions import InvalidArguments
 from .redis_grammar import CONST, command_grammar, get_command_grammar
-from .utils import _strip_quote_args, split_command_args, ensure_str
+from .utils import _strip_quote_args, ensure_str
 
 logger = logging.getLogger(__name__)
 
@@ -160,7 +160,7 @@ class IRedisCompleter(Completer):
 
     def get_completer(self, input_text):
         try:
-            command, _ = split_command_args(input_text, all_commands)
+            command, _ = split_command_args(input_text)
             # here will compile grammar for this command
             grammar = get_command_grammar(command)
             completer = GrammarCompleter(

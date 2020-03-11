@@ -6,9 +6,8 @@ from prompt_toolkit.layout.processors import (
     TransformationInput,
 )
 
-from .utils import split_command_args
 from .exceptions import InvalidArguments
-from .commands import all_commands
+from .commands import split_command_args
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +40,7 @@ class UpdateBottomProcessor(Processor):
     ) -> Transformation:
         input_text = transformation_input.document.text
         try:
-            command, _ = split_command_args(input_text, all_commands)
+            command, _ = split_command_args(input_text)
         except InvalidArguments:
             self.command_holder.command = None
         else:

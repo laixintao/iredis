@@ -6,10 +6,9 @@ from prompt_toolkit.formatted_text.base import StyleAndTextTuples
 from prompt_toolkit.lexers import Lexer, PygmentsLexer, SimpleLexer
 from pygments.lexers.scripting import LuaLexer
 
-from .commands import all_commands
+from .commands import split_command_args
 from .exceptions import InvalidArguments
 from .redis_grammar import CONST, get_command_grammar
-from .utils import split_command_args
 
 
 def get_lexer_mapping():
@@ -85,7 +84,7 @@ class IRedisLexer(Lexer):
         input_text = document.text
 
         try:
-            command, _ = split_command_args(input_text, all_commands)
+            command, _ = split_command_args(input_text)
             # compile grammar for this command
             grammar = get_command_grammar(command)
             self._current_lexer = GrammarLexer(grammar, lexers=get_lexer_mapping())
