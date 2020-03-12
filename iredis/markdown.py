@@ -43,7 +43,7 @@ class TerminalRender(mistune.Renderer):
 
     def list_item(self, text):
         """Rendering list item snippet. Like ``<li>``."""
-        return "<li>* %s</li>\n" % text
+        return "<li> * %s</li>\n" % text
 
 
 class RedisDocLexer(mistune.BlockLexer):

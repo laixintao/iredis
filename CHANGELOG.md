@@ -1,6 +1,10 @@
+### 1.4.3
+
+- Support `LOLWUT` command of Redis 6 version.
+
 ### 1.4.2
 
-- Password for auth command will be hidden as `*`.
+- Password for `AUTH` command will be hidden as `*`.
 
 ### 1.4.1
 

@@ -496,3 +496,13 @@ def test_render_nested_list():
             ("class:string", '"1"'),
         ]
     )
+
+
+def test_render_bytes(config):
+    config.raw = True
+    assert renders.OutputRender.render_bytes(b"bytes\n") == b"bytes"
+
+
+def test_render_bytes_raw(config):
+    config.raw = False
+    assert renders.OutputRender.render_bytes(b"bytes\n") == b"bytes"

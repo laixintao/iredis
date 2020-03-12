@@ -78,6 +78,7 @@ CONST = {
     "incrby": "INCRBY",
     "overflow": "OVERFLOW",
     "overflow_option": "WRAP SAT FAIL",
+    "version": "VERSION",
     "graphevent": (
         "active-defrag-cycle "
         "aof-fsync-always "
@@ -135,6 +136,7 @@ SVALUE = fr"(?P<svalue>{VALID_TOKEN})"
 MEMBER = fr"(?P<member>{VALID_TOKEN})"
 MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 COUNT = fr"(?P<count>{NNUM})"
+VERSION_NUM = fr"(?P<version_num>{NUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 CHANNEL = fr"(?P<channel>{VALID_TOKEN})"
 GROUP = fr"(?P<group>{VALID_TOKEN})"
@@ -263,6 +265,7 @@ OVERFLOW = fr"(?P<overflow>{c('overflow')})"
 OVERFLOW_OPTION = fr"(?P<overflow_option>{c('overflow_option')})"
 KEEPTTL = fr"(?P<keepttl>{c('keepttl')})"
 GRAPHEVENT = fr"(?P<graphevent>{c('graphevent')})"
+VERSION = fr"(?P<version>{c('version')})"
 
 command_grammar = compile(COMMAND)
 
@@ -486,6 +489,9 @@ NEW_GRAMMAR = {
     "command_replicationid_offset": fr"\s+ {REPLICATIONID} \s+ {OFFSET} \s*",
     "command_graphevent": fr"\s+ {GRAPHEVENT} \s*",
     "command_graphevents": fr"(\s+ {GRAPHEVENT})* \s*",
+    # before redis 5: lolwut 5 1
+    # start from redis 6: lolwut VERSION 5 1
+    "command_version": fr"(\s+ {VERSION} \s+ {VERSION_NUM})? (\s+ {ANY})? \s*",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"
