@@ -406,8 +406,9 @@ class Client:
 
         to_render = FormattedText(summary + rendered_detail)
         if config.raw:
+            # FIXME render formattedText with color
             to_render = [text for style, text in to_render]
-            return "".join(to_render)
+            return "".join(to_render).encode()
         return to_render
 
     def do_peek(self, key):

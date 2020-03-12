@@ -81,7 +81,7 @@ def write_result(text):
     :param text: is_raw: bytes or str, not raw: FormattedText
     :is_raw: bool
     """
-    logger.info(f"write{type(text)}: {text[:10]}")
+    logger.info(f"Print result {type(text)}: {text}"[:40])
     if config.raw or isinstance(text, bytes):
         if isinstance(text, str):
             text = text.encode(config.decode)

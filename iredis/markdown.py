@@ -64,6 +64,6 @@ markdown_render = mistune.Markdown(renderer, block=block_lexer)
 
 def render(text):
     html_text = markdown_render(text)
-    logger.debug("[Document] {}".format(html_text))
+    logger.debug("[Document] {} ...".format(html_text)[:20])
 
     return to_formatted_text(HTML(html_text))
