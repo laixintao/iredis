@@ -406,7 +406,6 @@ class Client:
 
         to_render = FormattedText(summary + rendered_detail)
         if config.raw:
-            # FIXME render formattedText with color
             to_render = [text for style, text in to_render]
             return "".join(to_render).encode()
         return to_render
@@ -495,12 +494,9 @@ class Client:
             yield FormattedText([("class:dockey", "XINFO: ")])
             yield renders.OutputRender.render_list(xinfo)
 
-        def _none(key):
-            yield f"Key {key} doesn't exist."
-
         key_type = nativestr(self.execute("type", key))
         if key_type == "none":
-            yield FormattedText([("class:dockey", f"{key} doesn't exist.")])
+            yield f"{key} doesn't exist."
             return
 
         encoding = nativestr(self.execute("object encoding", key))
@@ -525,5 +521,4 @@ class Client:
             "zset": _zset,
             "hash": _hash,
             "stream": _stream,
-            "none": _none,
         }[key_type](key)

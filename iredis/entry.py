@@ -84,7 +84,10 @@ def write_result(text):
     logger.info(f"Print result {type(text)}: {text}"[:40])
     if config.raw or isinstance(text, bytes):
         if isinstance(text, str):
-            text = text.encode(config.decode)
+            if config.decode:
+                text = text.encode(config.decode)
+            else:
+                text = text.encode()
         sys.stdout.buffer.write(text)
         sys.stdout.write("\n")
     else:
