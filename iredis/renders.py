@@ -25,14 +25,14 @@ class OutputRender:
     """Render redis output"""
 
     @staticmethod
-    def dynamic_render(command_name, response):
+    def get_render(command_name):
         """Dynamic render output due to command name."""
         command_upper = command_name.upper()
         callback_name = command2callback.get(command_upper)
         # else, use defined callback
         if callback_name is None:
             logger.warning("unknown command %s", command_name)
-            return response
+            return None
 
         if not hasattr(OutputRender, callback_name):
             # FIXME
@@ -43,19 +43,32 @@ class OutputRender:
                 command_name,
                 callback_name,
             )
-            return response
+            return OutputRender.default_render
 
         callback = getattr(OutputRender, callback_name)
-        rendered = callback(response)
-        logger.info(f"[render] using {callback_name}, result: {rendered}")
-        return rendered
+        logger.info(
+            f"[render] Find callback {callback_name}, for command: {command_name}"
+        )
+        return callback
+
+    @staticmethod
+    def render_raw(value):
+        """
+        Render for all kinds, list, string, bulkstring, int
+
+        :return : bytes
+        """
+        if value is None:
+            return b""
+        if isinstance(value, bytes):
+            return value
+        if isinstance(value, int):
+            return str(value).encode()
+        if isinstance(value, list):
+            return _render_raw_list(value)
 
     @staticmethod
     def render_bulk_string(value):
-        if config.raw:
-            if value is None:
-                return b""
-            return value
         if value is None:
             return NIL
         return double_quotes(ensure_str(value))
@@ -78,16 +91,10 @@ class OutputRender:
         Render nested list.
         Items come as pairs.
         """
-        if config.raw:
-            return OutputRender.render_list(value)
         return FormattedText(_render_pair(value, 0))
 
     @staticmethod
     def render_int(value):
-        if config.raw:
-            if value is None:
-                return b""
-            return str(value).encode()
         if value is None:
             return NIL
         return FormattedText([("class:type", "(integer) "), ("", str(value))])
@@ -95,8 +102,6 @@ class OutputRender:
     @staticmethod
     def render_unixtime(value):
         rendered_int = OutputRender.render_int(value)
-        if config.raw:
-            return rendered_int
         explained_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(value)))
         rendered_int.extend(
             [
@@ -110,8 +115,6 @@ class OutputRender:
 
     @staticmethod
     def render_time(value):
-        if config.raw:
-            return OutputRender.render_list(value)
         unix_timestamp, millisecond = value[0].decode(), value[1].decode()
         explained_date = time.strftime(
             "%Y-%m-%d %H:%M:%S", time.localtime(int(unix_timestamp))
@@ -143,8 +146,6 @@ class OutputRender:
                 double_quoted = double_quotes(str_item)
                 str_items.append(double_quoted)
         rendered = _render_list(text, str_items, "class:string")
-        if config.raw:
-            return rendered
         return FormattedText(rendered)
 
     @staticmethod
@@ -161,8 +162,6 @@ class OutputRender:
 
     @staticmethod
     def render_error(error_msg):
-        if config.raw:
-            return error_msg
         text = ensure_str(error_msg)
         return FormattedText([("class:type", "(error) "), ("class:error", text)])
 
@@ -172,8 +171,6 @@ class OutputRender:
         If response is b'OK', render simple string always with success color.
         If Error happend, error will be rendered by ``render_error``
         """
-        if config.raw:
-            return text
         if text is None:
             return NIL
         text = ensure_str(text)
@@ -193,15 +190,11 @@ class OutputRender:
     @staticmethod
     def render_members(items):
         if config.withscores:
-            if config.raw:
-                return _update_completer_then_render(items, "class:member")
             return _update_completer_then_render_withscores(items)
         return _update_completer_then_render(items, "class:member")
 
     @staticmethod
     def render_hash_pairs(response):
-        if config.raw:
-            return _update_completer_then_render(response, "class:field")
         # render hash pairs
         if not response:
             return EMPTY_LIST
@@ -233,8 +226,6 @@ class OutputRender:
 
     @staticmethod
     def render_slowlog(raw):
-        if config.raw:
-            return _render_raw_list(raw)
         fields = ["Slow log id", "Start at", "Running time(ms)", "Command"]
         if StrictVersion(config.version) > StrictVersion("4.0"):
             fields.extend(["Client IP and port", "Client name"])
@@ -272,8 +263,6 @@ class OutputRender:
         see: https://redis.io/topics/pubsub#format-of-pushed-messages
         """
         logger.info(raw)
-        if config.raw:
-            return OutputRender.render_list(raw)
         if raw[1] is None:
             raw[1] = "all"
         mtype, *channel, message = ensure_str(raw)
@@ -343,9 +332,6 @@ def _render_list(byte_items, str_items, style=None, pre_space=0):
     """Complute the newline/number-width/lineno,
     render list to FormattedText
     """
-    if config.raw:
-        return _render_raw_list(byte_items)
-
     if not str_items:
         return EMPTY_LIST
 
@@ -377,8 +363,6 @@ def _render_list(byte_items, str_items, style=None, pre_space=0):
 
 def _render_scan(render_response, response):
     cursor, responses = response
-    if config.raw:
-        return b"\n".join([cursor, render_response(responses)])
 
     rendered = [
         ("class:type", "(cursor) "),
@@ -412,8 +396,6 @@ def _update_completer_then_render(items, style):
     str_items = ensure_str(items)
     double_quoted = double_quotes(str_items)
     rendered = _render_list(items, double_quoted, style)
-    if config.raw:
-        return rendered
     return FormattedText(rendered)
 
 

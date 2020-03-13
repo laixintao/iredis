@@ -157,24 +157,18 @@ class Client:
                 return response
         raise last_error
 
-    def _dynamic_render(self, command_name, response):
-        """
-        Render command result using callback
-
-        :param command_name: command name, (will be converted
-            to UPPER case;
-        """
-        return OutputRender.dynamic_render(command_name=command_name, response=response)
-
     def render_response(self, response, command_name):
         "Parses a response from the Redis server"
         logger.info(f"[Redis-Server] Response: {response}")
+        if config.raw:
+            callback = OutputRender.render_raw
         # if in transaction, use queue render first
-        if config.transaction:
+        elif config.transaction:
             callback = renders.OutputRender.render_transaction_queue
-            rendered = callback(response)
         else:
-            rendered = self._dynamic_render(command_name, response)
+            callback = OutputRender.get_render(command_name=command_name)
+        rendered = callback(response)
+        logger.info(f"[render result] {rendered}")
         return rendered
 
     def monitor(self):
@@ -261,6 +255,8 @@ class Client:
             if shell_command and config.shell:
                 # pass the raw response of redis to shell command
                 if isinstance(redis_resp, list):
+                    # FIXME not handling nested list, use renders.render_raw
+                    # instead
                     stdin = b"\n".join(redis_resp)
                 else:
                     stdin = redis_resp
