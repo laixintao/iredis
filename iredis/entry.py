@@ -313,7 +313,7 @@ def gather_args(
     """
     IRedis: Interactive Redis
 
-    When no command is given, redis-cli starts in interactive mode.
+    When no command is given, IRedis starts in interactive mode.
 
     \b
     Examples:
