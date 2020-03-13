@@ -110,15 +110,17 @@ jobs:
       - name: Cache cargo registry
         uses: actions/cache@v1
         with:
-          path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry
+          path: ~/.cargo/bin/pyoxidizer
+          key: cargo-bin-0.6.0
 
       - name: Executable Build
+        # pyoxidizer doesn't know the wheel path
+        # and it doesn't support passing env vars
+        # so we use envsubst here
         run: |
-          # pyoxidizer doesn't know the wheel path, and it doesn't support passing env vars
           export WHEEL_PATH=`ls ./dist/iredis*.whl`
           envsubst '$WHEEL_PATH' < pyoxidizer.template.bzl > pyoxidizer.bzl
-          cargo install pyoxidizer --vers 0.6.0
+          pyoxidizer -V || cargo install pyoxidizer --vers 0.6.0
           pyoxidizer build --release install
           cd ./build/x86*/release/install
           tar -zcf ../../../iredis.tar.gz lib/ iredis
