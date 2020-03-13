@@ -92,6 +92,27 @@ def cli():
 
 
 @pytest.fixture(scope="function")
+def raw_cli():
+    """Open iredis subprocess to test"""
+    f = tempfile.TemporaryFile("w")
+    config_content = dedent(
+        """
+        [main]
+        log_location =
+        warning = True
+        """
+    )
+    f.write(config_content)
+    f.close()
+
+    child = pexpect.spawn(f"iredis --raw -n 15 --iredisrc {f.name}", timeout=TIMEOUT)
+    child.logfile_read = open("cli_test.log", "ab")
+    child.expect(["https://iredis.io/issues", "127.0.0.1"])
+    yield child
+    child.close()
+
+
+@pytest.fixture(scope="function")
 def cli_without_warning():
     f = tempfile.TemporaryFile("w")
     config_content = dedent(

@@ -29,22 +29,6 @@ class OutputRender:
         """Dynamic render output due to command name."""
         command_upper = command_name.upper()
         callback_name = command2callback.get(command_upper)
-        # else, use defined callback
-        if callback_name is None:
-            logger.warning("unknown command %s", command_name)
-            return None
-
-        if not hasattr(OutputRender, callback_name):
-            # FIXME
-            # not implemented command, use no conversion
-            # this condition should be deleted finally
-            logger.warning(
-                "command `%s`'s callback %s is not implemented",
-                command_name,
-                callback_name,
-            )
-            return OutputRender.default_render
-
         callback = getattr(OutputRender, callback_name)
         logger.info(
             f"[render] Find callback {callback_name}, for command: {command_name}"
@@ -132,7 +116,7 @@ class OutputRender:
         return FormattedText(rendered)
 
     @staticmethod
-    def render_list(text):
+    def render_list(text, style="class:string"):
         """
         Render callback for redis Array Reply
         Note: Cloud be null in it.
@@ -145,7 +129,7 @@ class OutputRender:
                 str_item = ensure_str(item)
                 double_quoted = double_quotes(str_item)
                 str_items.append(double_quoted)
-        rendered = _render_list(text, str_items, "class:string")
+        rendered = _render_list(text, str_items, style)
         return FormattedText(rendered)
 
     @staticmethod
@@ -183,15 +167,44 @@ class OutputRender:
 
         Response message should be "QUEUE" or Error.
         """
-        # FIXME raw
         text = ensure_str(text)
         return FormattedText([("class:queued", text)])
 
     @staticmethod
     def render_members(items):
-        if config.withscores:
-            return _update_completer_then_render_withscores(items)
-        return _update_completer_then_render(items, "class:member")
+        if not config.withscores:
+            return OutputRender.render_list(items, "class:member")
+
+        if not items:
+            return EMPTY_LIST
+        str_items = ensure_str(items)
+
+        members = [item for item in str_items[::2]]
+        scores = [item for item in str_items[1::2]]
+        logger.debug(f"[MEMBERS] {members}")
+        logger.debug(f"[SCORES] {scores}")
+        # render display
+        double_quoted = double_quotes(members)
+        index_width = len(str(len(double_quoted)))
+        score_width = max(len(score) for score in scores)
+        rendered = []
+        for index, item in enumerate(double_quoted):
+            index_const_width = f"{index+1:{index_width}})"
+            rendered.append(("", index_const_width))
+            # add a space between index and member
+            rendered.append(("", " "))
+            # add score
+            rendered.append(("class:integer", f"{scores[index]:{score_width}} "))
+            # add member
+            if item is None:
+                rendered.append(NIL_TUPLE)
+            else:
+                rendered.append(("class:member", item))
+
+            # add a newline for eachline
+            if index + 1 < len(double_quoted):
+                rendered.append(NEWLINE_TUPLE)
+        return FormattedText(rendered)
 
     @staticmethod
     def render_hash_pairs(response):
@@ -279,7 +292,7 @@ class OutputRender:
 
     @staticmethod
     def command_keys(items):
-        return _update_completer_then_render(items, "class:key")
+        return OutputRender.render_list(items, "class:key")
 
     @staticmethod
     def command_scan(response):
@@ -303,7 +316,7 @@ class OutputRender:
 
     @staticmethod
     def command_hkeys(response):
-        return _update_completer_then_render(response, "class:field")
+        return OutputRender.render_list(response, "class:field")
 
     @staticmethod
     def render_bytes(response):
@@ -388,48 +401,6 @@ def _render_pair(pairs, indent):
             rendered.append(("class:value", value))
         rendered.append(NEWLINE_TUPLE)
     return rendered[:-1]  # remove last newline
-
-
-def _update_completer_then_render(items, style):
-    """
-    """
-    str_items = ensure_str(items)
-    double_quoted = double_quotes(str_items)
-    rendered = _render_list(items, double_quoted, style)
-    return FormattedText(rendered)
-
-
-def _update_completer_then_render_withscores(items):
-    if not items:
-        return EMPTY_LIST
-    str_items = ensure_str(items)
-
-    members = [item for item in str_items[::2]]
-    scores = [item for item in str_items[1::2]]
-    logger.debug(f"[MEMBERS] {members}")
-    logger.debug(f"[SCORES] {scores}")
-    # render display
-    double_quoted = double_quotes(members)
-    index_width = len(str(len(double_quoted)))
-    score_width = max(len(score) for score in scores)
-    rendered = []
-    for index, item in enumerate(double_quoted):
-        index_const_width = f"{index+1:{index_width}})"
-        rendered.append(("", index_const_width))
-        # add a space between index and member
-        rendered.append(("", " "))
-        # add score
-        rendered.append(("class:integer", f"{scores[index]:{score_width}} "))
-        # add member
-        if item is None:
-            rendered.append(NIL_TUPLE)
-        else:
-            rendered.append(("class:member", item))
-
-        # add a newline for eachline
-        if index + 1 < len(double_quoted):
-            rendered.append(NEWLINE_TUPLE)
-    return FormattedText(rendered)
 
 
 # TODO
