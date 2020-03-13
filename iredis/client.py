@@ -283,7 +283,11 @@ class Client:
                     yield from self.unsubscribing()
         except Exception as e:
             logger.exception(e)
-            yield OutputRender.render_error(str(e))
+            if config.raw:
+                render_callback = OutputRender.render_raw
+            else:
+                render_callback = OutputRender.render_error
+            yield render_callback(f"ERROR {str(e)}".encode())
         finally:
             config.withscores = False
 
@@ -342,7 +346,6 @@ class Client:
         variables = m.variables()
         # zset withscores
         withscores = variables.get("withscores")
-        logger.debug(f"[PRE HOOK] withscores: {withscores}")
         if withscores:
             config.withscores = True
 

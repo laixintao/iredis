@@ -47,5 +47,6 @@ def test_trasaction_in_raw_mode(clean_redis, raw_cli):
     raw_cli.sendline("EXEC")
     raw_cli.expect("bar")
     raw_cli.expect("127.0.0.1")
+
     with pytest.raises(pexpect.exceptions.TIMEOUT):
         raw_cli.expect("transaction")
