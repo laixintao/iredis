@@ -82,14 +82,17 @@ def write_result(text):
     :is_raw: bool
     """
     logger.info(f"Print result {type(text)}: {text}"[:200])
-    if config.raw or isinstance(text, bytes):
-        if isinstance(text, str):
-            if config.decode:
-                text = text.encode(config.decode)
-            else:
-                text = text.encode()
+
+    if isinstance(text, str):
+        if config.decode:
+            text = text.encode(config.decode)
+        else:
+            text = text.encode()
+
+    if isinstance(text, bytes):
         sys.stdout.buffer.write(text)
         sys.stdout.write("\n")
+
     else:
         # TODO
         # FormattedText to Stringbuffer

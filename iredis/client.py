@@ -405,8 +405,7 @@ class Client:
 
         to_render = FormattedText(summary + rendered_detail)
         if config.raw:
-            to_render = [text for style, text in to_render]
-            return "".join(to_render).encode()
+            return self._convert_formatted_text_to_bytes(to_render)
         return to_render
 
     def do_peek(self, key):
@@ -535,4 +534,11 @@ class Client:
             if index < len(peek_response) - 1:
                 flat_formatted_text_pair.append(renders.NEWLINE_TUPLE)
 
+        if config.raw:
+            yield self._convert_formatted_text_to_bytes(flat_formatted_text_pair)
+            return
         yield FormattedText(flat_formatted_text_pair)
+
+    def _convert_formatted_text_to_bytes(self, formatted_text):
+        to_render = [text for style, text in formatted_text]
+        return "".join(to_render).encode()
