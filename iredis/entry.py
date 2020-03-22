@@ -203,7 +203,10 @@ def repl(client, session, start_time):
         try:
             answers = client.send_command(command, session.completer)
             for answer in answers:
-                write_result(answer, session.output.get_size().rows)
+                write_result(
+                    answer,
+                    session.output.get_size().rows - session.reserve_space_for_menu,
+                )
         # Error with previous command or exception
         except Exception as e:
             logger.exception(e)
