@@ -205,7 +205,8 @@ def repl(client, session, start_time):
             for answer in answers:
                 write_result(
                     answer,
-                    session.output.get_size().rows - session.reserve_space_for_menu,
+                    # -1 is because 127.0.0.1:6379> takes one line
+                    session.output.get_size().rows - session.reserve_space_for_menu - 1,
                 )
         # Error with previous command or exception
         except Exception as e:
