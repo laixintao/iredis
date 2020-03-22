@@ -171,7 +171,7 @@ def test_auto_select_db_and_auth_for_reconnect(iredis_client, config):
 
     next(iredis_client.send_command("config set requirepass 'abc'"))
     next(iredis_client.send_command("auth abc"))
-    assert iredis_client.connection.password == b"abc"
+    assert iredis_client.connection.password == "abc"
     next(iredis_client.send_command("config set requirepass ''"))
 
 
@@ -215,9 +215,7 @@ def test_can_not_connect_on_startup(capfd):
 def test_peek_key_not_exist(iredis_client, clean_redis, config):
     config.raw = False
     peek_result = list(iredis_client.do_peek("non-exist-key"))
-    assert peek_result == [
-        FormattedText([("class:dockey", "non-exist-key doesn't exist.")])
-    ]
+    assert peek_result == ["non-exist-key doesn't exist."]
 
 
 def test_peek_string(iredis_client, clean_redis):
