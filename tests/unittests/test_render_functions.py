@@ -10,15 +10,13 @@ def strip_formatted_text(formatted_text):
     return "".join(text[1] for text in formatted_text)
 
 
-def test_render_simple_string_raw(config):
-    config.raw = True
-    assert renders.OutputRender.render_simple_string(b"OK") == b"OK"
-    assert renders.OutputRender.render_simple_string(b"BUMPED 1") == b"BUMPED 1"
-    assert renders.OutputRender.render_simple_string(b"STILL 1") == b"STILL 1"
+def test_render_simple_string_raw_using_raw_render():
+    assert renders.OutputRender.render_raw(b"OK") == b"OK"
+    assert renders.OutputRender.render_raw(b"BUMPED 1") == b"BUMPED 1"
+    assert renders.OutputRender.render_raw(b"STILL 1") == b"STILL 1"
 
 
-def test_render_simple_string(config):
-    config.raw = False
+def test_render_simple_string():
     assert renders.OutputRender.render_simple_string(b"OK") == FormattedText(
         [("class:success", "OK")]
     )
@@ -30,8 +28,7 @@ def test_render_simple_string(config):
     )
 
 
-def test_render_list_index(config):
-    config.raw = False
+def test_render_list_index():
     raw = ["hello", "world", "foo"]
     out = renders._render_list([item.encode() for item in raw], raw)
     out = strip_formatted_text(out)
@@ -41,8 +38,7 @@ def test_render_list_index(config):
     assert "4)" not in out
 
 
-def test_render_list_index_const_width(config):
-    config.raw = False
+def test_render_list_index_const_width():
     raw = ["hello"] * 100
     out = renders._render_list([item.encode() for item in raw], raw)
     out = strip_formatted_text(out)
@@ -65,19 +61,13 @@ def test_render_list_index_const_width(config):
     assert "\n10)" in out
 
 
-def test_render_list_while_config_raw():
-    from iredis.config import config
-
-    config.raw = True
+def test_render_list_using_raw_render():
     raw = ["hello", "world", "foo"]
-    out = renders._render_list([item.encode() for item in raw], raw)
+    out = renders.OutputRender.render_raw([item.encode() for item in raw])
     assert b"hello\nworld\nfoo" == out
 
 
 def test_render_list_with_nil_init():
-    from iredis.config import config
-
-    config.raw = False
     raw = [b"hello", None, b"world"]
     out = renders.OutputRender.render_list(raw)
     out = strip_formatted_text(out)
@@ -85,27 +75,18 @@ def test_render_list_with_nil_init():
 
 
 def test_render_list_with_nil_init_while_config_raw():
-    from iredis.config import config
-
-    config.raw = True
     raw = [b"hello", None, b"world"]
-    out = renders.OutputRender.render_list(raw)
+    out = renders.OutputRender.render_raw(raw)
     assert out == b"hello\n\nworld"
 
 
 def test_render_list_with_empty_list_raw():
-    from iredis.config import config
-
-    config.raw = True
     raw = []
-    out = renders.OutputRender.render_list(raw)
+    out = renders.OutputRender.render_raw(raw)
     assert out == b""
 
 
 def test_render_list_with_empty_list():
-    from iredis.config import config
-
-    config.raw = False
     raw = []
     out = renders.OutputRender.render_list(raw)
     out = strip_formatted_text(out)
@@ -135,8 +116,7 @@ def test_render_int():
 
 
 def test_render_int_raw():
-    config.raw = True
-    assert renders.OutputRender.render_int(12) == b"12"
+    assert renders.OutputRender.render_raw(12) == b"12"
 
 
 def test_render_list_or_string():
@@ -230,7 +210,6 @@ def test_command_scan():
 def test_command_sscan():
     completer = IRedisCompleter()
     completer.member_completer.words = []
-    config.raw = False
     rendered = renders.OutputRender.command_sscan(
         [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]]
     )
@@ -271,8 +250,7 @@ def test_command_sscan():
 def test_command_sscan_config_raw():
     completer = IRedisCompleter()
     completer.member_completer.words = []
-    config.raw = True
-    rendered = renders.OutputRender.command_sscan(
+    rendered = renders.OutputRender.render_raw(
         [b"44", [b"a", b"member:__rand_int__", b"dest", b" a"]]
     )
     completer.update_completer_for_response(
@@ -291,7 +269,6 @@ def test_command_sscan_config_raw():
 def test_render_members():
     completer = IRedisCompleter()
     completer.member_completer.words = []
-    config.raw = False
     config.withscores = True
     resp = [b"duck", b"667", b"camel", b"708"]
     rendered = renders.OutputRender.render_members(resp)
@@ -316,10 +293,9 @@ def test_render_members():
 def test_render_members_config_raw():
     completer = IRedisCompleter()
     completer.member_completer.words = []
-    config.raw = True
     config.withscores = True
     resp = [b"duck", b"667", b"camel", b"708"]
-    rendered = renders.OutputRender.render_members(resp)
+    rendered = renders.OutputRender.render_raw(resp)
     completer.update_completer_for_response("ZRANGE", resp)
 
     assert rendered == b"duck\n667\ncamel\n708"
@@ -327,7 +303,6 @@ def test_render_members_config_raw():
 
 
 def test_render_unixtime_config_raw():
-    config.raw = False
     # fake the timezone and reload
     os.environ["TZ"] = "Asia/Shanghai"
     time.tzset()
@@ -346,20 +321,17 @@ def test_render_unixtime_config_raw():
 
 
 def test_render_unixtime():
-    config.raw = True
-    rendered = renders.OutputRender.render_unixtime(1570469891)
+    rendered = renders.OutputRender.render_raw(1570469891)
 
     assert rendered == b"1570469891"
 
 
 def test_bulk_string_reply():
-    config.raw = False
     assert renders.OutputRender.render_bulk_string(b"'\"") == '''"'\\""'''
 
 
 def test_bulk_string_reply_raw():
-    config.raw = True
-    assert renders.OutputRender.render_bulk_string(b"hello") == b"hello"
+    assert renders.OutputRender.render_raw(b"hello") == b"hello"
 
 
 def test_render_bulk_string_decoded():
@@ -375,7 +347,6 @@ def test_render_bulk_string_decoded_with_decoded_utf8():
 
 
 def test_render_time():
-    config.raw = False
     value = [b"1571305643", b"765481"]
     assert renders.OutputRender.render_time(value) == FormattedText(
         [
@@ -390,8 +361,7 @@ def test_render_time():
         ]
     )
 
-    config.raw = True
-    assert renders.OutputRender.render_time(value) == b"1571305643\n765481"
+    assert renders.OutputRender.render_raw(value) == b"1571305643\n765481"
 
 
 def test_render_nested_pairs():
@@ -410,15 +380,13 @@ def test_render_nested_pairs():
         -9445680,
     ]
 
-    config.raw = True
-    assert renders.OutputRender.render_nested_pair(text) == (
+    assert renders.OutputRender.render_raw(text) == (
         b"peak.allocated\n10160336\nlua.caches\n0\ndb.0\noverhead.hashtable.main\n64"
         b"8\noverhead.hashtable.expires\n32\ndb.1\noverhead.hashtable.main\n112\nove"
         b"rhead.hashtable.expires\n32\nfragmentation\n0.062980629503726959\nfragmentat"
         b"ion.bytes\n-9445680"
     )
 
-    config.raw = False
     assert renders.OutputRender.render_nested_pair(text) == FormattedText(
         [
             ("class:string", "peak.allocated: "),
@@ -454,7 +422,6 @@ def test_render_nested_pairs():
 
 def test_render_nested_list():
     text = [[b"get", 2, [b"readonly", b"fast"], 1, 1, 1]]
-    config.raw = False
     assert renders.OutputRender.render_list(text) == FormattedText(
         [
             ("", "1)"),
@@ -499,10 +466,8 @@ def test_render_nested_list():
 
 
 def test_render_bytes(config):
-    config.raw = True
     assert renders.OutputRender.render_bytes(b"bytes\n") == b"bytes"
 
 
 def test_render_bytes_raw(config):
-    config.raw = False
-    assert renders.OutputRender.render_bytes(b"bytes\n") == b"bytes"
+    assert renders.OutputRender.render_raw(b"bytes\n") == b"bytes\n"

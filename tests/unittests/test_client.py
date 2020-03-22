@@ -166,12 +166,12 @@ def test_auto_select_db_and_auth_for_reconnect(iredis_client, config):
     assert iredis_client.connection.db == 2
 
     resp = next(iredis_client.send_command("auth 123"))
-    assert "Client sent AUTH, but no password is set" in resp
+    assert b"Client sent AUTH, but no password is set" in resp
     assert iredis_client.connection.password is None
 
     next(iredis_client.send_command("config set requirepass 'abc'"))
     next(iredis_client.send_command("auth abc"))
-    assert iredis_client.connection.password == "abc"
+    assert iredis_client.connection.password == b"abc"
     next(iredis_client.send_command("config set requirepass ''"))
 
 
