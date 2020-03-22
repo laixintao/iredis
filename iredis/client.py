@@ -21,7 +21,12 @@ from .completers import IRedisCompleter
 from .config import config
 from .exceptions import NotRedisCommand
 from .renders import OutputRender
-from .utils import compose_command_syntax, nativestr, exit
+from .utils import (
+    compose_command_syntax,
+    nativestr,
+    exit,
+    convert_formatted_text_to_bytes,
+)
 from .warning import confirm_dangerous_command
 
 logger = logging.getLogger(__name__)
@@ -405,7 +410,7 @@ class Client:
 
         to_render = FormattedText(summary + rendered_detail)
         if config.raw:
-            return self._convert_formatted_text_to_bytes(to_render)
+            return convert_formatted_text_to_bytes(to_render)
         return to_render
 
     def do_peek(self, key):
@@ -535,10 +540,6 @@ class Client:
                 flat_formatted_text_pair.append(renders.NEWLINE_TUPLE)
 
         if config.raw:
-            yield self._convert_formatted_text_to_bytes(flat_formatted_text_pair)
+            yield convert_formatted_text_to_bytes(flat_formatted_text_pair)
             return
         yield FormattedText(flat_formatted_text_pair)
-
-    def _convert_formatted_text_to_bytes(self, formatted_text):
-        to_render = [text for style, text in formatted_text]
-        return "".join(to_render).encode()

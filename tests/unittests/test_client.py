@@ -293,6 +293,7 @@ def test_peek_set_fetch_part(iredis_client, clean_redis):
     clean_redis.sadd("myset", *[f"hello-{index}" for index in range(40)])
     peek_result = list(iredis_client.do_peek("myset"))
 
+    print(peek_result)
     assert len(peek_result[0]) == 87
 
 

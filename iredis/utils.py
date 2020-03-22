@@ -249,3 +249,8 @@ def exit():
     """
     print("Goodbye!")
     sys.exit()
+
+
+def convert_formatted_text_to_bytes(formatted_text):
+    to_render = [text for style, text in formatted_text]
+    return "".join(to_render).encode()

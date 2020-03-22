@@ -46,7 +46,7 @@ jobs:
       - name: Pytest
         run: |
           . venv/bin/activate
-          pytest
+          pytest -vv
   lint:
     name: flake8 & black
     runs-on: ubuntu-16.04
