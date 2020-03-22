@@ -24,6 +24,7 @@ def test_trasaction_rprompt(clean_redis, cli):
     with pytest.raises(pexpect.exceptions.TIMEOUT):
         cli.expect("transaction")
 
+
 def test_trasaction_syntax_error(cli):
     cli.sendline("multi")
     cli.sendline("get foo 1")

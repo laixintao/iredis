@@ -493,6 +493,9 @@ class Client:
             yield FormattedText([("class:dockey", "XINFO: ")])
             yield renders.OutputRender.render_list(xinfo)
 
+        # incase the result is too long, we yield only once so the outputer
+        # can pager it.
+        peek_response = []
         key_type = nativestr(self.execute("type", key))
         if key_type == "none":
             yield f"{key} doesn't exist."
@@ -511,13 +514,25 @@ class Client:
         key_info = f"{key_type} ({encoding}){mem}, ttl: {ttl}"
 
         # FIXME raw write_result parse FormattedText
-        yield FormattedText([("class:dockey", "key: "), ("", key_info)])
+        peek_response.append(FormattedText([("class:dockey", "key: "), ("", key_info)]))
 
-        yield from {
+        detail_action_fun = {
             "string": _string,
             "list": _list,
             "set": _set,
             "zset": _zset,
             "hash": _hash,
             "stream": _stream,
-        }[key_type](key)
+        }[key_type]
+        detail = list(detail_action_fun(key))
+        peek_response.extend(detail)
+
+        # merge them into only one FormattedText
+        flat_formatted_text_pair = []
+        for index, formatted_text in enumerate(peek_response):
+            for ft in formatted_text:
+                flat_formatted_text_pair.append(ft)
+            if index < len(peek_response) - 1:
+                flat_formatted_text_pair.append(renders.NEWLINE_TUPLE)
+
+        yield FormattedText(flat_formatted_text_pair)
