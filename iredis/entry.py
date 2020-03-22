@@ -13,6 +13,7 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit import print_formatted_text
+from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.key_binding.bindings.named_commands import (
     register as prompt_register,
 )
@@ -22,7 +23,7 @@ from .style import STYLE
 from .config import config, load_config_files
 from .processors import UserInputCommand, UpdateBottomProcessor, PasswordProcessor
 from .bottom import BottomToolbar
-from .utils import timer, exit
+from .utils import timer, exit, convert_formatted_text_to_bytes
 from .completers import IRedisCompleter
 from .lexer import IRedisLexer
 from . import __version__
@@ -73,7 +74,14 @@ def print_help_msg(command):
         click.echo(command.get_help(ctx))
 
 
-def write_result(text):
+def is_too_tall(text, max_height):
+    if isinstance(text, FormattedText):
+        text = convert_formatted_text_to_bytes(text)
+    lines = len(text.split(b"\n"))
+    return lines > max_height
+
+
+def write_result(text, max_height=None):
     """
     When config.raw set to True, write text(must be bytes in that case)
     directly to stdout, same if text is bytes.
@@ -83,16 +91,28 @@ def write_result(text):
     """
     logger.info(f"Print result {type(text)}: {text}"[:200])
 
+    # only handle bytes or FormattedText, if it's str, convert to bytes
     if isinstance(text, str):
         if config.decode:
             text = text.encode(config.decode)
         else:
             text = text.encode()
 
+    # using pager if too tall
+    if max_height and is_too_tall(text, max_height):
+        if isinstance(text, FormattedText):
+            text = convert_formatted_text_to_bytes(text)
+        # click.echo_via_pager only accepts str
+        if config.decode:
+            text = text.decode()
+        else:
+            text = text.decode()
+        click.echo_via_pager(text)
+        return
+
     if isinstance(text, bytes):
         sys.stdout.buffer.write(text)
         sys.stdout.write("\n")
-
     else:
         # TODO
         # FormattedText to Stringbuffer
@@ -183,7 +203,7 @@ def repl(client, session, start_time):
         try:
             answers = client.send_command(command, session.completer)
             for answer in answers:
-                write_result(answer)
+                write_result(answer, session.output.get_size().rows)
         # Error with previous command or exception
         except Exception as e:
             logger.exception(e)
@@ -450,6 +470,7 @@ def main():
             for answer in client.send_command(line, None):
                 write_result(answer)
         return
+
     # no interactive mode, directly run a command
     if ctx.params["cmd"]:
         answers = client.send_command(" ".join(ctx.params["cmd"]), None)
