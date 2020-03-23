@@ -58,7 +58,7 @@ like `KEYS *` (see
   download and run, it just works, even you don't have a Python interpreter.
 - Hide password for `AUTH` command.
 - Says "Goodbye!" to you when you exit!
-- For full features, please see: [iredis.io/show](https://www.iredis.io/show/)
+- For full features, please see: [iredis.io](https://www.iredis.io)
 
 ## Install
 
