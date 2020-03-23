@@ -1,4 +1,3 @@
-import pexpect
 import pytest
 import redis
 from unittest.mock import MagicMock
@@ -6,6 +5,7 @@ from unittest.mock import MagicMock
 from prompt_toolkit.formatted_text import FormattedText
 
 from iredis.client import Client
+from iredis.config import config
 from iredis.completers import IRedisCompleter
 from iredis.entry import Rainbow, prompt_message
 
@@ -187,6 +187,7 @@ def test_split_shell_command(iredis_client, completer):
 
 
 def test_running_with_pipeline(clean_redis, iredis_client, capfd, completer):
+    config.shell = True
     clean_redis.set("foo", "hello \n world")
     with pytest.raises(StopIteration):
         next(iredis_client.send_command("get foo | grep w", completer))
@@ -195,6 +196,7 @@ def test_running_with_pipeline(clean_redis, iredis_client, capfd, completer):
 
 
 def test_running_with_multiple_pipeline(clean_redis, iredis_client, capfd, completer):
+    config.shell = True
     clean_redis.set("foo", "hello world\nhello iredis")
     with pytest.raises(StopIteration):
         next(
@@ -202,16 +204,6 @@ def test_running_with_multiple_pipeline(clean_redis, iredis_client, capfd, compl
         )
     out, err = capfd.readouterr()
     assert out == "hello iredis\n"
-
-
-def test_running_disable_shell_pipeline():
-    cli = pexpect.spawn("iredis -n 15 --no-shell", timeout=2)
-    cli.expect("127.0.0.1")
-    cli.sendline("set foo hello")
-    cli.expect("OK")
-    cli.sendline("get foo | grep w")
-    cli.expect(r"hello")
-    cli.close()
 
 
 def test_can_not_connect_on_startup(capfd):

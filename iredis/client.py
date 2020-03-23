@@ -258,7 +258,7 @@ class Client:
             redis_resp = self.execute(command_name, *args)
             # if shell_command and enable shell, do not render, just run in shell pipe and show the
             # subcommand's stdout/stderr
-            if shell_command and getattr(config, "shell", True):
+            if shell_command and config.shell:
                 # pass the raw response of redis to shell command
                 if isinstance(redis_resp, list):
                     stdin = b"\n".join(redis_resp)

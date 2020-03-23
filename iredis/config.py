@@ -37,6 +37,7 @@ class Config:
         self.decode = None
         self.no_info = None
         self.bottom_bar = None
+        self.shell = None
 
         self.warning = True
 
