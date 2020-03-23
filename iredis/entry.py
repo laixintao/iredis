@@ -250,7 +250,7 @@ However, you can use --no-raw to force formatted output even \
 when STDOUT is not a tty.
 """
 DECODE_HELP = """
-decode response, defult is No decode, which will output all bytes literals.
+decode response, default is No decode, which will output all bytes literals.
 """
 RAINBOW = "Display colorful prompt."
 DSN_HELP = """
@@ -263,6 +263,7 @@ Use Redis URL to indicate connection(Can set with env `IREDIS_URL`), Example:
     rediss://[[username]:[password]]@localhost:6379/0
     unix://[[username]:[password]]@/path/to/socket.sock?db=0
 """
+SHELL = """use shell pipeline, default enable shell pipeline."""
 
 # command line entry here...
 @click.command()
@@ -292,6 +293,7 @@ Use Redis URL to indicate connection(Can set with env `IREDIS_URL`), Example:
 @click.option("--decode", default=None, help=DECODE_HELP)
 @click.option("--raw/--no-raw", default=None, is_flag=True, help=RAW_HELP)
 @click.option("--rainbow/--no-rainbow", default=None, is_flag=True, help=RAINBOW)
+@click.option("--shell/--no-shell", default=None, is_flag=True, help=SHELL)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
 def gather_args(
@@ -309,6 +311,7 @@ def gather_args(
     dsn,
     url,
     socket,
+    shell,
 ):
     """
     IRedis: Interactive Redis
@@ -345,6 +348,8 @@ def gather_args(
         config.decode = decode
     if rainbow is not None:
         config.rainbow = rainbow
+    if shell is not None:
+        config.shell = shell
 
     return ctx
 

@@ -22,6 +22,9 @@ retry_times = 2
 
 socket_keepalive = True
 
+# weather enable shell pipeline
+shell = True
+
 # decode redis response, default None
 decode = 
 

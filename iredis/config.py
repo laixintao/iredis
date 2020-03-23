@@ -120,5 +120,6 @@ def load_config_files(iredisrc):
     config.completion_casing = config_obj["main"]["completion_casing"]
     config.history_location = config_obj["main"]["history_location"]
     config.alias_dsn = config_obj["alias_dsn"]
+    config.shell = config_obj["main"].as_bool("shell")
 
     return config_obj

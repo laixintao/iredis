@@ -43,6 +43,18 @@ def test_command_with_decode_utf_8():
     assert config.decode == ""
 
 
+def test_command_with_shell_pipeline():
+    from iredis.config import config
+
+    config.shell = True
+    gather_args.main(["iredis", "--no-shell"], standalone_mode=False)
+    assert config.shell is False
+
+    config.shell = False
+    gather_args.main(["iredis"], standalone_mode=False)
+    assert config.shell is True
+
+
 @pytest.mark.parametrize(
     "url,dsn",
     [
