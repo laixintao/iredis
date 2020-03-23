@@ -264,7 +264,7 @@ class Client:
                     stdin = b"\n".join(redis_resp)
                 else:
                     stdin = redis_resp
-                run(shell_command, input=stdin, stdout=sys.stdout, shell=True)
+                run(shell_command, input=stdin, shell=True)
                 return
 
             self.after_hook(raw_command, command_name, args, completer, redis_resp)
