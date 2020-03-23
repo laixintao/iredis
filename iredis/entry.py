@@ -263,7 +263,7 @@ Use Redis URL to indicate connection(Can set with env `IREDIS_URL`), Example:
     rediss://[[username]:[password]]@localhost:6379/0
     unix://[[username]:[password]]@/path/to/socket.sock?db=0
 """
-SHELL = """use shell pipeline, default enable shell pipeline."""
+SHELL = """Allow to run shell commands, default to True."""
 
 # command line entry here...
 @click.command()
