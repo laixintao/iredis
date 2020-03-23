@@ -22,7 +22,11 @@ retry_times = 2
 
 socket_keepalive = True
 
-# weather enable shell pipeline
+# IRedis support running shell command to parse the response, like this:
+# > get json-str | jq .
+# However that will allow any shell command to execute under iredis REPL,
+# you can disable this feature by setting this to False.
+# Default is True.
 shell = True
 
 # decode redis response, default None
