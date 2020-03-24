@@ -101,6 +101,7 @@ def write_result(text, max_height=None):
     # using pager if too tall
     if max_height and is_too_tall(text, max_height):
         if isinstance(text, FormattedText):
+            # TODO convert using buffer, with colose
             text = convert_formatted_text_to_bytes(text)
         # click.echo_via_pager only accepts str
         if config.decode:
