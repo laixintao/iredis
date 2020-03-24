@@ -43,6 +43,38 @@ def test_command_with_decode_utf_8():
     assert config.decode == ""
 
 
+def test_command_with_shell_pipeline():
+    from iredis.config import config
+
+    gather_args.main(["iredis", "--no-shell"], standalone_mode=False)
+    assert config.shell is False
+
+    gather_args.main(["iredis"], standalone_mode=False)
+    assert config.shell is True
+
+
+def test_command_shell_options_higher_priority():
+    from iredis.config import config
+    from textwrap import dedent
+
+    config_content = dedent(
+        """
+        [main]
+        shell = False
+        """
+    )
+    with open("/tmp/iredisrc", "w+") as etc_config:
+        etc_config.write(config_content)
+
+    gather_args.main(["iredis", "--iredisrc", "/tmp/iredisrc"], standalone_mode=False)
+    assert config.shell is False
+
+    gather_args.main(
+        ["iredis", "--shell", "--iredisrc", "/tmp/iredisrc"], standalone_mode=False
+    )
+    assert config.shell is True
+
+
 @pytest.mark.parametrize(
     "url,dsn",
     [
