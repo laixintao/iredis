@@ -439,3 +439,41 @@ def test_peek_stream(iredis_client, clean_redis):
     ]
     assert ("class:string", '"length"') in peek_result[2]
     assert ("class:string", '"radix-tree-keys"') in peek_result[2]
+
+
+def test_mem_not_called_before_redis_4(config, iredis_client, clean_redis):
+    config.version = "3.2.9"
+
+    def wrapper(func):
+        def execute(command_name, *args):
+            print(command_name)
+            if command_name.upper() == "MEMORY USAGE":
+                raise Exception("MEMORY USAGE not supported!")
+            return func(command_name, *args)
+
+        return execute
+
+    iredis_client.execute = wrapper(iredis_client.execute)
+    clean_redis.set("foo", "bar")
+    result = list(iredis_client.do_peek("foo"))
+    assert result[0][1] == ("", "string (embstr), ttl: -1")
+
+
+def test_mem_not_called_when_cant_get_server_version(
+    config, iredis_client, clean_redis
+):
+    config.version = None
+
+    def wrapper(func):
+        def execute(command_name, *args):
+            print(command_name)
+            if command_name.upper() == "MEMORY USAGE":
+                raise Exception("MEMORY USAGE not supported!")
+            return func(command_name, *args)
+
+        return execute
+
+    iredis_client.execute = wrapper(iredis_client.execute)
+    clean_redis.set("foo", "bar")
+    result = list(iredis_client.do_peek("foo"))
+    assert result[0][1] == ("", "string (embstr), ttl: -1")

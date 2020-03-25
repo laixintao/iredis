@@ -1,3 +1,9 @@
+### 1.5
+
+- Bugfix: PEEK command do not use MEMORY USAGE before redis version 4.0.
+- Feature: Support disable shell pipeline feature in iredisrc. (Thanks
+  [wooden-robot])
+
 ### 1.4.3
 
 - Support `LOLWUT` command of Redis 6 version.

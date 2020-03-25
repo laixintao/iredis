@@ -499,10 +499,16 @@ class Client:
             return
 
         encoding = nativestr(self.execute("object encoding", key))
-        memory_usage = str(self.execute("memory usage", key))
+
+        # use `memory usage` to get memory, this command available from redis4.0
+        mem = ""
+        if config.version and StrictVersion(config.version) >= StrictVersion("4.0.0"):
+            memory_usage_value = str(self.execute("memory usage", key))
+            mem = f"  mem: {memory_usage_value} bytes"
+
         ttl = str(self.execute("ttl", key))
 
-        key_info = f"{key_type} ({encoding})  mem: {memory_usage} bytes, ttl: {ttl}"
+        key_info = f"{key_type} ({encoding}){mem}, ttl: {ttl}"
 
         # FIXME raw write_result parse FormattedText
         yield FormattedText([("class:dockey", "key: "), ("", key_info)])
