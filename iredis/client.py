@@ -500,7 +500,7 @@ class Client:
 
         encoding = nativestr(self.execute("object encoding", key))
 
-        # use `memory usage` to get memory, this command avaiable from redis4.0
+        # use `memory usage` to get memory, this command available from redis4.0
         mem = ""
         if config.version and StrictVersion(config.version) >= StrictVersion("4.0.0"):
             memory_usage_value = str(self.execute("memory usage", key))
