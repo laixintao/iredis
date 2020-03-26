@@ -2,7 +2,7 @@ import pytest
 import tempfile
 from unittest.mock import patch
 
-from iredis.entry import gather_args, parse_url, DSN, SkipAuthFileHistory
+from iredis.entry import gather_args, parse_url, DSN, SkipAuthFileHistory, write_result
 
 
 @pytest.mark.parametrize(
@@ -221,3 +221,27 @@ def test_history(command, record):
     assert history._loaded_strings == []
     history.append_string(command)
     assert (command in history._loaded_strings) is record
+
+
+def test_write_result_for_str(capsys):
+    write_result("hello")
+    captured = capsys.readouterr()
+    assert captured.out == "hello\n"
+
+
+def test_write_result_for_bytes(capsys):
+    write_result("hello")
+    captured = capsys.readouterr()
+    assert captured.out == "hello\n"
+
+
+def test_write_result_for_formatted_text(capsys):
+    write_result("hello")
+    captured = capsys.readouterr()
+    assert captured.out == "hello\n"
+
+
+def test_write_result_using_pager(capsys):
+    write_result("hello")
+    captured = capsys.readouterr()
+    assert captured.out == "hello\n"
