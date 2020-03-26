@@ -207,17 +207,26 @@ class Client:
         """
         while 1:
             response = self.connection.read_response()
-            yield OutputRender.render_bulk_string_decode(response)
+            if config.raw:
+                yield OutputRender.render_raw(response)
+            else:
+                yield OutputRender.render_bulk_string_decode(response)
 
     def subscribing(self):
         while 1:
             response = self.connection.read_response()
-            yield OutputRender.render_subscribe(response)
+            if config.raw:
+                yield OutputRender.render_raw(response)
+            else:
+                yield OutputRender.render_subscribe(response)
 
     def unsubscribing(self):
         "unsubscribe from all channels"
         response = self.execute("UNSUBSCRIBE")
-        yield OutputRender.render_subscribe(response)
+        if config.raw:
+            yield OutputRender.render_raw(response)
+        else:
+            yield OutputRender.render_subscribe(response)
 
     def split_command_and_pipeline(self, rawinput, completer: IRedisCompleter):
         """
@@ -264,10 +273,10 @@ class Client:
                 confirm = confirm_dangerous_command(input_command_upper)
                 # if we can prompt to user, it's always a tty
                 # so we always yield FormattedText here.
-                if confirm is False:
+                if not config.raw and confirm is False:
                     yield FormattedText([("class:warning", "Canceled!")])
                     return
-                if confirm is True:
+                if not config.raw and confirm is True:
                     yield FormattedText([("class:warning", "Your Call!!")])
 
             self.pre_hook(raw_command, command_name, args, completer)
