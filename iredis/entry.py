@@ -103,6 +103,7 @@ def write_result(text, max_height=None):
         if isinstance(text, FormattedText):
             # TODO convert using buffer, with colose
             text = convert_formatted_text_to_bytes(text)
+            os.environ["LESS"] = "-SRXF"
         # click.echo_via_pager only accepts str
         if config.decode:
             text = text.decode()

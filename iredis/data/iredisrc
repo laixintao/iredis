@@ -32,6 +32,10 @@ shell = True
 # decode redis response, default None
 decode = 
 
+# pager setting when line is too tall
+# By default 'PAGER' environment variable is used
+# pager = less -SRXF
+
 # iredis will send a `INFO` command to get the server's version, this option can
 # disable it
 no_info = False

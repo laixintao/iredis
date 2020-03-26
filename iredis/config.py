@@ -38,6 +38,7 @@ class Config:
         self.no_info = None
         self.bottom_bar = None
         self.shell = None
+        self.pager = None
 
         self.warning = True
 
@@ -122,5 +123,6 @@ def load_config_files(iredisrc):
     config.history_location = config_obj["main"]["history_location"]
     config.alias_dsn = config_obj["alias_dsn"]
     config.shell = config_obj["main"].as_bool("shell")
+    config.pager = config_obj["main"].get("pager")
 
     return config_obj

@@ -1,16 +1,17 @@
 """
 IRedis client.
 """
-import logging
 import re
+import os
 import sys
-from distutils.version import StrictVersion
-from importlib_resources import read_text
+import logging
 from subprocess import run
+from importlib_resources import read_text
+from distutils.version import StrictVersion
 
 import redis
-from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.shortcuts import clear
+from prompt_toolkit.formatted_text import FormattedText
 from redis.connection import Connection, SSLConnection, UnixDomainSocketConnection
 from redis.exceptions import AuthenticationError, ConnectionError, TimeoutError
 
@@ -84,6 +85,7 @@ class Client:
 
         # all command upper case
         self.answer_callbacks = command2callback
+        self.set_default_pager(config)
         try:
             self.connection.connect()
         except Exception as e:
@@ -96,6 +98,27 @@ class Client:
                 config.no_version_reason = str(e)
         else:
             config.no_version_reason = "--no-info flag activated"
+
+    def set_default_pager(self, config):
+        configured_pager = config.pager
+        os_environ_pager = os.environ.get("PAGER")
+
+        if configured_pager:
+            logger.info('Default pager found in config file: "%s"', configured_pager)
+            os.environ["PAGER"] = configured_pager
+        elif os_environ_pager:
+            logger.info(
+                'Default pager found in PAGER environment variable: "%s"',
+                os_environ_pager,
+            )
+            os.environ["PAGER"] = os_environ_pager
+        else:
+            logger.info("No default pager found in environment. Using os default pager")
+
+        # Set default set of less recommended options, if they are not already set.
+        # They are ignored if pager is different than less.
+        if not os.environ.get("LESS"):
+            os.environ["LESS"] = "-SRXF"
 
     def get_server_info(self):
         # safe to decode Redis's INFO response
