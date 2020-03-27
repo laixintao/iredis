@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 import sys
+import fileinput
 
 
 def wrappager(boundary):
     print(boundary)
-    while 1:
-        buf = sys.stdin.read(2048)
-        if not buf:
-            break
-        sys.stdout.write(buf)
+    for line in fileinput.input(files="-"):
+        sys.stdout.write(line)
     print(boundary)
 
 
