@@ -41,6 +41,16 @@ def test_command_entry_tty(is_tty, raw_arg_is_raw, final_config_is_raw, config):
         assert config.raw == final_config_is_raw
 
 
+def test_disable_pager():
+    from iredis.config import config
+
+    gather_args.main(["iredis", "--decode", "utf-8"], standalone_mode=False)
+    assert config.enable_pager
+
+    gather_args.main(["iredis", "--no-pager"], standalone_mode=False)
+    assert not config.enable_pager
+
+
 def test_command_with_decode_utf_8():
     from iredis.config import config
 

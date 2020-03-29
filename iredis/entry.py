@@ -99,11 +99,10 @@ def write_result(text, max_height=None):
             text = text.encode()
 
     # using pager if too tall
-    if max_height and is_too_tall(text, max_height):
+    if max_height and config.enable_pager and is_too_tall(text, max_height):
         if isinstance(text, FormattedText):
-            # TODO convert using buffer, with colose
             text = convert_formatted_text_to_bytes(text)
-            os.environ["LESS"] = "-SRXF"
+            os.environ["LESS"] = "-SRX"
         # click.echo_via_pager only accepts str
         if config.decode:
             text = text.decode()
@@ -299,6 +298,7 @@ Use Redis URL to indicate connection(Can set with env `IREDIS_URL`), Example:
     unix://[[username]:[password]]@/path/to/socket.sock?db=0
 """
 SHELL = """Allow to run shell commands, default to True."""
+PAGER_HELP = """Using pager when output is too tall for your window, default to True."""
 
 # command line entry here...
 @click.command()
@@ -329,6 +329,7 @@ SHELL = """Allow to run shell commands, default to True."""
 @click.option("--raw/--no-raw", default=None, is_flag=True, help=RAW_HELP)
 @click.option("--rainbow/--no-rainbow", default=None, is_flag=True, help=RAINBOW)
 @click.option("--shell/--no-shell", default=None, is_flag=True, help=SHELL)
+@click.option("--pager/--no-pager", default=None, is_flag=True, help=PAGER_HELP)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
 def gather_args(
@@ -347,6 +348,7 @@ def gather_args(
     url,
     socket,
     shell,
+    pager,
 ):
     """
     IRedis: Interactive Redis
@@ -385,6 +387,8 @@ def gather_args(
         config.rainbow = rainbow
     if shell is not None:
         config.shell = shell
+    if pager is not None:
+        config.enable_pager = pager
 
     return ctx
 
