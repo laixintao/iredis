@@ -1,8 +1,16 @@
 import pytest
 import tempfile
 from unittest.mock import patch
+from prompt_toolkit.formatted_text import FormattedText
 
-from iredis.entry import gather_args, parse_url, DSN, SkipAuthFileHistory
+from iredis.entry import (
+    gather_args,
+    parse_url,
+    DSN,
+    SkipAuthFileHistory,
+    write_result,
+    is_too_tall,
+)
 
 
 @pytest.mark.parametrize(
@@ -31,6 +39,16 @@ def test_command_entry_tty(is_tty, raw_arg_is_raw, final_config_is_raw, config):
             raise Exception()
         gather_args.main(call, standalone_mode=False)
         assert config.raw == final_config_is_raw
+
+
+def test_disable_pager():
+    from iredis.config import config
+
+    gather_args.main(["iredis", "--decode", "utf-8"], standalone_mode=False)
+    assert config.enable_pager
+
+    gather_args.main(["iredis", "--no-pager"], standalone_mode=False)
+    assert not config.enable_pager
 
 
 def test_command_with_decode_utf_8():
@@ -221,3 +239,33 @@ def test_history(command, record):
     assert history._loaded_strings == []
     history.append_string(command)
     assert (command in history._loaded_strings) is record
+
+
+def test_write_result_for_str(capsys):
+    write_result("hello")
+    captured = capsys.readouterr()
+    assert captured.out == "hello\n"
+
+
+def test_write_result_for_bytes(capsys):
+    write_result(b"hello")
+    captured = capsys.readouterr()
+    assert captured.out == "hello\n"
+
+
+def test_write_result_for_formatted_text():
+    ft = FormattedText([("class:keyword", "set"), ("class:string", "hello world")])
+    # just this test not raise means ok
+    write_result(ft)
+
+
+def test_is_too_tall_for_formatted_text():
+    ft = FormattedText([("class:key", f"key-{index}\n") for index in range(21)])
+    assert is_too_tall(ft, 20)
+    assert not is_too_tall(ft, 22)
+
+
+def test_is_too_tall_for_bytes():
+    byte_text = b"".join([b"key\n" for index in range(21)])
+    assert is_too_tall(byte_text, 20)
+    assert not is_too_tall(byte_text, 23)

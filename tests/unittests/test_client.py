@@ -166,7 +166,7 @@ def test_auto_select_db_and_auth_for_reconnect(iredis_client, config):
     assert iredis_client.connection.db == 2
 
     resp = next(iredis_client.send_command("auth 123"))
-    assert "Client sent AUTH, but no password is set" in resp
+    assert b"Client sent AUTH, but no password is set" in resp
     assert iredis_client.connection.password is None
 
     next(iredis_client.send_command("config set requirepass 'abc'"))
@@ -215,9 +215,7 @@ def test_can_not_connect_on_startup(capfd):
 def test_peek_key_not_exist(iredis_client, clean_redis, config):
     config.raw = False
     peek_result = list(iredis_client.do_peek("non-exist-key"))
-    assert peek_result == [
-        FormattedText([("class:dockey", "non-exist-key doesn't exist.")])
-    ]
+    assert peek_result == ["non-exist-key doesn't exist."]
 
 
 def test_peek_string(iredis_client, clean_redis):
@@ -226,10 +224,17 @@ def test_peek_string(iredis_client, clean_redis):
 
     assert peek_result == [
         FormattedText(
-            [("class:dockey", "key: "), ("", "string (embstr)  mem: 50 bytes, ttl: -1")]
-        ),
-        FormattedText([("class:dockey", "strlen: "), ("", "3")]),
-        FormattedText([("class:dockey", "value: "), ("", '"bar"')]),
+            [
+                ("class:dockey", "key: "),
+                ("", "string (embstr)  mem: 50 bytes, ttl: -1"),
+                ("", "\n"),
+                ("class:dockey", "strlen: "),
+                ("", "3"),
+                ("", "\n"),
+                ("class:dockey", "value: "),
+                ("", '"bar"'),
+            ]
+        )
     ]
 
 
@@ -242,12 +247,12 @@ def test_peek_list_fetch_all(iredis_client, clean_redis):
             [
                 ("class:dockey", "key: "),
                 ("", "list (quicklist)  mem: 176 bytes, ttl: -1"),
-            ]
-        ),
-        FormattedText([("class:dockey", "llen: "), ("", "5")]),
-        FormattedText([("class:dockey", "elements: ")]),
-        FormattedText(
-            [
+                ("", "\n"),
+                ("class:dockey", "llen: "),
+                ("", "5"),
+                ("", "\n"),
+                ("class:dockey", "elements: "),
+                ("", "\n"),
                 ("", "1)"),
                 ("", " "),
                 ("class:string", '"hello-4"'),
@@ -268,63 +273,28 @@ def test_peek_list_fetch_all(iredis_client, clean_redis):
                 ("", " "),
                 ("class:string", '"hello-0"'),
             ]
-        ),
+        )
     ]
 
 
 def test_peek_list_fetch_part(iredis_client, clean_redis):
     clean_redis.lpush("mylist", *[f"hello-{index}" for index in range(40)])
     peek_result = list(iredis_client.do_peek("mylist"))
-    assert len(peek_result[3]) == 83
+    assert len(peek_result[0]) == 91
 
 
 def test_peek_set_fetch_all(iredis_client, clean_redis):
     clean_redis.sadd("myset", *[f"hello-{index}" for index in range(5)])
     peek_result = list(iredis_client.do_peek("myset"))
-
-    assert peek_result[0:3] == [
-        FormattedText(
-            [
-                ("class:dockey", "key: "),
-                ("", "set (hashtable)  mem: 404 bytes, ttl: -1"),
-            ]
-        ),
-        FormattedText([("class:dockey", "cardinality: "), ("", "5")]),
-        FormattedText([("class:dockey", "members: ")]),
-    ]
-    assert sorted(peek_result[3]) == sorted(
-        FormattedText(
-            [
-                ("", "1)"),
-                ("", " "),
-                ("class:string", '"hello-2"'),
-                ("", "\n"),
-                ("", "2)"),
-                ("", " "),
-                ("class:string", '"hello-1"'),
-                ("", "\n"),
-                ("", "3)"),
-                ("", " "),
-                ("class:string", '"hello-0"'),
-                ("", "\n"),
-                ("", "4)"),
-                ("", " "),
-                ("class:string", '"hello-3"'),
-                ("", "\n"),
-                ("", "5)"),
-                ("", " "),
-                ("class:string", '"hello-4"'),
-            ]
-        )
-    )
+    assert len(peek_result[0]) == 27
 
 
 def test_peek_set_fetch_part(iredis_client, clean_redis):
     clean_redis.sadd("myset", *[f"hello-{index}" for index in range(40)])
     peek_result = list(iredis_client.do_peek("myset"))
 
-    assert peek_result[3][10][0] == "class:member"
-    assert peek_result[3][10][1].startswith('"hello-')
+    assert peek_result[0][0] == ("class:dockey", "key: ")
+    assert peek_result[0][1][1].startswith("set (hashtable)  mem: 2")
 
 
 def test_peek_zset_fetch_all(iredis_client, clean_redis):
@@ -332,40 +302,19 @@ def test_peek_zset_fetch_all(iredis_client, clean_redis):
         "myzset", dict(zip([f"hello-{index}" for index in range(3)], range(3)))
     )
     peek_result = list(iredis_client.do_peek("myzset"))
-    assert peek_result == [
-        FormattedText(
-            [("class:dockey", "key: "), ("", "zset (ziplist)  mem: 92 bytes, ttl: -1")]
-        ),
-        FormattedText([("class:dockey", "zcount: "), ("", "3")]),
-        FormattedText([("class:dockey", "members: ")]),
-        FormattedText(
-            [
-                ("", "1)"),
-                ("", " "),
-                ("class:member", '"hello-0"'),
-                ("", "\n"),
-                ("", "2)"),
-                ("", " "),
-                ("class:member", '"0"'),
-                ("", "\n"),
-                ("", "3)"),
-                ("", " "),
-                ("class:member", '"hello-1"'),
-                ("", "\n"),
-                ("", "4)"),
-                ("", " "),
-                ("class:member", '"1"'),
-                ("", "\n"),
-                ("", "5)"),
-                ("", " "),
-                ("class:member", '"hello-2"'),
-                ("", "\n"),
-                ("", "6)"),
-                ("", " "),
-                ("class:member", '"2"'),
-            ]
-        ),
-    ]
+    assert peek_result[0][0:9] == FormattedText(
+        [
+            ("class:dockey", "key: "),
+            ("", "zset (ziplist)  mem: 92 bytes, ttl: -1"),
+            ("", "\n"),
+            ("class:dockey", "zcount: "),
+            ("", "3"),
+            ("", "\n"),
+            ("class:dockey", "members: "),
+            ("", "\n"),
+            ("", "1)"),
+        ]
+    )
 
 
 def test_peek_zset_fetch_part(iredis_client, clean_redis):
@@ -373,7 +322,18 @@ def test_peek_zset_fetch_part(iredis_client, clean_redis):
         "myzset", dict(zip([f"hello-{index}" for index in range(40)], range(40)))
     )
     peek_result = list(iredis_client.do_peek("myzset"))
-    assert len(peek_result[3]) == 199
+    assert peek_result[0][0:8] == FormattedText(
+        [
+            ("class:dockey", "key: "),
+            ("", "zset (ziplist)  mem: 556 bytes, ttl: -1"),
+            ("", "\n"),
+            ("class:dockey", "zcount: "),
+            ("", "40"),
+            ("", "\n"),
+            ("class:dockey", "members (first 40): "),
+            ("", "\n"),
+        ]
+    )
 
 
 def test_peek_hash_fetch_all(iredis_client, clean_redis):
@@ -382,37 +342,7 @@ def test_peek_hash_fetch_all(iredis_client, clean_redis):
     ):
         clean_redis.hset("myhash", key, value)
     peek_result = list(iredis_client.do_peek("myhash"))
-    assert peek_result == [
-        FormattedText(
-            [("class:dockey", "key: "), ("", "hash (ziplist)  mem: 104 bytes, ttl: -1")]
-        ),
-        FormattedText([("class:dockey", "hlen: "), ("", "3")]),
-        FormattedText([("class:dockey", "fields: ")]),
-        FormattedText(
-            [
-                ("", "1)"),
-                ("", " "),
-                ("class:field", '"hello-0"'),
-                ("", "\n"),
-                ("", "   "),
-                ("class:string", '"hi-0"'),
-                ("", "\n"),
-                ("", "2)"),
-                ("", " "),
-                ("class:field", '"hello-1"'),
-                ("", "\n"),
-                ("", "   "),
-                ("class:string", '"hi-1"'),
-                ("", "\n"),
-                ("", "3)"),
-                ("", " "),
-                ("class:field", '"hello-2"'),
-                ("", "\n"),
-                ("", "   "),
-                ("class:string", '"hi-2"'),
-            ]
-        ),
-    ]
+    assert len(peek_result[0]) == 28
 
 
 def test_peek_hash_fetch_part(iredis_client, clean_redis):
@@ -422,23 +352,35 @@ def test_peek_hash_fetch_part(iredis_client, clean_redis):
     ):
         clean_redis.hset("myhash", key, value)
     peek_result = list(iredis_client.do_peek("myhash"))
-    assert ("class:string", '"hi-10"') in peek_result[3]
-    assert ("class:field", '"hello-10"') in peek_result[3]
+    assert len(peek_result[0]) == 707
 
 
 def test_peek_stream(iredis_client, clean_redis):
     clean_redis.xadd("mystream", {"foo": "bar", "hello": "world"})
     peek_result = list(iredis_client.do_peek("mystream"))
-    assert peek_result[0:1] == [
-        FormattedText(
-            [
-                ("class:dockey", "key: "),
-                ("", "stream (unknown)  mem: 601 bytes, ttl: -1"),
-            ]
-        )
-    ]
-    assert ("class:string", '"length"') in peek_result[2]
-    assert ("class:string", '"radix-tree-keys"') in peek_result[2]
+
+    assert peek_result[0][0:18] == FormattedText(
+        [
+            ("class:dockey", "key: "),
+            ("", "stream (unknown)  mem: 601 bytes, ttl: -1"),
+            ("", "\n"),
+            ("class:dockey", "XINFO: "),
+            ("", "\n"),
+            ("", " 1)"),
+            ("", " "),
+            ("class:string", '"length"'),
+            ("", "\n"),
+            ("", " 2)"),
+            ("", " "),
+            ("class:string", '"1"'),
+            ("", "\n"),
+            ("", " 3)"),
+            ("", " "),
+            ("class:string", '"radix-tree-keys"'),
+            ("", "\n"),
+            ("", " 4)"),
+        ]
+    )
 
 
 def test_mem_not_called_before_redis_4(config, iredis_client, clean_redis):

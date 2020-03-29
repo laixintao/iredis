@@ -1,16 +1,17 @@
 """
 IRedis client.
 """
-import logging
 import re
+import os
 import sys
-from distutils.version import StrictVersion
-from importlib_resources import read_text
+import logging
 from subprocess import run
+from importlib_resources import read_text
+from distutils.version import StrictVersion
 
 import redis
-from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.shortcuts import clear
+from prompt_toolkit.formatted_text import FormattedText
 from redis.connection import Connection, SSLConnection, UnixDomainSocketConnection
 from redis.exceptions import AuthenticationError, ConnectionError, TimeoutError
 
@@ -21,7 +22,12 @@ from .completers import IRedisCompleter
 from .config import config
 from .exceptions import NotRedisCommand
 from .renders import OutputRender
-from .utils import compose_command_syntax, nativestr, exit
+from .utils import (
+    compose_command_syntax,
+    nativestr,
+    exit,
+    convert_formatted_text_to_bytes,
+)
 from .warning import confirm_dangerous_command
 
 logger = logging.getLogger(__name__)
@@ -79,6 +85,7 @@ class Client:
 
         # all command upper case
         self.answer_callbacks = command2callback
+        self.set_default_pager(config)
         try:
             self.connection.connect()
         except Exception as e:
@@ -91,6 +98,27 @@ class Client:
                 config.no_version_reason = str(e)
         else:
             config.no_version_reason = "--no-info flag activated"
+
+    def set_default_pager(self, config):
+        configured_pager = config.pager
+        os_environ_pager = os.environ.get("PAGER")
+
+        if configured_pager:
+            logger.info('Default pager found in config file: "%s"', configured_pager)
+            os.environ["PAGER"] = configured_pager
+        elif os_environ_pager:
+            logger.info(
+                'Default pager found in PAGER environment variable: "%s"',
+                os_environ_pager,
+            )
+            os.environ["PAGER"] = os_environ_pager
+        else:
+            logger.info("No default pager found in environment. Using os default pager")
+
+        # Set default set of less recommended options, if they are not already set.
+        # They are ignored if pager is different than less.
+        if not os.environ.get("LESS"):
+            os.environ["LESS"] = "-SRXF"
 
     def get_server_info(self):
         # safe to decode Redis's INFO response
@@ -157,24 +185,18 @@ class Client:
                 return response
         raise last_error
 
-    def _dynamic_render(self, command_name, response):
-        """
-        Render command result using callback
-
-        :param command_name: command name, (will be converted
-            to UPPER case;
-        """
-        return OutputRender.dynamic_render(command_name=command_name, response=response)
-
     def render_response(self, response, command_name):
         "Parses a response from the Redis server"
         logger.info(f"[Redis-Server] Response: {response}")
+        if config.raw:
+            callback = OutputRender.render_raw
         # if in transaction, use queue render first
-        if config.transaction:
+        elif config.transaction:
             callback = renders.OutputRender.render_transaction_queue
-            rendered = callback(response)
         else:
-            rendered = self._dynamic_render(command_name, response)
+            callback = OutputRender.get_render(command_name=command_name)
+        rendered = callback(response)
+        logger.info(f"[render result] {rendered}")
         return rendered
 
     def monitor(self):
@@ -185,17 +207,26 @@ class Client:
         """
         while 1:
             response = self.connection.read_response()
-            yield OutputRender.render_bulk_string_decode(response)
+            if config.raw:
+                yield OutputRender.render_raw(response)
+            else:
+                yield OutputRender.render_bulk_string_decode(response)
 
     def subscribing(self):
         while 1:
             response = self.connection.read_response()
-            yield OutputRender.render_subscribe(response)
+            if config.raw:
+                yield OutputRender.render_raw(response)
+            else:
+                yield OutputRender.render_subscribe(response)
 
     def unsubscribing(self):
         "unsubscribe from all channels"
         response = self.execute("UNSUBSCRIBE")
-        yield OutputRender.render_subscribe(response)
+        if config.raw:
+            yield OutputRender.render_raw(response)
+        else:
+            yield OutputRender.render_subscribe(response)
 
     def split_command_and_pipeline(self, rawinput, completer: IRedisCompleter):
         """
@@ -242,10 +273,10 @@ class Client:
                 confirm = confirm_dangerous_command(input_command_upper)
                 # if we can prompt to user, it's always a tty
                 # so we always yield FormattedText here.
-                if confirm is False:
+                if not config.raw and confirm is False:
                     yield FormattedText([("class:warning", "Canceled!")])
                     return
-                if confirm is True:
+                if not config.raw and confirm is True:
                     yield FormattedText([("class:warning", "Your Call!!")])
 
             self.pre_hook(raw_command, command_name, args, completer)
@@ -261,6 +292,8 @@ class Client:
             if shell_command and config.shell:
                 # pass the raw response of redis to shell command
                 if isinstance(redis_resp, list):
+                    # FIXME not handling nested list, use renders.render_raw
+                    # instead
                     stdin = b"\n".join(redis_resp)
                 else:
                     stdin = redis_resp
@@ -287,7 +320,11 @@ class Client:
                     yield from self.unsubscribing()
         except Exception as e:
             logger.exception(e)
-            yield OutputRender.render_error(str(e))
+            if config.raw:
+                render_callback = OutputRender.render_raw
+            else:
+                render_callback = OutputRender.render_error
+            yield render_callback(f"ERROR {str(e)}".encode())
         finally:
             config.withscores = False
 
@@ -346,7 +383,6 @@ class Client:
         variables = m.variables()
         # zset withscores
         withscores = variables.get("withscores")
-        logger.debug(f"[PRE HOOK] withscores: {withscores}")
         if withscores:
             config.withscores = True
 
@@ -404,7 +440,10 @@ class Client:
             ("", "\n\n"),
         ]
 
-        return FormattedText(summary + rendered_detail)
+        to_render = FormattedText(summary + rendered_detail)
+        if config.raw:
+            return convert_formatted_text_to_bytes(to_render)
+        return to_render
 
     def do_peek(self, key):
         """
@@ -490,12 +529,12 @@ class Client:
             yield FormattedText([("class:dockey", "XINFO: ")])
             yield renders.OutputRender.render_list(xinfo)
 
-        def _none(key):
-            yield f"Key {key} doesn't exist."
-
+        # incase the result is too long, we yield only once so the outputer
+        # can pager it.
+        peek_response = []
         key_type = nativestr(self.execute("type", key))
         if key_type == "none":
-            yield FormattedText([("class:dockey", f"{key} doesn't exist.")])
+            yield f"{key} doesn't exist."
             return
 
         encoding = nativestr(self.execute("object encoding", key))
@@ -511,14 +550,28 @@ class Client:
         key_info = f"{key_type} ({encoding}){mem}, ttl: {ttl}"
 
         # FIXME raw write_result parse FormattedText
-        yield FormattedText([("class:dockey", "key: "), ("", key_info)])
+        peek_response.append(FormattedText([("class:dockey", "key: "), ("", key_info)]))
 
-        yield from {
+        detail_action_fun = {
             "string": _string,
             "list": _list,
             "set": _set,
             "zset": _zset,
             "hash": _hash,
             "stream": _stream,
-            "none": _none,
-        }[key_type](key)
+        }[key_type]
+        detail = list(detail_action_fun(key))
+        peek_response.extend(detail)
+
+        # merge them into only one FormattedText
+        flat_formatted_text_pair = []
+        for index, formatted_text in enumerate(peek_response):
+            for ft in formatted_text:
+                flat_formatted_text_pair.append(ft)
+            if index < len(peek_response) - 1:
+                flat_formatted_text_pair.append(renders.NEWLINE_TUPLE)
+
+        if config.raw:
+            yield convert_formatted_text_to_bytes(flat_formatted_text_pair)
+            return
+        yield FormattedText(flat_formatted_text_pair)
