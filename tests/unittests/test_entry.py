@@ -1,8 +1,16 @@
 import pytest
 import tempfile
 from unittest.mock import patch
+from prompt_toolkit.formatted_text import FormattedText
 
-from iredis.entry import gather_args, parse_url, DSN, SkipAuthFileHistory, write_result
+from iredis.entry import (
+    gather_args,
+    parse_url,
+    DSN,
+    SkipAuthFileHistory,
+    write_result,
+    is_too_tall,
+)
 
 
 @pytest.mark.parametrize(
@@ -230,18 +238,24 @@ def test_write_result_for_str(capsys):
 
 
 def test_write_result_for_bytes(capsys):
-    write_result("hello")
+    write_result(b"hello")
     captured = capsys.readouterr()
     assert captured.out == "hello\n"
 
 
-def test_write_result_for_formatted_text(capsys):
-    write_result("hello")
-    captured = capsys.readouterr()
-    assert captured.out == "hello\n"
+def test_write_result_for_formatted_text():
+    ft = FormattedText([("class:keyword", "set"), ("class:string", "hello world")])
+    # just this test not raise means ok
+    write_result(ft)
 
 
-def test_write_result_using_pager(capsys):
-    write_result("hello")
-    captured = capsys.readouterr()
-    assert captured.out == "hello\n"
+def test_is_too_tall_for_formatted_text():
+    ft = FormattedText([("class:key", f"key-{index}\n") for index in range(21)])
+    assert is_too_tall(ft, 20)
+    assert not is_too_tall(ft, 22)
+
+
+def test_is_too_tall_for_bytes():
+    byte_text = b"".join([b"key\n" for index in range(21)])
+    assert is_too_tall(byte_text, 20)
+    assert not is_too_tall(byte_text, 23)
