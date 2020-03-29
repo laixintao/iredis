@@ -1,4 +1,9 @@
-### 1.5
+## 1.6
+
+- Feature: support pager. You can disable it using `--no-pager` or in your
+  `iredisrc`, or change the pager behavior by setting `pager` in `iredisrc`.
+
+## 1.5
 
 - Bugfix: PEEK command do not use MEMORY USAGE before redis version 4.0.
 - Feature: Support disable shell pipeline feature in iredisrc. (Thanks
