@@ -1,3 +1,7 @@
+### 1.6.1
+
+- Bugfix: Dangerous command will still run even user canceled.
+
 ## 1.6
 
 - Feature: support pager. You can disable it using `--no-pager` or in your
