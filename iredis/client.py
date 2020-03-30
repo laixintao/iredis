@@ -271,13 +271,12 @@ class Client:
             # Confirm for dangerous command
             if config.warning:
                 confirm = confirm_dangerous_command(input_command_upper)
-                # if we can prompt to user, it's always a tty
-                # so we always yield FormattedText here.
-                if not config.raw and confirm is False:
-                    yield FormattedText([("class:warning", "Canceled!")])
+                if confirm is True:
+                    print("Your Call!!", file=sys.stderr)
+                elif confirm is False:
+                    print("Canceled!", file=sys.stderr)
                     return
-                if not config.raw and confirm is True:
-                    yield FormattedText([("class:warning", "Your Call!!")])
+                # None: continue...
 
             self.pre_hook(raw_command, command_name, args, completer)
             # if raw_command is not supposed to send to server
