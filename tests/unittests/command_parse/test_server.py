@@ -136,3 +136,10 @@ def test_lolwut(judge_command):
         "lolwut VERSION 5 5",
         {"command": "lolwut", "version": "VERSION", "version_num": "5", "any": "5"},
     )
+
+
+def test_info(judge_command):
+    judge_command("info cpu", {"command": "info", "section": "cpu"})
+    judge_command("info", {"command": "info"})
+    judge_command("info all", {"command": "info", "section": "all"})
+    judge_command("info CPU", {"command": "info", "section": "CPU"})

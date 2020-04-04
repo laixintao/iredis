@@ -79,7 +79,6 @@ CONST = {
     "overflow": "OVERFLOW",
     "overflow_option": "WRAP SAT FAIL",
     "version": "VERSION",
-
     "graphevent": (
         "ACTIVE-DEFRAG-CYCLE "
         "AOF-FSYNC-ALWAYS "
@@ -97,6 +96,20 @@ CONST = {
         "FAST-COMMAND "
         "FORK "
         "RDB-UNLINK-TEMP-FILE"
+    ),
+    "section": (
+        "SERVER "
+        "CLIENTS "
+        "MEMORY "
+        "PERSISTENCE "
+        "STATS "
+        "REPLICATION "
+        "CPU "
+        "COMMANDSTATS "
+        "CLUSTER "
+        "KEYSPACE "
+        "ALL "
+        "DEFAULT "
     ),
 }
 
@@ -267,6 +280,7 @@ OVERFLOW_OPTION = fr"(?P<overflow_option>{c('overflow_option')})"
 KEEPTTL = fr"(?P<keepttl>{c('keepttl')})"
 GRAPHEVENT = fr"(?P<graphevent>{c('graphevent')})"
 VERSION = fr"(?P<version>{c('version')})"
+SECTION = fr"(?P<section>{c('section')})"
 
 command_grammar = compile(COMMAND)
 
@@ -298,6 +312,7 @@ NEW_GRAMMAR = {
     "command": fr"\s*",
     "command_ip_port": fr"\s+ {IP} \s+ {PORT} \s*",
     "command_epoch": fr"\s+ {EPOCH} \s*",
+    "command_sectionx": fr"(\s+ {SECTION})? \s*",
     "command_asyncx": fr"(\s+ {ASYNC})? \s*",
     "command_slot_slotsubcmd_nodex": fr"""
         \s+ {SLOT} \s+ {SLOTSUBCMD} (\s+ {NODE})? \s*""",
