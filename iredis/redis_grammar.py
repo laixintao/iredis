@@ -80,22 +80,36 @@ CONST = {
     "overflow_option": "WRAP SAT FAIL",
     "version": "VERSION",
     "graphevent": (
-        "active-defrag-cycle "
-        "aof-fsync-always "
-        "aof-stat "
-        "aof-rewrite-diff-write "
-        "aof-rename "
-        "aof-write "
-        "aof-write-active-child "
-        "aof-write-alone "
-        "aof-write-pending-fsync "
-        "command "
-        "expire-cycle "
-        "eviction-cycle "
-        "eviction-del "
-        "fast-command "
-        "fork "
-        "rdb-unlink-temp-file"
+        "ACTIVE-DEFRAG-CYCLE "
+        "AOF-FSYNC-ALWAYS "
+        "AOF-STAT "
+        "AOF-REWRITE-DIFF-WRITE "
+        "AOF-RENAME "
+        "AOF-WRITE "
+        "AOF-WRITE-ACTIVE-CHILD "
+        "AOF-WRITE-ALONE "
+        "AOF-WRITE-PENDING-FSYNC "
+        "COMMAND "
+        "EXPIRE-CYCLE "
+        "EVICTION-CYCLE "
+        "EVICTION-DEL "
+        "FAST-COMMAND "
+        "FORK "
+        "RDB-UNLINK-TEMP-FILE"
+    ),
+    "section": (
+        "SERVER "
+        "CLIENTS "
+        "MEMORY "
+        "PERSISTENCE "
+        "STATS "
+        "REPLICATION "
+        "CPU "
+        "COMMANDSTATS "
+        "CLUSTER "
+        "KEYSPACE "
+        "ALL "
+        "DEFAULT "
     ),
 }
 
@@ -266,6 +280,7 @@ OVERFLOW_OPTION = fr"(?P<overflow_option>{c('overflow_option')})"
 KEEPTTL = fr"(?P<keepttl>{c('keepttl')})"
 GRAPHEVENT = fr"(?P<graphevent>{c('graphevent')})"
 VERSION = fr"(?P<version>{c('version')})"
+SECTION = fr"(?P<section>{c('section')})"
 
 command_grammar = compile(COMMAND)
 
@@ -297,6 +312,7 @@ NEW_GRAMMAR = {
     "command": fr"\s*",
     "command_ip_port": fr"\s+ {IP} \s+ {PORT} \s*",
     "command_epoch": fr"\s+ {EPOCH} \s*",
+    "command_sectionx": fr"(\s+ {SECTION})? \s*",
     "command_asyncx": fr"(\s+ {ASYNC})? \s*",
     "command_slot_slotsubcmd_nodex": fr"""
         \s+ {SLOT} \s+ {SLOTSUBCMD} (\s+ {NODE})? \s*""",
