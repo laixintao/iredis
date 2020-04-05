@@ -1,3 +1,7 @@
+### 1.6.2
+
+- Bugfix: `INFO` command accepts `section` now.
+
 ### 1.6.1
 
 - Bugfix: Dangerous command will still run even user canceled.
