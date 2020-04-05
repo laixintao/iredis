@@ -36,7 +36,10 @@ like `KEYS *` (see
 - Command highlighting, fully based on redis grammar. Any valid command in
   IRedis shell is a valid redis command.
 - Human-friendly result display.
-- Support URL, `iredis --url redis://example.com:6379/1`.
+- _pipeline_ feature, you can use your favorite shell tools to parse redis'
+  response, like `get json | jq .`.
+- Support pager for long output.
+- Support connection via URL, `iredis --url redis://example.com:6379/1`.
 - Store server configuration: `iredis -d prod-redis` (see [dsn](#using-dsn) for
   more).
 - `peek` command to check the key's type then automatically call
