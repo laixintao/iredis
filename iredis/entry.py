@@ -50,6 +50,8 @@ def setup_log():
             format="%(levelname)5s %(message)s",
             level="DEBUG",
         )
+    else:
+        logging.disable(logging.CRITICAL)
     logger.info("------ iRedis ------")
 
 
