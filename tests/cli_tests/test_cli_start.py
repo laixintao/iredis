@@ -1,5 +1,12 @@
-import os
 import pexpect
+import os
+
+
+def test_start_on_connection_error():
+    cli = pexpect.spawn("iredis -p 12345", timeout=1)
+    cli.logfile_read = open("cli_test.log", "ab")
+    cli.expect("Error 61 connecting to 127.0.0.1:12345. Connection refused.")
+    cli.close()
 
 
 def test_short_help_option(config):
@@ -40,6 +47,6 @@ def test_connection_using_url_from_env(clean_redis):
 
 
 def test_connect_via_socket():
-    c = pexpect.spawn("iredis -s /tmp/iredis9.sock", timeout=2)
+    c = pexpect.spawn("iredis -s /tmp/redis/redis.sock", timeout=2)
     c.logfile_read = open("cli_test.log", "ab")
-    c.expect("redis /tmp/iredis9.sock")
+    c.expect("redis /tmp/redis/redis.sock")
