@@ -83,8 +83,10 @@ def cli():
     )
     f.write(config_content)
     f.close()
+    env = os.environ
+    env['PROMPT_TOOLKIT_NO_CPR'] = "1"
 
-    child = pexpect.spawn(f"iredis -n 15 --iredisrc {f.name}", timeout=TIMEOUT)
+    child = pexpect.spawn(f"iredis -n 15 --iredisrc {f.name}", timeout=TIMEOUT, env=env)
     child.logfile_read = open("cli_test.log", "ab")
     child.expect(["https://iredis.io/issues", "127.0.0.1"])
     yield child
