@@ -135,3 +135,11 @@ def cli_without_warning():
     yield cli
     cli.close()
     os.remove("/tmp/iredisrc")
+
+
+@pytest.fixture
+def fake_redis_socket():
+    import socket as s
+
+    sock = s.socket(s.AF_UNIX)
+    sock.bind("/tmp/test.sock")

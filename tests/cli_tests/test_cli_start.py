@@ -1,5 +1,6 @@
 import pexpect
 import os
+from textwrap import dedent
 
 
 def test_start_on_connection_error():
@@ -46,7 +47,16 @@ def test_connection_using_url_from_env(clean_redis):
     c.close()
 
 
-def test_connect_via_socket():
-    c = pexpect.spawn("iredis -s /tmp/redis/redis.sock", timeout=2)
+def test_connect_via_socket(fake_redis_socket):
+    config_content = dedent(
+        """
+        [main]
+        log_location = /tmp/iredis1.log
+        """
+    )
+    with open("/tmp/iredisrc", "w+") as etc_config:
+        etc_config.write(config_content)
+
+    c = pexpect.spawn("iredis --iredisrc /tmp/iredisrc -s /tmp/test.sock", timeout=2)
     c.logfile_read = open("cli_test.log", "ab")
-    c.expect("redis /tmp/redis/redis.sock")
+    c.expect("redis /tmp/test.sock")
