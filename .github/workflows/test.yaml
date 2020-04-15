@@ -17,10 +17,9 @@ jobs:
 
     services:
       redis:
-        image: redis
         ports:
           - 6379:6379
-        options: -v /tmp/redis:/tmp/redis --entrypoint redis-server --unixsocket /tmp/redis/redis.sock
+        options: -v /tmp/redis:/tmp/redis redis redis-server --unixsocket /tmp/redis/redis.sock
 
     steps:
       - uses: actions/checkout@v2
