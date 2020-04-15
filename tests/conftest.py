@@ -84,7 +84,7 @@ def cli():
     f.write(config_content)
     f.close()
     env = os.environ
-    env['PROMPT_TOOLKIT_NO_CPR'] = "1"
+    env["PROMPT_TOOLKIT_NO_CPR"] = "1"
 
     child = pexpect.spawn(f"iredis -n 15 --iredisrc {f.name}", timeout=TIMEOUT, env=env)
     child.logfile_read = open("cli_test.log", "ab")

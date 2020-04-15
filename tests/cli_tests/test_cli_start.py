@@ -5,7 +5,7 @@ import os
 def test_start_on_connection_error():
     cli = pexpect.spawn("iredis -p 12345", timeout=1)
     cli.logfile_read = open("cli_test.log", "ab")
-    cli.expect("Error 61 connecting to 127.0.0.1:12345. Connection refused.")
+    cli.expect("Error \d+ connecting to 127.0.0.1:12345. Connection refused.")
     cli.close()
 
 
