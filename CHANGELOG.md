@@ -1,6 +1,7 @@
 ### 1.6.2
 
 - Bugfix: `INFO` command accepts `section` now.
+- Bugfix: refused to start when can not create connection.
 
 ### 1.6.1
 
