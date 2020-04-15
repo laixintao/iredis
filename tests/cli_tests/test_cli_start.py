@@ -1,5 +1,14 @@
-import os
 import pexpect
+import os
+import pytest
+from textwrap import dedent
+
+
+def test_start_on_connection_error():
+    cli = pexpect.spawn("iredis -p 12345", timeout=1)
+    cli.logfile_read = open("cli_test.log", "ab")
+    cli.expect(r"Error \d+ connecting to 127.0.0.1:12345. Connection refused.")
+    cli.close()
 
 
 def test_short_help_option(config):
@@ -39,7 +48,22 @@ def test_connection_using_url_from_env(clean_redis):
     c.close()
 
 
-def test_connect_via_socket():
-    c = pexpect.spawn("iredis -s /tmp/iredis9.sock", timeout=2)
+@pytest.mark.xfail(reason="current test in github action, socket not supported.")
+# https://github.community/t5/GitHub-Actions/Job-service-command/td-p/33901#
+# https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idservices
+def test_connect_via_socket(fake_redis_socket):
+    config_content = dedent(
+        """
+        [main]
+        log_location = /tmp/iredis1.log
+        no_info=True
+        """
+    )
+    with open("/tmp/iredisrc", "w+") as etc_config:
+        etc_config.write(config_content)
+
+    c = pexpect.spawn("iredis --iredisrc /tmp/iredisrc -s /tmp/test.sock", timeout=2)
     c.logfile_read = open("cli_test.log", "ab")
-    c.expect("redis /tmp/iredis9.sock")
+    c.expect("redis /tmp/test.sock")
+
+    c.close()

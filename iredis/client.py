@@ -90,6 +90,7 @@ class Client:
             self.connection.connect()
         except Exception as e:
             print(str(e), file=sys.stderr)
+            sys.exit(1)
         if not config.no_info:
             try:
                 self.get_server_info()
