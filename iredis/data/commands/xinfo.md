@@ -101,7 +101,7 @@ of `XINFO STREAM`, with some additional information:
 2. Groups, consumers and PELs are returned.
 
 The `COUNT` option is used to limit the amount of stream/PEL entries that are
-returned (The first <count> entries are returned). The default `COUNT` is 10 and
+returned (The first `<count>` entries are returned). The default `COUNT` is 10 and
 a `COUNT` of 0 means that all entries will be returned (Execution time may be
 long if the stream has a lot of entries)
 
