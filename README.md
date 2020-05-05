@@ -190,6 +190,17 @@ This is a command-line tool, so we don't write logs to stdout.
 You can `tail -f ~/.iredis.log` to see logs, the log is pretty clear, you can
 see what actually happens from log files.
 
+### Catch Up with Latest Redis-doc
+
+IRedis use a git submodule to track current-up-to-date redis-doc version. To
+catch up with latest:
+
+1. Git pull in redis-doc
+2. Copy doc files to `/data`: `cp -r redis-doc/commands* iredis/data`
+3. Prettier
+   markdown`prettier --prose-wrap always iredis/data/commands/*.md --write`
+4. Check the diff, update IRedis' code if needed.
+
 ## Related Projects
 
 - [redis-tui](https://github.com/mylxsw/redis-tui)

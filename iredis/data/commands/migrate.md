@@ -65,9 +65,12 @@ a single key exists.
   migrate all the keys that follow the `KEYS` option (see the above section for
   more info).
 - `AUTH` -- Authenticate with the given password to the remote instance.
+- `AUTH2` -- Authenticate with the given username and password pair (Redis 6 or
+  greater ACL auth style).
 
 `COPY` and `REPLACE` are available only in 3.0 and above. `KEYS` is available
 starting with Redis 3.0.6. `AUTH` is available starting with Redis 4.0.7.
+`AUTH2` is available starting with Redis 6.0.0.
 
 @return
 
