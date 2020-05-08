@@ -24,7 +24,7 @@ def test_short_help_option(config):
 
 def test_server_version_in_starting():
     c = pexpect.spawn("iredis", timeout=2)
-    c.expect("redis-server  5")
+    c.expect("redis-server  \d")
     c.close()
 
 
