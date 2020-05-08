@@ -65,7 +65,7 @@ jobs:
         with:
           path: venv
           # Look to see if there is a cache hit for the corresponding requirements file
-          key: lintenv-v1
+          key: lintenv-v2
       - name: Install Dependencies
         run: |
           python3 -m venv venv
