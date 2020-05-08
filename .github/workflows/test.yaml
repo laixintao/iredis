@@ -18,7 +18,7 @@ jobs:
 
     services:
       redis:
-        image: redis: ${{ matric.redis }}
+        image: redis:${{ matric.redis }}
         ports:
           - 6379:6379
         options: --entrypoint redis-server
