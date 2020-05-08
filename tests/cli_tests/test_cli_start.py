@@ -23,14 +23,14 @@ def test_short_help_option(config):
 
 
 @pytest.mark.skipif("int(os.environ['REDIS_VERSION']) != 5")
-def test_server_version_in_starting():
+def test_server_version_in_starting_on5():
     c = pexpect.spawn("iredis", timeout=2)
     c.expect("redis-server  5")
     c.close()
 
 
 @pytest.mark.skipif("int(os.environ['REDIS_VERSION']) != 6")
-def test_server_version_in_starting():
+def test_server_version_in_starting_on6():
     c = pexpect.spawn("iredis", timeout=2)
     c.expect("redis-server  6")
     c.close()
