@@ -13,11 +13,12 @@ jobs:
       matrix:
         os: [ubuntu-16.04]
         python: ['3.6', '3.7', '3.8']
+        redis: [5, 6]
     runs-on: ${{ matrix.os }}
 
     services:
       redis:
-        image: redis:5
+        image: redis: ${{ matric.redis }}
         ports:
           - 6379:6379
         options: --entrypoint redis-server
@@ -44,6 +45,8 @@ jobs:
           python -c "import sys; print(sys.version)"
           pip list
       - name: Pytest
+        env:
+          REDIS_VERSION: ${{ matrix.redis }}
         run: |
           . venv/bin/activate
           pytest
