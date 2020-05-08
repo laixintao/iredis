@@ -1,5 +1,4 @@
 import re
-import os
 import pytest
 import redis
 from unittest.mock import MagicMock
@@ -161,7 +160,6 @@ def test_not_retry_on_authentication_error(iredis_client, config):
         iredis_client.execute("None", "GET", ["foo"])
 
 
-
 @pytest.mark.skipif("int(os.environ['REDIS_VERSION']) < 6")
 def test_auto_select_db_and_auth_for_reconnect_only_6(iredis_client, config):
     config.retry_times = 2
@@ -171,15 +169,20 @@ def test_auto_select_db_and_auth_for_reconnect_only_6(iredis_client, config):
 
     resp = next(iredis_client.send_command("auth 123"))
 
-    ok_in_redis5 = b"Client sent AUTH, but no password is set" in resp 
-    ok_in_redis6 = b'ERROR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?' in resp
-    assert ok_in_redis5 or ok_in_redis6
+    assert (
+        b"ERROR AUTH <password> called without any "
+        b"password configured for the default user. "
+        b"Are you sure your configuration is correct?" in resp
+    )
     assert iredis_client.connection.password is None
 
     next(iredis_client.send_command("config set requirepass 'abc'"))
     next(iredis_client.send_command("auth abc"))
     assert iredis_client.connection.password == "abc"
-    assert iredis_client.execute("ACL SETUSER", "default", "on",  "nopass", "~*",  "+@all") == b'OK'
+    assert (
+        iredis_client.execute("ACL SETUSER", "default", "on", "nopass", "~*", "+@all")
+        == b"OK"
+    )
 
 
 @pytest.mark.skipif("int(os.environ['REDIS_VERSION']) > 5")
