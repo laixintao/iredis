@@ -93,7 +93,8 @@ def write_result(text, max_height=None):
     """
     logger.info(f"Print result {type(text)}: {text}"[:200])
 
-    # only handle bytes or FormattedText, if it's str, convert to bytes
+    # this function only handle bytes or FormattedText
+    # if it's str, convert to bytes
     if isinstance(text, str):
         if config.decode:
             text = text.encode(config.decode)
@@ -107,9 +108,10 @@ def write_result(text, max_height=None):
             os.environ["LESS"] = "-SRX"
         # click.echo_via_pager only accepts str
         if config.decode:
-            text = text.decode()
+            text = text.decode(config.decode)
         else:
             text = text.decode()
+        # TODO current pager doesn't support colors
         click.echo_via_pager(text)
         return
 
@@ -117,9 +119,6 @@ def write_result(text, max_height=None):
         sys.stdout.buffer.write(text)
         sys.stdout.write("\n")
     else:
-        # TODO
-        # FormattedText to Stringbuffer
-        # click.echo_via_pager if output is too long
         print_formatted_text(text, end="", style=STYLE)
         print_formatted_text()
 
