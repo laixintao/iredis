@@ -1,3 +1,4 @@
+import re
 import pytest
 import redis
 from unittest.mock import MagicMock
@@ -47,7 +48,7 @@ def test_patch_completer():
 
 def test_get_server_verison_after_client(config):
     Client("127.0.0.1", "6379", None)
-    assert config.version.startswith("5.")
+    assert re.match(r"\d+\..*", config.version)
 
     config.version = "Unknown"
     config.no_info = True
@@ -159,13 +160,40 @@ def test_not_retry_on_authentication_error(iredis_client, config):
         iredis_client.execute("None", "GET", ["foo"])
 
 
-def test_auto_select_db_and_auth_for_reconnect(iredis_client, config):
+@pytest.mark.skipif("int(os.environ['REDIS_VERSION']) < 6")
+def test_auto_select_db_and_auth_for_reconnect_only_6(iredis_client, config):
     config.retry_times = 2
     config.raw = True
     next(iredis_client.send_command("select 2"))
     assert iredis_client.connection.db == 2
 
     resp = next(iredis_client.send_command("auth 123"))
+
+    assert (
+        b"ERROR AUTH <password> called without any "
+        b"password configured for the default user. "
+        b"Are you sure your configuration is correct?" in resp
+    )
+    assert iredis_client.connection.password is None
+
+    next(iredis_client.send_command("config set requirepass 'abc'"))
+    next(iredis_client.send_command("auth abc"))
+    assert iredis_client.connection.password == "abc"
+    assert (
+        iredis_client.execute("ACL SETUSER", "default", "on", "nopass", "~*", "+@all")
+        == b"OK"
+    )
+
+
+@pytest.mark.skipif("int(os.environ['REDIS_VERSION']) > 5")
+def test_auto_select_db_and_auth_for_reconnect_only_5(iredis_client, config):
+    config.retry_times = 2
+    config.raw = True
+    next(iredis_client.send_command("select 2"))
+    assert iredis_client.connection.db == 2
+
+    resp = next(iredis_client.send_command("auth 123"))
+
     assert b"Client sent AUTH, but no password is set" in resp
     assert iredis_client.connection.password is None
 

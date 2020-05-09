@@ -36,6 +36,75 @@ same as the last entry ID in case some entry was deleted. Finally the full first
 and last entry in the stream are shown, in order to give some sense about what
 is the stream content.
 
+- `XINFO STREAM <key> FULL [COUNT <count>]`
+
+In this form the command returns the entire state of the stream, including
+entries, groups, consumers and PELs. This form is available since Redis 6.0.
+
+```
+> XADD mystream * foo bar
+"1588152471065-0"
+> XADD mystream * foo bar2
+"1588152473531-0"
+> XGROUP CREATE mystream mygroup 0-0
+OK
+> XREADGROUP GROUP mygroup Alice COUNT 1 STREAMS mystream >
+1) 1) "mystream"
+   2) 1) 1) "1588152471065-0"
+         2) 1) "foo"
+            2) "bar"
+> XINFO STREAM mystream FULL
+ 1) "length"
+ 2) (integer) 2
+ 3) "radix-tree-keys"
+ 4) (integer) 1
+ 5) "radix-tree-nodes"
+ 6) (integer) 2
+ 7) "last-generated-id"
+ 8) "1588152473531-0"
+ 9) "entries"
+10) 1) 1) "1588152471065-0"
+       2) 1) "foo"
+          2) "bar"
+    2) 1) "1588152473531-0"
+       2) 1) "foo"
+          2) "bar2"
+11) "groups"
+12) 1)  1) "name"
+        2) "mygroup"
+        3) "last-delivered-id"
+        4) "1588152471065-0"
+        5) "pel-count"
+        6) (integer) 1
+        7) "pending"
+        8) 1) 1) "1588152471065-0"
+              2) "Alice"
+              3) (integer) 1588152520299
+              4) (integer) 1
+        9) "consumers"
+       10) 1) 1) "name"
+              2) "Alice"
+              3) "seen-time"
+              4) (integer) 1588152520299
+              5) "pel-count"
+              6) (integer) 1
+              7) "pending"
+              8) 1) 1) "1588152471065-0"
+                    2) (integer) 1588152520299
+                    3) (integer) 1
+```
+
+The reported information contains all of the fields reported by the simple form
+of `XINFO STREAM`, with some additional information:
+
+1. Stream entries are returned, including fields and values.
+2. Groups, consumers and PELs are returned.
+
+The `COUNT` option is used to limit the amount of stream/PEL entries that are
+returned (The first `<count>` entries are returned). The default `COUNT` is 10 and
+a `COUNT` of 0 means that all entries will be returned (Execution time may be
+long if the stream has a lot of entries)
+
 - `XINFO GROUPS <key>`
 
 In this form we just get as output all the consumer groups associated with the
@@ -103,3 +172,7 @@ remember the exact syntax, by using the `HELP` subcommand:
 4) STREAM <key>                 -- Show information about the stream.
 5) HELP
 ```
+
+@history
+
+- `>= 6.0.0`: Added the `FULL` option to `XINFO STREAM`.
