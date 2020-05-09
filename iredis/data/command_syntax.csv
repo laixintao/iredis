@@ -28,7 +28,14 @@ connection,ECHO,command_message,render_bulk_string
 connection,PING,command_messagex,render_bulk_string
 connection,QUIT,command,render_simple_string
 connection,SELECT,command_index,render_simple_string
-connection,SWAPDB,command_index_index,render_simple_string
+connection,CLIENT LIST,command_type_conntype_x,render_bulk_string_decode
+connection,CLIENT GETNAME,command,render_bulk_string
+connection,CLIENT ID,command,render_int
+connection,CLIENT KILL,command_clientkill,render_string_or_int
+connection,CLIENT PAUSE,command_timeout,render_simple_string
+connection,CLIENT REPLY,command_switch,render_simple_string
+connection,CLIENT SETNAME,command_value,render_simple_string
+connection,CLIENT UNBLOCK,command_clientid_errorx,render_int
 generic,DEL,command_keys,render_int
 generic,DUMP,command_key,render_bulk_string
 generic,EXISTS,command_keys,render_int
@@ -107,16 +114,9 @@ scripting,SCRIPT EXISTS,command_any,render_list
 scripting,SCRIPT FLUSH,command,render_simple_string
 scripting,SCRIPT KILL,command,render_simple_string
 scripting,SCRIPT LOAD,command_lua_any,render_bulk_string_decode
+server,SWAPDB,command_index_index,render_simple_string
 server,BGREWRITEAOF,command,render_simple_string
 server,BGSAVE,command,render_simple_string
-server,CLIENT GETNAME,command,render_bulk_string
-server,CLIENT ID,command,render_int
-server,CLIENT KILL,command_clientkill,render_string_or_int
-server,CLIENT LIST,command_type_conntype_x,render_bulk_string_decode
-server,CLIENT PAUSE,command_timeout,render_simple_string
-server,CLIENT REPLY,command_switch,render_simple_string
-server,CLIENT SETNAME,command_value,render_simple_string
-server,CLIENT UNBLOCK,command_clientid_errorx,render_int
 server,COMMAND,command,render_list
 server,COMMAND COUNT,command,render_int
 server,COMMAND GETKEYS,command_any,render_list
