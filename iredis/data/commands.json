@@ -1,4 +1,99 @@
 {
+  "ACL LOAD": {
+    "summary": "Reload the ACLs from the configured ACL file",
+    "complexity": "O(N). Where N is the number of configured users.",
+    "since": "6.0.0",
+    "group": "server"
+  },
+  "ACL SAVE": {
+    "summary": "Save the current ACL rules in the configured ACL file",
+    "complexity": "O(N). Where N is the number of configured users.",
+    "since": "6.0.0",
+    "group": "server"
+  },
+  "ACL LIST": {
+    "summary": "List the current ACL rules in ACL config file format",
+    "complexity": "O(N). Where N is the number of configured users.",
+    "since": "6.0.0",
+    "group": "server"
+  },
+  "ACL USERS": {
+    "summary": "List the username of all the configured ACL rules",
+    "complexity": "O(N). Where N is the number of configured users.",
+    "since": "6.0.0",
+    "group": "server"
+  },
+  "ACL SETUSER": {
+    "summary": "Modify or create the rules for a specific ACL user",
+    "complexity": "O(N). Where N is the number of rules provided.",
+    "arguments": [
+      {
+        "name": "rule",
+        "type": "string",
+        "multiple": true
+      }
+    ],
+    "since": "6.0.0",
+    "group": "server"
+  },
+  "ACL DELUSER": {
+    "summary": "Remove the specified ACL users and the associated rules",
+    "complexity": "O(1) amortized time considering the typical user.",
+    "arguments": [
+      {
+        "name": "username",
+        "type": "string",
+        "multiple": true
+      }
+    ],
+    "since": "6.0.0",
+    "group": "server"
+  },
+  "ACL CAT": {
+    "summary": "List the ACL categories or the commands inside a category",
+    "complexity": "O(1) since the categories and commands are a fixed set.",
+    "arguments": [
+      {
+        "name": "categoryname",
+        "type": "string",
+        "optional": true
+      }
+    ],
+    "since": "6.0.0",
+    "group": "server"
+  },
+  "ACL GENPASS": {
+    "summary": "Generate a pseudorandom secure password to use for ACL users",
+    "complexity": "O(1)",
+    "arguments": [
+      {
+        "name": "bits",
+        "type": "integer",
+        "optional": true
+      }
+    ],
+    "since": "6.0.0",
+    "group": "server"
+  },
+  "ACL WHOAMI": {
+    "summary": "Return the name of the user associated to the current connection",
+    "complexity": "O(1)",
+    "since": "6.0.0",
+    "group": "server"
+  },
+  "ACL LOG": {
+    "summary": "List latest events denied because of ACLs in place",
+    "complexity": "O(N) with N being the number of entries shown.",
+    "arguments": [
+      {
+        "name": "count or RESET",
+        "type": "string",
+        "optional": true
+      }
+    ],
+    "since": "6.0.0",
+    "group": "server"
+  },
   "APPEND": {
     "summary": "Append a value to a key",
     "complexity": "O(1). The amortized time complexity is O(1) assuming the appended value is small and the already present value is of any size, since the dynamic string library used by Redis will double the free space available on every reallocation.",
@@ -33,6 +128,16 @@
   },
   "BGSAVE": {
     "summary": "Asynchronously save the dataset to disk",
+    "arguments": [
+      {
+        "name": "schedule",
+        "type": "enum",
+        "enum": [
+          "SCHEDULE"
+        ],
+        "optional": true
+      }
+    ],
     "since": "1.0.0",
     "group": "server"
   },
@@ -45,8 +150,14 @@
         "type": "key"
       },
       {
-        "name": ["start", "end"],
-        "type": ["integer", "integer"],
+        "name": [
+          "start",
+          "end"
+        ],
+        "type": [
+          "integer",
+          "integer"
+        ],
         "optional": true
       }
     ],
@@ -63,26 +174,52 @@
       },
       {
         "command": "GET",
-        "name": ["type", "offset"],
-        "type": ["type", "integer"],
+        "name": [
+          "type",
+          "offset"
+        ],
+        "type": [
+          "type",
+          "integer"
+        ],
         "optional": true
       },
       {
         "command": "SET",
-        "name": ["type", "offset", "value"],
-        "type": ["type", "integer", "integer"],
+        "name": [
+          "type",
+          "offset",
+          "value"
+        ],
+        "type": [
+          "type",
+          "integer",
+          "integer"
+        ],
         "optional": true
       },
       {
         "command": "INCRBY",
-        "name": ["type", "offset", "increment"],
-        "type": ["type", "integer", "integer"],
+        "name": [
+          "type",
+          "offset",
+          "increment"
+        ],
+        "type": [
+          "type",
+          "integer",
+          "integer"
+        ],
         "optional": true
       },
       {
         "command": "OVERFLOW",
         "type": "enum",
-        "enum": ["WRAP", "SAT", "FAIL"],
+        "enum": [
+          "WRAP",
+          "SAT",
+          "FAIL"
+        ],
         "optional": true
       }
     ],
@@ -224,11 +361,27 @@
     "since": "5.0.0",
     "group": "sorted_set"
   },
+  "CLIENT CACHING": {
+    "summary": "Instruct the server about tracking or not keys in the next request",
+    "complexity": "O(1)",
+    "arguments": [
+      {
+        "name": "mode",
+        "type": "enum",
+        "enum": [
+          "YES",
+          "NO"
+        ]
+      }
+    ],
+    "since": "6.0.0",
+    "group": "connection"
+  },
   "CLIENT ID": {
     "summary": "Returns the client ID for the current connection",
     "complexity": "O(1)",
     "since": "5.0.0",
-    "group": "server"
+    "group": "connection"
   },
   "CLIENT KILL": {
     "summary": "Kill the connection of a client",
@@ -248,7 +401,12 @@
       {
         "command": "TYPE",
         "type": "enum",
-        "enum": ["normal", "master", "slave", "pubsub"],
+        "enum": [
+          "normal",
+          "master",
+          "slave",
+          "pubsub"
+        ],
         "optional": true
       },
       {
@@ -265,7 +423,7 @@
       }
     ],
     "since": "2.4.0",
-    "group": "server"
+    "group": "connection"
   },
   "CLIENT LIST": {
     "summary": "Get the list of client connections",
@@ -274,18 +432,29 @@
       {
         "command": "TYPE",
         "type": "enum",
-        "enum": ["normal", "master", "replica", "pubsub"],
+        "enum": [
+          "normal",
+          "master",
+          "replica",
+          "pubsub"
+        ],
         "optional": true
       }
     ],
     "since": "2.4.0",
-    "group": "server"
+    "group": "connection"
   },
   "CLIENT GETNAME": {
     "summary": "Get the current connection name",
     "complexity": "O(1)",
     "since": "2.6.9",
-    "group": "server"
+    "group": "connection"
+  },
+  "CLIENT GETREDIR": {
+    "summary": "Get tracking notifications redirection client ID if any",
+    "complexity": "O(1)",
+    "since": "6.0.0",
+    "group": "connection"
   },
   "CLIENT PAUSE": {
     "summary": "Stop processing commands from clients for some time",
@@ -297,7 +466,7 @@
       }
     ],
     "since": "2.9.50",
-    "group": "server"
+    "group": "connection"
   },
   "CLIENT REPLY": {
     "summary": "Instruct the server whether to reply to commands",
@@ -306,11 +475,15 @@
       {
         "name": "reply-mode",
         "type": "enum",
-        "enum": ["ON", "OFF", "SKIP"]
+        "enum": [
+          "ON",
+          "OFF",
+          "SKIP"
+        ]
       }
     ],
     "since": "3.2",
-    "group": "server"
+    "group": "connection"
   },
   "CLIENT SETNAME": {
     "summary": "Set the current connection name",
@@ -322,7 +495,67 @@
         "type": "string"
       }
     ],
-    "group": "server"
+    "group": "connection"
+  },
+  "CLIENT TRACKING": {
+    "summary": "Enable or disable server assisted client side caching support",
+    "complexity": "O(1)",
+    "arguments": [
+      {
+        "name": "status",
+        "type": "enum",
+        "enum": [
+          "ON",
+          "OFF"
+        ]
+      },
+      {
+        "command": "REDIRECT",
+        "name": "client-id",
+        "type": "integer",
+        "optional": true
+      },
+      {
+        "command": "PREFIX",
+        "name": "prefix",
+        "type": "srting",
+        "optional": true
+      },
+      {
+        "name": "BCAST",
+        "type": "enum",
+        "enum": [
+          "BCAST"
+        ],
+        "optional": true
+      },
+      {
+        "name": "OPTIN",
+        "type": "enum",
+        "enum": [
+          "OPTIN"
+        ],
+        "optional": true
+      },
+      {
+        "name": "OPTOUT",
+        "type": "enum",
+        "enum": [
+          "OPTOUT"
+        ],
+        "optional": true
+      },
+      {
+        "name": "NOLOOP",
+        "type": "enum",
+        "enum": [
+          "NOLOOP"
+        ],
+        "optional": true
+      }
+    ],
+    "since": "6.0.0",
+    "group": "connection"
   },
   "CLIENT UNBLOCK": {
     "summary": "Unblock a client blocked in a blocking command from a different connection",
@@ -335,12 +568,15 @@
       {
         "name": "unblock-type",
         "type": "enum",
-        "enum": ["TIMEOUT", "ERROR"],
+        "enum": [
+          "TIMEOUT",
+          "ERROR"
+        ],
         "optional": true
       }
     ],
     "since": "5.0.0",
-    "group": "server"
+    "group": "connection"
   },
   "CLUSTER ADDSLOTS": {
     "summary": "Assign new hash slots to receiving node",
@@ -405,7 +641,10 @@
       {
         "name": "options",
         "type": "enum",
-        "enum": ["FORCE", "TAKEOVER"],
+        "enum": [
+          "FORCE",
+          "TAKEOVER"
+        ],
         "optional": true
       }
     ],
@@ -511,7 +750,10 @@
       {
         "name": "reset-type",
         "type": "enum",
-        "enum": ["HARD", "SOFT"],
+        "enum": [
+          "HARD",
+          "SOFT"
+        ],
         "optional": true
       }
     ],
@@ -547,7 +789,12 @@
       {
         "name": "subcommand",
         "type": "enum",
-        "enum": ["IMPORTING", "MIGRATING", "STABLE", "NODE"]
+        "enum": [
+          "IMPORTING",
+          "MIGRATING",
+          "STABLE",
+          "NODE"
+        ]
       },
       {
         "name": "node-id",
@@ -854,7 +1101,9 @@
       {
         "name": "async",
         "type": "enum",
-        "enum": ["ASYNC"],
+        "enum": [
+          "ASYNC"
+        ],
         "optional": true
       }
     ],
@@ -867,7 +1116,9 @@
       {
         "name": "async",
         "type": "enum",
-        "enum": ["ASYNC"],
+        "enum": [
+          "ASYNC"
+        ],
         "optional": true
       }
     ],
@@ -883,8 +1134,16 @@
         "type": "key"
       },
       {
-        "name": ["longitude", "latitude", "member"],
-        "type": ["double", "double", "string"],
+        "name": [
+          "longitude",
+          "latitude",
+          "member"
+        ],
+        "type": [
+          "double",
+          "double",
+          "string"
+        ],
         "multiple": true
       }
     ],
@@ -944,7 +1203,12 @@
       {
         "name": "unit",
         "type": "enum",
-        "enum": ["m", "km", "ft", "mi"],
+        "enum": [
+          "m",
+          "km",
+          "ft",
+          "mi"
+        ],
         "optional": true
       }
     ],
@@ -974,24 +1238,35 @@
       {
         "name": "unit",
         "type": "enum",
-        "enum": ["m", "km", "ft", "mi"]
+        "enum": [
+          "m",
+          "km",
+          "ft",
+          "mi"
+        ]
       },
       {
         "name": "withcoord",
         "type": "enum",
-        "enum": ["WITHCOORD"],
+        "enum": [
+          "WITHCOORD"
+        ],
         "optional": true
       },
       {
         "name": "withdist",
         "type": "enum",
-        "enum": ["WITHDIST"],
+        "enum": [
+          "WITHDIST"
+        ],
         "optional": true
       },
       {
         "name": "withhash",
         "type": "enum",
-        "enum": ["WITHHASH"],
+        "enum": [
+          "WITHHASH"
+        ],
         "optional": true
       },
       {
@@ -1003,7 +1278,10 @@
       {
         "name": "order",
         "type": "enum",
-        "enum": ["ASC", "DESC"],
+        "enum": [
+          "ASC",
+          "DESC"
+        ],
         "optional": true
       },
       {
@@ -1041,24 +1319,35 @@
       {
         "name": "unit",
         "type": "enum",
-        "enum": ["m", "km", "ft", "mi"]
+        "enum": [
+          "m",
+          "km",
+          "ft",
+          "mi"
+        ]
       },
       {
         "name": "withcoord",
         "type": "enum",
-        "enum": ["WITHCOORD"],
+        "enum": [
+          "WITHCOORD"
+        ],
         "optional": true
       },
       {
         "name": "withdist",
         "type": "enum",
-        "enum": ["WITHDIST"],
+        "enum": [
+          "WITHDIST"
+        ],
         "optional": true
       },
       {
         "name": "withhash",
         "type": "enum",
-        "enum": ["WITHHASH"],
+        "enum": [
+          "WITHHASH"
+        ],
         "optional": true
       },
       {
@@ -1070,7 +1359,10 @@
       {
         "name": "order",
         "type": "enum",
-        "enum": ["ASC", "DESC"],
+        "enum": [
+          "ASC",
+          "DESC"
+        ],
         "optional": true
       },
       {
@@ -1169,6 +1461,36 @@
     ],
     "since": "2.0.0",
     "group": "hash"
+  },
+  "HELLO": {
+    "summary": "switch Redis protocol",
+    "complexity": "O(1)",
+    "arguments": [
+      {
+        "name": "protover",
+        "type": "integer"
+      },
+      {
+        "command": "AUTH",
+        "name": [
+          "username",
+          "password"
+        ],
+        "type": [
+          "string",
+          "string"
+        ],
+        "optional": true
+      },
+      {
+        "command": "SETNAME",
+        "name": "clientname",
+        "type": "string",
+        "optional": true
+      }
+    ],
+    "since": "6.0.0",
+    "group": "connection"
   },
   "HEXISTS": {
     "summary": "Determine if a hash field exists",
@@ -1304,8 +1626,14 @@
         "type": "key"
       },
       {
-        "name": ["field", "value"],
-        "type": ["string", "string"],
+        "name": [
+          "field",
+          "value"
+        ],
+        "type": [
+          "string",
+          "string"
+        ],
         "multiple": true
       }
     ],
@@ -1321,8 +1649,14 @@
         "type": "key"
       },
       {
-        "name": ["field", "value"],
-        "type": ["string", "string"],
+        "name": [
+          "field",
+          "value"
+        ],
+        "type": [
+          "string",
+          "string"
+        ],
         "multiple": true
       }
     ],
@@ -1490,7 +1824,10 @@
       {
         "name": "where",
         "type": "enum",
-        "enum": ["BEFORE", "AFTER"]
+        "enum": [
+          "BEFORE",
+          "AFTER"
+        ]
       },
       {
         "name": "pivot",
@@ -1713,7 +2050,10 @@
       {
         "name": "key",
         "type": "enum",
-        "enum": ["key", "\"\""]
+        "enum": [
+          "key",
+          "\"\""
+        ]
       },
       {
         "name": "destination-db",
@@ -1726,13 +2066,17 @@
       {
         "name": "copy",
         "type": "enum",
-        "enum": ["COPY"],
+        "enum": [
+          "COPY"
+        ],
         "optional": true
       },
       {
         "name": "replace",
         "type": "enum",
-        "enum": ["REPLACE"],
+        "enum": [
+          "REPLACE"
+        ],
         "optional": true
       },
       {
@@ -1814,8 +2158,14 @@
     "complexity": "O(N) where N is the number of keys to set.",
     "arguments": [
       {
-        "name": ["key", "value"],
-        "type": ["key", "string"],
+        "name": [
+          "key",
+          "value"
+        ],
+        "type": [
+          "key",
+          "string"
+        ],
         "multiple": true
       }
     ],
@@ -1827,8 +2177,14 @@
     "complexity": "O(N) where N is the number of keys to set.",
     "arguments": [
       {
-        "name": ["key", "value"],
-        "type": ["key", "string"],
+        "name": [
+          "key",
+          "value"
+        ],
+        "type": [
+          "key",
+          "string"
+        ],
         "multiple": true
       }
     ],
@@ -1986,8 +2342,12 @@
     "complexity": "O(N) where N is the number of patterns the client is already subscribed to.",
     "arguments": [
       {
-        "name": ["pattern"],
-        "type": ["pattern"],
+        "name": [
+          "pattern"
+        ],
+        "type": [
+          "pattern"
+        ],
         "multiple": true
       }
     ],
@@ -2128,13 +2488,17 @@
       {
         "name": "replace",
         "type": "enum",
-        "enum": ["REPLACE"],
+        "enum": [
+          "REPLACE"
+        ],
         "optional": true
       },
       {
         "name": "absttl",
         "type": "enum",
-        "enum": ["ABSTTL"],
+        "enum": [
+          "ABSTTL"
+        ],
         "optional": true
       },
       {
@@ -2261,7 +2625,11 @@
       {
         "name": "mode",
         "type": "enum",
-        "enum": ["YES", "SYNC", "NO"]
+        "enum": [
+          "YES",
+          "SYNC",
+          "NO"
+        ]
       }
     ],
     "since": "3.2.0",
@@ -2360,19 +2728,27 @@
       {
         "name": "expiration",
         "type": "enum",
-        "enum": ["EX seconds", "PX milliseconds"],
+        "enum": [
+          "EX seconds",
+          "PX milliseconds"
+        ],
         "optional": true
       },
       {
         "name": "condition",
         "type": "enum",
-        "enum": ["NX", "XX"],
+        "enum": [
+          "NX",
+          "XX"
+        ],
         "optional": true
       },
       {
         "name": "keepttl",
         "type": "enum",
-        "enum": ["KEEPTTL"],
+        "enum": [
+          "KEEPTTL"
+        ],
         "optional": true
       }
     ],
@@ -2461,7 +2837,10 @@
       {
         "name": "save-mode",
         "type": "enum",
-        "enum": ["NOSAVE", "SAVE"],
+        "enum": [
+          "NOSAVE",
+          "SAVE"
+        ],
         "optional": true
       }
     ],
@@ -2608,8 +2987,14 @@
       },
       {
         "command": "LIMIT",
-        "name": ["offset", "count"],
-        "type": ["integer", "integer"],
+        "name": [
+          "offset",
+          "count"
+        ],
+        "type": [
+          "integer",
+          "integer"
+        ],
         "optional": true
       },
       {
@@ -2622,13 +3007,18 @@
       {
         "name": "order",
         "type": "enum",
-        "enum": ["ASC", "DESC"],
+        "enum": [
+          "ASC",
+          "DESC"
+        ],
         "optional": true
       },
       {
         "name": "sorting",
         "type": "enum",
-        "enum": ["ALPHA"],
+        "enum": [
+          "ALPHA"
+        ],
         "optional": true
       },
       {
@@ -2691,6 +3081,26 @@
     ],
     "since": "1.0.0",
     "group": "set"
+  },
+  "STRALGO": {
+    "summary": "Run algorithms (currently LCS) against strings",
+    "complexity": "For LCS O(strlen(s1)*strlen(s2))",
+    "arguments": [
+      {
+        "name": "algorithm",
+        "type": "enum",
+        "enum": [
+          "LCS"
+        ]
+      },
+      {
+        "name": "algo-specific-argument",
+        "type": "string",
+        "multiple": true
+      }
+    ],
+    "since": "6.0.0",
+    "group": "string"
   },
   "STRLEN": {
     "summary": "Get the length of the value stored in a key",
@@ -2760,7 +3170,7 @@
       }
     ],
     "since": "4.0.0",
-    "group": "connection"
+    "group": "server"
   },
   "SYNC": {
     "summary": "Internal command used for replication",
@@ -2898,24 +3308,37 @@
       {
         "name": "condition",
         "type": "enum",
-        "enum": ["NX", "XX"],
+        "enum": [
+          "NX",
+          "XX"
+        ],
         "optional": true
       },
       {
         "name": "change",
         "type": "enum",
-        "enum": ["CH"],
+        "enum": [
+          "CH"
+        ],
         "optional": true
       },
       {
         "name": "increment",
         "type": "enum",
-        "enum": ["INCR"],
+        "enum": [
+          "INCR"
+        ],
         "optional": true
       },
       {
-        "name": ["score", "member"],
-        "type": ["double", "string"],
+        "name": [
+          "score",
+          "member"
+        ],
+        "type": [
+          "double",
+          "string"
+        ],
         "multiple": true
       }
     ],
@@ -3002,7 +3425,11 @@
         "command": "AGGREGATE",
         "name": "aggregate",
         "type": "enum",
-        "enum": ["SUM", "MIN", "MAX"],
+        "enum": [
+          "SUM",
+          "MIN",
+          "MAX"
+        ],
         "optional": true
       }
     ],
@@ -3082,7 +3509,9 @@
       {
         "name": "withscores",
         "type": "enum",
-        "enum": ["WITHSCORES"],
+        "enum": [
+          "WITHSCORES"
+        ],
         "optional": true
       }
     ],
@@ -3107,8 +3536,14 @@
       },
       {
         "command": "LIMIT",
-        "name": ["offset", "count"],
-        "type": ["integer", "integer"],
+        "name": [
+          "offset",
+          "count"
+        ],
+        "type": [
+          "integer",
+          "integer"
+        ],
         "optional": true
       }
     ],
@@ -3133,8 +3568,14 @@
       },
       {
         "command": "LIMIT",
-        "name": ["offset", "count"],
-        "type": ["integer", "integer"],
+        "name": [
+          "offset",
+          "count"
+        ],
+        "type": [
+          "integer",
+          "integer"
+        ],
         "optional": true
       }
     ],
@@ -3160,13 +3601,21 @@
       {
         "name": "withscores",
         "type": "enum",
-        "enum": ["WITHSCORES"],
+        "enum": [
+          "WITHSCORES"
+        ],
         "optional": true
       },
       {
         "command": "LIMIT",
-        "name": ["offset", "count"],
-        "type": ["integer", "integer"],
+        "name": [
+          "offset",
+          "count"
+        ],
+        "type": [
+          "integer",
+          "integer"
+        ],
         "optional": true
       }
     ],
@@ -3285,7 +3734,9 @@
       {
         "name": "withscores",
         "type": "enum",
-        "enum": ["WITHSCORES"],
+        "enum": [
+          "WITHSCORES"
+        ],
         "optional": true
       }
     ],
@@ -3311,13 +3762,21 @@
       {
         "name": "withscores",
         "type": "enum",
-        "enum": ["WITHSCORES"],
+        "enum": [
+          "WITHSCORES"
+        ],
         "optional": true
       },
       {
         "command": "LIMIT",
-        "name": ["offset", "count"],
-        "type": ["integer", "integer"],
+        "name": [
+          "offset",
+          "count"
+        ],
+        "type": [
+          "integer",
+          "integer"
+        ],
         "optional": true
       }
     ],
@@ -3384,7 +3843,11 @@
         "command": "AGGREGATE",
         "name": "aggregate",
         "type": "enum",
-        "enum": ["SUM", "MIN", "MAX"],
+        "enum": [
+          "SUM",
+          "MIN",
+          "MAX"
+        ],
         "optional": true
       }
     ],
@@ -3511,8 +3974,14 @@
     "arguments": [
       {
         "command": "CONSUMERS",
-        "name": ["key", "groupname"],
-        "type": ["key", "string"],
+        "name": [
+          "key",
+          "groupname"
+        ],
+        "type": [
+          "key",
+          "string"
+        ],
         "optional": true
       },
       {
@@ -3530,7 +3999,9 @@
       {
         "name": "help",
         "type": "enum",
-        "enum": ["HELP"],
+        "enum": [
+          "HELP"
+        ],
         "optional": true
       }
     ],
@@ -3550,8 +4021,14 @@
         "type": "string"
       },
       {
-        "name": ["field", "value"],
-        "type": ["string", "string"],
+        "name": [
+          "field",
+          "value"
+        ],
+        "type": [
+          "string",
+          "string"
+        ],
         "multiple": true
       }
     ],
@@ -3569,12 +4046,16 @@
       {
         "name": "strategy",
         "type": "enum",
-        "enum": ["MAXLEN"]
+        "enum": [
+          "MAXLEN"
+        ]
       },
       {
         "name": "approx",
         "type": "enum",
-        "enum": ["~"],
+        "enum": [
+          "~"
+        ],
         "optional": true
       },
       {
@@ -3685,7 +4166,9 @@
       {
         "name": "streams",
         "type": "enum",
-        "enum": ["STREAMS"]
+        "enum": [
+          "STREAMS"
+        ]
       },
       {
         "name": "key",
@@ -3707,26 +4190,56 @@
     "arguments": [
       {
         "command": "CREATE",
-        "name": ["key", "groupname", "id-or-$"],
-        "type": ["key", "string", "string"],
+        "name": [
+          "key",
+          "groupname",
+          "id-or-$"
+        ],
+        "type": [
+          "key",
+          "string",
+          "string"
+        ],
         "optional": true
       },
       {
         "command": "SETID",
-        "name": ["key", "groupname", "id-or-$"],
-        "type": ["key", "string", "string"],
+        "name": [
+          "key",
+          "groupname",
+          "id-or-$"
+        ],
+        "type": [
+          "key",
+          "string",
+          "string"
+        ],
         "optional": true
       },
       {
         "command": "DESTROY",
-        "name": ["key", "groupname"],
-        "type": ["key", "string"],
+        "name": [
+          "key",
+          "groupname"
+        ],
+        "type": [
+          "key",
+          "string"
+        ],
         "optional": true
       },
       {
         "command": "DELCONSUMER",
-        "name": ["key", "groupname", "consumername"],
-        "type": ["key", "string", "string"],
+        "name": [
+          "key",
+          "groupname",
+          "consumername"
+        ],
+        "type": [
+          "key",
+          "string",
+          "string"
+        ],
         "optional": true
       }
     ],
@@ -3739,8 +4252,14 @@
     "arguments": [
       {
         "command": "GROUP",
-        "name": ["group", "consumer"],
-        "type": ["string", "string"]
+        "name": [
+          "group",
+          "consumer"
+        ],
+        "type": [
+          "string",
+          "string"
+        ]
       },
       {
         "command": "COUNT",
@@ -3757,13 +4276,17 @@
       {
         "name": "noack",
         "type": "enum",
-        "enum": ["NOACK"],
+        "enum": [
+          "NOACK"
+        ],
         "optional": true
       },
       {
         "name": "streams",
         "type": "enum",
-        "enum": ["STREAMS"]
+        "enum": [
+          "STREAMS"
+        ]
       },
       {
         "name": "key",
@@ -3845,12 +4368,16 @@
       },
       {
         "name": "force",
-        "enum": ["FORCE"],
+        "enum": [
+          "FORCE"
+        ],
         "optional": true
       },
       {
         "name": "justid",
-        "enum": ["JUSTID"],
+        "enum": [
+          "JUSTID"
+        ],
         "optional": true
       }
     ],
@@ -3870,8 +4397,16 @@
         "type": "string"
       },
       {
-        "name": ["start", "end", "count"],
-        "type": ["string", "string", "integer"],
+        "name": [
+          "start",
+          "end",
+          "count"
+        ],
+        "type": [
+          "string",
+          "string",
+          "integer"
+        ],
         "optional": true
       },
       {
