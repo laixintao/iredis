@@ -272,7 +272,7 @@ description = "Render rich text, tables, progress bars, syntax highlighting, mar
 name = "rich"
 optional = false
 python-versions = ">=3.6,<4.0"
-version = "0.8.8"
+version = "0.8.13"
 
 [package.dependencies]
 colorama = ">=0.4.3,<0.5.0"
@@ -444,8 +444,8 @@ redis = [
     {file = "redis-3.4.1.tar.gz", hash = "sha256:0dcfb335921b88a850d461dc255ff4708294943322bd55de6cfd68972490ca1f"},
 ]
 rich = [
-    {file = "rich-0.8.8-py3-none-any.whl", hash = "sha256:95ff8174a699d15c7b5cc789b46fb919b325821a8674eea1c74b22cab898bdc6"},
-    {file = "rich-0.8.8.tar.gz", hash = "sha256:3dcb9e6ddebaea6366272a49241048c822cc61733c65f078081fce46261ed2c8"},
+    {file = "rich-0.8.13-py3-none-any.whl", hash = "sha256:0611363007766954e606714982dfd5bba165e3cb4fb814f9196c84488d77071a"},
+    {file = "rich-0.8.13.tar.gz", hash = "sha256:fc8d6ec66bc9d12cf4f4291ff4d149f784bd6de33ec547950e9456899773f9b2"},
 ]
 six = [
     {file = "six-1.14.0-py2.py3-none-any.whl", hash = "sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"},
