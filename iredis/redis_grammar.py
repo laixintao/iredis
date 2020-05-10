@@ -79,6 +79,7 @@ CONST = {
     "overflow": "OVERFLOW",
     "overflow_option": "WRAP SAT FAIL",
     "version": "VERSION",
+    "schedule": "SCHEDULE",
     "graphevent": (
         "ACTIVE-DEFRAG-CYCLE "
         "AOF-FSYNC-ALWAYS "
@@ -281,6 +282,7 @@ KEEPTTL = fr"(?P<keepttl>{c('keepttl')})"
 GRAPHEVENT = fr"(?P<graphevent>{c('graphevent')})"
 VERSION = fr"(?P<version>{c('version')})"
 SECTION = fr"(?P<section>{c('section')})"
+SCHEDULE = fr"(?P<schedule>{c('schedule')})"
 
 command_grammar = compile(COMMAND)
 
@@ -405,6 +407,7 @@ NEW_GRAMMAR = {
     "command_key_fieldvalues": fr"\s+ {KEY} (\s+ {FIELD} \s+ {VALUE})+ \s*",
     "command_slowlog": fr"\s+ {SLOWLOGSUB} \s+ {NUM} \s*",
     "command_switch": fr"\s+ {SWITCH} \s*",
+    "command_schedule": fr"(\s+ {SCHEDULE})? \s*",
     "command_clientkill": fr"""
         (
             (\s+ {IP_PORT})|
