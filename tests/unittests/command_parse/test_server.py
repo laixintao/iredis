@@ -143,3 +143,9 @@ def test_info(judge_command):
     judge_command("info", {"command": "info"})
     judge_command("info all", {"command": "info", "section": "all"})
     judge_command("info CPU", {"command": "info", "section": "CPU"})
+
+
+def test_bgsave(judge_command):
+    judge_command("bgsave", {"command": "bgsave"})
+    judge_command("bgsave schedule", {"command": "bgsave", "schedule": "schedule"})
+    judge_command("BGSAVE SCHEDULE", {"command": "BGSAVE", "schedule": "SCHEDULE"})

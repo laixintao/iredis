@@ -116,7 +116,7 @@ scripting,SCRIPT KILL,command,render_simple_string
 scripting,SCRIPT LOAD,command_lua_any,render_bulk_string_decode
 server,SWAPDB,command_index_index,render_simple_string
 server,BGREWRITEAOF,command,render_simple_string
-server,BGSAVE,command,render_simple_string
+server,BGSAVE,command_schedulex,render_simple_string
 server,COMMAND,command,render_list
 server,COMMAND COUNT,command,render_int
 server,COMMAND GETKEYS,command_any,render_list
