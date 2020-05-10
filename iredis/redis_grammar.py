@@ -407,7 +407,7 @@ NEW_GRAMMAR = {
     "command_key_fieldvalues": fr"\s+ {KEY} (\s+ {FIELD} \s+ {VALUE})+ \s*",
     "command_slowlog": fr"\s+ {SLOWLOGSUB} \s+ {NUM} \s*",
     "command_switch": fr"\s+ {SWITCH} \s*",
-    "command_schedule": fr"(\s+ {SCHEDULE})? \s*",
+    "command_schedulex": fr"(\s+ {SCHEDULE})? \s*",
     "command_clientkill": fr"""
         (
             (\s+ {IP_PORT})|
