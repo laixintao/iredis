@@ -301,6 +301,7 @@ Use Redis URL to indicate connection(Can set with env `IREDIS_URL`), Example:
 SHELL = """Allow to run shell commands, default to True."""
 PAGER_HELP = """Using pager when output is too tall for your window, default to True."""
 
+
 # command line entry here...
 @click.command()
 @click.pass_context

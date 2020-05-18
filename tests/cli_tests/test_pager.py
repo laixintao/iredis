@@ -1,3 +1,4 @@
+# noqa: F541
 import os
 import sys
 import pexpect
@@ -26,7 +27,7 @@ env_pager_numbers = "{0} {1} {2}".format(
 def pager_enabled_cli():
     env = os.environ
     env["PAGER"] = env_pager
-    child = pexpect.spawn(f"iredis -n 15", timeout=3, env=env)
+    child = pexpect.spawn("iredis -n 15", timeout=3, env=env)
     child.logfile_read = open("cli_test.log", "ab")
     child.expect("127.0.0.1")
     try:
