@@ -3,6 +3,7 @@
 - Update: Builtin doc was updated with latest
   redis-doc(dd4159397f115d53423c21337eedb04d3258d291).
 - Test: IRedis now was tested in both Redis 5 and Redis 6.
+- Bugfix: Fix exception when transaction fails. (Thanks [brianmaissy])
 
 ### 1.6.2
 
@@ -165,3 +166,4 @@
 [ruohan.chen]: https://github.com/crhan
 [mac chaffee]: https://github.com/mac-chaffee
 [lyqscmy]: https://github.com/lyqscmy
+[brianmaissy]: https://github.com/brianmaissy
