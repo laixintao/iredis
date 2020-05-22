@@ -120,8 +120,8 @@ def split_command_args(command):
         matcher = re.match("[ ]+".join(command_name.split()), command.upper())
         if matcher:
             logger.info(f"->> matcher: {matcher}")
-            input_command = command[:matcher.end()]
-            input_args = command[matcher.end():]
+            input_command = command[: matcher.end()]
+            input_args = command[matcher.end() :]
             break
     else:
         raise InvalidArguments(f"`{command}` is not a valide Redis Command")

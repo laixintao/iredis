@@ -275,7 +275,9 @@ class Client:
             try:
                 command_name, args = split_command_args(redis_command)
             except InvalidArguments:
-                logger.warn("This is not a iredis known command, send to redis-server anyway...")
+                logger.warn(
+                    "This is not a iredis known command, send to redis-server anyway..."
+                )
                 command_name, args = split_unknown_args(redis_command)
 
             logger.info(f"[Split command] command: {command_name}, args: {args}")
