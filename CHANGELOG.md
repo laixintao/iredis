@@ -3,7 +3,8 @@
 - Update: Builtin doc was updated with latest
   redis-doc(dd4159397f115d53423c21337eedb04d3258d291).
 - Test: IRedis now was tested in both Redis 5 and Redis 6.
-- New command support: `CLIENT GETREDIR`, `CLIENT TRACKING` and
+- Bugfix: Fix exception when transaction fails. (Thanks [brianmaissy])
+- Feature: New command support: `CLIENT GETREDIR`, `CLIENT TRACKING` and
   `CLIENT CACHING`.
 
 ### 1.6.2
@@ -167,3 +168,4 @@
 [ruohan.chen]: https://github.com/crhan
 [mac chaffee]: https://github.com/mac-chaffee
 [lyqscmy]: https://github.com/lyqscmy
+[brianmaissy]: https://github.com/brianmaissy

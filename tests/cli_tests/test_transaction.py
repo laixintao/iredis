@@ -51,3 +51,20 @@ def test_trasaction_in_raw_mode(clean_redis, raw_cli):
 
     with pytest.raises(pexpect.exceptions.TIMEOUT):
         raw_cli.expect("transaction")
+
+
+def test_exec_return_nil_when_using_watch(clean_redis, cli):
+    cli.sendline("watch foo")
+    cli.expect("OK")
+
+    cli.sendline("multi")
+    cli.expect("OK")
+
+    cli.sendline("get bar")
+    cli.expect("QUEUED")
+
+    # transaction will fail, return nil
+    clean_redis.set("foo", "hello!")
+
+    cli.sendline("exec")
+    cli.expect("(nil)")

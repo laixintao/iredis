@@ -239,7 +239,7 @@ string,SETNX,command_key_value,render_int
 string,SETRANGE,command_key_offset_value,render_int
 string,STRLEN,command_key,render_int
 transactions,DISCARD,command,render_simple_string
-transactions,EXEC,command,render_list
+transactions,EXEC,command,render_list_or_string
 transactions,MULTI,command,render_simple_string
 transactions,UNWATCH,command,render_simple_string
 transactions,WATCH,command_keys,render_simple_string

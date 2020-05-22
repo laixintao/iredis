@@ -1,3 +1,4 @@
+# noqa: F541
 """
 This module describes how to match a redis command to grammar token based on
 regex.
@@ -140,7 +141,7 @@ VALID_NODE = r"\d+"
 NUM = r"\d+"
 NNUM = r"-?\+?\(?\[?(\d+|inf)"  # number cloud be negative
 _FLOAT = r"-?(\d|\.|e)+"
-LEXNUM = fr"(\[\w+)|(\(\w+)|(\+)|(-)"
+LEXNUM = r"(\[\w+)|(\(\w+)|(\+)|(-)"
 
 SLOT = fr"(?P<slot>{VALID_SLOT})"
 SLOTS = fr"(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"
@@ -170,8 +171,8 @@ LONGITUDE = fr"(?P<longitude>{_FLOAT})"
 LATITUDE = fr"(?P<latitude>{_FLOAT})"
 CURSOR = fr"(?P<cursor>{NUM})"
 PARAMETER = fr"(?P<parameter>{VALID_TOKEN})"
-DOUBLE_LUA = fr'(?P<double_lua>[^"]*)'
-SINGLE_LUA = fr"(?P<single_lua>[^']*)"
+DOUBLE_LUA = r'(?P<double_lua>[^"]*)'
+SINGLE_LUA = r"(?P<single_lua>[^']*)"
 INTTYPE = r"(?P<inttype>(i|u)\d+)"
 # IP re copied from:
 # https://www.regular-expressions.info/ip.html
@@ -327,7 +328,7 @@ NEW_GRAMMAR = {
     "command_slot_count": fr"\s+ {SLOT} \s+ {COUNT} \s*",
     "command_key_samples_count": fr"""
         \s+ {KEY} \s+ {SAMPLES} \s+ {COUNT} \s*""",
-    "command": fr"\s*",
+    "command": r"\s*",
     "command_ip_port": fr"\s+ {IP} \s+ {PORT} \s*",
     "command_epoch": fr"\s+ {EPOCH} \s*",
     "command_yes": fr"\s+ {YES} \s*",
