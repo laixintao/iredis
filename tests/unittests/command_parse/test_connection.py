@@ -29,3 +29,10 @@ def test_swapdb(judge_command):
             )
     judge_command("swapdb abc 1", None)
     judge_command("swapdb 1", None)
+
+
+def test_client_caching(judge_command):
+    judge_command("CLIENT CACHING YES", {"command": "CLIENT CACHING", "yes": "YES"})
+    judge_command("CLIENT CACHING   NO", {"command": "CLIENT CACHING", "yes": "NO"})
+    judge_command("CLIENT CACHING", None)
+    judge_command("CLIENT CACHING abc", None)

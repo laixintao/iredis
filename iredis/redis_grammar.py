@@ -314,6 +314,7 @@ NEW_GRAMMAR = {
     "command": fr"\s*",
     "command_ip_port": fr"\s+ {IP} \s+ {PORT} \s*",
     "command_epoch": fr"\s+ {EPOCH} \s*",
+    "command_yes": fr"\s+ {YES} \s*",
     "command_sectionx": fr"(\s+ {SECTION})? \s*",
     "command_asyncx": fr"(\s+ {ASYNC})? \s*",
     "command_slot_slotsubcmd_nodex": fr"""
