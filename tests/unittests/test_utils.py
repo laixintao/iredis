@@ -62,18 +62,20 @@ def test_stipe_quote_escaple_in_quote(test_input, expected):
 
 
 @pytest.mark.parametrize(
-    "command,expected",
+    "command,expected,args",
     [
-        ("GET a", "GET"),
-        ("cluster info", "cluster info"),
-        ("getbit foo 17", "getbit"),
-        ("command ", "command"),
-        (" command count  ", "command count"),
-        (" command  count  ", "command count"),  # command with multi space
+        ("GET a", "GET", ["a"]),
+        ("cluster info", "cluster info", []),
+        ("getbit foo 17", "getbit", ["foo", "17"]),
+        ("command ", "command", []),
+        (" command count  ", "command count", []),
+        (" command  count  ", "command count", []),  # command with multi space
+        (" command  count    ' hello   world'", "command count", [" hello   world"]),
+        ("set foo 'hello   world'", "set", ["foo", " hello   world"]),
     ],
 )
-def test_split_commands(command, expected):
-    assert split_command_args(command)[0] == expected
+def test_split_commands(command, expected, args):
+    assert expected, args == split_command_args(command)
 
 
 def test_split_commands_fail_on_unknown_command():
