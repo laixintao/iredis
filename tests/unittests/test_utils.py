@@ -69,13 +69,15 @@ def test_stipe_quote_escaple_in_quote(test_input, expected):
         ("getbit foo 17", "getbit", ["foo", "17"]),
         ("command ", "command", []),
         (" command count  ", "command count", []),
-        (" command  count  ", "command count", []),  # command with multi space
-        (" command  count    ' hello   world'", "command count", [" hello   world"]),
-        ("set foo 'hello   world'", "set", ["foo", " hello   world"]),
+        (" command  count  ", "command  count", []),  # command with multi space
+        (" command  count    ' hello   world'", "command  count", [" hello   world"]),
+        ("set foo 'hello   world'", "set", ["foo", "hello   world"]),
     ],
 )
 def test_split_commands(command, expected, args):
-    assert expected, args == split_command_args(command)
+    parsed_command, parsed_args = split_command_args(command)
+    assert expected == parsed_command
+    assert args == parsed_args
 
 
 def test_split_commands_fail_on_unknown_command():

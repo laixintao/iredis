@@ -117,9 +117,10 @@ def split_command_args(command):
     command = command.strip()
     for command_name in all_commands:
         # allow multiplt space in user inputed command
-        matcher = re.match("[ ]+".join(command_name.split()), command)
+        matcher = re.match("[ ]+".join(command_name.split()), command.upper())
         if matcher:
-            input_command = matcher.group()
+            logger.info(f"->> matcher: {matcher}")
+            input_command = command[:matcher.end()]
             input_args = command[matcher.end():]
             break
     else:
