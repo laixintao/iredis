@@ -4,6 +4,8 @@
   redis-doc(dd4159397f115d53423c21337eedb04d3258d291).
 - Test: IRedis now was tested in both Redis 5 and Redis 6.
 - Bugfix: Fix exception when transaction fails. (Thanks [brianmaissy])
+- Feature: New command support: `CLIENT GETREDIR`, `CLIENT TRACKING` and
+  `CLIENT CACHING`.
 
 ### 1.6.2
 

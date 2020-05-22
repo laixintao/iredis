@@ -29,3 +29,53 @@ def test_swapdb(judge_command):
             )
     judge_command("swapdb abc 1", None)
     judge_command("swapdb 1", None)
+
+
+def test_client_caching(judge_command):
+    judge_command("CLIENT CACHING YES", {"command": "CLIENT CACHING", "yes": "YES"})
+    judge_command("CLIENT CACHING   NO", {"command": "CLIENT CACHING", "yes": "NO"})
+    judge_command("CLIENT CACHING", None)
+    judge_command("CLIENT CACHING abc", None)
+
+
+def test_client_tracking(judge_command):
+    judge_command("CLIENT TRACKING on", {"command": "CLIENT TRACKING", "on_off": "on"})
+    judge_command(
+        "CLIENT TRACKING ON REDIRECT 123",
+        {
+            "command": "CLIENT TRACKING",
+            "on_off": "ON",
+            "redirect_const": "REDIRECT",
+            "clientid": "123",
+        },
+    )
+    judge_command(
+        "CLIENT TRACKING ON PREFIX foo",
+        {
+            "command": "CLIENT TRACKING",
+            "on_off": "ON",
+            "prefix_const": "PREFIX",
+            "prefix": "foo",
+        },
+    )
+    judge_command(
+        "CLIENT TRACKING ON PREFIX foo",
+        {
+            "command": "CLIENT TRACKING",
+            "on_off": "ON",
+            "prefix_const": "PREFIX",
+            "prefix": "foo",
+        },
+    )
+    judge_command(
+        "CLIENT TRACKING ON PREFIX foo BCAST NOLOOP OPTIN",
+        {
+            "command": "CLIENT TRACKING",
+            "on_off": "ON",
+            "prefix_const": "PREFIX",
+            "prefix": "foo",
+            "bcast_const": "BCAST",
+            "noloop_const": "NOLOOP",
+            "optin_const": "OPTIN",
+        },
+    )
