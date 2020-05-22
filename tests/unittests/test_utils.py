@@ -85,6 +85,11 @@ def test_split_commands_fail_on_unknown_command():
         split_command_args("FOO BAR")
 
 
+def test_split_commands_fail_on_unfinished_command():
+    with pytest.raises(InvalidArguments):
+        split_command_args("setn")
+
+
 def test_render_bottom_with_command_json():
     for command, info in commands_summary.items():
         print_formatted_text(command_syntax(command, info), style=STYLE)
