@@ -124,3 +124,12 @@ def split_command_args(command):
     args = list(strip_quote_args(input_args))
 
     return input_command, args
+
+
+def split_unknown_args(command):
+    """
+    Split user's input into command and args.
+    """
+    command = command.strip()
+    input_command, *input_args = command.split()
+    return input_command, list(strip_quote_args("".join(input_args)))
