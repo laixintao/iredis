@@ -4,9 +4,10 @@ import pytest
 from unittest.mock import patch
 
 from iredis.utils import timer, strip_quote_args
-from iredis.commands import split_command_args
+from iredis.commands import split_command_args, split_unknown_args
 from iredis.utils import command_syntax
 from iredis.style import STYLE
+from iredis.exceptions import InvalidArguments
 from iredis.commands import commands_summary
 from prompt_toolkit import print_formatted_text
 
@@ -75,6 +76,29 @@ def test_split_commands(command, expected):
     assert split_command_args(command)[0] == expected
 
 
+def test_split_commands_fail_on_unknown_command():
+    with pytest.raises(InvalidArguments):
+        split_command_args("FOO BAR")
+
+
 def test_render_bottom_with_command_json():
     for command, info in commands_summary.items():
         print_formatted_text(command_syntax(command, info), style=STYLE)
+
+
+@pytest.mark.parametrize(
+    "raw,command,args",
+    [
+        ("abc 123", "abc", ["123"]),
+        ("abc", "abc", []),
+        ("abc foo bar", "abc", ["foo", "bar"]),
+        ("abc 'foo bar'", "abc", ["foo bar"]),
+        ('abc "foo bar"', "abc", ["foo bar"]),
+        ('abc "foo bar" 3 hello', "abc", ["foo bar", "3", "hello"]),
+        ('abc "foo \nbar"', "abc", ["foo \nbar"]),
+    ],
+)
+def test_split_unknown_commands(raw, command, args):
+    parsed_command, parsed_args = split_unknown_args(raw)
+    assert command == parsed_command
+    assert args == parsed_args
