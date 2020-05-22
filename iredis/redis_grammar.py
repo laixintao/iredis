@@ -41,6 +41,7 @@ CONST = {
     "slowlogsub": "LEN RESET GET",
     "shutdown": "SAVE NOSAVE",
     "switch": "ON OFF SKIP",
+    "on_off": "ON OFF",
     "const_id": "ID",
     "addr": "ADDR",
     "skipme": "SKIPME",
@@ -112,6 +113,12 @@ CONST = {
         "ALL "
         "DEFAULT "
     ),
+    "redirect_const": "REDIRECT",
+    "prefix_const": "PREFIX",
+    "bcast_const": "BCAST",
+    "optin_const": "OPTIN",
+    "optout_const": "OPTOUT",
+    "noloop_const": "NOLOOP",
 }
 
 
@@ -139,6 +146,7 @@ SLOT = fr"(?P<slot>{VALID_SLOT})"
 SLOTS = fr"(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"
 NODE = fr"(?P<node>{VALID_NODE})"
 KEY = fr"(?P<key>{VALID_TOKEN})"
+PREFIX = fr"(?P<prefix>{VALID_TOKEN})"
 KEYS = fr"(?P<keys>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 DESTINATION = fr"(?P<destination>{VALID_TOKEN})"
 NEWKEY = fr"(?P<newkey>{VALID_TOKEN})"
@@ -238,6 +246,7 @@ AGGREGATE = fr"(?P<aggregate>{c('aggregate')})"
 SLOWLOGSUB = fr"(?P<slowlogsub>{c('slowlogsub')})"
 SHUTDOWN = fr"(?P<shutdown>{c('shutdown')})"
 SWITCH = fr"(?P<switch>{c('switch')})"
+ON_OFF = fr"(?P<on_off>{c('on_off')})"
 CONST_ID = fr"(?P<const_id>{c('const_id')})"
 ADDR = fr"(?P<addr>{c('addr')})"
 SKIPME = fr"(?P<skipme>{c('skipme')})"
@@ -283,6 +292,13 @@ GRAPHEVENT = fr"(?P<graphevent>{c('graphevent')})"
 VERSION = fr"(?P<version>{c('version')})"
 SECTION = fr"(?P<section>{c('section')})"
 SCHEDULE = fr"(?P<schedule>{c('schedule')})"
+
+REDIRECT_CONST = fr"(?P<redirect_const>{c('redirect_const')})"
+PREFIX_CONST = fr"(?P<prefix_const>{c('prefix_const')})"
+BCAST_CONST = fr"(?P<bcast_const>{c('bcast_const')})"
+OPTIN_CONST = fr"(?P<optin_const>{c('optin_const')})"
+OPTOUT_CONST = fr"(?P<optout_const>{c('optout_const')})"
+NOLOOP_CONST = fr"(?P<noloop_const>{c('noloop_const')})"
 
 command_grammar = compile(COMMAND)
 
@@ -512,6 +528,17 @@ NEW_GRAMMAR = {
     # before redis 5: lolwut 5 1
     # start from redis 6: lolwut VERSION 5 1
     "command_version": fr"(\s+ {VERSION} \s+ {VERSION_NUM})? (\s+ {ANY})? \s*",
+    "command_client_tracking": fr"""
+        \s+ {ON_OFF}
+        (
+            (\s+ {REDIRECT_CONST} \s+ {CLIENTID})|
+            (\s+ {PREFIX_CONST} \s+ {PREFIX})|
+            (\s+ {BCAST_CONST})|
+            (\s+ {OPTIN_CONST})|
+            (\s+ {OPTOUT_CONST})|
+            (\s+ {NOLOOP_CONST})
+        )*
+        \s*""",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"
