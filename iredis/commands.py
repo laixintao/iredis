@@ -1,11 +1,16 @@
+import re
 import csv
 import json
+import logging
 import functools
 from importlib_resources import read_text, open_text
 
 from .utils import timer, strip_quote_args
 from .exceptions import InvalidArguments
 from . import data as project_data
+
+
+logger = logging.getLogger(__name__)
 
 
 def _load_command_summary():
@@ -110,13 +115,14 @@ def split_command_args(command):
     global all_commands
 
     command = command.strip()
-    upper_command_list = command.upper().split()
     for command_name in all_commands:
-        _command_name = command_name.split()
-        _command_length = len(_command_name)
-        if upper_command_list[:_command_length] == _command_name:
-            input_command = " ".join(command.split()[:_command_length])
-            input_args = " ".join(command.split()[_command_length:])
+        # allow multiplt space in user inputed command
+        command_allow_multi_spaces = "[ ]+".join(command_name.split())
+        matcher = re.match(fr"({command_allow_multi_spaces})( |$)", command.upper())
+        if matcher:
+            matched_command_len = len(matcher.group(1))
+            input_command = command[:matched_command_len]
+            input_args = command[matcher.end() :]
             break
     else:
         raise InvalidArguments(f"`{command}` is not a valide Redis Command")
@@ -124,3 +130,12 @@ def split_command_args(command):
     args = list(strip_quote_args(input_args))
 
     return input_command, args
+
+
+def split_unknown_args(command):
+    """
+    Split user's input into command and args.
+    """
+    command = command.strip()
+    input_command, *input_args = command.split(" ")
+    return input_command, list(strip_quote_args(" ".join(input_args)))

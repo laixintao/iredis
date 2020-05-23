@@ -4,6 +4,8 @@
   redis-doc(dd4159397f115d53423c21337eedb04d3258d291).
 - Test: IRedis now was tested in both Redis 5 and Redis 6.
 - Bugfix: Fix exception when transaction fails. (Thanks [brianmaissy])
+- Bugfix: Merging multiple spaces bug, e.g. `set foo "hello world"` will result
+  in sending `set foo "hello world"` to redis-server.
 - Feature: New command support: `CLIENT GETREDIR`, `CLIENT TRACKING` and
   `CLIENT CACHING`.
 
