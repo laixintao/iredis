@@ -1,5 +1,8 @@
+import os
+
 import pexpect
 from textwrap import dedent
+import pytest
 
 
 def test_using_dsn():
@@ -30,6 +33,9 @@ def test_using_dsn():
     assert cli.status == 1
 
 
+@pytest.mark.skipif(
+    not os.path.exists("/tmp/redis/redis.sock"), reason="unix socket is not found"
+)
 def test_using_dsn_unix():
     config_content = dedent(
         """
