@@ -439,7 +439,7 @@ def create_client(params):
     if dsn_from_url:
         # db from command lint options should be high priority
         db = db if db else dsn_from_url.db
-        client = Client(
+        return Client(
             host=dsn_from_url.host,
             port=dsn_from_url.port,
             db=db,
@@ -449,10 +449,8 @@ def create_client(params):
             username=dsn_from_url.username,
         )
     if params["socket"]:
-        client = Client(scheme="unix", path=params["socket"], db=db, password=password)
-    else:
-        client = Client(host=host, port=port, db=db, password=password)
-    return client
+        return Client(scheme="unix", path=params["socket"], db=db, password=password)
+    return Client(host=host, port=port, db=db, password=password)
 
 
 def main():
