@@ -2,12 +2,13 @@
 
 - Update: Builtin doc was updated with latest
   redis-doc(dd4159397f115d53423c21337eedb04d3258d291).
+- Feature: New command support: `CLIENT GETREDIR`, `CLIENT TRACKING` and
 - Test: IRedis now was tested in both Redis 5 and Redis 6.
 - Bugfix: Fix exception when transaction fails. (Thanks [brianmaissy])
 - Bugfix: Merging multiple spaces bug, e.g. `set foo "hello world"` will result
   in sending `set foo "hello world"` to redis-server.
-- Feature: New command support: `CLIENT GETREDIR`, `CLIENT TRACKING` and
   `CLIENT CACHING`.
+- Bugfix: `--url` options is ignored, but don't worry, it is fixed now by [otms61].
 
 ### 1.6.2
 
@@ -171,3 +172,4 @@
 [mac chaffee]: https://github.com/mac-chaffee
 [lyqscmy]: https://github.com/lyqscmy
 [brianmaissy]: https://github.com/brianmaissy
+[otms61]: https://github.com/otms61
