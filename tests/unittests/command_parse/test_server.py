@@ -149,3 +149,12 @@ def test_bgsave(judge_command):
     judge_command("bgsave", {"command": "bgsave"})
     judge_command("bgsave schedule", {"command": "bgsave", "schedule": "schedule"})
     judge_command("BGSAVE SCHEDULE", {"command": "BGSAVE", "schedule": "SCHEDULE"})
+
+
+def test_acl_cat(judge_command):
+    judge_command("acl cat", {"command": "acl cat"})
+    judge_command("acl  CAT", {"command": "acl  CAT"})
+    judge_command(
+        "ACL CAT scripting", {"command": "ACL CAT", "categoryname": "scripting"}
+    )
+    judge_command("ACL CAT WATCH", {"command": "ACL CAT", "categoryname": "WATCH"})
