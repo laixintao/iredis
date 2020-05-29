@@ -27,7 +27,7 @@ class OutputRender:
     @staticmethod
     def get_render(command_name):
         """Dynamic render output due to command name."""
-        command_upper = command_name.upper()
+        command_upper = " ".join(command_name.split()).upper()
         callback_name = command2callback.get(command_upper)
 
         # using `render_list_or_string` as default render.

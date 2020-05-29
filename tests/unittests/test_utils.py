@@ -7,7 +7,7 @@ from iredis.utils import timer, strip_quote_args
 from iredis.commands import split_command_args, split_unknown_args
 from iredis.utils import command_syntax
 from iredis.style import STYLE
-from iredis.exceptions import InvalidArguments
+from iredis.exceptions import InvalidArguments, AmbiguousCommand
 from iredis.commands import commands_summary
 from prompt_toolkit import print_formatted_text
 
@@ -83,6 +83,14 @@ def test_split_commands(command, expected, args):
 def test_split_commands_fail_on_unknown_command():
     with pytest.raises(InvalidArguments):
         split_command_args("FOO BAR")
+
+
+@pytest.mark.parametrize(
+    "command", ["command in", "command   in", "Command   in", "COMMAND     in"],
+)
+def test_split_commands_fail_on_partially_input(command):
+    with pytest.raises(AmbiguousCommand):
+        split_command_args(command)
 
 
 def test_split_commands_fail_on_unfinished_command():

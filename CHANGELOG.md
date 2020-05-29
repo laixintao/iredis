@@ -1,3 +1,9 @@
+### 1.7.1
+
+- Bugfix: `command in` considered as an invalid input case, due to matched with
+  `command`'s syntax, and `in` as an extra args. Fixed by falling back to
+  default grammar if there are ambiguous commands that can match.
+
 ## 1.7
 
 - Update: Builtin doc was updated with latest
@@ -6,9 +12,9 @@
 - Test: IRedis now was tested in both Redis 5 and Redis 6.
 - Bugfix: Fix exception when transaction fails. (Thanks [brianmaissy])
 - Bugfix: Merging multiple spaces bug, e.g. `set foo "hello world"` will result
-  in sending `set foo "hello world"` to redis-server.
-  `CLIENT CACHING`.
-- Bugfix: `--url` options is ignored, but don't worry, it is fixed now by [otms61].
+  in sending `set foo "hello world"` to redis-server. `CLIENT CACHING`.
+- Bugfix: `--url` options is ignored, but don't worry, it is fixed now by
+  [otms61].
 
 ### 1.6.2
 
