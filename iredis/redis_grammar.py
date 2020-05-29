@@ -551,7 +551,7 @@ def get_command_grammar(command):
     :param command: command name in upper case. This command must be raw user
         input, otherwise can't match in lexer, cause this command to be invalid;
     """
-    syntax_name = command2syntax[command.upper()]
+    syntax_name = command2syntax[" ".join(command.split()).upper()]
     syntax = NEW_GRAMMAR.get(syntax_name)
 
     # If a command is not supported yet, (e.g. command from latest version added

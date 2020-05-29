@@ -6,7 +6,7 @@ from prompt_toolkit.layout.processors import (
     TransformationInput,
 )
 
-from .exceptions import InvalidArguments
+from .exceptions import InvalidArguments, AmbiguousCommand
 from .commands import split_command_args
 
 logger = logging.getLogger(__name__)
@@ -41,7 +41,7 @@ class UpdateBottomProcessor(Processor):
         input_text = transformation_input.document.text
         try:
             command, _ = split_command_args(input_text)
-        except InvalidArguments:
+        except (InvalidArguments, AmbiguousCommand):
             self.command_holder.command = None
         else:
             self.command_holder.command = command.upper()
@@ -64,7 +64,7 @@ class PasswordProcessor(Processor):
         default_transformation = Transformation(ti.fragments)
         try:
             command, _ = split_command_args(input_text)
-        except InvalidArguments:
+        except (InvalidArguments, AmbiguousCommand):
             return default_transformation
 
         if command.upper() != "AUTH":

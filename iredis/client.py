@@ -26,7 +26,7 @@ from .commands import (
 )
 from .completers import IRedisCompleter
 from .config import config
-from .exceptions import NotRedisCommand, InvalidArguments
+from .exceptions import NotRedisCommand, InvalidArguments, AmbiguousCommand
 from .renders import OutputRender
 from .utils import (
     compose_command_syntax,
@@ -274,7 +274,7 @@ class Client:
         try:
             try:
                 command_name, args = split_command_args(redis_command)
-            except InvalidArguments:
+            except (InvalidArguments, AmbiguousCommand):
                 logger.warn(
                     "This is not a iredis known command, send to redis-server anyway..."
                 )
