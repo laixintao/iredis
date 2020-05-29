@@ -29,7 +29,13 @@ class OutputRender:
         """Dynamic render output due to command name."""
         command_upper = command_name.upper()
         callback_name = command2callback.get(command_upper)
-        callback = getattr(OutputRender, callback_name)
+
+        # using `render_list_or_string` as default render.
+        if callback_name is None:
+            callback = OutputRender.render_list_or_string
+        else:
+            callback = getattr(OutputRender, callback_name, OutputRender.render_list_or_string)
+
         logger.info(
             f"[render] Find callback {callback_name}, for command: {command_name}"
         )
