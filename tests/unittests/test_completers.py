@@ -112,6 +112,36 @@ def test_iredis_completer_update_for_response():
     assert c.field_completer.words == ["Trust", "Lead", "Interpret", "Behave"]
 
 
+def test_categoryname_completer_update_for_response():
+    c = IRedisCompleter()
+    c.update_completer_for_response(
+        "ACL CAT", (), [b"scripting", b"watch"],
+    )
+    assert sorted(c.catetoryname_completer.words) == ["scripting", "watch"]
+    c.update_completer_for_response(
+        "ACL CAT", ("scripting"), [b"foo", b"bar"],
+    )
+    assert sorted(c.catetoryname_completer.words) == ["scripting", "watch"]
+
+
+def test_completer_when_there_are_spaces_in_command():
+    c = IRedisCompleter()
+    c.update_completer_for_response(
+        "ACL    cat", (), [b"scripting", b"watch"],
+    )
+    assert sorted(c.catetoryname_completer.words) == ["scripting", "watch"]
+
+    c.update_completer_for_response(
+        "acl \t   cat", (), [b"hello", b"world"],
+    )
+    assert sorted(c.catetoryname_completer.words) == [
+        "hello",
+        "scripting",
+        "watch",
+        "world",
+    ]
+
+
 def test_iredis_completer_no_exception_for_none_response():
     c = IRedisCompleter()
     c.update_completer_for_response("XPENDING", None, None)

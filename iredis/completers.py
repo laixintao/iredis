@@ -206,7 +206,7 @@ class IRedisCompleter(Completer):
                     _completer.touch(single_token)
 
     def update_completer_for_response(self, command_name, args, response):
-        command_name = command_name.upper()
+        command_name = " ".join(command_name.split()).upper()
         logger.info(
             f"Try update completer using response... command_name is {command_name}"
         )
