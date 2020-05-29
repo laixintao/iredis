@@ -361,7 +361,7 @@ class Client:
             config.transaction = True
 
         if completer:
-            completer.update_completer_for_response(command_name, response)
+            completer.update_completer_for_response(command_name, args, response)
 
     def pre_hook(self, command, command_name, args, completer: IRedisCompleter):
         """

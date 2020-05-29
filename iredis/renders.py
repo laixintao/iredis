@@ -34,7 +34,9 @@ class OutputRender:
         if callback_name is None:
             callback = OutputRender.render_list_or_string
         else:
-            callback = getattr(OutputRender, callback_name, OutputRender.render_list_or_string)
+            callback = getattr(
+                OutputRender, callback_name, OutputRender.render_list_or_string
+            )
 
         logger.info(
             f"[render] Find callback {callback_name}, for command: {command_name}"

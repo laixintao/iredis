@@ -205,7 +205,7 @@ class IRedisCompleter(Completer):
                 for single_token in strip_quote_args(_token_in_command):
                     _completer.touch(single_token)
 
-    def update_completer_for_response(self, command_name, response):
+    def update_completer_for_response(self, command_name, args, response):
         command_name = command_name.upper()
         logger.info(
             f"Try update completer using response... command_name is {command_name}"
@@ -249,7 +249,9 @@ class IRedisCompleter(Completer):
             logger.debug(
                 f"[Completer] field completer updated with {response[1][::2]}."
             )
-        if command_name == "ACL CAT":
+
+        # only update categoryname completer when `ACL CAT` without args.
+        if command_name == "ACL CAT" and not args:
             self.catetoryname_completer.touch_words(response)
 
     def _touch_members(self, items):

@@ -97,6 +97,7 @@ def test_iredis_completer_update_for_response():
     c = IRedisCompleter()
     c.update_completer_for_response(
         "HGETALL",
+        (),
         [
             b"Behave",
             b"misbehave",
@@ -113,8 +114,8 @@ def test_iredis_completer_update_for_response():
 
 def test_iredis_completer_no_exception_for_none_response():
     c = IRedisCompleter()
-    c.update_completer_for_response("XPENDING", None)
-    c.update_completer_for_response("KEYS", None)
+    c.update_completer_for_response("XPENDING", None, None)
+    c.update_completer_for_response("KEYS", None, None)
 
 
 def test_group_completer():
