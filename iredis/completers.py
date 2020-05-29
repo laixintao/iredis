@@ -162,6 +162,10 @@ class IRedisCompleter(Completer):
     def catetoryname_completer(self) -> MostRecentlyUsedFirstWordCompleter:
         return self.completer_mapping["categoryname"]
 
+    @property
+    def username_completer(self) -> MostRecentlyUsedFirstWordCompleter:
+        return self.completer_mapping["username"]
+
     def get_completer(self, input_text):
         try:
             command, _ = split_command_args(input_text)
@@ -286,6 +290,9 @@ class IRedisCompleter(Completer):
         member_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
         field_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
         group_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
+        username_completer = MostRecentlyUsedFirstWordCompleter(
+            config.completer_max, []
+        )
         categoryname_completer = MostRecentlyUsedFirstWordCompleter(100, [])
         timestamp_completer = TimestampCompleter()
         integer_type_completer = IntegerTypeCompleter()
@@ -311,6 +318,7 @@ class IRedisCompleter(Completer):
                 "stream_id": timestamp_completer,
                 "inttype": integer_type_completer,
                 "categoryname": categoryname_completer,
+                "username": username_completer,
             }
         )
 

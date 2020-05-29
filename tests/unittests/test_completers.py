@@ -319,3 +319,17 @@ def test_completion_casing():
     assert [
         completion.text for completion in c.get_completions(fake_document, None)
     ] == ["get", "getset", "getbit", "getrange"]
+
+
+def test_username_completer():
+    completer = IRedisCompleter()
+    completer.update_completer_for_input("acl deluser laixintao")
+    completer.update_completer_for_input("acl deluser antirez")
+
+    fake_document = MagicMock()
+    fake_document.text_before_cursor = fake_document.text = "acl deluser "
+    completions = list(completer.get_completions(fake_document, None))
+    assert sorted([completion.text for completion in completions]) == [
+        "antirez",
+        "laixintao",
+    ]
