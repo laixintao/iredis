@@ -14,7 +14,7 @@ from prompt_toolkit.document import Document
 
 from .commands import split_command_args, commands_summary, all_commands
 from .config import config
-from .exceptions import InvalidArguments
+from .exceptions import InvalidArguments, AmbiguousCommand
 from .redis_grammar import CONST, command_grammar, get_command_grammar
 from .utils import strip_quote_args, ensure_str
 
@@ -166,7 +166,7 @@ class IRedisCompleter(Completer):
             completer = GrammarCompleter(
                 compiled_grammar=grammar, completers=self.completer_mapping
             )
-        except InvalidArguments:
+        except (InvalidArguments, AmbiguousCommand):
             completer = self.root_completer
 
         return completer

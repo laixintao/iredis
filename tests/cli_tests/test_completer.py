@@ -25,3 +25,10 @@ def test_command_completion_when_a_command_is_another_command_substring(
 
     cli.send("setnx")
     cli.expect("foo")
+
+
+def test_command_completion_when_space_command(cli, clean_redis):
+    cli.expect("127.0.0.1")
+
+    cli.send("command in")
+    cli.expect("command info")

@@ -6,7 +6,7 @@ import functools
 from importlib_resources import read_text, open_text
 
 from .utils import timer, strip_quote_args
-from .exceptions import InvalidArguments
+from .exceptions import InvalidArguments, AmbiguousCommand
 from . import data as project_data
 
 
@@ -116,6 +116,16 @@ def split_command_args(command):
 
     command = command.strip()
     for command_name in all_commands:
+        # for command that is paritaly inputed, like `command in`, we should
+        # match with `command info`, otherwise, `command in` will result in
+        # `command` with `args` is ('in') which is an invalid case.
+        normalized_input_command = " ".join(command.split()).upper()
+        if (
+            re.search("\s", command)
+            and command_name.startswith(normalized_input_command)
+            and command_name != normalized_input_command
+        ):
+            raise AmbiguousCommand("command is not finished")
         # allow multiplt space in user inputed command
         command_allow_multi_spaces = "[ ]+".join(command_name.split())
         matcher = re.match(fr"({command_allow_multi_spaces})( |$)", command.upper())

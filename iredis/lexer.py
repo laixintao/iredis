@@ -7,7 +7,7 @@ from prompt_toolkit.lexers import Lexer, PygmentsLexer, SimpleLexer
 from pygments.lexers.scripting import LuaLexer
 
 from .commands import split_command_args
-from .exceptions import InvalidArguments
+from .exceptions import InvalidArguments, AmbiguousCommand
 from .redis_grammar import CONST, get_command_grammar
 
 
@@ -88,7 +88,7 @@ class IRedisLexer(Lexer):
             # compile grammar for this command
             grammar = get_command_grammar(command)
             self._current_lexer = GrammarLexer(grammar, lexers=get_lexer_mapping())
-        except InvalidArguments:
+        except (InvalidArguments, AmbiguousCommand):
             self._current_lexer = self._dummy
 
         return self._current_lexer.lex_document(document)
