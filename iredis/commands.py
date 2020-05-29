@@ -129,9 +129,7 @@ def split_command_args(command):
 
     args = list(strip_quote_args(input_args))
 
-    normalized_command = " ".join(input_command.split()).upper()
-
-    return normalized_command, args
+    return input_command, args
 
 
 def split_unknown_args(command):
