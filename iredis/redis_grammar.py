@@ -166,6 +166,7 @@ CHANNEL = fr"(?P<channel>{VALID_TOKEN})"
 GROUP = fr"(?P<group>{VALID_TOKEN})"
 CONSUMER = fr"(?P<consumer>{VALID_TOKEN})"
 CATEGORYNAME = fr"(?P<categoryname>{VALID_TOKEN})"
+USERNAME = fr"(?P<username>{VALID_TOKEN})"
 BIT = r"(?P<bit>0|1)"
 FLOAT = fr"(?P<float>{_FLOAT})"
 LONGITUDE = fr"(?P<longitude>{_FLOAT})"
@@ -542,6 +543,7 @@ NEW_GRAMMAR = {
         )*
         \s*""",
     "command_categorynamex": fr"(\s+ {CATEGORYNAME})? \s*",
+    "command_usernames": fr"(\s+ {USERNAME})+ \s*",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"

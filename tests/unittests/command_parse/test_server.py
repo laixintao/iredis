@@ -158,3 +158,13 @@ def test_acl_cat(judge_command):
         "ACL CAT scripting", {"command": "ACL CAT", "categoryname": "scripting"}
     )
     judge_command("ACL CAT WATCH", {"command": "ACL CAT", "categoryname": "WATCH"})
+
+
+def test_acl_deluser(judge_command):
+    judge_command(
+        "acl deluser laixintao", {"command": "acl deluser", "username": "laixintao"}
+    )
+    judge_command(
+        "acl deluser laixintao antirez",
+        {"command": "acl deluser", "username": "antirez"},
+    )
