@@ -1,6 +1,7 @@
 ### 1.7.2
 
-- Feature: Support `ACL` (#340).
+- Feature: Support `ACL` ( [#340](https://github.com/laixintao/iredis/pull/343)
+  ).
 
 ### 1.7.1
 
