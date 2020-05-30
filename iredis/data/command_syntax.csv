@@ -123,6 +123,7 @@ server,ACL HELP,command,render_list
 server,ACL LIST,command,render_list
 server,ACL LOAD,command,render_simple_string
 server,ACL LOG,command_count_or_resetx,render_list_or_string
+server,ACL SAVE,command,render_simple_string
 server,SWAPDB,command_index_index,render_simple_string
 server,BGREWRITEAOF,command,render_simple_string
 server,BGSAVE,command_schedulex,render_simple_string
