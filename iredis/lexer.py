@@ -64,6 +64,7 @@ def get_lexer_mapping():
         "single_lua": PygmentsLexer(LuaLexer),
         "command": SimpleLexer("class:command"),
         "approximately": SimpleLexer("class:const"),
+        "username": SimpleLexer("class:username"),
     }
 
     lexers_dict.update({key: SimpleLexer("class:const") for key in CONST})

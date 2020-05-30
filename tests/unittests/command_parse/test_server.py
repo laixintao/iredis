@@ -149,3 +149,45 @@ def test_bgsave(judge_command):
     judge_command("bgsave", {"command": "bgsave"})
     judge_command("bgsave schedule", {"command": "bgsave", "schedule": "schedule"})
     judge_command("BGSAVE SCHEDULE", {"command": "BGSAVE", "schedule": "SCHEDULE"})
+
+
+def test_acl_cat(judge_command):
+    judge_command("acl cat", {"command": "acl cat"})
+    judge_command("acl  CAT", {"command": "acl  CAT"})
+    judge_command(
+        "ACL CAT scripting", {"command": "ACL CAT", "categoryname": "scripting"}
+    )
+    judge_command("ACL CAT WATCH", {"command": "ACL CAT", "categoryname": "WATCH"})
+
+
+def test_acl_deluser(judge_command):
+    judge_command(
+        "acl deluser laixintao", {"command": "acl deluser", "username": "laixintao"}
+    )
+    judge_command(
+        "acl deluser laixintao antirez",
+        {"command": "acl deluser", "username": "antirez"},
+    )
+
+
+def test_acl_log(judge_command):
+    judge_command("acl log 2", {"command": "acl log", "count": "2"})
+    judge_command("acl log reset", {"command": "acl log", "reset_const": "reset"})
+    judge_command("acl log ", {"command": "acl log"})
+
+
+def test_acl_setuser(judge_command):
+    judge_command("ACL SETUSER alice", {"command": "ACL SETUSER", "username": "alice"})
+    judge_command(
+        "ACL SETUSER alice on >p1pp0 ~cached:* +get",
+        {"command": "ACL SETUSER", "username": "alice", "rule": "+get"},
+    )
+    judge_command(
+        "ACL SETUSER alan allkeys +@string +@set -SADD >alanpassword",
+        {"command": "ACL SETUSER", "username": "alan", "rule": ">alanpassword"},
+    )
+
+
+def test_acl_getuser(judge_command):
+    judge_command("acl getuser alan", {"command": "acl getuser", "username": "alan"})
+    judge_command("acl getuser", None)

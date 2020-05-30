@@ -17,6 +17,7 @@ style = REDIS_TOKEN = {
     "bit": "#8541FF",
     "field": "cyan",
     "group": "ansiblue",
+    "username": "blue",
 }
 
 DOC = {

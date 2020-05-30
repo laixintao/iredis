@@ -158,6 +158,14 @@ class IRedisCompleter(Completer):
     def group_completer(self) -> MostRecentlyUsedFirstWordCompleter:
         return self.completer_mapping["group"]
 
+    @property
+    def catetoryname_completer(self) -> MostRecentlyUsedFirstWordCompleter:
+        return self.completer_mapping["categoryname"]
+
+    @property
+    def username_completer(self) -> MostRecentlyUsedFirstWordCompleter:
+        return self.completer_mapping["username"]
+
     def get_completer(self, input_text):
         try:
             command, _ = split_command_args(input_text)
@@ -201,8 +209,11 @@ class IRedisCompleter(Completer):
                 for single_token in strip_quote_args(_token_in_command):
                     _completer.touch(single_token)
 
-    def update_completer_for_response(self, command_name, response):
-        command_name = command_name.upper()
+    def update_completer_for_response(self, command_name, args, response):
+        command_name = " ".join(command_name.split()).upper()
+        logger.info(
+            f"Try update completer using response... command_name is {command_name}"
+        )
         if response is None:
             return
 
@@ -243,6 +254,12 @@ class IRedisCompleter(Completer):
                 f"[Completer] field completer updated with {response[1][::2]}."
             )
 
+        # only update categoryname completer when `ACL CAT` without args.
+        if command_name == "ACL CAT" and not args:
+            self.catetoryname_completer.touch_words(response)
+        if command_name == "ACL USERS":
+            self.username_completer.touch_words(response)
+
     def _touch_members(self, items):
         _step = 1
 
@@ -275,6 +292,10 @@ class IRedisCompleter(Completer):
         member_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
         field_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
         group_completer = MostRecentlyUsedFirstWordCompleter(config.completer_max, [])
+        username_completer = MostRecentlyUsedFirstWordCompleter(
+            config.completer_max, []
+        )
+        categoryname_completer = MostRecentlyUsedFirstWordCompleter(100, [])
         timestamp_completer = TimestampCompleter()
         integer_type_completer = IntegerTypeCompleter()
 
@@ -298,6 +319,8 @@ class IRedisCompleter(Completer):
                 # stream id
                 "stream_id": timestamp_completer,
                 "inttype": integer_type_completer,
+                "categoryname": categoryname_completer,
+                "username": username_completer,
             }
         )
 

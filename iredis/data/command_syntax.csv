@@ -117,6 +117,18 @@ scripting,SCRIPT EXISTS,command_any,render_list
 scripting,SCRIPT FLUSH,command,render_simple_string
 scripting,SCRIPT KILL,command,render_simple_string
 scripting,SCRIPT LOAD,command_lua_any,render_bulk_string_decode
+server,ACL CAT,command_categorynamex,render_list
+server,ACL DELUSER,command_usernames,render_int
+server,ACL GENPASS,command_countx,render_bulk_string
+server,ACL GETUSER,command_username,render_list
+server,ACL HELP,command,render_list
+server,ACL LIST,command,render_list
+server,ACL LOAD,command,render_simple_string
+server,ACL LOG,command_count_or_resetx,render_list_or_string
+server,ACL SAVE,command,render_simple_string
+server,ACL SETUSER,command_username_rules,render_simple_string
+server,ACL USERS,command,render_list
+server,ACL WHOAMI,command,render_bulk_string
 server,SWAPDB,command_index_index,render_simple_string
 server,BGREWRITEAOF,command,render_simple_string
 server,BGSAVE,command_schedulex,render_simple_string

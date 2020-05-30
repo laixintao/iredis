@@ -97,6 +97,7 @@ def test_iredis_completer_update_for_response():
     c = IRedisCompleter()
     c.update_completer_for_response(
         "HGETALL",
+        (),
         [
             b"Behave",
             b"misbehave",
@@ -111,10 +112,40 @@ def test_iredis_completer_update_for_response():
     assert c.field_completer.words == ["Trust", "Lead", "Interpret", "Behave"]
 
 
+def test_categoryname_completer_update_for_response():
+    c = IRedisCompleter()
+    c.update_completer_for_response(
+        "ACL CAT", (), [b"scripting", b"watch"],
+    )
+    assert sorted(c.catetoryname_completer.words) == ["scripting", "watch"]
+    c.update_completer_for_response(
+        "ACL CAT", ("scripting"), [b"foo", b"bar"],
+    )
+    assert sorted(c.catetoryname_completer.words) == ["scripting", "watch"]
+
+
+def test_completer_when_there_are_spaces_in_command():
+    c = IRedisCompleter()
+    c.update_completer_for_response(
+        "ACL    cat", (), [b"scripting", b"watch"],
+    )
+    assert sorted(c.catetoryname_completer.words) == ["scripting", "watch"]
+
+    c.update_completer_for_response(
+        "acl \t   cat", (), [b"hello", b"world"],
+    )
+    assert sorted(c.catetoryname_completer.words) == [
+        "hello",
+        "scripting",
+        "watch",
+        "world",
+    ]
+
+
 def test_iredis_completer_no_exception_for_none_response():
     c = IRedisCompleter()
-    c.update_completer_for_response("XPENDING", None)
-    c.update_completer_for_response("KEYS", None)
+    c.update_completer_for_response("XPENDING", None, None)
+    c.update_completer_for_response("KEYS", None, None)
 
 
 def test_group_completer():
@@ -288,3 +319,28 @@ def test_completion_casing():
     assert [
         completion.text for completion in c.get_completions(fake_document, None)
     ] == ["get", "getset", "getbit", "getrange"]
+
+
+def test_username_completer():
+    completer = IRedisCompleter()
+    completer.update_completer_for_input("acl deluser laixintao")
+    completer.update_completer_for_input("acl deluser antirez")
+
+    fake_document = MagicMock()
+    fake_document.text_before_cursor = fake_document.text = "acl deluser "
+    completions = list(completer.get_completions(fake_document, None))
+    assert sorted([completion.text for completion in completions]) == [
+        "antirez",
+        "laixintao",
+    ]
+
+
+def test_username_touch_for_response():
+    c = IRedisCompleter()
+    c.update_completer_for_response(
+        "acl   users", (), [b"hello", b"world"],
+    )
+    assert sorted(c.username_completer.words) == [
+        "hello",
+        "world",
+    ]

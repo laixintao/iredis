@@ -120,6 +120,7 @@ CONST = {
     "optin_const": "OPTIN",
     "optout_const": "OPTOUT",
     "noloop_const": "NOLOOP",
+    "reset_const": "RESET",
 }
 
 
@@ -165,6 +166,9 @@ MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 CHANNEL = fr"(?P<channel>{VALID_TOKEN})"
 GROUP = fr"(?P<group>{VALID_TOKEN})"
 CONSUMER = fr"(?P<consumer>{VALID_TOKEN})"
+CATEGORYNAME = fr"(?P<categoryname>{VALID_TOKEN})"
+USERNAME = fr"(?P<username>{VALID_TOKEN})"
+RULE = fr"(?P<rule>{VALID_TOKEN})"
 BIT = r"(?P<bit>0|1)"
 FLOAT = fr"(?P<float>{_FLOAT})"
 LONGITUDE = fr"(?P<longitude>{_FLOAT})"
@@ -300,6 +304,8 @@ BCAST_CONST = fr"(?P<bcast_const>{c('bcast_const')})"
 OPTIN_CONST = fr"(?P<optin_const>{c('optin_const')})"
 OPTOUT_CONST = fr"(?P<optout_const>{c('optout_const')})"
 NOLOOP_CONST = fr"(?P<noloop_const>{c('noloop_const')})"
+
+RESET_CONST = fr"(?P<reset_const>{c('reset_const')})"
 
 command_grammar = compile(COMMAND)
 
@@ -540,6 +546,12 @@ NEW_GRAMMAR = {
             (\s+ {NOLOOP_CONST})
         )*
         \s*""",
+    "command_categorynamex": fr"(\s+ {CATEGORYNAME})? \s*",
+    "command_usernames": fr"(\s+ {USERNAME})+ \s*",
+    "command_username": fr"\s+ {USERNAME} \s*",
+    "command_count_or_resetx": fr"( (\s+ {COUNT}) | (\s+ {RESET_CONST}) )? \s*",
+    "command_username_rules": fr"\s+ {USERNAME} (\s+ {RULE})* \s*",
+    "command_count": fr"(\s+ {COUNT})? \s*",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"
