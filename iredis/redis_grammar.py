@@ -551,6 +551,7 @@ NEW_GRAMMAR = {
     "command_username": fr"\s+ {USERNAME} \s*",
     "command_count_or_resetx": fr"( (\s+ {COUNT}) | (\s+ {RESET_CONST}) )? \s*",
     "command_username_rules": fr"\s+ {USERNAME} (\s+ {RULE})* \s*",
+    "command_count": fr"(\s+ {COUNT})? \s*",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"
