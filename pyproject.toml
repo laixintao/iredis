@@ -23,6 +23,15 @@ classifiers = [
     "Intended Audience :: Developers",
 ]
 
+packages = [
+    { include = "iredis" },
+    { include = "CHANGELOG", format = "sdist" },
+    { include = "LICENSE", format = "sdist" },
+    { include = "README.md", format = "sdist" },
+    { include = "poetry.lock", format = "sdist" },
+    { include = "tests", format = "sdist" },
+    { include = "scripts", format = "sdist" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.6"
@@ -41,6 +50,7 @@ pexpect = "^4.7"
 
 [tool.poetry.scripts]
 iredis = 'iredis.entry:main'
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
