@@ -174,3 +174,15 @@ def test_acl_log(judge_command):
     judge_command("acl log 2", {"command": "acl log", "count": "2"})
     judge_command("acl log reset", {"command": "acl log", "reset_const": "reset"})
     judge_command("acl log ", {"command": "acl log"})
+
+
+def test_acl_setuser(judge_command):
+    judge_command("ACL SETUSER alice", {"command": "ACL SETUSER", "username": "alice"})
+    judge_command(
+        "ACL SETUSER alice on >p1pp0 ~cached:* +get",
+        {"command": "ACL SETUSER", "username": "alice", "rule": "+get"},
+    )
+    judge_command(
+        "ACL SETUSER alan allkeys +@string +@set -SADD >alanpassword",
+        {"command": "ACL SETUSER", "username": "alan", "rule": ">alanpassword"},
+    )
