@@ -121,6 +121,7 @@ server,ACL CAT,command_categorynamex,render_list
 server,ACL DELUSER,command_usernames,render_int
 server,ACL HELP,command,render_list
 server,ACL LIST,command,render_list
+server,ACL LOAD,command,render_simple_string
 server,SWAPDB,command_index_index,render_simple_string
 server,BGREWRITEAOF,command,render_simple_string
 server,BGSAVE,command_schedulex,render_simple_string
