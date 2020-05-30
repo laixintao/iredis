@@ -1,3 +1,7 @@
+### 1.7.2
+
+- Feature: Support `ACL` (#340).
+
 ### 1.7.1
 
 - Bugfix: `command in` considered as an invalid input case, due to matched with
