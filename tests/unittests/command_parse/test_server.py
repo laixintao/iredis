@@ -186,3 +186,8 @@ def test_acl_setuser(judge_command):
         "ACL SETUSER alan allkeys +@string +@set -SADD >alanpassword",
         {"command": "ACL SETUSER", "username": "alan", "rule": ">alanpassword"},
     )
+
+
+def test_acl_getuser(judge_command):
+    judge_command("acl getuser alan", {"command": "acl getuser", "username": "alan"})
+    judge_command("acl getuser", None)

@@ -548,6 +548,7 @@ NEW_GRAMMAR = {
         \s*""",
     "command_categorynamex": fr"(\s+ {CATEGORYNAME})? \s*",
     "command_usernames": fr"(\s+ {USERNAME})+ \s*",
+    "command_username": fr"\s+ {USERNAME} \s*",
     "command_count_or_resetx": fr"( (\s+ {COUNT}) | (\s+ {RESET_CONST}) )? \s*",
     "command_username_rules": fr"\s+ {USERNAME} (\s+ {RULE})* \s*",
 }
