@@ -168,3 +168,9 @@ def test_acl_deluser(judge_command):
         "acl deluser laixintao antirez",
         {"command": "acl deluser", "username": "antirez"},
     )
+
+
+def test_acl_log(judge_command):
+    judge_command("acl log 2", {"command": "acl log", "count": "2"})
+    judge_command("acl log reset", {"command": "acl log", "reset_const": "reset"})
+    judge_command("acl log ", {"command": "acl log"})

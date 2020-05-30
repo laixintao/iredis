@@ -120,6 +120,7 @@ CONST = {
     "optin_const": "OPTIN",
     "optout_const": "OPTOUT",
     "noloop_const": "NOLOOP",
+    "reset_const": "RESET",
 }
 
 
@@ -302,6 +303,8 @@ BCAST_CONST = fr"(?P<bcast_const>{c('bcast_const')})"
 OPTIN_CONST = fr"(?P<optin_const>{c('optin_const')})"
 OPTOUT_CONST = fr"(?P<optout_const>{c('optout_const')})"
 NOLOOP_CONST = fr"(?P<noloop_const>{c('noloop_const')})"
+
+RESET_CONST = fr"(?P<reset_const>{c('reset_const')})"
 
 command_grammar = compile(COMMAND)
 
@@ -544,6 +547,7 @@ NEW_GRAMMAR = {
         \s*""",
     "command_categorynamex": fr"(\s+ {CATEGORYNAME})? \s*",
     "command_usernames": fr"(\s+ {USERNAME})+ \s*",
+    "command_count_or_resetx": fr"( (\s+ {COUNT}) | (\s+ {RESET_CONST}) )? \s*",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"
