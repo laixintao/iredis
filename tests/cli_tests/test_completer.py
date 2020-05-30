@@ -1,3 +1,6 @@
+import pytest
+
+
 def test_integer_type_completer(cli):
     cli.expect("127.0.0.1")
     cli.send("BITFIELD meykey GET ")
@@ -32,3 +35,17 @@ def test_command_completion_when_space_command(cli, clean_redis):
 
     cli.send("command in")
     cli.expect("command info")
+
+
+@pytest.mark.skipif("int(os.environ['REDIS_VERSION']) < 6")
+def test_username_completer(cli, iredis_client):
+    iredis_client.execute("acl setuser", "foo1")
+    iredis_client.execute("acl setuser", "bar2")
+
+    cli.expect("127.0.0.1")
+    cli.sendline("acl users")
+    cli.expect("foo1")
+
+    cli.send("acl deluser ")
+    cli.expect("foo1")
+    cli.expect("bar2")

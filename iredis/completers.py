@@ -257,6 +257,8 @@ class IRedisCompleter(Completer):
         # only update categoryname completer when `ACL CAT` without args.
         if command_name == "ACL CAT" and not args:
             self.catetoryname_completer.touch_words(response)
+        if command_name == "ACL USERS":
+            self.username_completer.touch_words(response)
 
     def _touch_members(self, items):
         _step = 1

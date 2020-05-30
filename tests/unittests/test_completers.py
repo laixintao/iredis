@@ -333,3 +333,14 @@ def test_username_completer():
         "antirez",
         "laixintao",
     ]
+
+
+def test_username_touch_for_response():
+    c = IRedisCompleter()
+    c.update_completer_for_response(
+        "acl   users", (), [b"hello", b"world"],
+    )
+    assert sorted(c.username_completer.words) == [
+        "hello",
+        "world",
+    ]
