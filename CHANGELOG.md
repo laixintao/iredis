@@ -2,6 +2,7 @@
 
 - Feature: Support `ACL` ( [#340](https://github.com/laixintao/iredis/pull/343)
   ).
+- Bugfix: Include tests in source distribution.
 
 ### 1.7.1
 

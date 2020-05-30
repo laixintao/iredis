@@ -25,12 +25,7 @@ classifiers = [
 
 packages = [
     { include = "iredis" },
-    { include = "CHANGELOG", format = "sdist" },
-    { include = "LICENSE", format = "sdist" },
-    { include = "README.md", format = "sdist" },
-    { include = "poetry.lock", format = "sdist" },
     { include = "tests", format = "sdist" },
-    { include = "scripts", format = "sdist" },
 ]
 
 [tool.poetry.dependencies]
