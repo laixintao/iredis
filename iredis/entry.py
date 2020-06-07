@@ -19,6 +19,7 @@ from prompt_toolkit.key_binding.bindings.named_commands import (
 )
 
 from .client import Client
+from .key_bindings import kb as key_bindings
 from .style import STYLE
 from .config import config, load_config_files
 from .processors import UserInputCommand, UpdateBottomProcessor, PasswordProcessor
@@ -188,6 +189,7 @@ def repl(client, session, start_time):
                     PasswordProcessor(),
                 ],
                 rprompt=lambda: "<transaction>" if config.transaction else None,
+                key_bindings=key_bindings,
                 enable_suspend=True,
             )
 

@@ -18,3 +18,16 @@ def test_set_command_with_shash(clean_redis, cli):
 
     cli.sendline("get a")
     cli.expect(r"hello")
+
+
+def test_enter_key_binding(clean_redis, cli):
+    cli.send("set")
+    cli.expect("set")
+    cli.send("\033[B")  # down
+    cli.sendline()  # enter
+
+    cli.sendline(" a 'hello'")
+    cli.expect("OK")
+
+    cli.sendline("get a")
+    cli.expect(r"hello")
