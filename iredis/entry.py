@@ -188,6 +188,7 @@ def repl(client, session, start_time):
                     PasswordProcessor(),
                 ],
                 rprompt=lambda: "<transaction>" if config.transaction else None,
+                enable_suspend=True,
             )
 
         except KeyboardInterrupt:
