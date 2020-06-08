@@ -107,7 +107,7 @@ class Client:
         else:
             config.no_version_reason = "--no-info flag activated"
 
-        if config.version:
+        if config.version and re.match(r"([\d\.]+)", config.version):
             self.auth_compat(config.version)
 
     def auth_compat(self, redis_version: str):

@@ -5,6 +5,7 @@ def test_auth(judge_command):
 def test_auth_redis6(judge_command):
     from iredis.commands import command2syntax
     from iredis.redis_grammar import get_command_grammar
+
     get_command_grammar.cache_clear()
 
     old = command2syntax["AUTH"]
