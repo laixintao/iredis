@@ -20,6 +20,7 @@ from .data import commands as commands_data
 from .commands import (
     command2callback,
     commands_summary,
+    command2syntax,
     groups,
     split_command_args,
     split_unknown_args,
@@ -105,6 +106,14 @@ class Client:
                 config.no_version_reason = str(e)
         else:
             config.no_version_reason = "--no-info flag activated"
+
+        if config.version:
+            self.auth_compat(config.version)
+
+    def auth_compat(self, redis_version: str):
+        with_username = StrictVersion(redis_version) >= StrictVersion("6.0.0")
+        if with_username:
+            command2syntax["AUTH"] = "command_usernamex_password"
 
     def set_default_pager(self, config):
         configured_pager = config.pager
