@@ -314,7 +314,7 @@ command_grammar = compile(COMMAND)
 # Then it's grammar here is r"\s+ key \s+ value \s*", we needn't add `command`
 # here because every syntaxes starts with `command` so we will prepend `command`
 # in get_command_grammar function.
-NEW_GRAMMAR = {
+GRAMMAR = {
     "command_key": fr"\s+ {KEY} \s*",
     "command_pattern": fr"\s+ {PATTERN} \s*",
     "command_georadiusbymember": fr"""
@@ -343,6 +343,7 @@ NEW_GRAMMAR = {
     "command_slot_slotsubcmd_nodex": fr"""
         \s+ {SLOT} \s+ {SLOTSUBCMD} (\s+ {NODE})? \s*""",
     "command_password": fr"\s+ {PASSWORD} \s*",
+    "command_usernamex_password": fr"(\s+ {USERNAME})? \s+ {PASSWORD} \s*",
     "command_message": fr"\s+ {MESSAGE} \s*",
     "command_messagex": fr"(\s+{MESSAGE})? \s*",
     "command_index": fr"\s+ {INDEX} \s*",
@@ -564,7 +565,7 @@ def get_command_grammar(command):
         input, otherwise can't match in lexer, cause this command to be invalid;
     """
     syntax_name = command2syntax[" ".join(command.split()).upper()]
-    syntax = NEW_GRAMMAR.get(syntax_name)
+    syntax = GRAMMAR.get(syntax_name)
 
     # If a command is not supported yet, (e.g. command from latest version added
     # by Redis recently, or command from third Redis module.) return a defualt

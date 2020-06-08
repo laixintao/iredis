@@ -2,6 +2,22 @@ def test_auth(judge_command):
     judge_command("auth 123", {"command": "auth", "password": "123"})
 
 
+def test_auth_redis6(judge_command):
+    from iredis.commands import command2syntax
+    from iredis.redis_grammar import get_command_grammar
+
+    get_command_grammar.cache_clear()
+
+    old = command2syntax["AUTH"]
+    command2syntax["AUTH"] = "command_usernamex_password"
+    judge_command(
+        "auth default 123",
+        {"command": "auth", "password": "123", "username": "default"},
+    )
+    judge_command("AUTH 123", {"command": "AUTH", "password": "123"})
+    command2syntax["AUTH"] = old
+
+
 def test_echo(judge_command):
     judge_command("echo hello", {"command": "echo", "message": "hello"})
 
