@@ -1,3 +1,10 @@
+### 1.7.3
+
+- Bugfix: IRedis can be suspended by <kbd>Ctrl</kbd> + <kbd>Z</kbd>. (Thanks
+  [wooden-robot])
+- Bugfix: Press <kbd>Enter</kbd> when completion is open will not execute
+  commands. (Thanks [wooden-robot])
+
 ### 1.7.2
 
 - Feature: Support `ACL` ( [#340](https://github.com/laixintao/iredis/pull/343)
