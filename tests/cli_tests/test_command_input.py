@@ -1,3 +1,6 @@
+import pytest
+
+
 def test_wrong_select_db_index(cli):
     cli.sendline("select 1")
     cli.expect(["OK", "127.0.0.1"])
@@ -31,3 +34,17 @@ def test_enter_key_binding(clean_redis, cli):
 
     cli.sendline("get a")
     cli.expect(r"hello")
+
+
+@pytest.mark.skipif("int(os.environ['REDIS_VERSION']) < 6")
+def test_auth_hidden_password_with_username(clean_redis, cli):
+    cli.send("auth  default hello-world")
+    cli.expect("default")
+    cli.expect(r"\*{11}")
+
+
+@pytest.mark.skipif("int(os.environ['REDIS_VERSION']) > 5")
+def test_auth_hidden_password(clean_redis, cli):
+    cli.send("auth hello-world")
+    cli.expect("auth")
+    cli.expect(r"\*{11}")
