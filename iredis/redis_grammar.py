@@ -121,6 +121,7 @@ CONST = {
     "optout_const": "OPTOUT",
     "noloop_const": "NOLOOP",
     "reset_const": "RESET",
+    "const_user": "USER",
 }
 
 
@@ -253,6 +254,7 @@ SHUTDOWN = fr"(?P<shutdown>{c('shutdown')})"
 SWITCH = fr"(?P<switch>{c('switch')})"
 ON_OFF = fr"(?P<on_off>{c('on_off')})"
 CONST_ID = fr"(?P<const_id>{c('const_id')})"
+CONST_USER = fr"(?P<const_user>{c('const_user')})"
 ADDR = fr"(?P<addr>{c('addr')})"
 SKIPME = fr"(?P<skipme>{c('skipme')})"
 YES = fr"(?P<yes>{c('yes')})"
@@ -439,6 +441,7 @@ GRAMMAR = {
             (\s+ {ADDR} \s+ {IP_PORT})|
             (\s+ {CONST_ID} \s+ {CLIENTID})|
             (\s+ {TYPE_CONST} \s+ {CONNTYPE})|
+            (\s+ {CONST_USER} \s+ {USERNAME})|
             (\s+ {SKIPME} \s+ {YES})
         )+ \s*""",
     "command_migrate": fr"""\s+ {HOST} \s+ {PORT}

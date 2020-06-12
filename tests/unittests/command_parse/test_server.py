@@ -85,6 +85,14 @@ def test_client_kill(judge_command):
     )
 
 
+def test_client_kill_username(judge_command):
+    """since redis-server 6.0"""
+    judge_command(
+        "client kill USER default",
+        {"command": "client kill", "const_user": "USER", "username": "default"},
+    )
+
+
 def test_client_kill_unordered_arguments(judge_command):
     judge_command(
         "CLIENT KILL type pubsub addr 127.0.0.1:12345",
