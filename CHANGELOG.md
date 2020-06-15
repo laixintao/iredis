@@ -5,6 +5,8 @@
 - Bugfix: Press <kbd>Enter</kbd> when completion is open will not execute
   commands. (Thanks [wooden-robot])
 - Feature: `AUTH` command is now compatible with both Redis 5 and Redis 6.
+- Redis6 support: `CLIENT KILL` support kill by `USER`, `XINFO` command support
+  `FULL` option.
 
 ### 1.7.2
 

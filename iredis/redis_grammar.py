@@ -122,6 +122,7 @@ CONST = {
     "noloop_const": "NOLOOP",
     "reset_const": "RESET",
     "const_user": "USER",
+    "full_const": "FULL",
 }
 
 
@@ -308,6 +309,7 @@ OPTOUT_CONST = fr"(?P<optout_const>{c('optout_const')})"
 NOLOOP_CONST = fr"(?P<noloop_const>{c('noloop_const')})"
 
 RESET_CONST = fr"(?P<reset_const>{c('reset_const')})"
+FULL_CONST = fr"(?P<full_const>{c('full_const')})"
 
 command_grammar = compile(COMMAND)
 
@@ -482,7 +484,10 @@ GRAMMAR = {
         (
             (\s+ {STREAM_CONSUMERS} \s+ {KEY} \s+ {GROUP})|
             (\s+ {STREAM_GROUPS} \s+ {KEY})|
-            (\s+ {STREAM} \s+ {KEY})|
+            (\s+ {STREAM} \s+ {KEY}
+                (\s+ {FULL_CONST})?
+                (\s+ {COUNT_CONST} \s+ {COUNT})?
+            )|
             (\s+ {HELP})
         )
         \s*""",

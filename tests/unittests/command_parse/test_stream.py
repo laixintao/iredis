@@ -159,6 +159,29 @@ def test_xinfo(judge_command):
     judge_command("XINFO groups mystream mygroup", None)
 
 
+def test_xinfo_with_full(judge_command):
+    judge_command(
+        "XINFO STREAM mystream FULL",
+        {
+            "command": "XINFO",
+            "stream": "STREAM",
+            "key": "mystream",
+            "full_const": "FULL",
+        },
+    )
+    judge_command(
+        "XINFO STREAM mystream FULL count 10",
+        {
+            "command": "XINFO",
+            "stream": "STREAM",
+            "key": "mystream",
+            "full_const": "FULL",
+            "count_const": "count",
+            "count": "10",
+        },
+    )
+
+
 def test_xpending(judge_command):
     judge_command(
         "XPENDING mystream group55",
