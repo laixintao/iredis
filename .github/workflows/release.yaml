@@ -1,64 +1,6 @@
 name: Release
 
-on:
-  push:
-    tags:
-      - v*
-
 jobs:
-  release-pypi:
-    name: release-pypi
-    runs-on: ubuntu-16.04
-
-    # FIXME
-    # help test shouldn't depends on this to run
-    services:
-      redis:
-        image: redis:5
-        ports:
-          - 6379:6379
-        options: --entrypoint redis-server
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
-        with:
-          python-version: 3.7
-          architecture: 'x64'
-      - name: Cache venv
-        uses: actions/cache@v1
-        with:
-          path: venv
-          # Look to see if there is a cache hit for the corresponding requirements file
-          key: ubuntu-16.04-poetryenv-${{ hashFiles('poetry.lock') }}
-      - name: Install Dependencies
-        run: |
-          python3 -m venv venv
-          . venv/bin/activate
-          pip install -U pip
-          pip install poetry
-          poetry install
-          python -c "import sys; print(sys.version)"
-          pip list
-      - name: Poetry Build
-        run: |
-          . venv/bin/activate
-          poetry build
-      - name: Test Build
-        run: |
-          python3 -m venv fresh_env
-          . fresh_env/bin/activate
-          pip install dist/*.whl
-
-          iredis -h
-          iredis help GET
-
-      - name: Upload to Pypi
-        env:
-          PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: |
-          . venv/bin/activate
-          poetry publish --username __token__ --password ${PASSWORD}
 
   release-binary:
     name: Release Executable Binary.
@@ -128,25 +70,3 @@ jobs:
         run: |
           ./build/x86*/release/install/iredis -h
           ./build/x86*/release/install/iredis help GET
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/iredis.tar.gz
-          asset_name: iredis.tar.gz
-          asset_content_type: application/gzip
