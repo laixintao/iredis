@@ -62,7 +62,7 @@ jobs:
           # pyoxidizer doesn't know the wheel path, and it doesn't support passing env vars
           export WHEEL_PATH=`ls ./dist/iredis*.whl`
           envsubst '$WHEEL_PATH' < pyoxidizer.template.bzl > pyoxidizer.bzl
-          cargo install pyoxidizer --vers 0.6.0
+          cargo install pyoxidizer --vers 0.7.0
           pyoxidizer build --release install
           cd ./build/x86*/release/install
           tar -zcf ../../../iredis.tar.gz lib/ iredis
