@@ -1,3 +1,7 @@
+### 1.7.4
+
+- Bugfix: Lock wcwidth's version on `1.9.0`. Fix binary build.
+
 ### 1.7.3
 
 - Bugfix: IRedis can be suspended by <kbd>Ctrl</kbd> + <kbd>Z</kbd>. (Thanks
