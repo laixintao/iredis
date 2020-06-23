@@ -1,7 +1,9 @@
 name: Release
 
-jobs:
+on:
+  pull_request:
 
+jobs:
   release-binary:
     name: Release Executable Binary.
     runs-on: ubuntu-16.04
