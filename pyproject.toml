@@ -37,7 +37,7 @@ mistune = "^0.8"
 configobj = "^5.0"
 click = "^7.0"
 pendulum = "^2.0"
-importlib-resources = "1.0.2"
+importlib-resources = "2.0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5"
