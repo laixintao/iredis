@@ -446,9 +446,16 @@ GRAMMAR = {
             (\s+ {CONST_USER} \s+ {USERNAME})|
             (\s+ {SKIPME} \s+ {YES})
         )+ \s*""",
-    "command_migrate": fr"""\s+ {HOST} \s+ {PORT}
-        \s+ {KEY} \s+ {INDEX} \s+ {TIMEOUT} (\s+ {MIGRATECHOICE})?
-        (\s+ {AUTH} \s+ {PASSWORD})? (\s+ {CONST_KEYS} \s+ {KEYS})? \s*""",
+    "command_migrate": fr"""
+        \s+ {HOST} \s+ {PORT}
+        \s+ {KEY} \s+ {INDEX} \s+ {TIMEOUT} 
+        (\s+ {MIGRATECHOICE})?
+        (
+            (\s+ {AUTH} \s+ {PASSWORD})|
+            (\s+ {AUTH} \s+ {USERNAME} \s+ {PASSWORD})
+        )?
+        (\s+ {CONST_KEYS} \s+ {KEYS})?
+    \s*""",
     "command_radius": fr"""\s+ {KEY}
         \s+ {LONGITUDE} \s+ {LATITUDE} \s+ {FLOAT} \s+ {DISTUNIT}
         (\s+ {GEOCHOICE})* (\s+ {COUNT_CONST} \s+ {COUNT})?

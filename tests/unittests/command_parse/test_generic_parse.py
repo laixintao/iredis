@@ -123,6 +123,37 @@ def test_migrate(judge_command):
             "keys": "key1 key2 key3",
         },
     )
+    judge_command(
+        "MIGRATE 192.168.1.34 6379 foo 0 5000 auth password1 KEYS key1 key2 key3",
+        {
+            "command": "MIGRATE",
+            "host": "192.168.1.34",
+            "port": "6379",
+            "key": "foo",
+            "index": "0",
+            "timeout": "5000",
+            "const_keys": "KEYS",
+            "keys": "key1 key2 key3",
+            "auth": "auth",
+            "password": "password1",
+        },
+    )
+    judge_command(
+        "MIGRATE 192.168.1.34 6379 foo 0 5000 auth username1 password1 KEYS key1 key2 key3",
+        {
+            "command": "MIGRATE",
+            "host": "192.168.1.34",
+            "port": "6379",
+            "key": "foo",
+            "index": "0",
+            "timeout": "5000",
+            "const_keys": "KEYS",
+            "keys": "key1 key2 key3",
+            "auth": "auth",
+            "password": "password1",
+            "username": "username1",
+        },
+    )
 
 
 def test_object(judge_command):
