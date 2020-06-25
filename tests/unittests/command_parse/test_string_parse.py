@@ -320,3 +320,27 @@ def test_bitfield(judge_command):
             "overflow_option": "SAT",
         },
     )
+
+
+def test_stralgo(judge_command):
+    judge_command(
+        "STRALGO LCS STRINGS ohmytext mynewtext",
+        {
+            "command": "STRALGO",
+            "str_algo": "LCS",
+            "strings_const": "STRINGS",
+            "values": "ohmytext mynewtext",
+        },
+    )
+
+    # Due to redis' command design, this can't be fix in any ways.
+    judge_command(
+        "STRALGO LCS STRINGS ohmytext mynewtext LEN",
+        {
+            "command": "STRALGO",
+            "str_algo": "LCS",
+            "strings_const": "STRINGS",
+            "values": "ohmytext mynewtext LEN",
+        },
+    )
+

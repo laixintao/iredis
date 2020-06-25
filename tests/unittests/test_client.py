@@ -9,6 +9,7 @@ from iredis.client import Client
 from iredis.config import config
 from iredis.completers import IRedisCompleter
 from iredis.entry import Rainbow, prompt_message
+from iredis.exceptions import NotSupport
 
 
 @pytest.fixture
@@ -31,6 +32,11 @@ def test_send_command(_input, command_name, expect_args):
     next(client.send_command(_input, None))
     args, kwargs = client.execute.call_args
     assert args == (command_name, *expect_args)
+
+
+def test_client_not_support_hello_command(iredis_client):
+    with pytest.raises(NotSupport):
+        iredis_client.pre_hook("hello 3", "hello", "3", None)
 
 
 def test_patch_completer():
