@@ -1,3 +1,10 @@
+## 1.8
+
+- Feature: Fully support Redis6!
+  - Support `STRALGO` command.
+  - `MIGRATE` command now support `AUTH2`.
+  - DISABLE `hello` command, IRedis not support RESP3.
+
 ### 1.7.4
 
 - Bugfix: Lock wcwidth's version on `1.9.0`. Fix binary build.
