@@ -320,10 +320,10 @@ FULL_CONST = fr"(?P<full_const>{c('full_const')})"
 
 STR_ALGO = fr"(?P<str_algo>{c('str_algo')})"
 LEN_CONST = fr"(?P<len_const>{c('len_const')})"
-IDX_CONST =  fr"(?P<idx_const>{c('idx_const')})"
-MINMATCHLEN_CONST =  fr"(?P<minmatchlen_const>{c('minmatchlen_const')})"
-WITHMATCHLEN_CONST =  fr"(?P<withmatchlen_const>{c('withmatchlen_const')})"
-STRINGS_CONST =  fr"(?P<strings_const>{c('strings_const')})"
+IDX_CONST = fr"(?P<idx_const>{c('idx_const')})"
+MINMATCHLEN_CONST = fr"(?P<minmatchlen_const>{c('minmatchlen_const')})"
+WITHMATCHLEN_CONST = fr"(?P<withmatchlen_const>{c('withmatchlen_const')})"
+STRINGS_CONST = fr"(?P<strings_const>{c('strings_const')})"
 
 command_grammar = compile(COMMAND)
 
@@ -462,7 +462,7 @@ GRAMMAR = {
         )+ \s*""",
     "command_migrate": fr"""
         \s+ {HOST} \s+ {PORT}
-        \s+ {KEY} \s+ {INDEX} \s+ {TIMEOUT} 
+        \s+ {KEY} \s+ {INDEX} \s+ {TIMEOUT}
         (\s+ {MIGRATECHOICE})?
         (
             (\s+ {AUTH} \s+ {PASSWORD})|

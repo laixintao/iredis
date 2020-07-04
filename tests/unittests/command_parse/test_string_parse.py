@@ -343,4 +343,3 @@ def test_stralgo(judge_command):
             "values": "ohmytext mynewtext LEN",
         },
     )
-
