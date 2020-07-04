@@ -123,6 +123,12 @@ CONST = {
     "reset_const": "RESET",
     "const_user": "USER",
     "full_const": "FULL",
+    "str_algo": "LCS",
+    "len_const": "LEN",
+    "idx_const": "IDX",
+    "minmatchlen_const": "MINMATCHLEN",
+    "withmatchlen_const": "WITHMATCHLEN",
+    "strings_const": "STRINGS",
 }
 
 
@@ -163,6 +169,7 @@ SVALUE = fr"(?P<svalue>{VALID_TOKEN})"
 MEMBER = fr"(?P<member>{VALID_TOKEN})"
 MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 COUNT = fr"(?P<count>{NNUM})"
+LEN = fr"(?P<len>{NNUM})"
 VERSION_NUM = fr"(?P<version_num>{NUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 CHANNEL = fr"(?P<channel>{VALID_TOKEN})"
@@ -311,6 +318,13 @@ NOLOOP_CONST = fr"(?P<noloop_const>{c('noloop_const')})"
 RESET_CONST = fr"(?P<reset_const>{c('reset_const')})"
 FULL_CONST = fr"(?P<full_const>{c('full_const')})"
 
+STR_ALGO = fr"(?P<str_algo>{c('str_algo')})"
+LEN_CONST = fr"(?P<len_const>{c('len_const')})"
+IDX_CONST = fr"(?P<idx_const>{c('idx_const')})"
+MINMATCHLEN_CONST = fr"(?P<minmatchlen_const>{c('minmatchlen_const')})"
+WITHMATCHLEN_CONST = fr"(?P<withmatchlen_const>{c('withmatchlen_const')})"
+STRINGS_CONST = fr"(?P<strings_const>{c('strings_const')})"
+
 command_grammar = compile(COMMAND)
 
 # Here are the core grammars, those are tokens after ``command``.
@@ -446,9 +460,16 @@ GRAMMAR = {
             (\s+ {CONST_USER} \s+ {USERNAME})|
             (\s+ {SKIPME} \s+ {YES})
         )+ \s*""",
-    "command_migrate": fr"""\s+ {HOST} \s+ {PORT}
-        \s+ {KEY} \s+ {INDEX} \s+ {TIMEOUT} (\s+ {MIGRATECHOICE})?
-        (\s+ {AUTH} \s+ {PASSWORD})? (\s+ {CONST_KEYS} \s+ {KEYS})? \s*""",
+    "command_migrate": fr"""
+        \s+ {HOST} \s+ {PORT}
+        \s+ {KEY} \s+ {INDEX} \s+ {TIMEOUT}
+        (\s+ {MIGRATECHOICE})?
+        (
+            (\s+ {AUTH} \s+ {PASSWORD})|
+            (\s+ {AUTH} \s+ {USERNAME} \s+ {PASSWORD})
+        )?
+        (\s+ {CONST_KEYS} \s+ {KEYS})?
+    \s*""",
     "command_radius": fr"""\s+ {KEY}
         \s+ {LONGITUDE} \s+ {LATITUDE} \s+ {FLOAT} \s+ {DISTUNIT}
         (\s+ {GEOCHOICE})* (\s+ {COUNT_CONST} \s+ {COUNT})?
@@ -561,6 +582,19 @@ GRAMMAR = {
     "command_count_or_resetx": fr"( (\s+ {COUNT}) | (\s+ {RESET_CONST}) )? \s*",
     "command_username_rules": fr"\s+ {USERNAME} (\s+ {RULE})* \s*",
     "command_count": fr"(\s+ {COUNT})? \s*",
+    "command_stralgo": fr"""
+        (
+            \s+ {STR_ALGO}
+            (
+                (\s+ {CONST_KEYS} \s+ {KEYS})|
+                (\s+ {STRINGS_CONST} \s+ {VALUES})
+            )
+            (\s+ {IDX_CONST})?
+            (\s+ {LEN_CONST})?
+            (\s+ {MINMATCHLEN_CONST} \s+ {LEN})?
+            (\s+ {WITHMATCHLEN_CONST})?
+        )
+    \s*""",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"

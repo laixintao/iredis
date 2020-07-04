@@ -16,3 +16,7 @@ class NotRedisCommand(IRedisException):
 
 class AmbiguousCommand(IRedisException):
     """Command is not finished, don't it's command's name"""
+
+
+class NotSupport(IRedisException):
+    """IRedis currently not support this."""

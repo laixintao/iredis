@@ -25,6 +25,7 @@ cluster,READONLY,command,render_simple_string
 cluster,READWRITE,command,render_simple_string
 connection,AUTH,command_password,render_simple_string
 connection,ECHO,command_message,render_bulk_string
+connection,HELLO,command_any,render_list
 connection,PING,command_messagex,render_bulk_string
 connection,QUIT,command,render_simple_string
 connection,SELECT,command_index,render_simple_string
@@ -249,6 +250,7 @@ string,SETBIT,command_key_offset_bit,render_int
 string,SETEX,command_key_second_value,render_bulk_string
 string,SETNX,command_key_value,render_int
 string,SETRANGE,command_key_offset_value,render_int
+string,STRALGO,command_stralgo,render_list_or_string
 string,STRLEN,command_key,render_int
 transactions,DISCARD,command,render_simple_string
 transactions,EXEC,command,render_list_or_string

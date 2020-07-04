@@ -13,7 +13,12 @@ import redis
 from prompt_toolkit.shortcuts import clear
 from prompt_toolkit.formatted_text import FormattedText
 from redis.connection import Connection, SSLConnection, UnixDomainSocketConnection
-from redis.exceptions import AuthenticationError, ConnectionError, TimeoutError
+from redis.exceptions import (
+    AuthenticationError,
+    ConnectionError,
+    TimeoutError,
+)
+
 
 from . import markdown, renders
 from .data import commands as commands_data
@@ -27,7 +32,7 @@ from .commands import (
 )
 from .completers import IRedisCompleter
 from .config import config
-from .exceptions import NotRedisCommand, InvalidArguments, AmbiguousCommand
+from .exceptions import NotRedisCommand, InvalidArguments, AmbiguousCommand, NotSupport
 from .renders import OutputRender
 from .utils import (
     compose_command_syntax,
@@ -380,6 +385,8 @@ class Client:
 
         Only works when compile-grammar thread is done.
         """
+        if command_name.upper() == "HELLO":
+            raise NotSupport("IRedis currently not support RESP3, sorry about that.")
         # TRANSATION state chage
         if command_name.upper() in ["EXEC", "DISCARD"]:
             logger.debug(f"[After hook] Command is {command_name}, unset transaction.")
