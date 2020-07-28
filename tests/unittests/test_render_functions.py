@@ -120,7 +120,6 @@ def test_render_int_raw():
 
 
 def test_render_list_or_string():
-    config.raw = False
     assert renders.OutputRender.render_list_or_string("") == '""'
     assert renders.OutputRender.render_list_or_string("foo") == '"foo"'
     assert renders.OutputRender.render_list_or_string(
@@ -136,6 +135,20 @@ def test_render_list_or_string():
             ("class:string", '"bar"'),
         ]
     )
+
+
+def test_render_list_or_string_nil_and_empty_list():
+    assert renders.OutputRender.render_list_or_string(None) == FormattedText(
+        [("class:type", "(nil)")]
+    )
+    assert renders.OutputRender.render_list_or_string([]) == FormattedText(
+        [("class:type", "(empty list or set)")]
+    )
+
+
+def test_render_raw_nil_and_empty_list():
+    assert renders.OutputRender.render_raw(None) == b""
+    assert renders.OutputRender.render_raw([]) == b""
 
 
 def test_list_or_string():
