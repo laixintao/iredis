@@ -60,3 +60,49 @@ def test_linsert(judge_command):
             "value": ['"World"', '"There"'],
         },
     )
+
+
+def test_lpos(judge_command):
+    judge_command("LPOS mylist c", {"command": "LPOS", "key": "mylist", "element": "c"})
+    judge_command(
+        "LPOS mylist c RANK 2",
+        {
+            "command": "LPOS",
+            "key": "mylist",
+            "element": "c",
+            "rank_const": "RANK",
+            "rank": "2",
+        },
+    )
+    judge_command(
+        "LPOS mylist c RANK -1",
+        {
+            "command": "LPOS",
+            "key": "mylist",
+            "element": "c",
+            "rank_const": "RANK",
+            "rank": "-1",
+        },
+    )
+    judge_command(
+        "LPOS mylist c COUNT 2",
+        {
+            "command": "LPOS",
+            "key": "mylist",
+            "element": "c",
+            "count_const": "COUNT",
+            "count": "2",
+        },
+    )
+    judge_command(
+        "LPOS mylist c RANK -1 COUNT 2",
+        {
+            "command": "LPOS",
+            "key": "mylist",
+            "element": "c",
+            "count_const": "COUNT",
+            "count": "2",
+            "rank_const": "RANK",
+            "rank": "-1",
+        },
+    )
