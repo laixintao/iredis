@@ -1,3 +1,8 @@
+## 1.9
+
+- Feature: Support `LPOS` command.
+- Doc: Update docs in `HELP` command update to date.
+
 ## 1.8
 
 - Feature: Fully support Redis6!
