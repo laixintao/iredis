@@ -109,7 +109,7 @@ Finally to also have the match len:
 
 @return
 
-For the LCS algorith:
+For the LCS algorithm:
 
 - Without modifiers the string representing the longest common substring is
   returned.

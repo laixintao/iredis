@@ -129,6 +129,7 @@ CONST = {
     "minmatchlen_const": "MINMATCHLEN",
     "withmatchlen_const": "WITHMATCHLEN",
     "strings_const": "STRINGS",
+    "rank_const": "RANK",
 }
 
 
@@ -162,6 +163,7 @@ DESTINATION = fr"(?P<destination>{VALID_TOKEN})"
 NEWKEY = fr"(?P<newkey>{VALID_TOKEN})"
 VALUE = fr"(?P<value>{VALID_TOKEN})"
 VALUES = fr"(?P<values>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
+ELEMENT = fr"(?P<element>{VALID_TOKEN})"  # element for list
 FIELDS = fr"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 FIELD = fr"(?P<field>{VALID_TOKEN})"
 SFIELD = fr"(?P<sfield>{VALID_TOKEN})"
@@ -170,6 +172,7 @@ MEMBER = fr"(?P<member>{VALID_TOKEN})"
 MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 COUNT = fr"(?P<count>{NNUM})"
 LEN = fr"(?P<len>{NNUM})"
+RANK = fr"(?P<rank>{NNUM})"
 VERSION_NUM = fr"(?P<version_num>{NUM})"
 MESSAGE = fr"(?P<message>{VALID_TOKEN})"
 CHANNEL = fr"(?P<channel>{VALID_TOKEN})"
@@ -324,6 +327,7 @@ IDX_CONST = fr"(?P<idx_const>{c('idx_const')})"
 MINMATCHLEN_CONST = fr"(?P<minmatchlen_const>{c('minmatchlen_const')})"
 WITHMATCHLEN_CONST = fr"(?P<withmatchlen_const>{c('withmatchlen_const')})"
 STRINGS_CONST = fr"(?P<strings_const>{c('strings_const')})"
+RANK_CONST = fr"(?P<rank_const>{c('rank_const')})"
 
 command_grammar = compile(COMMAND)
 
@@ -595,6 +599,14 @@ GRAMMAR = {
             (\s+ {WITHMATCHLEN_CONST})?
         )
     \s*""",
+    "command_lpos": fr"""
+        \s+ {KEY} \s+ {ELEMENT}
+        (
+            (\s+ {RANK_CONST} \s+ {RANK})|
+            (\s+ {COUNT_CONST} \s+ {COUNT})|
+            (\s+ {MAXLEN} \s+ {LEN})
+        )*
+        \s*""",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"

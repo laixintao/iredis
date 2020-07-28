@@ -94,6 +94,7 @@ list,BRPOPLPUSH,command_key_newkey_timeout,render_bulk_string
 list,LINDEX,command_key_position,render_bulk_string
 list,LINSERT,command_key_positionchoice_pivot_value,render_int
 list,LLEN,command_key,render_int
+list,LPOS,command_lpos,render_list_or_string
 list,LPOP,command_key,render_bulk_string
 list,LPUSH,command_key_values,render_int
 list,LPUSHX,command_key_values,render_int

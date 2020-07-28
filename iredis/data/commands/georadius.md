@@ -44,6 +44,15 @@ with a very small `COUNT` option may be slow even if just a few results are
 returned. On the other hand `COUNT` can be a very effective way to reduce
 bandwidth usage if normally just the first results are used.
 
+By default the command returns the items to the client. It is possible to store
+the results with one of these options:
+
+- `!STORE`: Store the items in a sorted set populated with their geospatial
+  information.
+- `!STOREDIST`: Store the items in a sorted set populated with their distance
+  from the center as a floating point number, in the same unit specified in the
+  radius.
+
 @return
 
 @array-reply, specifically:
