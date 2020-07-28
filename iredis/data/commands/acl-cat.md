@@ -4,7 +4,7 @@ specified category.
 
 ACL categories are very useful in order to create ACL rules that include or
 exclude a large set of commands at once, without specifying every single
-command. For instance the following rule will let the user `karin` perform
+command. For instance, the following rule will let the user `karin` perform
 everything but the most dangerous operations that may affect the server
 stability:
 

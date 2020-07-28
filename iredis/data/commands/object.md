@@ -15,7 +15,8 @@ The `OBJECT` command supports multiple sub commands:
   at the specified key is idle (not requested by read or write operations).
   While the value is returned in seconds the actual resolution of this timer is
   10 seconds, but may vary in future implementations. This subcommand is
-  available when `maxmemory-policy` is set to an LRU policy or `noeviction`.
+  available when `maxmemory-policy` is set to an LRU policy or `noeviction` and
+  `maxmemory` is set.
 - `OBJECT FREQ <key>` returns the logarithmic access frequency counter of the
   object stored at the specified key. This subcommand is available when
   `maxmemory-policy` is set to an LFU policy.

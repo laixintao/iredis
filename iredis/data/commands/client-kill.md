@@ -24,7 +24,7 @@ of killing just by address. The following filters are available:
   connections of **all the clients** in the specified class. Note that clients
   blocked into the `MONITOR` command are considered to belong to the `normal`
   class.
-- `CLIENT KILL USER`username`. Closes all the connections that are authenticated
+- `CLIENT KILL USER username`. Closes all the connections that are authenticated
   with the specified [ACL](/topics/acl) username, however it returns an error if
   the username does not map to an existing ACL user.
 - `CLIENT KILL SKIPME yes/no`. By default this option is set to `yes`, that is,

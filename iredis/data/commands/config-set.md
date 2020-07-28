@@ -13,7 +13,7 @@ All the supported parameters have the same meaning of the equivalent
 configuration parameter used in the [redis.conf][hgcarr22rc] file, with the
 following important differences:
 
-[hgcarr22rc]: http://github.com/antirez/redis/raw/2.8/redis.conf
+[hgcarr22rc]: http://github.com/redis/redis/raw/2.8/redis.conf
 
 - In options where bytes or other quantities are specified, it is not possible
   to use the `redis.conf` abbreviated form (`10k`, `2gb` ... and so forth),

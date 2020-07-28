@@ -23,7 +23,7 @@ When Redis ACLs are used, the command should be given in an extended way:
     AUTH <username> <password>
 
 In order to authenticate the current connection with one of the connections
-defined in the ACL list (see `ACL SETUSER`) and the offical
+defined in the ACL list (see `ACL SETUSER`) and the official
 [ACL guide](/topics/acl) for more information.
 
 When ACLs are used, the single argument form of the command, where only the

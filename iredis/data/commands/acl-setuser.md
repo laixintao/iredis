@@ -61,7 +61,7 @@ This is a list of all the supported Redis ACL rules:
   user can access.
 - `+<command>`: add this command to the list of the commands the user can call.
   Example: `+zadd`.
-- `+@<categoty>`: add all the commands in the specified categoty to the list of
+- `+@<category>`: add all the commands in the specified category to the list of
   commands the user is able to execute. Example: `+@string` (adds all the string
   commands). For a list of categories check the `ACL CAT` command.
 - `+<command>|<subcommand>`: add the specified command to the list of the
@@ -76,7 +76,7 @@ This is a list of all the supported Redis ACL rules:
   server, including _future commands_ loaded via module, to be executed by this
   user.
 - `-<command>`. Like `+<command>` but removes the command instead of adding it.
-- `-@<categoty>`: Like `-@<category>` but removes all the commands in the
+- `-@<category>`: Like `+@<category>` but removes all the commands in the
   category instead of adding them.
 - `nocommands`: alias for `-@all`. Removes all the commands, the user will no
   longer be able to execute anything.
