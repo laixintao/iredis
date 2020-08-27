@@ -187,10 +187,19 @@ class Client:
         if command == "EXIT":
             exit()
 
-    def execute(self, command_name, *args, **options):
+    def execute(self, *args, **kwargs):
+        logger.info(
+            f"execute: connection={self.connection} args={args}, kwargs={kwargs}"
+        )
+        return self.execute_by_connection(self.connection, *args, **kwargs)
+
+    def execute_by_connection(self, connection, command_name, *args, **options):
         """Execute a command and return a parsed response
         Here we retry once for ConnectionError.
         """
+        logger.info(
+            f"execute by connection: connection={connection}, name={command_name}, {args}, {options}"
+        )
         retry_times = config.retry_times  # FIXME configureable
         last_error = None
         need_refresh_connection = False
@@ -202,11 +211,12 @@ class Client:
                         f"{str(last_error)} retrying... retry left: {retry_times+1}",
                         file=sys.stderr,
                     )
-                    self.connection.disconnect()
-                    self.connection.connect()
-                    logger.info(f"New connection created, retry on {self.connection}.")
-                self.connection.send_command(command_name, *args)
-                response = self.connection.read_response()
+                    connection.disconnect()
+                    connection.connect()
+                    logger.info(f"New connection created, retry on {connection}.")
+                logger.info(f"send_command: {command_name} , {args}")
+                connection.send_command(command_name, *args)
+                response = connection.read_response()
             except AuthenticationError:
                 raise
             except (ConnectionError, TimeoutError) as e:
@@ -217,7 +227,9 @@ class Client:
             except (ResponseError) as e:
                 response_message = str(e)
                 if response_message.startswith("MOVED"):
-                    return self.reissue_with_redirect(e, command_name, *args, **options)
+                    return self.reissue_with_redirect(
+                        response_message, command_name, *args, **options
+                    )
                 raise e
 
             except redis.exceptions.ExecAbortError:
@@ -227,16 +239,23 @@ class Client:
                 return response
         raise last_error
 
-    def reissue_with_redirect(self, response, command_name, *args, **kwargs):
+    def reissue_with_redirect(self, response, *args, **kwargs):
         """
         For redis cluster, when server response a "MOVE ..." response, we auto-
         redirect to the target node, reissue the original command.
         """
         # TODO unix cluster node?
+        # TODO read dsn for password username
         # Redis Cluster only supports database zero.
-        _, slot, ip, port = response.split(" ")
+        _, slot, ip_port = response.split(" ")
+        ip, port = ip_port.split(":")
+        print(
+            response, file=sys.stderr,
+        )
         logger.info(f"redirect response type: {type(response)}")
-        logger.info(f"{response.message}")
+        # create a new connection for redirection
+        connection = self.create_connection(ip, port)
+        return self.execute_by_connection(connection, *args, **kwargs)
 
     def render_response(self, response, command_name):
         "Parses a response from the Redis server"
