@@ -115,11 +115,15 @@ def test_iredis_completer_update_for_response():
 def test_categoryname_completer_update_for_response():
     c = IRedisCompleter()
     c.update_completer_for_response(
-        "ACL CAT", (), [b"scripting", b"watch"],
+        "ACL CAT",
+        (),
+        [b"scripting", b"watch"],
     )
     assert sorted(c.catetoryname_completer.words) == ["scripting", "watch"]
     c.update_completer_for_response(
-        "ACL CAT", ("scripting"), [b"foo", b"bar"],
+        "ACL CAT",
+        ("scripting"),
+        [b"foo", b"bar"],
     )
     assert sorted(c.catetoryname_completer.words) == ["scripting", "watch"]
 
@@ -127,12 +131,16 @@ def test_categoryname_completer_update_for_response():
 def test_completer_when_there_are_spaces_in_command():
     c = IRedisCompleter()
     c.update_completer_for_response(
-        "ACL    cat", (), [b"scripting", b"watch"],
+        "ACL    cat",
+        (),
+        [b"scripting", b"watch"],
     )
     assert sorted(c.catetoryname_completer.words) == ["scripting", "watch"]
 
     c.update_completer_for_response(
-        "acl \t   cat", (), [b"hello", b"world"],
+        "acl \t   cat",
+        (),
+        [b"hello", b"world"],
     )
     assert sorted(c.catetoryname_completer.words) == [
         "hello",
@@ -338,7 +346,9 @@ def test_username_completer():
 def test_username_touch_for_response():
     c = IRedisCompleter()
     c.update_completer_for_response(
-        "acl   users", (), [b"hello", b"world"],
+        "acl   users",
+        (),
+        [b"hello", b"world"],
     )
     assert sorted(c.username_completer.words) == [
         "hello",

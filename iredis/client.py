@@ -71,7 +71,13 @@ class Client:
         self.scheme = scheme
 
         self.connection = self.create_connection(
-            host, port, db, password, path, scheme, username,
+            host,
+            port,
+            db,
+            password,
+            path,
+            scheme,
+            username,
         )
 
         # all command upper case
@@ -250,7 +256,8 @@ class Client:
         _, slot, ip_port = response.split(" ")
         ip, port = ip_port.split(":")
         print(
-            response, file=sys.stderr,
+            response,
+            file=sys.stderr,
         )
         logger.info(f"redirect response type: {type(response)}")
         # create a new connection for redirection
