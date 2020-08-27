@@ -249,8 +249,9 @@ class Client:
         """
         For redis cluster, when server response a "MOVE ..." response, we auto-
         redirect to the target node, reissue the original command.
+
+        This feature is not supported for unix socket connection.
         """
-        # TODO unix cluster node?
         # TODO read dsn for password username
         # Redis Cluster only supports database zero.
         _, slot, ip_port = response.split(" ")
