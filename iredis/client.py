@@ -17,6 +17,7 @@ from redis.exceptions import (
     AuthenticationError,
     ConnectionError,
     TimeoutError,
+    ResponseError,
 )
 
 
@@ -69,6 +70,40 @@ class Client:
         self.username = username
         self.scheme = scheme
 
+        self.connection = self.create_connection(
+            host, port, db, password, path, scheme, username,
+        )
+
+        # all command upper case
+        self.answer_callbacks = command2callback
+        self.set_default_pager(config)
+        try:
+            self.connection.connect()
+        except Exception as e:
+            print(str(e), file=sys.stderr)
+            sys.exit(1)
+        if not config.no_info:
+            try:
+                self.get_server_info()
+            except Exception as e:
+                logger.warning(f"[After Connection] {str(e)}")
+                config.no_version_reason = str(e)
+        else:
+            config.no_version_reason = "--no-info flag activated"
+
+        if config.version and re.match(r"([\d\.]+)", config.version):
+            self.auth_compat(config.version)
+
+    def create_connection(
+        self,
+        host=None,
+        port=None,
+        db=0,
+        password=None,
+        path=None,
+        scheme="redis",
+        username=None,
+    ):
         if scheme in ("redis", "rediss"):
             connection_kwargs = {
                 "host": host,
@@ -93,27 +128,8 @@ class Client:
         logger.debug(
             f"connection_class={connection_class}, connection_kwargs={connection_kwargs}"
         )
-        self.connection = connection_class(**connection_kwargs)
 
-        # all command upper case
-        self.answer_callbacks = command2callback
-        self.set_default_pager(config)
-        try:
-            self.connection.connect()
-        except Exception as e:
-            print(str(e), file=sys.stderr)
-            sys.exit(1)
-        if not config.no_info:
-            try:
-                self.get_server_info()
-            except Exception as e:
-                logger.warning(f"[After Connection] {str(e)}")
-                config.no_version_reason = str(e)
-        else:
-            config.no_version_reason = "--no-info flag activated"
-
-        if config.version and re.match(r"([\d\.]+)", config.version):
-            self.auth_compat(config.version)
+        return connection_class(**connection_kwargs)
 
     def auth_compat(self, redis_version: str):
         with_username = StrictVersion(redis_version) >= StrictVersion("6.0.0")
@@ -198,6 +214,11 @@ class Client:
                 last_error = e
                 retry_times -= 1
                 need_refresh_connection = True
+            except (ResponseError) as e:
+                response_message = str(e)
+                if response_message.startswith("MOVED"):
+                    return self.reissue_with_redirect(e, command_name, *args, **options)
+                raise e
 
             except redis.exceptions.ExecAbortError:
                 config.transaction = False
@@ -205,6 +226,17 @@ class Client:
             else:
                 return response
         raise last_error
+
+    def reissue_with_redirect(self, response, command_name, *args, **kwargs):
+        """
+        For redis cluster, when server response a "MOVE ..." response, we auto-
+        redirect to the target node, reissue the original command.
+        """
+        # TODO unix cluster node?
+        # Redis Cluster only supports database zero.
+        _, slot, ip, port = response.split(" ")
+        logger.info(f"redirect response type: {type(response)}")
+        logger.info(f"{response.message}")
 
     def render_response(self, response, command_name):
         "Parses a response from the Redis server"
