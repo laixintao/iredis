@@ -86,7 +86,8 @@ def test_split_commands_fail_on_unknown_command():
 
 
 @pytest.mark.parametrize(
-    "command", ["command in", "command   in", "Command   in", "COMMAND     in"],
+    "command",
+    ["command in", "command   in", "Command   in", "COMMAND     in"],
 )
 def test_split_commands_fail_on_partially_input(command):
     with pytest.raises(AmbiguousCommand):

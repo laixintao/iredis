@@ -17,6 +17,7 @@ from redis.exceptions import (
     AuthenticationError,
     ConnectionError,
     TimeoutError,
+    ResponseError,
 )
 
 
@@ -39,6 +40,7 @@ from .utils import (
     nativestr,
     exit,
     convert_formatted_text_to_bytes,
+    parse_url,
 )
 from .warning import confirm_dangerous_command
 
@@ -69,6 +71,46 @@ class Client:
         self.username = username
         self.scheme = scheme
 
+        self.connection = self.create_connection(
+            host,
+            port,
+            db,
+            password,
+            path,
+            scheme,
+            username,
+        )
+
+        # all command upper case
+        self.answer_callbacks = command2callback
+        self.set_default_pager(config)
+        try:
+            self.connection.connect()
+        except Exception as e:
+            print(str(e), file=sys.stderr)
+            sys.exit(1)
+        if not config.no_info:
+            try:
+                self.get_server_info()
+            except Exception as e:
+                logger.warning(f"[After Connection] {str(e)}")
+                config.no_version_reason = str(e)
+        else:
+            config.no_version_reason = "--no-info flag activated"
+
+        if config.version and re.match(r"([\d\.]+)", config.version):
+            self.auth_compat(config.version)
+
+    def create_connection(
+        self,
+        host=None,
+        port=None,
+        db=0,
+        password=None,
+        path=None,
+        scheme="redis",
+        username=None,
+    ):
         if scheme in ("redis", "rediss"):
             connection_kwargs = {
                 "host": host,
@@ -93,27 +135,8 @@ class Client:
         logger.debug(
             f"connection_class={connection_class}, connection_kwargs={connection_kwargs}"
         )
-        self.connection = connection_class(**connection_kwargs)
 
-        # all command upper case
-        self.answer_callbacks = command2callback
-        self.set_default_pager(config)
-        try:
-            self.connection.connect()
-        except Exception as e:
-            print(str(e), file=sys.stderr)
-            sys.exit(1)
-        if not config.no_info:
-            try:
-                self.get_server_info()
-            except Exception as e:
-                logger.warning(f"[After Connection] {str(e)}")
-                config.no_version_reason = str(e)
-        else:
-            config.no_version_reason = "--no-info flag activated"
-
-        if config.version and re.match(r"([\d\.]+)", config.version):
-            self.auth_compat(config.version)
+        return connection_class(**connection_kwargs)
 
     def auth_compat(self, redis_version: str):
         with_username = StrictVersion(redis_version) >= StrictVersion("6.0.0")
@@ -171,10 +194,19 @@ class Client:
         if command == "EXIT":
             exit()
 
-    def execute(self, command_name, *args, **options):
+    def execute(self, *args, **kwargs):
+        logger.info(
+            f"execute: connection={self.connection} args={args}, kwargs={kwargs}"
+        )
+        return self.execute_by_connection(self.connection, *args, **kwargs)
+
+    def execute_by_connection(self, connection, command_name, *args, **options):
         """Execute a command and return a parsed response
         Here we retry once for ConnectionError.
         """
+        logger.info(
+            f"execute by connection: connection={connection}, name={command_name}, {args}, {options}"
+        )
         retry_times = config.retry_times  # FIXME configureable
         last_error = None
         need_refresh_connection = False
@@ -186,11 +218,12 @@ class Client:
                         f"{str(last_error)} retrying... retry left: {retry_times+1}",
                         file=sys.stderr,
                     )
-                    self.connection.disconnect()
-                    self.connection.connect()
-                    logger.info(f"New connection created, retry on {self.connection}.")
-                self.connection.send_command(command_name, *args)
-                response = self.connection.read_response()
+                    connection.disconnect()
+                    connection.connect()
+                    logger.info(f"New connection created, retry on {connection}.")
+                logger.info(f"send_command: {command_name} , {args}")
+                connection.send_command(command_name, *args)
+                response = connection.read_response()
             except AuthenticationError:
                 raise
             except (ConnectionError, TimeoutError) as e:
@@ -198,6 +231,13 @@ class Client:
                 last_error = e
                 retry_times -= 1
                 need_refresh_connection = True
+            except (ResponseError) as e:
+                response_message = str(e)
+                if response_message.startswith("MOVED"):
+                    return self.reissue_with_redirect(
+                        response_message, command_name, *args, **options
+                    )
+                raise e
 
             except redis.exceptions.ExecAbortError:
                 config.transaction = False
@@ -205,6 +245,45 @@ class Client:
             else:
                 return response
         raise last_error
+
+    def reissue_with_redirect(self, response, *args, **kwargs):
+        """
+        For redis cluster, when server response a "MOVE ..." response, we auto-
+        redirect to the target node, reissue the original command.
+
+        This feature is not supported for unix socket connection.
+        """
+        # Redis Cluster only supports database zero.
+        _, slot, ip_port = response.split(" ")
+        ip, port = ip_port.split(":")
+        port = int(port)
+
+        print(response, file=sys.stderr)
+
+        connection = self.create_connection(ip, port)
+        # if user sets dsn for dest node
+        # use username and password from dsn settings
+        if config.alias_dsn:
+            for dsn_name, dsn_url in config.alias_dsn.items():
+                dsn = parse_url(dsn_url)
+                if dsn.host == ip and dsn.port == port:
+                    print(
+                        f"Connect {ip}:{port} via dns settings of {dsn_name}",
+                        file=sys.stderr,
+                    )
+                    connection = self.create_connection(
+                        dsn.host,
+                        dsn.port,
+                        dsn.db,
+                        dsn.password,
+                        dsn.path,
+                        dsn.scheme,
+                        dsn.username,
+                    )
+                    break
+
+        connection.connect()
+        return self.execute_by_connection(connection, *args, **kwargs)
 
     def render_response(self, response, command_name):
         "Parses a response from the Redis server"

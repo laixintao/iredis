@@ -1,12 +1,13 @@
 import re
 import pytest
 import redis
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
+from textwrap import dedent
 
 from prompt_toolkit.formatted_text import FormattedText
 
 from iredis.client import Client
-from iredis.config import config
+from iredis.config import config, load_config_files
 from iredis.completers import IRedisCompleter
 from iredis.entry import Rainbow, prompt_message
 from iredis.exceptions import NotSupport
@@ -454,3 +455,50 @@ def test_mem_not_called_when_cant_get_server_version(
     clean_redis.set("foo", "bar")
     result = list(iredis_client.do_peek("foo"))
     assert result[0][1] == ("", "string (embstr), ttl: -1")
+
+
+def test_reissue_command_on_redis_cluster(iredis_client, clean_redis):
+    mock_response = iredis_client.connection = MagicMock()
+    mock_response.read_response.side_effect = redis.exceptions.ResponseError(
+        "MOVED 12182 127.0.0.1:7002"
+    )
+    iredis_client.reissue_with_redirect = MagicMock()
+    iredis_client.execute("set", "foo", "bar")
+    assert iredis_client.reissue_with_redirect.call_args == (
+        (
+            "MOVED 12182 127.0.0.1:7002",
+            "set",
+            "foo",
+            "bar",
+        ),
+    )
+
+
+def test_reissue_command_on_redis_cluster_with_password_in_dsn(
+    iredis_client, clean_redis
+):
+    config_content = dedent(
+        """
+        [main]
+        log_location = /tmp/iredis1.log
+        no_info=True
+        [alias_dsn]
+        cluster-7003=redis://foo:bar@127.0.0.1:7003
+        """
+    )
+    with open("/tmp/iredisrc", "w+") as etc_config:
+        etc_config.write(config_content)
+
+    config_obj = load_config_files("/tmp/iredisrc")
+    config.alias_dsn = config_obj["alias_dsn"]
+
+    mock_execute_by_connection = iredis_client.execute_by_connection = MagicMock()
+    with patch("redis.connection.Connection.connect"):
+        iredis_client.reissue_with_redirect(
+            "MOVED 12182 127.0.0.1:7003", "set", "foo", "bar"
+        )
+
+        call_args = mock_execute_by_connection.call_args[0]
+        print(call_args)
+        assert list(call_args[1:]) == ["set", "foo", "bar"]
+        assert call_args[0].password == "bar"

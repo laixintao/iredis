@@ -1,3 +1,8 @@
+### 1.9.1
+
+- Feature: support auto-reissue command to another Redis server, when got a
+  "MOVED" error in redis cluster.
+
 ## 1.9
 
 - Feature: Support `LPOS` command.

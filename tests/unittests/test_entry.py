@@ -6,11 +6,12 @@ from prompt_toolkit.formatted_text import FormattedText
 from iredis.entry import (
     gather_args,
     parse_url,
-    DSN,
     SkipAuthFileHistory,
     write_result,
     is_too_tall,
 )
+
+from iredis.utils import DSN
 
 
 @pytest.mark.parametrize(
