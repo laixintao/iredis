@@ -260,28 +260,27 @@ class Client:
 
         print(response, file=sys.stderr)
 
+        connection = self.create_connection(ip, port)
         # if user sets dsn for dest node
         # use username and password from dsn settings
-        for dsn_name, dsn_url in config.alias_dsn.items():
-            dsn = parse_url(dsn_url)
-            if dsn.host == ip and dsn.port == port:
-                print(
-                    f"Connect {ip}:{port} via dns settings of {dsn_name}",
-                    file=sys.stderr,
-                )
-                connection = self.create_connection(
-                    dsn.host,
-                    dsn.port,
-                    dsn.db,
-                    dsn.password,
-                    dsn.path,
-                    dsn.scheme,
-                    dsn.username,
-                )
-                break
-        else:
-            # create a new connection for redirection
-            connection = self.create_connection(ip, port)
+        if config.alias_dsn:
+            for dsn_name, dsn_url in config.alias_dsn.items():
+                dsn = parse_url(dsn_url)
+                if dsn.host == ip and dsn.port == port:
+                    print(
+                        f"Connect {ip}:{port} via dns settings of {dsn_name}",
+                        file=sys.stderr,
+                    )
+                    connection = self.create_connection(
+                        dsn.host,
+                        dsn.port,
+                        dsn.db,
+                        dsn.password,
+                        dsn.path,
+                        dsn.scheme,
+                        dsn.username,
+                    )
+                    break
 
         connection.connect()
         return self.execute_by_connection(connection, *args, **kwargs)
