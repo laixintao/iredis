@@ -4,8 +4,6 @@ import logging
 import sys
 import time
 from pathlib import Path
-from collections import namedtuple
-from urllib.parse import parse_qs, unquote, urlparse
 import platform
 
 import click
@@ -24,13 +22,12 @@ from .style import STYLE
 from .config import config, load_config_files
 from .processors import UserInputCommand, UpdateBottomProcessor, PasswordProcessor
 from .bottom import BottomToolbar
-from .utils import timer, exit, convert_formatted_text_to_bytes
+from .utils import timer, exit, convert_formatted_text_to_bytes, parse_url
 from .completers import IRedisCompleter
 from .lexer import IRedisLexer
 from . import __version__
 
 logger = logging.getLogger(__name__)
-DSN = namedtuple("DSN", "scheme host port path db username password")
 
 
 class SkipAuthFileHistory(FileHistory):
@@ -218,68 +215,6 @@ def repl(client, session, start_time):
             logger.exception(e)
             # TODO red error color
             print("(error)", str(e))
-
-
-def parse_url(url, db=0):
-    """
-    Return a Redis client object configured from the given URL
-
-    For example::
-
-        redis://[[username]:[password]]@localhost:6379/0
-        rediss://[[username]:[password]]@localhost:6379/0
-        unix://[[username]:[password]]@/path/to/socket.sock?db=0
-
-    Three URL schemes are supported:
-
-    - ```redis://``
-      <http://www.iana.org/assignments/uri-schemes/prov/redis>`_ creates a
-      normal TCP socket connection
-    - ```rediss://``
-      <http://www.iana.org/assignments/uri-schemes/prov/rediss>`_ creates a
-      SSL wrapped TCP socket connection
-    - ``unix://`` creates a Unix Domain Socket connection
-
-    There are several ways to specify a database number. The parse function
-    will return the first specified option:
-        1. A ``db`` querystring option, e.g. redis://localhost?db=0
-        2. If using the redis:// scheme, the path argument of the url, e.g.
-           redis://localhost/0
-        3. The ``db`` argument to this function.
-
-    If none of these options are specified, db=0 is used.
-    """
-    url = urlparse(url)
-
-    scheme = url.scheme
-    path = unquote(url.path) if url.path else None
-    # We only support redis://, rediss:// and unix:// schemes.
-    # if scheme is ``unix``, read ``db`` from query string
-    # otherwise read ``db`` from path
-    if url.scheme == "unix":
-        qs = parse_qs(url.query)
-        if "db" in qs:
-            db = int(qs["db"][0] or db)
-    elif url.scheme in ("redis", "rediss"):
-        scheme = url.scheme
-        if path:
-            try:
-                db = int(path.replace("/", ""))
-                path = None
-            except (AttributeError, ValueError):
-                pass
-    else:
-        valid_schemes = ", ".join(("redis://", "rediss://", "unix://"))
-        raise ValueError(
-            "Redis URL must specify one of the following" "schemes (%s)" % valid_schemes
-        )
-
-    username = unquote(url.username) if url.username else None
-    password = unquote(url.password) if url.password else None
-    hostname = unquote(url.hostname) if url.hostname else None
-    port = url.port
-
-    return DSN(scheme, hostname, port, path, db, username, password)
 
 
 RAW_HELP = """

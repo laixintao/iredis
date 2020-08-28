@@ -40,6 +40,7 @@ from .utils import (
     nativestr,
     exit,
     convert_formatted_text_to_bytes,
+    parse_url,
 )
 from .warning import confirm_dangerous_command
 
@@ -71,13 +72,7 @@ class Client:
         self.scheme = scheme
 
         self.connection = self.create_connection(
-            host,
-            port,
-            db,
-            password,
-            path,
-            scheme,
-            username,
+            host, port, db, password, path, scheme, username,
         )
 
         # all command upper case
@@ -252,17 +247,37 @@ class Client:
 
         This feature is not supported for unix socket connection.
         """
-        # TODO read dsn for password username
         # Redis Cluster only supports database zero.
         _, slot, ip_port = response.split(" ")
         ip, port = ip_port.split(":")
-        print(
-            response,
-            file=sys.stderr,
-        )
-        logger.info(f"redirect response type: {type(response)}")
-        # create a new connection for redirection
-        connection = self.create_connection(ip, port)
+        port = int(port)
+
+        print(response, file=sys.stderr)
+
+        # if user sets dsn for dest node
+        # use username and password from dsn settings
+        for dsn_name, dsn_url in config.alias_dsn.items():
+            dsn = parse_url(dsn_url)
+            if dsn.host == ip and dsn.port == port:
+                print(
+                    f"Connect {ip}:{port} via dns settings of {dsn_name}",
+                    file=sys.stderr,
+                )
+                connection = self.create_connection(
+                    dsn.host,
+                    dsn.port,
+                    dsn.db,
+                    dsn.password,
+                    dsn.path,
+                    dsn.scheme,
+                    dsn.username,
+                )
+                break
+        else:
+            # create a new connection for redirection
+            connection = self.create_connection(ip, port)
+
+        connection.connect()
         return self.execute_by_connection(connection, *args, **kwargs)
 
     def render_response(self, response, command_name):
