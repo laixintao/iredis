@@ -72,7 +72,13 @@ class Client:
         self.scheme = scheme
 
         self.connection = self.create_connection(
-            host, port, db, password, path, scheme, username,
+            host,
+            port,
+            db,
+            password,
+            path,
+            scheme,
+            username,
         )
 
         # all command upper case
