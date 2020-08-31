@@ -193,6 +193,8 @@ class Client:
             clear()
         if command == "EXIT":
             exit()
+        if command == "CLUSTER SLOTSMAP":
+            yield from self.do_cluster_slotsmap(*args)
 
     def execute(self, *args, **kwargs):
         logger.info(
@@ -683,3 +685,7 @@ class Client:
             yield convert_formatted_text_to_bytes(flat_formatted_text_pair)
             return
         yield FormattedText(flat_formatted_text_pair)
+
+    def do_cluster_slotsmap(self, *args):
+        for i in range(100):
+            yield FormattedText([("", f"index-{i}")])
