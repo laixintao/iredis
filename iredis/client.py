@@ -6,6 +6,7 @@ import os
 import sys
 import logging
 from subprocess import run
+from collections import Counter, namedtuple
 from importlib_resources import read_text
 from distutils.version import StrictVersion
 
@@ -43,9 +44,11 @@ from .utils import (
     parse_url,
 )
 from .warning import confirm_dangerous_command
+from .slot_render import render_slot_map
 
 logger = logging.getLogger(__name__)
 CLIENT_COMMANDS = groups["iredis"]
+
 
 
 class Client:
@@ -72,13 +75,7 @@ class Client:
         self.scheme = scheme
 
         self.connection = self.create_connection(
-            host,
-            port,
-            db,
-            password,
-            path,
-            scheme,
-            username,
+            host, port, db, password, path, scheme, username,
         )
 
         # all command upper case
@@ -687,5 +684,6 @@ class Client:
         yield FormattedText(flat_formatted_text_pair)
 
     def do_cluster_slotsmap(self, *args):
-        for i in range(100):
-            yield FormattedText([("", f"index-{i}")])
+
+        cluster_slots = self.execute("CLUSTER SLOTS")
+        yield from render_slot_map(cluster_slots)
