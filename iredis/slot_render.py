@@ -15,7 +15,6 @@ U+258F	▏	Left one eighth block
 import logging
 
 UNICODE_MARK = "▏▎▍▌▋▊▉█"
-# TODO
 TOTAL_SLOT = 16384
 logger = logging.getLogger(__name__)
 
@@ -59,6 +58,7 @@ def render_block(block, plate):
     logger.debug("loading slots done, previous={}".format(previous))
 
     different_hosts_len = len(previous)
+
     if different_hosts_len == 1:
         return [(plate.color_for(previous[0].host), "█")]
 
@@ -71,20 +71,31 @@ def render_block(block, plate):
                 UNICODE_MARK[previous[0].count - 1],
             )
         ]
+    # more than 2 colors
+    head_host, *middle_host, tail_host = previous
+    result = []
+    result.append(
+        ("{}".format(plate.color_for(head_host.host)), UNICODE_MARK[head_host.count - 1],)
+    )
+    for host in middle_host + [tail_host]:
+        result.append(
+            ("{}".format(plate.color_for(host.host)), UNICODE_MARK[host.count - 1],)
+        )
+    return result
+
 
 
 def render_slot_map(redis_cluster_solts_response):
     slot_in_host = [""] * TOTAL_SLOT
     plate = ColorPlate()
 
-    for node in cluster_slots:
+    for node in redis_cluster_solts_response:
         start_slot, end_slot, master_node, *_ = node
         host_ip = f"{master_node[0].decode()}:{master_node[1]}"
         slot_in_host[start_slot : end_slot + 1] = [host_ip] * (
             end_slot - start_slot + 1
         )
         logger.info(f"{start_slot} {end_slot} {master_node}")
-    print(cluster_slots)
 
     ascii_art_pairs = []
 
