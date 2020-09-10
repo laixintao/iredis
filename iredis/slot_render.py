@@ -47,7 +47,10 @@ class ColorPlate:
         return self.color[host]
 
 
-def _render_block(block, plate):
+PLATE = ColorPlate()
+
+
+def _render_block(block):
     """8 slots are a block"""
     previous = []
     for slot in block:
@@ -55,16 +58,15 @@ def _render_block(block, plate):
             previous[-1].count += 1
         else:
             previous.append(SlotCount(slot, 1))
-    logger.debug("loading slots done, previous={}".format(previous))
 
     different_hosts_len = len(previous)
 
     if different_hosts_len == 1:
-        return [(plate.color_for(previous[0].host), "█")]
+        return [(PLATE.color_for(previous[0].host), "█")]
 
     if different_hosts_len == 2:
         head_host, tail_host = previous[0].host, previous[1].host
-        head_color, tail_color = plate.color_for(head_host), plate.color_for(tail_host)
+        head_color, tail_color = PLATE.color_for(head_host), PLATE.color_for(tail_host)
         return [
             (
                 "{} bg:{}".format(head_color, tail_color),
@@ -75,30 +77,35 @@ def _render_block(block, plate):
     head_host, *middle_host, tail_host = previous
     result = []
     result.append(
-        ("{}".format(plate.color_for(head_host.host)), UNICODE_MARK[head_host.count - 1],)
+        (
+            "{}".format(PLATE.color_for(head_host.host)),
+            UNICODE_MARK[head_host.count - 1],
+        )
     )
     for host in middle_host + [tail_host]:
         result.append(
-            ("{}".format(plate.color_for(host.host)), UNICODE_MARK[host.count - 1],)
+            ("{}".format(PLATE.color_for(host.host)), UNICODE_MARK[host.count - 1],)
         )
     return result
 
 
-
 def render_slot_map(redis_cluster_solts_response):
     slot_in_host = [""] * TOTAL_SLOT
-    plate = ColorPlate()
 
-    ascii_art_pairs = []
     for node in redis_cluster_solts_response:
         start_slot, end_slot, master_node, *_ = node
         host_ip = f"{master_node[0].decode()}:{master_node[1]}"
         slot_in_host[start_slot : end_slot + 1] = [host_ip] * (
             end_slot - start_slot + 1
         )
-        logger.info(f"{start_slot} {end_slot} {master_node}")
-        ascii_art_pairs.extend(render
 
+    ascii_art_pairs = []
+    for index in range(0, TOTAL_SLOT, 8):
+        if index % (64*8) == 0 and index:
+            ascii_art_pairs.append(("", "\n"))
+        ascii_art_pairs.extend(_render_block(slot_in_host[index : index + 8]))
+
+    return ascii_art_pairs
 
 
 if __name__ == "__main__":
