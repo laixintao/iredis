@@ -47,7 +47,7 @@ class ColorPlate:
         return self.color[host]
 
 
-def render_block(block, plate):
+def _render_block(block, plate):
     """8 slots are a block"""
     previous = []
     for slot in block:
@@ -89,6 +89,7 @@ def render_slot_map(redis_cluster_solts_response):
     slot_in_host = [""] * TOTAL_SLOT
     plate = ColorPlate()
 
+    ascii_art_pairs = []
     for node in redis_cluster_solts_response:
         start_slot, end_slot, master_node, *_ = node
         host_ip = f"{master_node[0].decode()}:{master_node[1]}"
@@ -96,13 +97,13 @@ def render_slot_map(redis_cluster_solts_response):
             end_slot - start_slot + 1
         )
         logger.info(f"{start_slot} {end_slot} {master_node}")
+        ascii_art_pairs.extend(render
 
-    ascii_art_pairs = []
 
 
 if __name__ == "__main__":
     print(
-        render_block(
+        _render_block(
             [
                 "127.0.0.1:7001",
                 "127.0.0.1:7001",
@@ -117,7 +118,7 @@ if __name__ == "__main__":
         )
     )
     print(
-        render_block(
+        _render_block(
             [
                 "127.0.0.1:7000",
                 "127.0.0.1:7001",
@@ -132,7 +133,7 @@ if __name__ == "__main__":
         )
     )
     print(
-        render_block(
+        _render_block(
             [
                 "127.0.0.1:7001",
                 "127.0.0.1:7001",

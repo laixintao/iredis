@@ -44,6 +44,7 @@ wcwidth = "0.1.9"
 [tool.poetry.dev-dependencies]
 pytest = "^5"
 pexpect = "^4.7"
+rope = "^0.17.0"
 
 [tool.poetry.scripts]
 iredis = 'iredis.entry:main'
