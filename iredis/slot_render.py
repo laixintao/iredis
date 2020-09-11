@@ -84,7 +84,10 @@ def _render_block(block):
     )
     for host in middle_host + [tail_host]:
         result.append(
-            ("{}".format(PLATE.color_for(host.host)), UNICODE_MARK[host.count - 1],)
+            (
+                "{}".format(PLATE.color_for(host.host)),
+                UNICODE_MARK[host.count - 1],
+            )
         )
     return result
 

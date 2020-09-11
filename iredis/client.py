@@ -6,7 +6,6 @@ import os
 import sys
 import logging
 from subprocess import run
-from collections import Counter, namedtuple
 from importlib_resources import read_text
 from distutils.version import StrictVersion
 
