@@ -109,13 +109,13 @@ def render_slot_map(redis_cluster_solts_response):
             ascii_art_pairs.append(("", "\n"))
             ascii_art_pairs.append(("", f"{index+1:5} "))
         ascii_art_pairs.extend(_render_block(slot_in_host[index : index + 8]))
-    ascii_art_pairs.append(("", f" 16384"))
+    ascii_art_pairs.append(("", " 16384"))
 
     host_color_sample = []
 
     for hostname, color in PLATE.color.items():
         host_color_sample.append((f"bg:{color}", "  "))
-        host_color_sample.append((f"", f" -> {hostname}"))
+        host_color_sample.append(("", f" -> {hostname}"))
         host_color_sample.append(("", "\n"))
 
     return host_color_sample + ascii_art_pairs
