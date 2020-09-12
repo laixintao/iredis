@@ -147,7 +147,7 @@ VALID_TOKEN = r"""(
 )"""
 PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
 VALID_SLOT = r"\d+"  # TODO add range? max value:16384
-VALID_NODE = r"\d+"
+VALID_NODE = r"\w+"
 NUM = r"\d+"
 NNUM = r"-?\+?\(?\[?(\d+|inf)"  # number cloud be negative
 _FLOAT = r"-?(\d|\.|e)+"
