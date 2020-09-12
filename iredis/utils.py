@@ -190,7 +190,7 @@ def _literal_bytes(b):
     backslash.
     "hello\" -> \"hello\\\"
 
-    we don't add outter double quotes here, since
+    we don't add outer double quotes here, since
     completer also need this function's return value
     to patch completers.
 
@@ -233,14 +233,14 @@ def double_quotes(unquoted):
     """
     Display String like redis-cli.
     escape inner double quotes.
-    add outter double quotes.
+    add outer double quotes.
 
     :param unquoted: list, or str
     """
     if isinstance(unquoted, str):
         # escape double quote
         escaped = unquoted.replace('"', '\\"')
-        return f'"{escaped}"'  # add outter double quotes
+        return f'"{escaped}"'  # add outer double quotes
     elif isinstance(unquoted, list):
         return [double_quotes(item) for item in unquoted]
 
