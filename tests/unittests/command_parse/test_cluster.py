@@ -26,9 +26,15 @@ def test_command_cluster_count_failure_reports(judge_command):
     )
     judge_command("cluster count-failure-reports 1 2 3 4", None)
     judge_command("cluster count-failure-reports 1 a", None)
-    judge_command("cluster count-failure-reports a", None)
+    judge_command(
+        "cluster count-failure-reports a",
+        {"command": "cluster count-failure-reports", "node": "a"},
+    )
     judge_command("cluster count-failure-reports a 2", None)
-    judge_command("cluster count-failure-reports abc", None)
+    judge_command(
+        "cluster count-failure-reports abc",
+        {"command": "cluster count-failure-reports", "node": "abc"},
+    )
 
 
 def test_command_cluster_countkeysinslot(judge_command):
@@ -88,9 +94,22 @@ def test_command_cluster_forget(judge_command):
     )
     judge_command("cluster forget 1 2 3 4", None)
     judge_command("cluster forget 1 a", None)
-    judge_command("cluster forget a", None)
+    judge_command("cluster forget a", {"command": "cluster forget", "node": "a"})
     judge_command("cluster forget a 2", None)
-    judge_command("cluster forget abc", None)
+    judge_command(
+        "cluster forget abc",
+        {
+            "command": "cluster forget",
+            "node": "abc",
+        },
+    )
+    judge_command(
+        "cluster forget 07c37dfeb235213a872192d90877d0cd55635b91",
+        {
+            "command": "cluster forget",
+            "node": "07c37dfeb235213a872192d90877d0cd55635b91",
+        },
+    )
 
 
 def test_command_cluster_getkeysinslot(judge_command):
@@ -206,6 +225,15 @@ def test_command_cluster_set_slot(judge_command):
             "slot": "123",
             "slotsubcmd": "node",
             "node": "123123",
+        },
+    )
+    judge_command(
+        "cluster setslot 123 node e7d1eecce10fd6bb5eb35b9f99a514335d9ba9ca",
+        {
+            "command": "cluster setslot",
+            "slot": "123",
+            "slotsubcmd": "node",
+            "node": "e7d1eecce10fd6bb5eb35b9f99a514335d9ba9ca",
         },
     )
     judge_command(
