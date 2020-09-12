@@ -1,3 +1,8 @@
+### 1.9.2
+
+- Bugfix: before `cluster` commands' `node-id` only accept numbers, not it's
+  fixed. `node-id` can be `\w+`.
+
 ### 1.9.1
 
 - Feature: support auto-reissue command to another Redis server, when got a
