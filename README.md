@@ -156,7 +156,7 @@ Also:
 
 ### Release Strategy
 
-IRedis is built and released by CircleCI. Whenever a tag is pushed to the
+IRedis is built and released by `GitHub Actions`. Whenever a tag is pushed to the
 `master` branch, a new release is built and uploaded to pypi.org, it's very
 convenient.
 
