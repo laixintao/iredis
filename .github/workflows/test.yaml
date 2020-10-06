@@ -34,12 +34,12 @@ jobs:
         with:
           path: venv
           # Look to see if there is a cache hit for the corresponding requirements file
-          key: ${{ matrix.os }}-poetryenv-${{ hashFiles('poetry.lock') }}
+          key: poetryenv-${{ matrix.os }}-${{ matrix.python }}-${{ hashFiles('poetry.lock') }}
       - name: Install Dependencies
         run: |
           python3 -m venv venv
           . venv/bin/activate
-          pip install -U pip
+          pip install -U pip==18.1 setuptools
           pip install poetry
           poetry install
           python -c "import sys; print(sys.version)"
