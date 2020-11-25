@@ -1,5 +1,8 @@
 name: Test binary build.
 
+on:
+  workflow_dispatch
+
 jobs:
   release-binary:
     name: Release Executable Binary.
