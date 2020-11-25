@@ -393,7 +393,7 @@ def test_peek_stream(iredis_client, clean_redis):
 
     assert peek_result[0][0] == ("class:dockey", "key: ")
     assert re.match(
-        r"stream \(stream\)  mem: 6\d\d bytes, ttl: -1", peek_result[0][1][1]
+        r"stream \((stream|unknown)\)  mem: 6\d\d bytes, ttl: -1", peek_result[0][1][1]
     )
     assert peek_result[0][2:18] == FormattedText(
         [
