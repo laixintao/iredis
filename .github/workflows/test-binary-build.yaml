@@ -1,9 +1,10 @@
 name: Test binary build.
 
 on:
+  pull_request:
   push:
-    tags:
-      - v*
+    branches:
+      - master
 
 jobs:
   test-release-binary:
