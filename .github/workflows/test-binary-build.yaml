@@ -1,11 +1,5 @@
 name: Test binary build.
 
-on:
-  pull_request:
-  push:
-    branches:
-      - master
-
 jobs:
   release-binary:
     name: Release Executable Binary.
@@ -79,5 +73,5 @@ jobs:
       - name: Upload Release Asset to Github Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: iredis-{{ GITHUB_SHA }}.tar.gz
+          name: iredis-${{ GITHUB_SHA }}.tar.gz
           path: ./build/iredis.tar.gz
