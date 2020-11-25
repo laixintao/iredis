@@ -77,10 +77,7 @@ jobs:
           ./build/x86*/release/install/iredis help GET
 
       - name: Upload Release Asset to Github Artifact
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/upload-artifact@v2
         with:
           name: iredis-{{ GITHUB_SHA }}.tar.gz
-          asset_path: ./build/iredis.tar.gz
+          path: ./build/iredis.tar.gz
