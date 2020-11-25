@@ -258,19 +258,15 @@ def test_peek_string(iredis_client, clean_redis):
     clean_redis.set("foo", "bar")
     peek_result = list(iredis_client.do_peek("foo"))
 
-    assert peek_result == [
-        FormattedText(
-            [
-                ("class:dockey", "key: "),
-                ("", "string (embstr)  mem: 50 bytes, ttl: -1"),
-                ("", "\n"),
-                ("class:dockey", "strlen: "),
-                ("", "3"),
-                ("", "\n"),
-                ("class:dockey", "value: "),
-                ("", '"bar"'),
-            ]
-        )
+    assert peek_result[0][0] == ("class:dockey", "key: ")
+    assert re.match(r"string \(embstr\)  mem: 5\d bytes, ttl: -1", peek_result[0][1][1])
+    assert peek_result[0][2:] == [
+        ("", "\n"),
+        ("class:dockey", "strlen: "),
+        ("", "3"),
+        ("", "\n"),
+        ("class:dockey", "value: "),
+        ("", '"bar"'),
     ]
 
 
@@ -395,10 +391,12 @@ def test_peek_stream(iredis_client, clean_redis):
     clean_redis.xadd("mystream", {"foo": "bar", "hello": "world"})
     peek_result = list(iredis_client.do_peek("mystream"))
 
-    assert peek_result[0][0:18] == FormattedText(
+    assert peek_result[0][0] == ("class:dockey", "key: ")
+    assert re.match(
+        r"stream \((stream|unknown)\)  mem: 6\d\d bytes, ttl: -1", peek_result[0][1][1]
+    )
+    assert peek_result[0][2:18] == FormattedText(
         [
-            ("class:dockey", "key: "),
-            ("", "stream (unknown)  mem: 601 bytes, ttl: -1"),
             ("", "\n"),
             ("class:dockey", "XINFO: "),
             ("", "\n"),
