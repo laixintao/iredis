@@ -1,11 +1,13 @@
 name: Test binary build.
 
 on:
-  workflow_dispatch
+  push:
+    tags:
+      - v*
 
 jobs:
-  release-binary:
-    name: Release Executable Binary.
+  test-release-binary:
+    name: Test Build Executable Binary. You can download from Artifact after building.
     runs-on: ubuntu-16.04
 
     # FIXME
