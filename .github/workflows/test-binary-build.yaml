@@ -79,5 +79,5 @@ jobs:
       - name: Upload Release Asset to Github Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: iredis-${{ GITHUB_SHA }}.tar.gz
+          name: iredis-$GITHUB_SHA.tar.gz
           path: ./build/iredis.tar.gz
