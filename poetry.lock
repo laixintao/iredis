@@ -102,18 +102,6 @@ pyparsing = ">=2.0.2"
 six = "*"
 
 [[package]]
-category = "main"
-description = "Python datetimes made easy"
-name = "pendulum"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "2.1.0"
-
-[package.dependencies]
-python-dateutil = ">=2.6,<3.0"
-pytzdata = ">=2018.3"
-
-[[package]]
 category = "dev"
 description = "Pexpect allows easy control of interactive console applications."
 name = "pexpect"
@@ -211,25 +199,6 @@ testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xm
 
 [[package]]
 category = "main"
-description = "Extensions to the standard Python datetime module"
-name = "python-dateutil"
-optional = false
-python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
-version = "2.8.1"
-
-[package.dependencies]
-six = ">=1.5"
-
-[[package]]
-category = "main"
-description = "The Olson timezone database for Python."
-name = "pytzdata"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "2019.3"
-
-[[package]]
-category = "main"
 description = "Python client for Redis key-value store"
 name = "redis"
 optional = false
@@ -269,7 +238,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "50616ff2ae7105090d8555ffaae4bceb8cfc92d7fddb70635202a5eb8b4cf701"
+content-hash = "d192021d6a95516c15a639473c297065804fce05cb2e4ef6f4b7952263845ec0"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -312,27 +281,6 @@ packaging = [
     {file = "packaging-20.4-py2.py3-none-any.whl", hash = "sha256:998416ba6962ae7fbd6596850b80e17859a5753ba17c32284f67bfff33784181"},
     {file = "packaging-20.4.tar.gz", hash = "sha256:4357f74f47b9c12db93624a82154e9b120fa8293699949152b22065d556079f8"},
 ]
-pendulum = [
-    {file = "pendulum-2.1.0-cp27-cp27m-macosx_10_13_x86_64.whl", hash = "sha256:9eda38ff65b1f297d860d3f562480e048673fb4b81fdd5c8c55decb519b97ed2"},
-    {file = "pendulum-2.1.0-cp27-cp27m-win_amd64.whl", hash = "sha256:70007aebc4494163f8705909a1996ce21ab853801b57fba4c2dd53c3df5c38f0"},
-    {file = "pendulum-2.1.0-cp35-cp35m-macosx_10_13_x86_64.whl", hash = "sha256:575934b65b298eeb99c5a5b1673c945fc5c99e2b56caff772a91bc4b1eba7b82"},
-    {file = "pendulum-2.1.0-cp35-cp35m-manylinux1_i686.whl", hash = "sha256:d42d1e870541eeaf3fe0500aac0c76a85bd4bd53ebed74f9a7daf8f01ac77374"},
-    {file = "pendulum-2.1.0-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:ff7f3420de0c0cf21c1fc813d581fcfa4a1fb6d87f09485880b3e1204eb9cdd7"},
-    {file = "pendulum-2.1.0-cp35-cp35m-win_amd64.whl", hash = "sha256:ac3c6a992beeb4c9bd90c317a1bb2a6cba159b49a49b6dd3c86b5bacb86f3d50"},
-    {file = "pendulum-2.1.0-cp36-cp36m-macosx_10_13_x86_64.whl", hash = "sha256:75a62e3f98499283fafe8ef4b44f81052e84825b00a0b64609dd8a06985382b9"},
-    {file = "pendulum-2.1.0-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:a79a72a7fd1092a7c69ddd8580a0be5365ded40c9f9c865623c7665742e3b888"},
-    {file = "pendulum-2.1.0-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:701127e1f0ff7c253cc0c07f29becc5f9210547914e0bbe59ffd9fa064d7c3c8"},
-    {file = "pendulum-2.1.0-cp36-cp36m-win_amd64.whl", hash = "sha256:816e01dcb0ba4ffcf2ceaafe4d644174fea680361e909f6f8ba0a4fdb2ccae24"},
-    {file = "pendulum-2.1.0-cp37-cp37m-macosx_10_13_x86_64.whl", hash = "sha256:edd00e6b43698762e10bfda508cc9c06bad88c0703a9b37e412aec1189e06e23"},
-    {file = "pendulum-2.1.0-cp37-cp37m-manylinux1_i686.whl", hash = "sha256:4420e058110740a8193fb0709350dfc6ac790a99c345fc4e92e24df0f834ddcb"},
-    {file = "pendulum-2.1.0-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:aa560bd39d94f3889646422f1e65b8dfd025bf6288d43e5c2e31d4f972aaf2e4"},
-    {file = "pendulum-2.1.0-cp37-cp37m-win_amd64.whl", hash = "sha256:2788945a0111d5325fd27ae3e3b18b741e440d20bdb7d4ea22fce7c9a4fbbf40"},
-    {file = "pendulum-2.1.0-cp38-cp38-macosx_10_13_x86_64.whl", hash = "sha256:eb7e349bb2d1b2b418d094e2179d6768561e8242fd8cb640b5aaba735f3e91d1"},
-    {file = "pendulum-2.1.0-cp38-cp38-manylinux1_i686.whl", hash = "sha256:6cf0f876cd088ee1578266f4231121376747aa90c3ed3b8e212a8344a9920061"},
-    {file = "pendulum-2.1.0-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:aa13ddea12fd871d3191f633f08090b91ea2e80fb0ed50a7a149add7f680b12d"},
-    {file = "pendulum-2.1.0-cp38-cp38m-win_amd64.whl", hash = "sha256:0cbbd4f30c69a283690d9ed8e58e44a990e067e59ee05b5ef55d022b38659aeb"},
-    {file = "pendulum-2.1.0.tar.gz", hash = "sha256:093cab342e10516660e64b935a6da1a043e0286de36cc229fb48471415981ffe"},
-]
 pexpect = [
     {file = "pexpect-4.8.0-py2.py3-none-any.whl", hash = "sha256:0b48a55dcb3c05f3329815901ea4fc1537514d6ba867a152b581d69ae3710937"},
     {file = "pexpect-4.8.0.tar.gz", hash = "sha256:fc65a43959d153d0114afe13997d439c22823a27cefceb5ff35c2178c6784c0c"},
@@ -364,14 +312,6 @@ pyparsing = [
 pytest = [
     {file = "pytest-5.4.3-py3-none-any.whl", hash = "sha256:5c0db86b698e8f170ba4582a492248919255fcd4c79b1ee64ace34301fb589a1"},
     {file = "pytest-5.4.3.tar.gz", hash = "sha256:7979331bfcba207414f5e1263b5a0f8f521d0f457318836a7355531ed1a4c7d8"},
-]
-python-dateutil = [
-    {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
-    {file = "python_dateutil-2.8.1-py2.py3-none-any.whl", hash = "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"},
-]
-pytzdata = [
-    {file = "pytzdata-2019.3-py2.py3-none-any.whl", hash = "sha256:84c52b9a47d097fcd483f047a544979de6c3a86e94c845e3569e9f8acd0fa071"},
-    {file = "pytzdata-2019.3.tar.gz", hash = "sha256:fac06f7cdfa903188dc4848c655e4adaee67ee0f2fe08e7daf815cf2a761ee5e"},
 ]
 redis = [
     {file = "redis-3.5.3-py2.py3-none-any.whl", hash = "sha256:432b788c4530cfe16d8d943a09d40ca6c16149727e4afe8c2c9d5580c59d9f24"},

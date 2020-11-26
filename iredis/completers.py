@@ -1,7 +1,6 @@
 import logging
 from typing import Iterable
 
-import pendulum
 from prompt_toolkit.completion import (
     CompleteEvent,
     Completer,
@@ -88,33 +87,9 @@ class TimestampCompleter(Completer):
         "second": 1000_000,
     }
 
-    def _completion_humanize_time(self, document: Document) -> Iterable[Completion]:
-        text = document.text
-        if not text.isnumeric():
-            return
-        current = int(text)
-        now = pendulum.now()
-        for unit, minium in self.when_lower_than.items():
-            if current <= minium:
-                dt = now.subtract(**{f"{unit}s": current})
-                meta = f"{text} {unit}{'s' if current > 1 else ''} ago ({dt.format('YYYY-MM-DD HH:mm:ss')})"
-                yield Completion(
-                    str(dt.int_timestamp * 1000),
-                    start_position=-len(document.text_before_cursor),
-                    display_meta=meta,
-                )
-
     def _completion_formatted_time(self, document: Document) -> Iterable[Completion]:
         text = document.text
-        try:
-            dt = pendulum.parse(text)
-        except Exception:
-            return
-        yield Completion(
-            str(dt.int_timestamp * 1000),
-            start_position=-len(document.text_before_cursor),
-            display_meta=str(dt),
-        )
+        return 
 
     def get_completions(
         self, document: Document, complete_event: CompleteEvent
