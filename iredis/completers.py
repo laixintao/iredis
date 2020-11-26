@@ -253,8 +253,6 @@ class IRedisCompleter(Completer):
                 "fields": field_completer,
                 # stream groups
                 "group": group_completer,
-                # stream id
-                "stream_id": timestamp_completer,
                 "inttype": integer_type_completer,
                 "categoryname": categoryname_completer,
                 "username": username_completer,
