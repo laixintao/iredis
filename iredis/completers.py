@@ -66,43 +66,6 @@ class IntegerTypeCompleter(MostRecentlyUsedFirstWordMixin, WordCompleter):
         super().__init__(len(words), list(reversed(words)))
 
 
-class TimestampCompleter(Completer):
-    """
-    Completer for timestamp based on input.
-
-    Features:
-    * Auto complete humanize time, like 3 -> 3 minutes ago, 3 hours ago.
-    * Auto guess datetime, complete by its timestamp. 2020-01-01 12:00
-        -> 1577851200.
-
-    The timezone is read from system.
-    """
-
-    when_lower_than = {
-        "year": 20,
-        "month": 12,
-        "day": 31,
-        "hour": 100,
-        "minute": 1000,
-        "second": 1000_000,
-    }
-
-    def _completion_formatted_time(self, document: Document) -> Iterable[Completion]:
-        text = document.text
-        return 
-
-    def get_completions(
-        self, document: Document, complete_event: CompleteEvent
-    ) -> Iterable[Completion]:
-        completions = list(self._completion_humanize_time(document)) + list(
-            self._completion_formatted_time(document)
-        )
-
-        # here we yield bigger timestamp first.
-        for completion in sorted(completions, key=lambda a: a.text):
-            yield completion
-
-
 class IRedisCompleter(Completer):
     """
     Completer class that can dynamically returns any Completer.
@@ -271,7 +234,6 @@ class IRedisCompleter(Completer):
             config.completer_max, []
         )
         categoryname_completer = MostRecentlyUsedFirstWordCompleter(100, [])
-        timestamp_completer = TimestampCompleter()
         integer_type_completer = IntegerTypeCompleter()
 
         completer_mapping.update(

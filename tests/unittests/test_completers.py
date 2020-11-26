@@ -4,7 +4,7 @@ from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.completion import Completion
 
 from iredis.completers import MostRecentlyUsedFirstWordCompleter
-from iredis.completers import IRedisCompleter, TimestampCompleter, IntegerTypeCompleter
+from iredis.completers import IRedisCompleter, IntegerTypeCompleter
 
 
 def test_LUF_completer_touch():
