@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.completion import Completion
