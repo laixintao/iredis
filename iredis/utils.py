@@ -104,7 +104,10 @@ def parse_argument_to_formatted_text(
     result = []
     if isinstance(name, str):
         _type = type_convert.get(_type, _type)
-        result.append((f"class:{style_class}.{_type}", " " + name))
+        if is_option:
+            result.append((f"class:{style_class}.{_type}", f" [{name}]"))
+        else:
+            result.append((f"class:{style_class}.{_type}", f" {name}"))
     elif isinstance(name, list):
         for inner_name, inner_type in zip(name, _type):
             inner_type = type_convert.get(inner_type, inner_type)
