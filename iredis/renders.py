@@ -387,7 +387,7 @@ def _render_scan(render_response, response):
 
     rendered = [
         ("class:type", "(cursor) "),
-        ("class:integer", cursor.decode()),
+        ("class:integer", cursor if isinstance(cursor, str) else cursor.decode()),
         ("", "\n"),
     ]
     rendered_keys = render_response(responses)
