@@ -338,7 +338,7 @@ class Client:
         grammar = completer.get_completer(input_text=rawinput).compiled_grammar
         matched = grammar.match(rawinput)
         if not matched:
-            # invalide command!
+            # invalid command!
             return rawinput, None
         variables = matched.variables()
         shell_command = variables.get("shellcommand")
