@@ -135,7 +135,7 @@ def split_command_args(command):
             input_args = command[matcher.end() :]
             break
     else:
-        raise InvalidArguments(f"`{command}` is not a valide Redis Command")
+        raise InvalidArguments(f"`{command}` is not a valid Redis Command")
 
     args = list(strip_quote_args(input_args))
 
