@@ -486,7 +486,7 @@ class Client:
         redis_grammar = completer.get_completer(command).compiled_grammar
         m = redis_grammar.match(command)
         if not m:
-            # invalide command!
+            # invalid command!
             return
         variables = m.variables()
         # zset withscores
@@ -501,7 +501,7 @@ class Client:
             doc = read_text(commands_data, f"{command_docs_name}.md")
         except FileNotFoundError:
             raise NotRedisCommand(
-                f"{command_summary_name} is not a valide Redis command."
+                f"{command_summary_name} is not a valid Redis command."
             )
         rendered_detail = markdown.render(doc)
         summary_dict = commands_summary[command_summary_name]
