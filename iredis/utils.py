@@ -40,7 +40,7 @@ def literal_bytes(b):
     return b
 
 
-def _valid_token(words):
+def _valide_token(words):
     token = "".join(words).strip()
     if token:
         yield token
