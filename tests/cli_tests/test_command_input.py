@@ -9,7 +9,7 @@ def test_wrong_select_db_index(cli):
     cli.expect(["DB index is out of range", "127.0.0.1:6379[1]>"])
 
     cli.sendline("select abc")
-    cli.expect(["invalid DB index", "127.0.0.1:6379[1]>"])
+    cli.expect(["value is not an integer or out of range", "127.0.0.1:6379[1]>"])
 
     cli.sendline("select 15")
     cli.expect("OK")
