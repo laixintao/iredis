@@ -191,7 +191,7 @@ class IRedisCompleter(Completer):
         grammar = completer.compiled_grammar
         m = grammar.match(command)
         if not m:
-            # invalide command!
+            # invalid command!
             return
         variables = m.variables()
 
