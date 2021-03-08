@@ -24,7 +24,7 @@ class BottomToolbar:
 
     def render(self):
         text = BUTTOM_TEXT
-        # add command help if valide
+        # add command help if valid
         if self.command_holder.command:
             try:
                 command_info = commands_summary[self.command_holder.command]

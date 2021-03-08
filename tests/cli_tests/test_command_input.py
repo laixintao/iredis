@@ -1,3 +1,4 @@
+import os
 import pytest
 
 
@@ -8,8 +9,13 @@ def test_wrong_select_db_index(cli):
     cli.sendline("select 128")
     cli.expect(["DB index is out of range", "127.0.0.1:6379[1]>"])
 
+    if int(os.environ["REDIS_VERSION"]) > 5:
+        text = "value is not an integer or out of range"
+    else:
+        text = "invalid DB index"
+
     cli.sendline("select abc")
-    cli.expect(["invalid DB index", "127.0.0.1:6379[1]>"])
+    cli.expect([text, "127.0.0.1:6379[1]>"])
 
     cli.sendline("select 15")
     cli.expect("OK")

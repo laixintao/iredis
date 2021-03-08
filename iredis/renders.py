@@ -78,7 +78,7 @@ class OutputRender:
     @staticmethod
     def render_nested_pair(value):
         """
-        For redis internel responses.
+        For redis internal responses.
         Always decode with utf-8
         Render nested list.
         Items come as pairs.
