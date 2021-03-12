@@ -53,11 +53,11 @@ def test_timer():
         (r""" "hello\"world" """, ['hello"world']),
         (r"''", [""]),  # set foo "" is a legal command
         (r'""', [""]),  # set foo "" is a legal command
-        (r"\\", ["\\\\"]),  # blackslash are legal
-        ("\\hello\\", ["\\hello\\"]),  # blackslash are legal
+        (r"\\", ["\\\\"]),  # backslash are legal
+        ("\\hello\\", ["\\hello\\"]),  # backslash are legal
     ],
 )
-def test_stipe_quote_escaple_in_quote(test_input, expected):
+def test_stripe_quote_escape_in_quote(test_input, expected):
     assert list(strip_quote_args(test_input)) == expected
 
 
