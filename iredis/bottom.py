@@ -31,5 +31,5 @@ class BottomToolbar:
                 text = command_syntax(self.command_holder.command, command_info)
             except KeyError as e:
                 logger.exception(e)
-                pass
+
         return text

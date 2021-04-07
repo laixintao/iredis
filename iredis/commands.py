@@ -94,7 +94,6 @@ commands_summary.update(
         "PEEK": {
             "summary": "Get the key's type and value.",
             "arguments": [{"name": "key", "type": "key"}],
-            "since": "1.0",
             "complexity": "O(1).",
             "since": "1.0",
             "group": "iredis",
