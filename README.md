@@ -2,7 +2,7 @@
   <img width="100" height="100" src="https://raw.githubusercontent.com/laixintao/iredis/master/docs/assets/logo.png" />
 </p>
 
-<h3 align="center">Interactive Redis: A Cli for Redis with AutoCompletion and Syntax Highlighting.</h4>
+<h3 align="center">Interactive Redis: A Cli for Redis with AutoCompletion and Syntax Highlighting.</h3>
 
 <p align="center">
 <a href="https://github.com/laixintao/iredis/actions"><img src="https://github.com/laixintao/iredis/workflows/Test/badge.svg" alt="Github Action"></a>
