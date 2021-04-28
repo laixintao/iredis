@@ -145,7 +145,7 @@ like <kbd>Ctrl</kbd> + <kbd>F</kbd> to forward work.
 
 Also:
 
-- <kbd>Ctrl</kbd> + <kbd>F</kbd> (i.e. EOF) to exit; you can also use the `exit`
+- <kbd>Ctrl</kbd> + <kbd>D</kbd> (i.e. EOF) to exit; you can also use the `exit`
   command.
 - <kbd>Ctrl</kbd> + <kbd>L</kbd> to clear screen; you can also use the `clear`
   command.
