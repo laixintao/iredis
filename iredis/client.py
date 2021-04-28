@@ -43,6 +43,7 @@ from .utils import (
     parse_url,
 )
 from .warning import confirm_dangerous_command
+from .slot_render import render_slot_map
 
 logger = logging.getLogger(__name__)
 CLIENT_COMMANDS = groups["iredis"]
@@ -193,6 +194,8 @@ class Client:
             clear()
         if command == "EXIT":
             exit()
+        if command == "CLUSTER SLOTSMAP":
+            yield self.do_cluster_slotsmap(*args)
 
     def execute(self, *args, **kwargs):
         logger.info(
@@ -224,6 +227,7 @@ class Client:
                 logger.info(f"send_command: {command_name} , {args}")
                 connection.send_command(command_name, *args)
                 response = connection.read_response()
+                logger.info(f"redis-server response: {response}")
             except AuthenticationError:
                 raise
             except (ConnectionError, TimeoutError) as e:
@@ -683,3 +687,28 @@ class Client:
             yield convert_formatted_text_to_bytes(flat_formatted_text_pair)
             return
         yield FormattedText(flat_formatted_text_pair)
+
+    def do_cluster_slotsmap(self, *args):
+        # cluster_slots = self.execute("CLUSTER SLOTS")
+
+        cluster_slots = [
+            [
+                5461,
+                10922,
+                [b"127.0.0.1", 7005, b"f505e0c7524f71f09a8c09a6c3552aa78a25ae55"],
+                [b"127.0.0.1", 7001, b"bd50636e6e86fc89c92dc91777808817315502ed"],
+            ],
+            [
+                10923,
+                16383,
+                [b"127.0.0.1", 7002, b"72c6b51cbc87a7cc7d3d300c464d4a27e9d07db5"],
+                [b"127.0.0.1", 7003, b"52ebf696174fea3e9ff2438323d15f3abf3ba615"],
+            ],
+            [
+                0,
+                5460,
+                [b"127.0.0.1", 7000, b"aaa43cd5777d79495e42469102ed5bafea795c86"],
+                [b"127.0.0.1", 7004, b"df1f0137624a21c12ddb52eea6359db222c551be"],
+            ],
+        ]
+        return FormattedText(render_slot_map(cluster_slots))
