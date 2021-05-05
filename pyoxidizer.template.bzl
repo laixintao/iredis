@@ -129,10 +129,10 @@ def make_exe(dist):
     python_config.module_search_paths = ["$ORIGIN/lib"]
 
     # Use jemalloc as Python's memory allocator
-    # python_config.raw_allocator = "jemalloc"
+    # python_config.allocator_backend = "jemalloc"
 
     # Use the system allocator as Python's memory allocator.
-    python_config.raw_allocator = "system"
+    python_config.allocator_backend = "default"
 
     # Control whether `oxidized_importer` is the first importer on
     # `sys.meta_path`.
