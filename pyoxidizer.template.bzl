@@ -1,6 +1,7 @@
 # This file defines how PyOxidizer application building and packaging is
-# performed. See the pyoxidizer crate's documentation for extensive
-# documentation on this file format.
+# performed. See PyOxidizer's documentation at
+# https://pyoxidizer.readthedocs.io/en/stable/ for details of this
+# configuration file format.
 
 # Obtain the default PythonDistribution for our build target. We link
 # this distribution into our produced executable and extract the Python
@@ -25,7 +26,7 @@ def make_exe(dist):
     # Control support for loading Python extensions and other shared libraries
     # from memory. This is only supported on Windows and is ignored on other
     # platforms.
-    # policy.low_in_memory_shared_library_loading = True
+    # policy.allow_in_memory_shared_library_loading = True
 
     # Control whether to generate Python bytecode at various optimization
     # levels. The default optimization level used by Python is 0.
@@ -48,8 +49,8 @@ def make_exe(dist):
     # policy.extension_module_filter = "no-libraries"
 
     # Package Python extensions in the distribution not having a dependency on
-    # GPL licensed software.
-    # policy.extension_module_filter = "no-gpl"
+    # copyleft licensed software like GPL.
+    # policy.extension_module_filter = "no-copyleft"
 
     # Controls whether the file scanner attempts to classify files and emit
     # resource-specific values.
@@ -128,11 +129,34 @@ def make_exe(dist):
     # a value, it will be expanded to the directory of the built executable.
     python_config.module_search_paths = ["$ORIGIN/lib"]
 
-    # Use jemalloc as Python's memory allocator
+    # Use jemalloc as Python's memory allocator.
     # python_config.allocator_backend = "jemalloc"
 
-    # Use the system allocator as Python's memory allocator.
+    # Use mimalloc as Python's memory allocator.
+    # python_config.allocator_backend = "mimalloc"
+
+    # Use snmalloc as Python's memory allocator.
+    # python_config.allocator_backend = "snmalloc"
+
+    # Let Python choose which memory allocator to use. (This will likely
+    # use the malloc()/free() linked into the program.
     python_config.allocator_backend = "default"
+
+    # Enable the use of a custom allocator backend with the "raw" memory domain.
+    # python_config.allocator_raw = True
+
+    # Enable the use of a custom allocator backend with the "mem" memory domain.
+    # python_config.allocator_mem = True
+
+    # Enable the use of a custom allocator backend with the "obj" memory domain.
+    # python_config.allocator_obj = True
+
+    # Enable the use of a custom allocator backend with pymalloc's arena
+    # allocator.
+    # python_config.allocator_pymalloc_arena = True
+
+    # Enable Python memory allocator debug hooks.
+    # python_config.allocator_debug = True
 
     # Control whether `oxidized_importer` is the first importer on
     # `sys.meta_path`.
@@ -178,6 +202,17 @@ def make_exe(dist):
     # Install tcl/tk support files to a specified directory so the `tkinter` Python
     # module works.
     # exe.tcl_files_path = "lib"
+
+    # Never attempt to copy Windows runtime DLLs next to the built executable.
+    # exe.windows_runtime_dlls_mode = "never"
+
+    # Copy Windows runtime DLLs next to the built executable when they can be
+    # located.
+    # exe.windows_runtime_dlls_mode = "when-present"
+
+    # Copy Windows runtime DLLs next to the build executable and error if this
+    # cannot be done.
+    # exe.windows_runtime_dlls_mode = "always"
 
     # Make the executable a console application on Windows.
     # exe.windows_subsystem = "console"
@@ -237,11 +272,63 @@ def make_install(exe):
 
     return files
 
+def make_msi(exe):
+    # See the full docs for more. But this will convert your Python executable
+    # into a `WiXMSIBuilder` Starlark type, which will be converted to a Windows
+    # .msi installer when it is built.
+    return exe.to_wix_msi_builder(
+        # Simple identifier of your app.
+        "iredis",
+        # The name of your application.
+        "iredis",
+        # The version of your application.
+        "1.9.1",
+        # The author/manufacturer of your application.
+        "laixintao"
+    )
+
+
+# Dynamically enable automatic code signing.
+def register_code_signers():
+    # You will need to run with `pyoxidizer build --var ENABLE_CODE_SIGNING 1` for
+    # this if block to be evaluated.
+    if not VARS.get("ENABLE_CODE_SIGNING"):
+        return
+
+    # Use a code signing certificate in a .pfx/.p12 file, prompting the
+    # user for its path and password to open.
+    # pfx_path = prompt_input("path to code signing certificate file")
+    # pfx_password = prompt_password(
+    #     "password for code signing certificate file",
+    #     confirm = True
+    # )
+    # signer = code_signer_from_pfx_file(pfx_path, pfx_password)
+
+    # Use a code signing certificate in the Windows certificate store, specified
+    # by its SHA-1 thumbprint. (This allows you to use YubiKeys and other
+    # hardware tokens if they speak to the Windows certificate APIs.)
+    # sha1_thumbprint = prompt_input(
+    #     "SHA-1 thumbprint of code signing certificate in Windows store"
+    # )
+    # signer = code_signer_from_windows_store_sha1_thumbprint(sha1_thumbprint)
+
+    # Choose a code signing certificate automatically from the Windows
+    # certificate store.
+    # signer = code_signer_from_windows_store_auto()
+
+    # Activate your signer so it gets called automatically.
+    # signer.activate()
+
+
+# Call our function to set up automatic code signers.
+register_code_signers()
+
 # Tell PyOxidizer about the build targets defined above.
 register_target("dist", make_dist)
 register_target("exe", make_exe, depends=["dist"])
 register_target("resources", make_embedded_resources, depends=["exe"], default_build_script=True)
 register_target("install", make_install, depends=["exe"], default=True)
+register_target("msi_installer", make_msi, depends=["exe"])
 
 # Resolve whatever targets the invoker of this configuration file is requesting
 # be resolved.
@@ -252,5 +339,5 @@ resolve_targets()
 # Everything below this is typically managed by PyOxidizer and doesn't need
 # to be updated by people.
 
-PYOXIDIZER_VERSION = "0.10.3"
-PYOXIDIZER_COMMIT = ""
+PYOXIDIZER_VERSION = "0.14.1"
+PYOXIDIZER_COMMIT = "UNKNOWN"
