@@ -36,7 +36,7 @@ jobs:
         run: |
           python3 -m venv venv
           . venv/bin/activate
-          pip install pip==18.1
+          pip install pip==21.1
           pip install poetry
           poetry install
           python -c "import sys; print(sys.version)"
@@ -54,18 +54,12 @@ jobs:
           iredis -h
           iredis help GET
 
-      - name: Cache cargo registry
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry
-
       - name: Executable Build
         run: |
           # pyoxidizer doesn't know the wheel path, and it doesn't support passing env vars
           export WHEEL_PATH=`ls ./dist/iredis*.whl`
           envsubst '$WHEEL_PATH' < pyoxidizer.template.bzl > pyoxidizer.bzl
-          cargo install pyoxidizer --vers 0.10.3
+          pip install pyoxidizer
           pyoxidizer build --release install
           cd ./build/x86*/release/install
           tar -zcf ../../../iredis.tar.gz lib/ iredis
