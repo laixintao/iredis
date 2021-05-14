@@ -252,6 +252,7 @@ PAGER_HELP = """Using pager when output is too tall for your window, default to 
     "-n", help="Database number.(overwrites dsn/url's db number)", default=None
 )
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
+@click.option("-name", "--client_name", help="Name for current connection.")
 @click.option("--url", default=None, envvar="IREDIS_URL", help=URL_HELP)
 @click.option("-d", "--dsn", default=None, envvar="IREDIS_DSN", help=DSN_HELP)
 @click.option(
@@ -278,6 +279,7 @@ def gather_args(
     p,
     n,
     password,
+    client_name,
     newbie,
     iredisrc,
     decode,
@@ -366,6 +368,7 @@ def create_client(params):
     port = params["p"]
     db = params["n"]
     password = params["password"]
+    client_name = params["client_name"]
 
     dsn_from_url = None
     dsn = params["dsn"]
@@ -385,10 +388,11 @@ def create_client(params):
             path=dsn_from_url.path,
             scheme=dsn_from_url.scheme,
             username=dsn_from_url.username,
+            client_name=client_name,
         )
     if params["socket"]:
-        return Client(scheme="unix", path=params["socket"], db=db, password=password)
-    return Client(host=host, port=port, db=db, password=password)
+        return Client(scheme="unix", path=params["socket"], db=db, password=password, client_name=client_name)
+    return Client(host=host, port=port, db=db, password=password, client_name=client_name)
 
 
 def main():
