@@ -10,6 +10,14 @@ def test_start_on_connection_error():
     cli.close()
 
 
+def test_start_with_client_name():
+    cli = pexpect.spawn("iredis --client_name custom_name", timeout=2)
+    cli.expect("iredis")
+    cli.sendline("CLIENT GETNAME")
+    cli.expect("custom_name")
+    cli.close()
+
+
 def test_short_help_option(config):
     c = pexpect.spawn("iredis -h", timeout=2)
 

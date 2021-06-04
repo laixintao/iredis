@@ -129,7 +129,12 @@ class Client:
             else:
                 connection_class = Connection
         else:
-            connection_kwargs = {"db": db, "password": password, "path": path, "client_name": client_name}
+            connection_kwargs = {
+                "db": db,
+                "password": password,
+                "path": path,
+                "client_name": client_name,
+            }
             connection_class = UnixDomainSocketConnection
 
         if config.decode:

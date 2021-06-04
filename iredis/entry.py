@@ -391,8 +391,16 @@ def create_client(params):
             client_name=client_name,
         )
     if params["socket"]:
-        return Client(scheme="unix", path=params["socket"], db=db, password=password, client_name=client_name)
-    return Client(host=host, port=port, db=db, password=password, client_name=client_name)
+        return Client(
+            scheme="unix",
+            path=params["socket"],
+            db=db,
+            password=password,
+            client_name=client_name,
+        )
+    return Client(
+        host=host, port=port, db=db, password=password, client_name=client_name
+    )
 
 
 def main():
