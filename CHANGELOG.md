@@ -2,6 +2,7 @@
 
 - Bugfix: before `cluster` commands' `node-id` only accept numbers, not it's
   fixed. `node-id` can be `\w+`.
+- Feature: support set client name for iredis connections via `--client-name`.
 
 ### 1.9.1
 

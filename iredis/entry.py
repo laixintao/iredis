@@ -252,7 +252,6 @@ PAGER_HELP = """Using pager when output is too tall for your window, default to 
     "-n", help="Database number.(overwrites dsn/url's db number)", default=None
 )
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
-@click.option("-name", "--client_name", help="Assign a name to the current connection.")
 @click.option("--url", default=None, envvar="IREDIS_URL", help=URL_HELP)
 @click.option("-d", "--dsn", default=None, envvar="IREDIS_DSN", help=DSN_HELP)
 @click.option(
@@ -267,6 +266,7 @@ PAGER_HELP = """Using pager when output is too tall for your window, default to 
     help="Config file for iredis, default is ~/.iredisrc.",
 )
 @click.option("--decode", default=None, help=DECODE_HELP)
+@click.option("--client_name", help="Assign a name to the current connection.")
 @click.option("--raw/--no-raw", default=None, is_flag=True, help=RAW_HELP)
 @click.option("--rainbow/--no-rainbow", default=None, is_flag=True, help=RAINBOW)
 @click.option("--shell/--no-shell", default=None, is_flag=True, help=SHELL)
