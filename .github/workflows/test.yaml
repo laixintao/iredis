@@ -30,7 +30,7 @@ jobs:
           python-version: ${{ matrix.python }}
           architecture: 'x64'
       - name: Cache venv
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: venv
           # Look to see if there is a cache hit for the corresponding requirements file
@@ -61,7 +61,7 @@ jobs:
           python-version: 3.7
           architecture: 'x64'
       - name: Cache venv
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: venv
           # Look to see if there is a cache hit for the corresponding requirements file
