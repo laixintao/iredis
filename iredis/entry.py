@@ -252,7 +252,7 @@ PAGER_HELP = """Using pager when output is too tall for your window, default to 
     "-n", help="Database number.(overwrites dsn/url's db number)", default=None
 )
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
-@click.option("-name", "--client_name", help="Name for current connection.")
+@click.option("-name", "--client_name", help="Assign a name to the current connection.")
 @click.option("--url", default=None, envvar="IREDIS_URL", help=URL_HELP)
 @click.option("-d", "--dsn", default=None, envvar="IREDIS_DSN", help=DSN_HELP)
 @click.option(
