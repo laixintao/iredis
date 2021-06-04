@@ -29,19 +29,20 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
           architecture: 'x64'
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.1.6
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
       - name: Cache venv
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: venv
           # Look to see if there is a cache hit for the corresponding requirements file
           key: poetryenv-${{ matrix.os }}-${{ matrix.python }}-${{ hashFiles('poetry.lock') }}
       - name: Install Dependencies
         run: |
-          python3 -m venv venv
-          . venv/bin/activate
-          pip install -U pip==21.1 setuptools
-          pip install poetry
-          poetry install
+          poetry install --no-interaction --no-root
           python -c "import sys; print(sys.version)"
           pip list
       - name: Pytest
