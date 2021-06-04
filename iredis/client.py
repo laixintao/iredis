@@ -62,6 +62,7 @@ class Client:
         path=None,
         scheme="redis",
         username=None,
+        client_name=None,
     ):
         self.host = host
         self.port = port
@@ -69,6 +70,7 @@ class Client:
         self.path = path
         # FIXME username is not using...
         self.username = username
+        self.client_name = client_name
         self.scheme = scheme
 
         self.connection = self.create_connection(
@@ -79,6 +81,7 @@ class Client:
             path,
             scheme,
             username,
+            client_name=client_name,
         )
 
         # all command upper case
@@ -110,6 +113,7 @@ class Client:
         path=None,
         scheme="redis",
         username=None,
+        client_name=None,
     ):
         if scheme in ("redis", "rediss"):
             connection_kwargs = {
@@ -118,13 +122,19 @@ class Client:
                 "db": db,
                 "password": password,
                 "socket_keepalive": config.socket_keepalive,
+                "client_name": client_name,
             }
             if scheme == "rediss":
                 connection_class = SSLConnection
             else:
                 connection_class = Connection
         else:
-            connection_kwargs = {"db": db, "password": password, "path": path}
+            connection_kwargs = {
+                "db": db,
+                "password": password,
+                "path": path,
+                "client_name": client_name,
+            }
             connection_class = UnixDomainSocketConnection
 
         if config.decode:
