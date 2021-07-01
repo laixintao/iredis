@@ -407,12 +407,7 @@ class Client:
             # subcommand's stdout/stderr
             if shell_command and config.shell:
                 # pass the raw response of redis to shell command
-                if isinstance(redis_resp, list):
-                    # FIXME not handling nested list, use renders.render_raw
-                    # instead
-                    stdin = b"\n".join(redis_resp)
-                else:
-                    stdin = redis_resp
+                stdin = OutputRender.render_raw(redis_resp)
                 run(shell_command, input=stdin, shell=True)
                 return
 

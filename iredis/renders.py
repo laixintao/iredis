@@ -56,6 +56,8 @@ class OutputRender:
             return value
         if isinstance(value, int):
             return str(value).encode()
+        if isinstance(value, str):
+            return value.encode()
         if isinstance(value, list):
             return _render_raw_list(value)
 
@@ -344,6 +346,8 @@ def _render_raw_list(bytes_items):
             flatten_items.append(item)
         elif isinstance(item, int):
             flatten_items.append(str(item).encode())
+        elif isinstance(item, str):
+            flatten_items.append(item.encode())
         elif isinstance(item, list):
             flatten_items.append(_render_raw_list(item))
     return b"\n".join(flatten_items)
