@@ -1,3 +1,9 @@
+### 1.9.3
+
+- Bugfix: When IRedis start with `--decode=utf-8`, command with shell pipe will
+  fail. ( [#383](https://github.com/laixintao/iredis/issues/383)). Thanks to
+  [hanaasagi].
+
 ### 1.9.2
 
 - Bugfix: before `cluster` commands' `node-id` only accept numbers, not it's
@@ -222,3 +228,4 @@
 [lyqscmy]: https://github.com/lyqscmy
 [brianmaissy]: https://github.com/brianmaissy
 [otms61]: https://github.com/otms61
+[hanaasagi]: https://github.com/Hanaasagi
