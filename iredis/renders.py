@@ -178,7 +178,7 @@ class OutputRender:
         will return a list of strings.
         we render it as plain text
         """
-        return FormattedText(_render_list(raw, [ensure_str(s) for s in raw], "class:string"))
+        return FormattedText([("class:string", _render_raw_list(raw).decode())])
 
 
     @staticmethod
