@@ -59,3 +59,14 @@ def test_auth_hidden_password(clean_redis, cli):
 def test_hello_command_is_not_supported(cli):
     cli.sendline("hello 3")
     cli.expect("IRedis currently not support RESP3")
+
+
+def test_abort_reading_connection(cli):
+    cli.sendline("blpop mylist 10")
+    cli.send(chr(3))
+    cli.expect(r"KeyboardInterrupt received! User canceled reading response!")
+
+    cli.sendline("set foo bar")
+    cli.expect("OK")
+    cli.sendline("get foo")
+    cli.expect("bar")

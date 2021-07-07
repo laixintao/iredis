@@ -259,6 +259,15 @@ class Client:
             except redis.exceptions.ExecAbortError:
                 config.transaction = False
                 raise
+            except KeyboardInterrupt:
+                logger.warning("received KeyboardInterrupt... rebuild connection...")
+                connection.disconnect()
+                connection.connect()
+                print(
+                    "KeyboardInterrupt received! User canceled reading response!",
+                    file=sys.stderr,
+                )
+                return None
             else:
                 return response
         raise last_error

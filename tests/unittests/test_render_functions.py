@@ -485,5 +485,8 @@ def test_render_bytes(config):
 def test_render_bytes_raw(config):
     assert renders.OutputRender.render_raw(b"bytes\n") == b"bytes\n"
 
+
 def test_render_help(config):
-    assert renders.OutputRender.render_help([b"foo", b"bar"]) == FormattedText([('class:string', 'foo\nbar')])
+    assert renders.OutputRender.render_help([b"foo", b"bar"]) == FormattedText(
+        [("class:string", "foo\nbar")]
+    )

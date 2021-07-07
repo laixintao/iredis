@@ -275,7 +275,8 @@ def test_peek_list_fetch_all(iredis_client, clean_redis):
     clean_redis.lpush("mylist", *[f"hello-{index}" for index in range(5)])
     peek_result = list(iredis_client.do_peek("mylist"))
 
-    formatted_text_rematch(peek_result[0], 
+    formatted_text_rematch(
+        peek_result[0],
         FormattedText(
             [
                 ("class:dockey", "key: "),
@@ -306,7 +307,7 @@ def test_peek_list_fetch_all(iredis_client, clean_redis):
                 ("", " "),
                 ("class:string", '"hello-0"'),
             ]
-        )
+        ),
     )
 
 
