@@ -1,3 +1,8 @@
+## 1.10
+
+- Feature: more human readable output for `HELP` command like `ACL HELP` and
+  `MEMORY HELP`.
+
 ### 1.9.3
 
 - Bugfix: When IRedis start with `--decode=utf-8`, command with shell pipe will
