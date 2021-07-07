@@ -180,7 +180,6 @@ class OutputRender:
         """
         return FormattedText([("class:string", _render_raw_list(raw).decode())])
 
-
     @staticmethod
     def render_transaction_queue(text):
         """
