@@ -17,8 +17,8 @@ is active and retains all changes to the data set once it ends.
 
 - `YES`. Enable non-blocking asynchronous debugging of Lua scripts (changes are
   discarded).
-- `SYNC`. Enable blocking synchronous debugging of Lua scripts (saves changes to
-  data).
+- `!SYNC`. Enable blocking synchronous debugging of Lua scripts (saves changes
+  to data).
 - `NO`. Disables scripts debug mode.
 
 @return

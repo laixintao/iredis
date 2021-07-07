@@ -29,6 +29,10 @@ defined in the ACL list (see `ACL SETUSER`) and the official
 When ACLs are used, the single argument form of the command, where only the
 password is specified, assumes that the implicit username is "default".
 
+@history
+
+- `>= 6.0.0`: Added ACL style (username and password).
+
 ## Security notice
 
 Because of the high performance nature of Redis, it is possible to try a lot of

@@ -72,17 +72,9 @@ class Client:
         self.username = username
         self.client_name = client_name
         self.scheme = scheme
+        self.password = password
 
-        self.connection = self.create_connection(
-            host,
-            port,
-            db,
-            password,
-            path,
-            scheme,
-            username,
-            client_name=client_name,
-        )
+        self.build_connection()
 
         # all command upper case
         self.answer_callbacks = command2callback
@@ -103,6 +95,21 @@ class Client:
 
         if config.version and re.match(r"([\d\.]+)", config.version):
             self.auth_compat(config.version)
+
+    def build_connection(self):
+        """
+        create a new connection and replace ``self.connection``
+        """
+        self.connection = self.create_connection(
+            self.host,
+            self.port,
+            self.db,
+            self.password,
+            self.path,
+            self.scheme,
+            self.username,
+            client_name=self.client_name,
+        )
 
     def create_connection(
         self,
@@ -252,6 +259,15 @@ class Client:
             except redis.exceptions.ExecAbortError:
                 config.transaction = False
                 raise
+            except KeyboardInterrupt:
+                logger.warning("received KeyboardInterrupt... rebuild connection...")
+                connection.disconnect()
+                connection.connect()
+                print(
+                    "KeyboardInterrupt received! User canceled reading response!",
+                    file=sys.stderr,
+                )
+                return None
             else:
                 return response
         raise last_error

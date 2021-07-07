@@ -1,7 +1,8 @@
 Sets or clears the bit at _offset_ in the string value stored at _key_.
 
-The bit is either set or cleared depending on _value_, which can be either 0
-or 1.
+The bit is either set or cleared depending on _value_, which can be either 0 or
+
+1.
 
 When _key_ does not exist, a new string value is created. The string is grown to
 make sure it can hold a bit at _offset_. The _offset_ argument is required to be

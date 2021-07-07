@@ -11,6 +11,9 @@ performed. If `source` and `destination` are the same, the operation is
 equivalent to removing the last element from the list and pushing it as first
 element of the list, so it can be considered as a list rotation command.
 
+As per Redis 6.2.0, RPOPLPUSH is considered deprecated. Please prefer `LMOVE` in
+new code.
+
 @return
 
 @bulk-string-reply: the element being popped and pushed.

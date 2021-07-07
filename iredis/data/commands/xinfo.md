@@ -39,7 +39,8 @@ is the stream content.
 - `XINFO STREAM <key> FULL [COUNT <count>]`
 
 In this form the command returns the entire state of the stream, including
-entries, groups, consumers and PELs. This form is available since Redis 6.0.
+entries, groups, consumers and Pending Entries Lists (PELs). This form is
+available since Redis 6.0.
 
 ```
 > XADD mystream * foo bar

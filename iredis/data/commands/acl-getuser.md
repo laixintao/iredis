@@ -8,6 +8,10 @@ rules used to configure the user, it is still functionally identical.
 
 @array-reply: a list of ACL rule definitions for the user.
 
+@history
+
+- `>= 6.2`: Added Pub/Sub channel patterns.
+
 @examples
 
 Here's the default configuration for the default user:
@@ -25,4 +29,6 @@ Here's the default configuration for the default user:
 6) "+@all"
 7) "keys"
 8) 1) "*"
+9) "channels"
+10) 1) "*"
 ```

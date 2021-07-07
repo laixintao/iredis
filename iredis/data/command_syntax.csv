@@ -123,7 +123,7 @@ server,ACL CAT,command_categorynamex,render_list
 server,ACL DELUSER,command_usernames,render_int
 server,ACL GENPASS,command_countx,render_bulk_string
 server,ACL GETUSER,command_username,render_list
-server,ACL HELP,command,render_list
+server,ACL HELP,command,render_help
 server,ACL LIST,command,render_list
 server,ACL LOAD,command,render_simple_string
 server,ACL LOG,command_count_or_resetx,render_list_or_string
@@ -152,12 +152,12 @@ server,LOLWUT,command_version,render_bytes
 server,LASTSAVE,command,render_unixtime
 server,LATENCY DOCTOR,command,render_bulk_string_decode
 server,LATENCY GRAPH,command_graphevent,render_bulk_string_decode
-server,LATENCY HELP,command,render_list
+server,LATENCY HELP,command,render_help
 server,LATENCY HISTORY,command_graphevent,render_list
 server,LATENCY LATEST,command,render_list
 server,LATENCY RESET,command_graphevents,render_int
 server,MEMORY DOCTOR,command,render_bulk_string_decode
-server,MEMORY HELP,command,render_list
+server,MEMORY HELP,command,render_help
 server,MEMORY MALLOC-STATS,command,render_bulk_string_decode
 server,MEMORY PURGE,command,render_simple_string
 server,MEMORY STATS,command,render_nested_pair

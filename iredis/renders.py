@@ -171,6 +171,16 @@ class OutputRender:
         return FormattedText([("class:success", text)])
 
     @staticmethod
+    def render_help(raw):
+        """
+        render help text message.
+        the comand like ``ACL HELP`` and ``MEMORY HELP``
+        will return a list of strings.
+        we render it as plain text
+        """
+        return FormattedText([("class:string", _render_raw_list(raw).decode())])
+
+    @staticmethod
     def render_transaction_queue(text):
         """
         Used when client session is in a transaction.

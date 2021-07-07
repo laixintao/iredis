@@ -36,8 +36,8 @@ QUIT
 Connection closed by foreign host.
 ```
 
-Manually issue the `QUIT` command to stop a `MONITOR` stream running via
-`telnet`.
+Manually issue the `QUIT` or `RESET` commands to stop a `MONITOR` stream running
+via `telnet`.
 
 ## Commands not logged by MONITOR
 
@@ -90,4 +90,5 @@ flow.
 
 @history
 
-- `>=6.0`: `AUTH` excluded from the command's output.
+- `>= 6.2`: `RESET` can be called to exit monitor mode.
+- `>= 6.0`: `AUTH` excluded from the command's output.

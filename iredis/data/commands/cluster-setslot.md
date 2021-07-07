@@ -65,9 +65,10 @@ already migrated to the target node are executed in the target node, so that:
 ## CLUSTER SETSLOT `<slot>` STABLE
 
 This subcommand just clears migrating / importing state from the slot. It is
-mainly used to fix a cluster stuck in a wrong state by `redis-trib fix`.
-Normally the two states are cleared automatically at the end of the migration
-using the `SETSLOT ... NODE ...` subcommand as explained in the next section.
+mainly used to fix a cluster stuck in a wrong state by
+`redis-cli --cluster fix`. Normally the two states are cleared automatically at
+the end of the migration using the `SETSLOT ... NODE ...` subcommand as
+explained in the next section.
 
 ## CLUSTER SETSLOT `<slot>` NODE `<node-id>`
 

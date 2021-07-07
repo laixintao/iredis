@@ -73,7 +73,7 @@ Command flags is @array-reply containing one or more status replies:
 
 - _write_ - command may result in modifications
 - _readonly_ - command will never modify keys
-- _denyoom_ - reject command if currently OOM
+- _denyoom_ - reject command if currently out of memory
 - _admin_ - server admin command
 - _pubsub_ - pubsub-related command
 - _noscript_ - deny this command from scripts
@@ -109,8 +109,12 @@ relevant key positions.
 Complete list of commands currently requiring key location parsing:
 
 - `SORT` - optional `STORE` key, optional `BY` weights, optional `GET` keys
+- `ZUNION` - keys stop when `WEIGHT` or `AGGREGATE` starts
 - `ZUNIONSTORE` - keys stop when `WEIGHT` or `AGGREGATE` starts
+- `ZINTER` - keys stop when `WEIGHT` or `AGGREGATE` starts
 - `ZINTERSTORE` - keys stop when `WEIGHT` or `AGGREGATE` starts
+- `ZDIFF` - keys stop after `numkeys` count arguments
+- `ZDIFFSTORE` - keys stop after `numkeys` count arguments
 - `EVAL` - keys stop after `numkeys` count arguments
 - `EVALSHA` - keys stop after `numkeys` count arguments
 

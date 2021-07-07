@@ -5,14 +5,15 @@ command argument. Normally this is what happens:
 1. There is a stream with an associated consumer group.
 2. Some consumer A reads a message via `XREADGROUP` from a stream, in the
    context of that consumer group.
-3. As a side effect a pending message entry is created in the pending entries
-   list (PEL) of the consumer group: it means the message was delivered to a
+3. As a side effect a pending message entry is created in the Pending Entries
+   List (PEL) of the consumer group: it means the message was delivered to a
    given consumer, but it was not yet acknowledged via `XACK`.
 4. Then suddenly that consumer fails forever.
 5. Other consumers may inspect the list of pending messages, that are stale for
    quite some time, using the `XPENDING` command. In order to continue
    processing such messages, they use `XCLAIM` to acquire the ownership of the
-   message and continue.
+   message and continue. As of Redis 6.2, consumers can use the `XAUTOCLAIM`
+   command to automatically scan and claim stale pending messages.
 
 This dynamic is clearly explained in the
 [Stream intro documentation](/topics/streams-intro).
@@ -68,7 +69,7 @@ The command returns all the messages successfully claimed, in the same format as
 `XRANGE`. However if the `JUSTID` option was specified, only the message IDs are
 reported, without including the actual message.
 
-Example:
+@examples
 
 ```
 > XCLAIM mystream mygroup Alice 3600000 1526569498055-0

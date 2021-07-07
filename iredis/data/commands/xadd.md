@@ -1,6 +1,7 @@
 Appends the specified stream entry to the stream at the specified key. If the
 key does not exist, as a side effect of running this command the key is created
-with a stream value.
+with a stream value. The creation of stream's key can be disabled with the
+`NOMKSTREAM` option.
 
 An entry is composed of a set of field-value pairs, it is basically a small
 dictionary. The field-value pairs are stored in the same order they are given by
@@ -14,11 +15,12 @@ stream.
 
 ## Specifying a Stream ID as an argument
 
-A stream entry ID identifies a given entry inside a stream. The `XADD` command
-will auto-generate a unique ID for you if the ID argument specified is the `*`
-character (asterisk ASCII character). However, while useful only in very rare
-cases, it is possible to specify a well-formed ID, so that the new entry will be
-added exactly with the specified ID.
+A stream entry ID identifies a given entry inside a stream.
+
+The `XADD` command will auto-generate a unique ID for you if the ID argument
+specified is the `*` character (asterisk ASCII character). However, while useful
+only in very rare cases, it is possible to specify a well-formed ID, so that the
+new entry will be added exactly with the specified ID.
 
 IDs are specified by two numbers separated by a `-` character:
 
@@ -39,30 +41,27 @@ or if after a failover the new master has a different absolute time.
 
 When a user specified an explicit ID to `XADD`, the minimum valid ID is `0-1`,
 and the user _must_ specify an ID which is greater than any other ID currently
-inside the stream, otherwise the command will fail. Usually resorting to
-specific IDs is useful only if you have another system generating unique IDs
-(for instance an SQL table) and you really want the Redis stream IDs to match
-the one of this other system.
+inside the stream, otherwise the command will fail and return an error. Usually
+resorting to specific IDs is useful only if you have another system generating
+unique IDs (for instance an SQL table) and you really want the Redis stream IDs
+to match the one of this other system.
 
 ## Capped streams
 
-It is possible to limit the size of the stream to a maximum number of elements
-using the **MAXLEN** option.
+`XADD` incorporates the same semantics as the `XTRIM` command - refer to its
+documentation page for more information. This allows adding new entries and
+keeping the stream's size in check with a single call to `XADD`, effectively
+capping the stream with an arbitrary threshold. Although exact trimming is
+possible and is the default, due to the internal representation of steams it is
+more efficient to add an entry and trim stream with `XADD` using **almost
+exact** trimming (the `~` argument).
 
-Trimming with **MAXLEN** can be expensive compared to just adding entries with
-`XADD`: streams are represented by macro nodes into a radix tree, in order to be
-very memory efficient. Altering the single macro node, consisting of a few tens
-of elements, is not optimal. So it is possible to give the command in the
-following special form:
+For example, calling `XADD` in the following form:
 
     XADD mystream MAXLEN ~ 1000 * ... entry fields here ...
 
-The `~` argument between the **MAXLEN** option and the actual count means that
-the user is not really requesting that the stream length is exactly 1000 items,
-but instead it could be a few tens of entries more, but never less than 1000
-items. When this option modifier is used, the trimming is performed only when
-Redis is able to remove a whole macro node. This makes it much more efficient,
-and it is usually what you want.
+Will add a new entry but will also evict old entries so that the stream will
+contain only 1000 entries, or at most a few tens more.
 
 ## Additional information about streams
 
@@ -76,6 +75,14 @@ For further information about Redis streams please check our
 The command returns the ID of the added entry. The ID is the one auto-generated
 if `*` is passed as ID argument, otherwise the command just returns the same ID
 specified by the user during insertion.
+
+The command returns a @nil-reply when used with the `NOMKSTREAM` option and the
+key doesn't exist.
+
+@history
+
+- `>= 6.2`: Added the `NOMKSTREAM` option, `MINID` trimming strategy and the
+  `LIMIT` option.
 
 @examples
 

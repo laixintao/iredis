@@ -34,7 +34,7 @@ client will unblock returning a `nil` multi-bulk value when the specified
 timeout has expired without a push operation against at least one of the
 specified keys.
 
-**The timeout argument is interpreted as an integer value specifying the maximum
+**The timeout argument is interpreted as a double value specifying the maximum
 number of seconds to block**. A timeout of zero can be used to block
 indefinitely.
 
@@ -128,6 +128,10 @@ If you like science fiction, think of time flowing at infinite speed inside a
 - A two-element multi-bulk with the first element being the name of the key
   where an element was popped and the second element being the value of the
   popped element.
+
+@history
+
+- `>= 6.0`: `timeout` is interpreted as a double instead of an integer.
 
 @examples
 

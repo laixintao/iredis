@@ -5,7 +5,7 @@ specified by the `path` argument. The `path` should be the absolute path of the
 library, including the full filename. Any additional arguments are passed
 unmodified to the module.
 
-**Note**: modules can also be loaded at server startup with 'loadmodule'
+**Note**: modules can also be loaded at server startup with `loadmodule`
 configuration directive in `redis.conf`.
 
 @return

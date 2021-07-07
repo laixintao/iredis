@@ -22,7 +22,7 @@ GET mykey
 **Please note that:**
 
 1. The following pattern is discouraged in favor of
-   [the Redlock algorithm](http://redis.io/topics/distlock) which is only a bit
+   [the Redlock algorithm](https://redis.io/topics/distlock) which is only a bit
    more complex to implement, but offers better guarantees and is fault
    tolerant.
 2. We document the old pattern anyway because certain existing implementations

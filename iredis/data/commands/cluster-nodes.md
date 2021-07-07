@@ -11,8 +11,8 @@ additional info appended at the end).
 Note that normally clients willing to fetch the map between Cluster hash slots
 and node addresses should use `CLUSTER SLOTS` instead. `CLUSTER NODES`, that
 provides more information, should be used for administrative tasks, debugging,
-and configuration inspections. It is also used by `redis-trib` in order to
-manage a cluster.
+and configuration inspections. It is also used by `redis-cli` in order to manage
+a cluster.
 
 ## Serialization format
 
@@ -41,8 +41,8 @@ The meaning of each filed is the following:
 2. `ip:port@cport`: The node address where clients should contact the node to
    run queries.
 3. `flags`: A list of comma separated flags: `myself`, `master`, `slave`,
-   `fail?`, `fail`, `handshake`, `noaddr`, `noflags`. Flags are explained in
-   detail in the next section.
+   `fail?`, `fail`, `handshake`, `noaddr`, `nofailover`, `noflags`. Flags are
+   explained in detail in the next section.
 4. `master`: If the node is a replica, and the master is known, the master node
    ID, otherwise the "-" character.
 5. `ping-sent`: Milliseconds unix time at which the currently active ping was
@@ -74,6 +74,7 @@ Meaning of the flags (field number 3):
   promoted the `PFAIL` state to `FAIL`.
 - `handshake`: Untrusted node, we are handshaking.
 - `noaddr`: No address known for this node.
+- `nofailover`: Replica will not try to failover.
 - `noflags`: No flags at all.
 
 ## Notes on published config epochs

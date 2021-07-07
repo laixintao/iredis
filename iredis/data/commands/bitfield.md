@@ -20,11 +20,11 @@ offset 100, and gets the value of the 4 bit unsigned integer at bit offset 0:
 
 Note that:
 
-1. Addressing with `GET` bits outside the current string length (including the
+1. Addressing with `!GET` bits outside the current string length (including the
    case the key does not exist at all), results in the operation to be performed
    like the missing part all consists of bits set to 0.
-2. Addressing with `SET` or `INCRBY` bits outside the current string length will
-   enlarge the string, zero-padding it, as needed, for the minimal length
+2. Addressing with `!SET` or `!INCRBY` bits outside the current string length
+   will enlarge the string, zero-padding it, as needed, for the minimal length
    needed, according to the most far bit touched.
 
 ## Supported subcommands and integer types
@@ -39,7 +39,7 @@ The following is the list of supported commands.
   value.
 
 There is another subcommand that only changes the behavior of successive
-`INCRBY` subcommand calls by setting the overflow behavior:
+`!INCRBY` and `!SET` subcommands calls by setting the overflow behavior:
 
 - **OVERFLOW** `[WRAP|SAT|FAIL]`
 
@@ -91,8 +91,9 @@ following behaviors:
   detected. The corresponding return value is set to NULL to signal the
   condition to the caller.
 
-Note that each `OVERFLOW` statement only affects the `INCRBY` commands that
-follow it in the list of subcommands, up to the next `OVERFLOW` statement.
+Note that each `OVERFLOW` statement only affects the `!INCRBY` and `!SET`
+commands that follow it in the list of subcommands, up to the next `OVERFLOW`
+statement.
 
 By default, **WRAP** is used if not otherwise specified.
 

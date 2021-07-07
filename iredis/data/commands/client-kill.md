@@ -1,14 +1,12 @@
-The `CLIENT KILL` command closes a given client connection. Up to Redis 2.8.11
-it was possible to close a connection only by client address, using the
-following form:
+The `CLIENT KILL` command closes a given client connection. This command support
+two formats, the old format:
 
     CLIENT KILL addr:port
 
 The `ip:port` should match a line returned by the `CLIENT LIST` command (`addr`
 field).
 
-However starting with Redis 2.8.12 or greater, the command accepts the following
-form:
+The new format:
 
     CLIENT KILL <filter> <value> ... ... <filter> <value>
 
@@ -17,13 +15,14 @@ of killing just by address. The following filters are available:
 
 - `CLIENT KILL ADDR ip:port`. This is exactly the same as the old
   three-arguments behavior.
-- `CLIENT KILL ID client-id`. Allows to kill a client by its unique `ID` field,
-  which was introduced in the `CLIENT LIST` command starting from Redis 2.8.12.
-- `CLIENT KILL TYPE type`, where _type_ is one of `normal`, `master`, `slave`
-  and `pubsub` (the `master` type is available from v3.2). This closes the
-  connections of **all the clients** in the specified class. Note that clients
-  blocked into the `MONITOR` command are considered to belong to the `normal`
-  class.
+- `CLIENT KILL LADDR ip:port`. Kill all clients connected to specified local
+  (bind) address.
+- `CLIENT KILL ID client-id`. Allows to kill a client by its unique `ID` field.
+  Client `ID`'s are retrieved using the `CLIENT LIST` command.
+- `CLIENT KILL TYPE type`, where _type_ is one of `normal`, `master`, `replica`
+  and `pubsub`. This closes the connections of **all the clients** in the
+  specified class. Note that clients blocked into the `MONITOR` command are
+  considered to belong to the `normal` class.
 - `CLIENT KILL USER username`. Closes all the connections that are authenticated
   with the specified [ACL](/topics/acl) username, however it returns an error if
   the username does not map to an existing ACL user.
@@ -31,10 +30,6 @@ of killing just by address. The following filters are available:
   the client calling the command will not get killed, however setting this
   option to `no` will have the effect of also killing the client calling the
   command.
-
-**Note: starting with Redis 5 the project is no longer using the slave word. You
-can use `TYPE replica` instead, however the old form is still supported for
-backward compatibility.**
 
 It is possible to provide multiple filters at the same time. The command will
 handle multiple filters via logical AND. For example:
@@ -71,3 +66,12 @@ When called with the three arguments format:
 When called with the filter / value format:
 
 @integer-reply: the number of clients killed.
+
+@history
+
+- `>= 2.8.12`: Added new filter format.
+- `>= 2.8.12`: `ID` option.
+- `>= 3.2`: Added `master` type in for `TYPE` option.
+- `>= 5`: Replaced `slave` `TYPE` with `replica`. `slave` still supported for
+  backward compatibility.
+- `>= 6.2`: `LADDR` option.

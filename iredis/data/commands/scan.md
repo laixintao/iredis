@@ -246,7 +246,7 @@ may receive no elements in many iterations.
 
 It is possible for an infinite number of clients to iterate the same collection
 at the same time, as the full state of the iterator is in the cursor, that is
-obtained and returned to the client at every call. Server side no state is taken
+obtained and returned to the client at every call. No server side state is taken
 at all.
 
 ## Terminating iterations in the middle

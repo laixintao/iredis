@@ -29,7 +29,7 @@ the history of messages that were delivered to it, so a message has just a
 single owner. However there is a special feature called _message claiming_ that
 allows other consumers to claim messages in case there is a non recoverable
 failure of some consumer. In order to implement such semantics, consumer groups
-require explicit acknowledgement of the messages successfully processed by the
+require explicit acknowledgment of the messages successfully processed by the
 consumer, via the `XACK` command. This is needed because the stream will track,
 for each consumer group, who is processing what message.
 
@@ -88,7 +88,7 @@ no differences in this regard.
 Two things:
 
 1. If the message was never delivered to anyone, that is, if we are talking
-   about a new message, then a PEL (Pending Entry List) is created.
+   about a new message, then a PEL (Pending Entries List) is created.
 2. If instead the message was already delivered to this consumer, and it is just
    re-fetching the same message again, then the _last delivery counter_ is
    updated to the current time, and the _number of deliveries_ is incremented by
@@ -129,3 +129,19 @@ acknowledged all the pending messages: we can start to use `>` as ID, in order
 to get the new messages and rejoin the consumers that are processing new things.
 
 To see how the command actually replies, please check the `XREAD` command page.
+
+@return
+
+@array-reply, specifically:
+
+The command returns an array of results: each element of the returned array is
+an array composed of a two element containing the key name and the entries
+reported for that key. The entries reported are full stream entries, having IDs
+and the list of all the fields and values. Field and values are guaranteed to be
+reported in the same order they were added by `XADD`.
+
+When **BLOCK** is used, on timeout a null reply is returned.
+
+Reading the [Redis Streams introduction](/topics/streams-intro) is highly
+suggested in order to understand more about the streams overall behavior and
+semantics.

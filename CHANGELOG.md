@@ -1,3 +1,10 @@
+## 1.10
+
+- Feature: more human readable output for `HELP` command like `ACL HELP` and
+  `MEMORY HELP`.
+- Feature: you can use <kbd>Ctrl</kbd> + <kbd>C</kbd> to cancel a blocking
+  command like `BLPOP`.
+
 ### 1.9.3
 
 - Bugfix: When IRedis start with `--decode=utf-8`, command with shell pipe will
