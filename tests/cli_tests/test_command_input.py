@@ -62,9 +62,11 @@ def test_hello_command_is_not_supported(cli):
 
 
 def test_abort_reading_connection(cli):
-    cli.sendline("blpop mylist 10")
+    cli.sendline("blpop mylist 30")
     cli.send(chr(3))
-    cli.expect(r"KeyboardInterrupt received! User canceled reading response!")
+    cli.expect(
+        r"KeyboardInterrupt received! User canceled reading response!", timeout=10
+    )
 
     cli.sendline("set foo bar")
     cli.expect("OK")
