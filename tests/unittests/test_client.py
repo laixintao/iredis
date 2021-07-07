@@ -11,6 +11,7 @@ from iredis.config import config, load_config_files
 from iredis.completers import IRedisCompleter
 from iredis.entry import Rainbow, prompt_message
 from iredis.exceptions import NotSupport
+from ..helpers import formatted_text_rematch
 
 
 @pytest.fixture
@@ -259,7 +260,7 @@ def test_peek_string(iredis_client, clean_redis):
     peek_result = list(iredis_client.do_peek("foo"))
 
     assert peek_result[0][0] == ("class:dockey", "key: ")
-    assert re.match(r"string \(embstr\)  mem: 5\d bytes, ttl: -1", peek_result[0][1][1])
+    assert re.match(r"string \(embstr\)  mem: \d+ bytes, ttl: -1", peek_result[0][1][1])
     assert peek_result[0][2:] == [
         ("", "\n"),
         ("class:dockey", "strlen: "),
@@ -274,39 +275,39 @@ def test_peek_list_fetch_all(iredis_client, clean_redis):
     clean_redis.lpush("mylist", *[f"hello-{index}" for index in range(5)])
     peek_result = list(iredis_client.do_peek("mylist"))
 
-    assert peek_result == [
+    formatted_text_rematch(peek_result[0], 
         FormattedText(
             [
                 ("class:dockey", "key: "),
-                ("", "list (quicklist)  mem: 176 bytes, ttl: -1"),
+                ("", r"list \(quicklist\)  mem: \d+ bytes, ttl: -1"),
                 ("", "\n"),
                 ("class:dockey", "llen: "),
                 ("", "5"),
                 ("", "\n"),
                 ("class:dockey", "elements: "),
                 ("", "\n"),
-                ("", "1)"),
+                ("", r"1\)"),
                 ("", " "),
                 ("class:string", '"hello-4"'),
                 ("", "\n"),
-                ("", "2)"),
+                ("", r"2\)"),
                 ("", " "),
                 ("class:string", '"hello-3"'),
                 ("", "\n"),
-                ("", "3)"),
+                ("", r"3\)"),
                 ("", " "),
                 ("class:string", '"hello-2"'),
                 ("", "\n"),
-                ("", "4)"),
+                ("", r"4\)"),
                 ("", " "),
                 ("class:string", '"hello-1"'),
                 ("", "\n"),
-                ("", "5)"),
+                ("", r"5\)"),
                 ("", " "),
                 ("class:string", '"hello-0"'),
             ]
         )
-    ]
+    )
 
 
 def test_peek_list_fetch_part(iredis_client, clean_redis):
@@ -334,18 +335,21 @@ def test_peek_zset_fetch_all(iredis_client, clean_redis):
         "myzset", dict(zip([f"hello-{index}" for index in range(3)], range(3)))
     )
     peek_result = list(iredis_client.do_peek("myzset"))
-    assert peek_result[0][0:9] == FormattedText(
-        [
-            ("class:dockey", "key: "),
-            ("", "zset (ziplist)  mem: 92 bytes, ttl: -1"),
-            ("", "\n"),
-            ("class:dockey", "zcount: "),
-            ("", "3"),
-            ("", "\n"),
-            ("class:dockey", "members: "),
-            ("", "\n"),
-            ("", "1)"),
-        ]
+    formatted_text_rematch(
+        peek_result[0][0:9],
+        FormattedText(
+            [
+                ("class:dockey", "key: "),
+                ("", r"zset \(ziplist\)  mem: \d+ bytes, ttl: -1"),
+                ("", "\n"),
+                ("class:dockey", "zcount: "),
+                ("", "3"),
+                ("", "\n"),
+                ("class:dockey", "members: "),
+                ("", "\n"),
+                ("", r"1\)"),
+            ]
+        ),
     )
 
 
@@ -354,17 +358,20 @@ def test_peek_zset_fetch_part(iredis_client, clean_redis):
         "myzset", dict(zip([f"hello-{index}" for index in range(40)], range(40)))
     )
     peek_result = list(iredis_client.do_peek("myzset"))
-    assert peek_result[0][0:8] == FormattedText(
-        [
-            ("class:dockey", "key: "),
-            ("", "zset (ziplist)  mem: 556 bytes, ttl: -1"),
-            ("", "\n"),
-            ("class:dockey", "zcount: "),
-            ("", "40"),
-            ("", "\n"),
-            ("class:dockey", "members (first 40): "),
-            ("", "\n"),
-        ]
+    formatted_text_rematch(
+        peek_result[0][0:8],
+        FormattedText(
+            [
+                ("class:dockey", "key: "),
+                ("", r"zset \(ziplist\)  mem: \d+ bytes, ttl: -1"),
+                ("", "\n"),
+                ("class:dockey", "zcount: "),
+                ("", "40"),
+                ("", "\n"),
+                ("class:dockey", r"members \(first 40\): "),
+                ("", "\n"),
+            ]
+        ),
     )
 
 
