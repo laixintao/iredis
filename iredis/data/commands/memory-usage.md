@@ -37,4 +37,4 @@ OK
 
 @return
 
-@integer-reply: the memory usage in bytes
+@integer-reply: the memory usage in bytes, or `nil` when the key does not exist.

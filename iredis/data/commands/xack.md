@@ -1,5 +1,5 @@
-The `XACK` command removes one or multiple messages from the _pending entries
-list_ (PEL) of a stream consumer group. A message is pending, and as such stored
+The `XACK` command removes one or multiple messages from the _Pending Entries
+List_ (PEL) of a stream consumer group. A message is pending, and as such stored
 inside the PEL, when it was delivered to some consumer, normally as a side
 effect of calling `XREADGROUP`, or when a consumer took ownership of a message
 calling `XCLAIM`. The pending message was delivered to some consumer but the
@@ -17,9 +17,13 @@ entry about this message is also purged, releasing memory from the Redis server.
 @integer-reply, specifically:
 
 The command returns the number of messages successfully acknowledged. Certain
-message IDs may no longer be part of the PEL (for example because they have been
-already acknowledge), and XACK will not count them as successfully acknowledged.
+message IDs may no longer be part of the PEL (for example because they have
+already been acknowledged), and XACK will not count them as successfully
+acknowledged.
 
-```cli
-XACK mystream mygroup 1526569495631-0
+@examples
+
+```
+redis> XACK mystream mygroup 1526569495631-0
+(integer) 1
 ```

@@ -1,33 +1,136 @@
-Returns the specified range of elements in the sorted set stored at `key`. The
-elements are considered to be ordered from the lowest to the highest score.
-Lexicographical order is used for elements with equal score.
+Returns the specified range of elements in the sorted set stored at `<key>`.
 
-See `ZREVRANGE` when you need the elements ordered from highest to lowest score
-(and descending lexicographical order for elements with equal score).
+`ZRANGE` can perform different types of range queries: by index (rank), by the
+score, or by lexicographical order.
 
-Both `start` and `stop` are zero-based indexes, where `0` is the first element,
-`1` is the next element and so on. They can also be negative numbers indicating
-offsets from the end of the sorted set, with `-1` being the last element of the
-sorted set, `-2` the penultimate element and so on.
+Starting with Redis 6.2.0, this command can replace the following commands:
+`ZREVRANGE`, `ZRANGEBYSCORE`, `ZREVRANGEBYSCORE`, `ZRANGEBYLEX` and
+`ZREVRANGEBYLEX`.
 
-`start` and `stop` are **inclusive ranges**, so for example `ZRANGE myzset 0 1`
-will return both the first and the second element of the sorted set.
+## Common behavior and options
 
-Out of range indexes will not produce an error. If `start` is larger than the
-largest index in the sorted set, or `start > stop`, an empty list is returned.
-If `stop` is larger than the end of the sorted set Redis will treat it like it
-is the last element of the sorted set.
+The order of elements is from the lowest to the highest score. Elements with the
+same score are ordered lexicographically.
 
-It is possible to pass the `WITHSCORES` option in order to return the scores of
-the elements together with the elements. The returned list will contain
+The optional `REV` argument reverses the ordering, so elements are ordered from
+highest to lowest score, and score ties are resolved by reverse lexicographical
+ordering.
+
+The optional `LIMIT` argument can be used to obtain a sub-range from the
+matching elements (similar to _SELECT LIMIT offset, count_ in SQL). A negative
+`<count>` returns all elements from the `<offset>`. Keep in mind that if
+`<offset>` is large, the sorted set needs to be traversed for `<offset>`
+elements before getting to the elements to return, which can add up to O(N) time
+complexity.
+
+The optional `WITHSCORES` argument supplements the command's reply with the
+scores of elements returned. The returned list contains
 `value1,score1,...,valueN,scoreN` instead of `value1,...,valueN`. Client
 libraries are free to return a more appropriate data type (suggestion: an array
 with (value, score) arrays/tuples).
+
+## Index ranges
+
+By default, the command performs an index range query. The `<min>` and `<max>`
+arguments represent zero-based indexes, where `0` is the first element, `1` is
+the next element, and so on. These arguments specify an **inclusive range**, so
+for example, `ZRANGE myzset 0 1` will return both the first and the second
+element of the sorted set.
+
+The indexes can also be negative numbers indicating offsets from the end of the
+sorted set, with `-1` being the last element of the sorted set, `-2` the
+penultimate element, and so on.
+
+Out of range indexes do not produce an error.
+
+If `<min>` is greater than either the end index of the sorted set or `<max>`, an
+empty list is returned.
+
+If `<max>` is greater than the end index of the sorted set, Redis will use the
+last element of the sorted set.
+
+## Score ranges
+
+When the `BYSCORE` option is provided, the command behaves like `ZRANGEBYSCORE`
+and returns the range of elements from the sorted set having scores equal or
+between `<min>` and `<max>`.
+
+`<min>` and `<max>` can be `-inf` and `+inf`, denoting the negative and positive
+infinities, respectively. This means that you are not required to know the
+highest or lowest score in the sorted set to get all elements from or up to a
+certain score.
+
+By default, the score intervals specified by `<min>` and `<max>` are closed
+(inclusive). It is possible to specify an open interval (exclusive) by prefixing
+the score with the character `(`.
+
+For example:
+
+```
+ZRANGE zset (1 5 BYSCORE
+```
+
+Will return all elements with `1 < score <= 5` while:
+
+```
+ZRANGE zset (5 (10 BYSCORE
+```
+
+Will return all the elements with `5 < score < 10` (5 and 10 excluded).
+
+## Lexicographical ranges
+
+When the `BYLEX` option is used, the command behaves like `ZRANGEBYLEX` and
+returns the range of elements from the sorted set between the `<min>` and
+`<max>` lexicographical closed range intervals.
+
+Note that lexicographical ordering relies on all elements having the same score.
+The reply is unspecified when the elements have different scores.
+
+Valid `<min>` and `<max>` must start with `(` or `[`, in order to specify
+whether the range interval is exclusive or inclusive, respectively.
+
+The special values of `+` or `-` `<min>` and `<max>` mean positive and negative
+infinite strings, respectively, so for instance the command **ZRANGEBYLEX
+myzset - +** is guaranteed to return all the elements in the sorted set,
+providing that all the elements have the same score.
+
+### Lexicographical comparison of strings
+
+Strings are compared as a binary array of bytes. Because of how the ASCII
+character set is specified, this means that usually this also have the effect of
+comparing normal ASCII characters in an obvious dictionary way. However, this is
+not true if non-plain ASCII strings are used (for example, utf8 strings).
+
+However, the user can apply a transformation to the encoded string so that the
+first part of the element inserted in the sorted set will compare as the user
+requires for the specific application. For example, if I want to add strings
+that will be compared in a case-insensitive way, but I still want to retrieve
+the real case when querying, I can add strings in the following way:
+
+    ZADD autocomplete 0 foo:Foo 0 bar:BAR 0 zap:zap
+
+Because of the first _normalized_ part in every element (before the colon
+character), we are forcing a given comparison. However, after the range is
+queried using `ZRANGE ... BYLEX`, the application can display to the user the
+second part of the string, after the colon.
+
+The binary nature of the comparison allows to use sorted sets as a general
+purpose index, for example, the first part of the element can be a 64-bit
+big-endian number. Since big-endian numbers have the most significant bytes in
+the initial positions, the binary comparison will match the numerical comparison
+of the numbers. This can be used in order to implement range queries on 64-bit
+values. As in the example below, after the first 8 bytes, we can store the value
+of the element we are indexing.
 
 @return
 
 @array-reply: list of elements in the specified range (optionally with their
 scores, in case the `WITHSCORES` option is given).
+
+@history
+
+- `>= 6.2`: Added the `REV`, `BYSCORE`, `BYLEX` and `LIMIT` options.
 
 @examples
 
@@ -46,4 +149,11 @@ _score_2_, ..., _element_N_, _score_N_.
 
 ```cli
 ZRANGE myzset 0 1 WITHSCORES
+```
+
+This example shows how to query the sorted set by score, excluding the value `1`
+and up to infinity, returning only the second element of the result:
+
+```cli
+ZRANGE myzset (1 +inf BYSCORE LIMIT 1 1
 ```

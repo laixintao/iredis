@@ -4,6 +4,12 @@ separately. The general form is:
 
     PUBSUB <subcommand> ... args ...
 
+Cluster note: in a Redis Cluster clients can subscribe to every node, and can
+also publish to every other node. The cluster will make sure that published
+messages are forwarded as needed. That said, `PUBSUB`'s replies in a cluster
+only report information from the node's Pub/Sub context, rather than the entire
+cluster.
+
 # PUBSUB CHANNELS [pattern]
 
 Lists the currently _active channels_. An active channel is a Pub/Sub channel

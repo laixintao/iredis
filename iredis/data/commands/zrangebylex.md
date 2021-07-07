@@ -9,6 +9,9 @@ The elements are considered to be ordered from lower to higher strings as
 compared byte-by-byte using the `memcmp()` C function. Longer strings are
 considered greater than shorter strings if the common part is identical.
 
+As per Redis 6.2.0, this command is considered deprecated. Please prefer using
+the `ZRANGE` command with the `BYLEX` argument in new code.
+
 The optional `LIMIT` argument can be used to only get a range of the matching
 elements (similar to _SELECT LIMIT offset, count_ in SQL). A negative `count`
 returns all elements from the `offset`. Keep in mind that if `offset` is large,

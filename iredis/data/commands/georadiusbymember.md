@@ -3,6 +3,9 @@ of taking, as the center of the area to query, a longitude and latitude value,
 it takes the name of a member already existing inside the geospatial index
 represented by the sorted set.
 
+As per Redis 6.2.0, GEORADIUS command family are considered deprecated. Please
+prefer `GEOSEARCH` and `GEOSEARCHSTORE` in new code.
+
 The position of the specified member is used as the center of the query.
 
 Please check the example below and the `GEORADIUS` documentation for more

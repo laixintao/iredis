@@ -4,6 +4,9 @@ Descending lexicographical order is used for elements with equal score.
 
 Apart from the reversed ordering, `ZREVRANGE` is similar to `ZRANGE`.
 
+As per Redis 6.2.0, this command is considered deprecated. Please prefer using
+the `ZRANGE` command with the `REV` argument in new code.
+
 @return
 
 @array-reply: list of elements in the specified range (optionally with their

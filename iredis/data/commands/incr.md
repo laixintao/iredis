@@ -65,14 +65,14 @@ The more simple and direct implementation of this pattern is the following:
 FUNCTION LIMIT_API_CALL(ip)
 ts = CURRENT_UNIX_TIME()
 keyname = ip+":"+ts
-current = GET(keyname)
-IF current != NULL AND current > 10 THEN
+MULTI
+    INCR(keyname)
+    EXPIRE(keyname,10)
+EXEC
+current = RESPONSE_OF_INCR_WITHIN_MULTI
+IF current > 10 THEN
     ERROR "too many requests per second"
 ELSE
-    MULTI
-        INCR(keyname,1)
-        EXPIRE(keyname,10)
-    EXEC
     PERFORM_API_CALL()
 END
 ```
@@ -119,7 +119,7 @@ script that is send using the `EVAL` command (only available since Redis version
 ```
 local current
 current = redis.call("incr",KEYS[1])
-if tonumber(current) == 1 then
+if current == 1 then
     redis.call("expire",KEYS[1],1)
 end
 ```

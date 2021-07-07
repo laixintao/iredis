@@ -2,7 +2,7 @@ Fetching data from a stream via a consumer group, and not acknowledging such
 data, has the effect of creating _pending entries_. This is well explained in
 the `XREADGROUP` command, and even better in our
 [introduction to Redis Streams](/topics/streams-intro). The `XACK` command will
-immediately remove the pending entry from the Pending Entry List (PEL) since
+immediately remove the pending entry from the Pending Entries List (PEL) since
 once a message is successfully processed, there is no longer need for the
 consumer group to track it and to remember the current owner of the message.
 
@@ -58,10 +58,13 @@ consumer group, which is one, followed by the smallest and greatest ID among the
 pending messages, and then list every consumer in the consumer group with at
 least one pending message, and the number of pending messages it has.
 
-This is a good overview, but sometimes we are interested in the details. In
-order to see all the pending messages with more associated information we need
-to also pass a range of IDs, in a similar way we do it with `XRANGE`, and a non
-optional _count_ argument, to limit the number of messages returned per call:
+## Extended form of XPENDING
+
+The summary provides a good overview, but sometimes we are interested in the
+details. In order to see all the pending messages with more associated
+information we need to also pass a range of IDs, in a similar way we do it with
+`XRANGE`, and a non optional _count_ argument, to limit the number of messages
+returned per call:
 
 ```
 > XPENDING mystream group55 - + 10
@@ -71,7 +74,7 @@ optional _count_ argument, to limit the number of messages returned per call:
    4) (integer) 1
 ```
 
-In the extended form we no longer see the summary information, instead there are
+In the extended form we no longer see the summary information, instead there is
 detailed information for each message in the pending entries list. For each
 message four attributes are returned:
 
@@ -87,8 +90,8 @@ when some other consumer _claims_ the message with `XCLAIM`, or when the message
 is delivered again via `XREADGROUP`, when accessing the history of a consumer in
 a consumer group (see the `XREADGROUP` page for more info).
 
-Finally it is possible to pass an additional argument to the command, in order
-to see the messages having a specific owner:
+It is possible to pass an additional argument to the command, in order to see
+the messages having a specific owner:
 
 ```
 > XPENDING mystream group55 - + 10 consumer-123
@@ -101,6 +104,29 @@ even when there are many pending messages from many consumers: we have a pending
 entries list data structure both globally, and for every consumer, so we can
 very efficiently show just messages pending for a single consumer.
 
+## Idle time filter
+
+Since version 6.2 it is possible to filter entries by their idle-time, given in
+milliseconds (useful for `XCLAIM`ing entries that have not been processed for
+some time):
+
+```
+> XPENDING mystream group55 IDLE 9000 - + 10
+> XPENDING mystream group55 IDLE 9000 - + 10 consumer-123
+```
+
+The first case will return the first 10 (or less) PEL entries of the entire
+group that are idle for over 9 seconds, whereas in the second case only those of
+`consumer-123`.
+
+## Exclusive ranges and iterating the PEL
+
+The `XPENDING` command allows iterating over the pending entries just like
+`XRANGE` and `XREVRANGE` allow for the stream's entries. You can do this by
+prefixing the ID of the last-read pending entry with the `(` character that
+denotes an open (exclusive) range, and proving it to the subsequent call to the
+command.
+
 @return
 
 @array-reply, specifically:
@@ -108,3 +134,7 @@ very efficiently show just messages pending for a single consumer.
 The command returns data in different format depending on the way it is called,
 as previously explained in this page. However the reply is always an array of
 items.
+
+@history
+
+- `>= 6.2.0`: Added the `IDLE` option and exclusive range intervals.

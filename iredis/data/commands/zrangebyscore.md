@@ -6,6 +6,9 @@ The elements having the same score are returned in lexicographical order (this
 follows from a property of the sorted set implementation in Redis and does not
 involve further computation).
 
+As per Redis 6.2.0, this command is considered deprecated. Please prefer using
+the `ZRANGE` command with the `BYSCORE` argument in new code.
+
 The optional `LIMIT` argument can be used to only get a range of the matching
 elements (similar to _SELECT LIMIT offset, count_ in SQL). A negative `count`
 returns all elements from the `offset`. Keep in mind that if `offset` is large,

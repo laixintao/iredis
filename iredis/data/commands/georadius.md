@@ -2,6 +2,9 @@ Return the members of a sorted set populated with geospatial information using
 `GEOADD`, which are within the borders of the area specified with the center
 location and the maximum distance from the center (the radius).
 
+As per Redis 6.2.0, GEORADIUS command family are considered deprecated. Please
+prefer `GEOSEARCH` and `GEOSEARCHSTORE` in new code.
+
 This manual page also covers the `GEORADIUS_RO` and `GEORADIUSBYMEMBER_RO`
 variants (see the section below for more information).
 
@@ -38,11 +41,13 @@ can be invoked using the following two options:
 
 By default all the matching items are returned. It is possible to limit the
 results to the first N matching items by using the **COUNT `<count>`** option.
-However note that internally the command needs to perform an effort proportional
-to the number of items matching the specified area, so to query very large areas
-with a very small `COUNT` option may be slow even if just a few results are
-returned. On the other hand `COUNT` can be a very effective way to reduce
-bandwidth usage if normally just the first results are used.
+When `ANY` is provided the command will return as soon as enough matches are
+found, so the results may not be the ones closest to the specified point, but on
+the other hand, the effort invested by the server is significantly lower. When
+`ANY` is not provided, the command will perform an effort that is proportional
+to the number of items matching the specified area and sort them, so to query
+very large areas with a very small `COUNT` option may be slow even if just a few
+results are returned.
 
 By default the command returns the items to the client. It is possible to store
 the results with one of these options:
@@ -92,6 +97,10 @@ They are exactly like the original commands but refuse the `STORE` and
 `GEORADIUSBYMEMBER_RO`, and can safely be used in replicas.
 
 Both commands were introduced in Redis 3.2.10 and Redis 4.0.0 respectively.
+
+@history
+
+- `>= 6.2`: Added the `ANY` option for `COUNT`.
 
 @examples
 

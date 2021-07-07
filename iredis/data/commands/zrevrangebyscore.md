@@ -9,6 +9,9 @@ order.
 Apart from the reversed ordering, `ZREVRANGEBYSCORE` is similar to
 `ZRANGEBYSCORE`.
 
+As per Redis 6.2.0, this command is considered deprecated. Please prefer using
+the `ZRANGE` command with the `BYSCORE` and `REV` arguments in new code.
+
 @return
 
 @array-reply: list of elements in the specified score range (optionally with

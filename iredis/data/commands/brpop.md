@@ -18,6 +18,10 @@ the tail of a list instead of popping from the head.
   where an element was popped and the second element being the value of the
   popped element.
 
+@history
+
+- `>= 6.0`: `timeout` is interpreted as a double instead of an integer.
+
 @examples
 
 ```

@@ -1,7 +1,7 @@
 This command controls the tracking of the keys in the next command executed by
 the connection, when tracking is enabled in `OPTIN` or `OPTOUT` mode. Please
 check the [client side caching documentation](/topics/client-side-caching) for
-background informations.
+background information.
 
 When tracking is enabled Redis, using the `CLIENT TRACKING` command, it is
 possible to specify the `OPTIN` or `OPTOUT` options, so that keys in read only

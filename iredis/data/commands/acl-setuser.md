@@ -55,10 +55,17 @@ This is a list of all the supported Redis ACL rules:
   deleted user to be disconnected.
 - `~<pattern>`: add the specified key pattern (glob style pattern, like in the
   `KEYS` command), to the list of key patterns accessible by the user. You can
-  add as many key patterns you want to the same user. Example: `~objects:*`
+  add multiple key patterns to the same user. Example: `~objects:*`
 - `allkeys`: alias for `~*`, it allows the user to access all the keys.
-- `resetkey`: removes all the key patterns from the list of key patterns the
+- `resetkeys`: removes all the key patterns from the list of key patterns the
   user can access.
+- `&<pattern>`: add the specified glob style pattern to the list of Pub/Sub
+  channel patterns accessible by the user. You can add multiple channel patterns
+  to the same user. Example: `&chatroom:*`
+- `allchannels`: alias for `&*`, it allows the user to access all Pub/Sub
+  channels.
+- `resetchannels`: removes all channel patterns from the list of Pub/Sub channel
+  patterns the user can access.
 - `+<command>`: add this command to the list of the commands the user can call.
   Example: `+zadd`.
 - `+@<category>`: add all the commands in the specified category to the list of
@@ -87,7 +94,7 @@ This is a list of all the supported Redis ACL rules:
 - `>password`: Add the specified clear text password as an hashed password in
   the list of the users passwords. Every user can have many active passwords, so
   that password rotation will be simpler. The specified password is not stored
-  in cleartext inside the server. Example: `>mypassword`.
+  as clear text inside the server. Example: `>mypassword`.
 - `#<hashedpassword>`: Add the specified hashed password to the list of user
   passwords. A Redis hashed password is hashed with SHA256 and translated into a
   hexadecimal string. Example:
@@ -103,6 +110,10 @@ This is a list of all the supported Redis ACL rules:
 @simple-string-reply: `OK` on success.
 
 If the rules contain errors, the error is returned.
+
+@history
+
+- `>= 6.2`: Added Pub/Sub channel patterns.
 
 @examples
 

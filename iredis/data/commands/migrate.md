@@ -68,9 +68,12 @@ a single key exists.
 - `AUTH2` -- Authenticate with the given username and password pair (Redis 6 or
   greater ACL auth style).
 
-`COPY` and `REPLACE` are available only in 3.0 and above. `KEYS` is available
-starting with Redis 3.0.6. `AUTH` is available starting with Redis 4.0.7.
-`AUTH2` is available starting with Redis 6.0.0.
+@history
+
+- `>= 3.0.0`: Added the `COPY` and `REPLACE` options.
+- `>= 3.0.6`: Added the `KEYS` option.
+- `>= 4.0.7`: Added the `AUTH` option.
+- `>= 6.0.0`: Added the `AUTH2` option.
 
 @return
 

@@ -11,7 +11,7 @@ argument must be "LCS", since this is the only implemented one.
 ## LCS algorithm
 
 ```
-STRALGO LCS [KEYS ...] [STRINGS ...] [LEN] [IDX] [MINMATCHLEN <len>] [WITHMATCHLEN]
+STRALGO LCS STRINGS <string_a> <string_b> | KEYS <key_a> <key_b> [LEN] [IDX] [MINMATCHLEN <len>] [WITHMATCHLEN]
 ```
 
 The LCS subcommand implements the longest common subsequence algorithm. Note
@@ -113,9 +113,9 @@ For the LCS algorithm:
 
 - Without modifiers the string representing the longest common substring is
   returned.
-- When LEN is given the command returns the length of the longest common
+- When `LEN` is given the command returns the length of the longest common
   substring.
-- When IDX is given the command returns an array with the LCS length and all the
-  ranges in both the strings, start and end offset for each string, where there
-  are matches. When WITHMATCHLEN is given each array representing a match will
-  also have the length of the match (see examples).
+- When `IDX` is given the command returns an array with the LCS length and all
+  the ranges in both the strings, start and end offset for each string, where
+  there are matches. When `WITHMATCHLEN` is given each array representing a
+  match will also have the length of the match (see examples).

@@ -37,7 +37,9 @@ when enabling tracking:
   notifications will be provided only for keys starting with this string. This
   option can be given multiple times to register multiple prefixes. If
   broadcasting is enabled without this option, Redis will send notifications for
-  every key.
+  every key. You can't delete a single prefix, but you can delete all prefixes
+  by disabling and re-enabling tracking. Using this option adds the additional
+  time complexity of O(N^2), where N is the total number of prefixes tracked.
 - `OPTIN`: when broadcasting is NOT active, normally don't track keys in read
   only commands, unless they are called immediately after a `CLIENT CACHING yes`
   command.
