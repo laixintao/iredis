@@ -5,6 +5,10 @@
 - Feature: you can use <kbd>Ctrl</kbd> + <kbd>C</kbd> to cancel a blocking
   command like `BLPOP`.
 
+### 1.9.4
+
+- Bugfix: respect newbie_mode set in config, if cli flag is missing. thanks to [sid-maddy]
+
 ### 1.9.3
 
 - Bugfix: When IRedis start with `--decode=utf-8`, command with shell pipe will
@@ -236,3 +240,4 @@
 [brianmaissy]: https://github.com/brianmaissy
 [otms61]: https://github.com/otms61
 [hanaasagi]: https://github.com/Hanaasagi
+[sid-maddy]: https://github.com/sid-maddy
