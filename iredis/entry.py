@@ -321,7 +321,8 @@ def gather_args(
     if not sys.stdout.isatty():
         config.raw = True
 
-    config.newbie_mode = newbie
+    if newbie is not None:
+        config.newbie_mode = newbie
 
     if decode is not None:
         config.decode = decode
