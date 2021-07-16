@@ -68,14 +68,20 @@ like `KEYS *` (see
 
 Install via pip:
 
-```
+```bash
 pip install iredis
 ```
 
 [pipx](https://github.com/pipxproject/pipx) is recommended:
 
-```
+```bash
 pipx install iredis
+```
+
+On macOS you can install it with Homebrew:
+
+```bash
+brew install iredis
 ```
 
 Or you can download the executable binary with cURL(or wget), untar, then run.
@@ -83,7 +89,7 @@ It is especially useful when you don't have a python interpreter(E.g. the
 [official Redis docker image](https://hub.docker.com/_/redis/) which doesn't
 have Python installed.):
 
-```
+```bash
 wget  https://github.com/laixintao/iredis/releases/latest/download/iredis.tar.gz \
  && tar -xzf iredis.tar.gz \
  && ./iredis
@@ -98,7 +104,7 @@ Once you install IRedis, you will know how to use it. Just remember, IRedis
 supports similar options like redis-cli, like `-h` for redis-server's host and
 `-p` for port.
 
-```
+```bash
 $ iredis --help
 ```
 
@@ -107,7 +113,7 @@ $ iredis --help
 IRedis support storing server configuration in config file. Here is a DSN
 config:
 
-```
+```ini
 [alias_dsn]
 dev=redis://localhost:6379/4
 staging=redis://username:password@staging-redis.example.com:6379/1
@@ -171,13 +177,13 @@ management tool. To setup a develop environment on your computer:
 
 First, install poetry (you can do it in a python's virtualenv):
 
-```
+```bash
 pip install poetry
 ```
 
 Then run (which is similar to `pip install -e .`):
 
-```
+```bash
 poetry install
 ```
 
