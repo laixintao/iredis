@@ -66,6 +66,8 @@ like `KEYS *` (see
 
 ## Install
 
+### Pip
+
 Install via pip:
 
 ```
@@ -77,6 +79,16 @@ pip install iredis
 ```
 pipx install iredis
 ```
+
+### Brew
+
+Form Mac users, you can install iredis via brew 🍻
+
+```
+   brew install iredis
+```
+
+### Download Binary
 
 Or you can download the executable binary with cURL(or wget), untar, then run.
 It is especially useful when you don't have a python interpreter(E.g. the
