@@ -61,6 +61,9 @@ log_location =
 # History file location
 history_location = ~/.iredis_history
 
+# Whether to run prompt_toolkit in vi mode
+vi_mode = False
+
 [alias_dsn]
 # example_dsn = redis://[[username]:[password]]@localhost:6379/0
 # example_dsn = rediss://[[username]:[password]]@localhost:6379/0

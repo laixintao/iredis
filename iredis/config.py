@@ -40,6 +40,7 @@ class Config:
         self.shell = None
         self.enable_pager = None
         self.pager = None
+        self.vi_mode = None
 
         self.warning = True
 
@@ -126,5 +127,6 @@ def load_config_files(iredisrc):
     config.shell = config_obj["main"].as_bool("shell")
     config.pager = config_obj["main"].get("pager")
     config.enable_pager = config_obj["main"].as_bool("enable_pager")
+    config.vi_mode = config_obj["main"].as_bool("vi_mode")
 
     return config_obj
