@@ -41,6 +41,8 @@ like `KEYS *` (see
   response, like `get json | jq .`.
 - Support pager for long output.
 - Support connection via URL, `iredis --url redis://example.com:6379/1`.
+- Support cluster, IRedis will auto reissue command for `MOVED` response in
+  cluster mode.
 - Store server configuration: `iredis -d prod-redis` (see [dsn](#using-dsn) for
   more).
 - `peek` command to check the key's type then automatically call
