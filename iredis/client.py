@@ -153,6 +153,9 @@ class Client:
             f"connection_class={connection_class}, connection_kwargs={connection_kwargs}"
         )
 
+        # redis-py add `client_name` after version 3.4.0
+        if redis.VERSION < (3, 4, 0):
+            connection_kwargs.pop("client_name")
         return connection_class(**connection_kwargs)
 
     def auth_compat(self, redis_version: str):
