@@ -31,7 +31,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.6"
-redis = "^3"
+redis = "^3.4.0"
 prompt_toolkit = "^3"
 Pygments = "^2"
 mistune = "^0.8"
