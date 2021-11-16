@@ -229,10 +229,10 @@ stream,XREADGROUP,command_xreadgroup,render_list
 stream,XREVRANGE,command_key_start_end_countx,render_list
 stream,XTRIM,command_key_maxlen,render_int
 string,APPEND,command_key_value,render_int
-string,BITCOUNT,command_key_start_end_x,render_int
-string,BITFIELD,command_bitfield,render_list
-string,BITOP,command_operation_key_keys,render_int
-string,BITPOS,command_key_bit_start_end,render_int
+bitmap,BITCOUNT,command_key_start_end_x,render_int
+bitmap,BITFIELD,command_bitfield,render_list
+bitmap,BITOP,command_operation_key_keys,render_int
+bitmap,BITPOS,command_key_bit_start_end,render_int
 string,DECR,command_key,render_int
 string,DECRBY,command_key_delta,render_int
 string,GET,command_key,render_bulk_string

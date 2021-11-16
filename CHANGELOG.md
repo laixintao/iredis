@@ -16,6 +16,10 @@
   command like `BLPOP`.
 - Test: IRedis now tested under ubuntu-latest (before is ubuntu-16.04)
 - Dependency: Support Python 3.10 now, thanks to [tssujt].
+- Add new command group: `bitmap`.
+- Support new command in Redis:
+  - `ACL GETUSER`
+  - `ACL HELP`
 
 ### 1.9.4
 
