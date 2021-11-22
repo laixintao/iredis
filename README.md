@@ -82,7 +82,7 @@ pipx install iredis
 
 ### Brew
 
-Form Mac users, you can install iredis via brew 🍻
+For Mac users, you can install iredis via brew 🍻
 
 ```
 brew install iredis
