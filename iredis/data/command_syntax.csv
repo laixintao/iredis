@@ -35,6 +35,7 @@ connection,CLIENT TRACKING,command_client_tracking,render_simple_string
 connection,CLIENT LIST,command_type_conntype_x,render_bulk_string_decode
 connection,CLIENT GETNAME,command,render_bulk_string
 connection,CLIENT ID,command,render_int
+connection,CLIENT INFO,command,render_bulk_string_decode
 connection,CLIENT KILL,command_clientkill,render_string_or_int
 connection,CLIENT PAUSE,command_timeout,render_simple_string
 connection,CLIENT REPLY,command_switch,render_simple_string
