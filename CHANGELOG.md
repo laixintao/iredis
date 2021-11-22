@@ -20,6 +20,7 @@
 - Support new command in Redis:
   - `ACL GETUSER`
   - `ACL HELP`
+  - `BLMOVE`
 
 ### 1.9.4
 

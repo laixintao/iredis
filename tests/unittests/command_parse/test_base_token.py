@@ -66,3 +66,15 @@ def test_timeout(token_should_match, token_should_not_match):
     token_should_not_match(TIMEOUT, "1.")
     token_should_not_match(TIMEOUT, ".")
     token_should_not_match(TIMEOUT, ".a")
+
+
+def test_lr_const(token_should_match, token_should_not_match):
+    from iredis.redis_grammar import LR_CONST
+
+    token_should_match(LR_CONST, "left")
+    token_should_match(LR_CONST, "right")
+    token_should_match(LR_CONST, "LEFT")
+    token_should_match(LR_CONST, "RIGHT")
+    token_should_not_match(LR_CONST, "righ")
+    token_should_not_match(LR_CONST, "ab")
+    token_should_not_match(LR_CONST, "123")

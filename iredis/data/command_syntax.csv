@@ -88,6 +88,7 @@ hash,HVALS,command_key,render_list
 hyperloglog,PFADD,command_key_values,render_int
 hyperloglog,PFCOUNT,command_keys,render_int
 hyperloglog,PFMERGE,command_newkey_keys,render_simple_string
+list,BLMOVE,command_key_key_lr_lr_timeout, render_bulk_string
 list,BLPOP,command_keys_timeout,render_list_or_string
 list,BRPOP,command_keys_timeout,render_list_or_string
 list,BRPOPLPUSH,command_key_newkey_timeout,render_bulk_string

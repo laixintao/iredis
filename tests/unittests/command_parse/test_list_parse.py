@@ -118,3 +118,32 @@ def test_lpos(judge_command):
             "rank": "-1",
         },
     )
+
+
+def test_blmove(judge_command):
+    judge_command(
+        "blmove list1 list2 left right 1.2",
+        {
+            "command": "blmove",
+            "key": ["list1", "list2"],
+            "lr_const": ["left", "right"],
+            "timeout": "1.2",
+        },
+    )
+    judge_command(
+        "blmove list1 list2 right right .2",
+        {
+            "command": "blmove",
+            "key": ["list1", "list2"],
+            "lr_const": ["right", "right"],
+            "timeout": ".2",
+        },
+    )
+    judge_command(
+        "blmove list1 list2 right right",
+        None
+    )
+    judge_command(
+        "blmove list1 right right 1",
+        None
+    )
