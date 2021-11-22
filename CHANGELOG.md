@@ -4,10 +4,12 @@
   `MEMORY HELP`.
 - Feature: you can use <kbd>Ctrl</kbd> + <kbd>C</kbd> to cancel a blocking
   command like `BLPOP`.
+- Test: IRedis now tested under ubuntu-latest (before is ubuntu-16.04)
 
 ### 1.9.4
 
-- Bugfix: respect newbie_mode set in config, if cli flag is missing. thanks to [sid-maddy]
+- Bugfix: respect newbie_mode set in config, if cli flag is missing. thanks to
+  [sid-maddy]
 
 ### 1.9.3
 
