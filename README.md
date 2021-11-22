@@ -9,8 +9,6 @@
 <a href="https://badge.fury.io/py/iredis"><img src="https://badge.fury.io/py/iredis.svg" alt="PyPI version"></a>
 <img src="https://badgen.net/badge/python/3.6%20%7C%203.7%20%7C%203.8%20%7C%203.9/" alt="Python version">
 <a href="https://pepy.tech/project/iredis"><img src="https://pepy.tech/badge/iredis" alt="Download stats"></a>
-<a href="https://t.me/iredis_users"><img src="https://badgen.net/badge/icon/join?icon=telegram&amp;label=usergroup" alt="Chat on telegram"></a>
-<a href="https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/laixintao/iredis&amp;cloudshell_print=docs/cloudshell/run-in-docker.txt"><img src="https://badgen.net/badge/run/GoogleCloudShell/blue?icon=terminal" alt="Open in Cloud Shell"></a>
 </p>
 
 <p align="center">
@@ -89,6 +87,17 @@ Form Mac users, you can install iredis via brew 🍻
 ```
 brew install iredis
 ```
+
+### Linux
+
+You can also use your Linux package manager to install IRedis, like `apt` in
+Ubuntu (Only available on Ubuntu 21.04+).
+
+```shell
+apt install iredis
+```
+
+[![Packaging status](https://repology.org/badge/vertical-allrepos/iredis.svg)](https://repology.org/project/iredis/versions)
 
 ### Download Binary
 
