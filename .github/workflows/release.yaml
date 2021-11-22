@@ -8,7 +8,7 @@ on:
 jobs:
   release-pypi:
     name: release-pypi
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-latest
 
     # FIXME
     # help test shouldn't depends on this to run
@@ -30,7 +30,7 @@ jobs:
         with:
           path: venv
           # Look to see if there is a cache hit for the corresponding requirements file
-          key: ubuntu-16.04-poetryenv-${{ hashFiles('poetry.lock') }}
+          key: ubuntu-latest-poetryenv-${{ hashFiles('poetry.lock') }}
       - name: Install Dependencies
         run: |
           python3 -m venv venv
@@ -62,7 +62,7 @@ jobs:
 
   release-binary:
     name: Release Executable Binary.
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-latest
 
     # FIXME
     # help test shouldn't depends on this to run
@@ -84,7 +84,7 @@ jobs:
         with:
           path: venv
           # Look to see if there is a cache hit for the corresponding requirements file
-          key: ubuntu-16.04-poetryenv-${{ hashFiles('poetry.lock') }}
+          key: ubuntu-latest-poetryenv-${{ hashFiles('poetry.lock') }}
       - name: Install Dependencies
         run: |
           python3 -m venv venv
