@@ -139,11 +139,5 @@ def test_blmove(judge_command):
             "timeout": ".2",
         },
     )
-    judge_command(
-        "blmove list1 list2 right right",
-        None
-    )
-    judge_command(
-        "blmove list1 right right 1",
-        None
-    )
+    judge_command("blmove list1 list2 right right", None)
+    judge_command("blmove list1 right right 1", None)
