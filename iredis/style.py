@@ -39,9 +39,9 @@ GROUP = {
     "group.server": "#E6DB74",
     "group.set": "#E6DB74",
     "group.sortedset": "#E6DB74",
-    "group.stram": "#E6DB74",
+    "group.stream": "#E6DB74",
     "group.string": "#E6DB74",
-    "group.transections": "#E6DB74",
+    "group.transactions": "#E6DB74",
 }
 
 

@@ -74,8 +74,8 @@ class OutputRender:
         utf-8 decoded.
         """
         decoded = nativestr(value)
-        splitted = "\n".join(decoded.splitlines())  # get rid of last newline
-        return splitted
+        split = "\n".join(decoded.splitlines())  # get rid of last newline
+        return split
 
     @staticmethod
     def render_nested_pair(value):
@@ -163,7 +163,7 @@ class OutputRender:
     def render_simple_string(text):
         """
         If response is b'OK', render simple string always with success color.
-        If Error happend, error will be rendered by ``render_error``
+        If Error happens, error will be rendered by ``render_error``
         """
         if text is None:
             return NIL
@@ -174,7 +174,7 @@ class OutputRender:
     def render_help(raw):
         """
         render help text message.
-        the comand like ``ACL HELP`` and ``MEMORY HELP``
+        the command like ``ACL HELP`` and ``MEMORY HELP``
         will return a list of strings.
         we render it as plain text
         """

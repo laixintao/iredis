@@ -229,7 +229,7 @@ def ensure_str(origin, decode=None):
             return origin.decode(decode)
         return _literal_bytes(origin)
     else:
-        raise Exception(f"Unkown type: {type(origin)}, origin: {origin}")
+        raise Exception(f"Unknown type: {type(origin)}, origin: {origin}")
 
 
 def double_quotes(unquoted):

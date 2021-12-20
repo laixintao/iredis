@@ -68,10 +68,10 @@ def test_do_help(config):
     client = Client("127.0.0.1", "6379", None)
     config.version = "5.0.0"
     resp = client.do_help("SET")
-    assert resp[10] == ("", "1.0.0 (Avaiable on your redis-server: 5.0.0)")
+    assert resp[10] == ("", "1.0.0 (Available on your redis-server: 5.0.0)")
     config.version = "2.0.0"
     resp = client.do_help("cluster", "addslots")
-    assert resp[10] == ("", "3.0.0 (Not avaiable on your redis-server: 2.0.0)")
+    assert resp[10] == ("", "3.0.0 (Not available on your redis-server: 2.0.0)")
 
 
 def test_rainbow_iterator():

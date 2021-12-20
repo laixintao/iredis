@@ -56,6 +56,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: codespell-project/actions-codespell@master
+        with:
+          ignore_words_list: fo,ists,oll,optin,ot,smove,tre,whe
+          exclude_file: docs/assets/demo.svg
       - uses: actions/setup-python@v1
         with:
           python-version: 3.7

@@ -622,7 +622,7 @@ def get_command_grammar(command):
     syntax = GRAMMAR.get(syntax_name)
 
     # If a command is not supported yet, (e.g. command from latest version added
-    # by Redis recently, or command from third Redis module.) return a defualt
+    # by Redis recently, or command from third Redis module.) return a default
     # grammar, so the lexer and completion won't be activated.
     if syntax is None:
         return command_grammar

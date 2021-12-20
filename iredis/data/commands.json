@@ -2310,7 +2310,7 @@
               "WITHVALUES"
             ],
             "optional": true
-          }    
+          }
         ],
         "optional": true
       }
@@ -4378,7 +4378,7 @@
               "WITHSCORES"
             ],
             "optional": true
-          }    
+          }
         ],
         "optional": true
       }
@@ -5048,7 +5048,7 @@
   },
   "XADD": {
     "summary": "Appends a new entry to a stream",
-    "complexity": "O(1) when adding a new entry, O(N) when trimming where N being the number of entires evicted.",
+    "complexity": "O(1) when adding a new entry, O(N) when trimming where N being the number of entries evicted.",
     "arguments": [
       {
         "name": "key",

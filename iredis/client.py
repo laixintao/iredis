@@ -224,7 +224,7 @@ class Client:
         logger.info(
             f"execute by connection: connection={connection}, name={command_name}, {args}, {options}"
         )
-        retry_times = config.retry_times  # FIXME configureable
+        retry_times = config.retry_times  # FIXME configurable
         last_error = None
         need_refresh_connection = False
 
@@ -487,7 +487,7 @@ class Client:
         """
         if command_name.upper() == "HELLO":
             raise NotSupport("IRedis currently not support RESP3, sorry about that.")
-        # TRANSATION state chage
+        # TRANSACTION state change
         if command_name.upper() in ["EXEC", "DISCARD"]:
             logger.debug(f"[After hook] Command is {command_name}, unset transaction.")
             config.transaction = False
@@ -527,25 +527,25 @@ class Client:
         rendered_detail = markdown.render(doc)
         summary_dict = commands_summary[command_summary_name]
 
-        avaiable_version = summary_dict.get("since", "?")
+        available_version = summary_dict.get("since", "?")
         server_version = config.version
         # FIXME anything strange with single quotes?
         logger.debug(f"[--version--] '{server_version}'")
         try:
-            is_avaiable = StrictVersion(server_version) > StrictVersion(
-                avaiable_version
+            is_available = StrictVersion(server_version) > StrictVersion(
+                available_version
             )
         except Exception as e:
             logger.exception(e)
-            is_avaiable = None
+            is_available = None
 
-        if is_avaiable:
-            avaiable_text = f"(Avaiable on your redis-server: {server_version})"
-        elif is_avaiable is False:
-            avaiable_text = f"(Not avaiable on your redis-server: {server_version})"
+        if is_available:
+            available_text = f"(Available on your redis-server: {server_version})"
+        elif is_available is False:
+            available_text = f"(Not available on your redis-server: {server_version})"
         else:
-            avaiable_text = ""
-        since_text = f"{avaiable_version} {avaiable_text}"
+            available_text = ""
+        since_text = f"{available_version} {available_text}"
 
         summary = [
             ("", "\n"),
@@ -658,7 +658,7 @@ class Client:
             yield FormattedText([("class:dockey", "XINFO: ")])
             yield renders.OutputRender.render_list(xinfo)
 
-        # incase the result is too long, we yield only once so the outputer
+        # in case the result is too long, we yield only once so the outputer
         # can pager it.
         peek_response = []
         key_type = nativestr(self.execute("type", key))
