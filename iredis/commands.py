@@ -20,7 +20,7 @@ def _load_command_summary():
 
 def _load_command():
     """
-    load command informations from file.
+    load command information from file.
     :returns:
         - original_commans: dict, command name : Command
         - command_group: dict, group_name: command_names
@@ -115,7 +115,7 @@ def split_command_args(command):
 
     command = command.strip()
     for command_name in all_commands:
-        # for command that is paritaly inputed, like `command in`, we should
+        # for command that is paritaly input, like `command in`, we should
         # match with `command info`, otherwise, `command in` will result in
         # `command` with `args` is ('in') which is an invalid case.
         normalized_input_command = " ".join(command.split()).upper()
@@ -125,7 +125,7 @@ def split_command_args(command):
             and command_name != normalized_input_command
         ):
             raise AmbiguousCommand("command is not finished")
-        # allow multiplt space in user inputed command
+        # allow multiple space in user input command
         command_allow_multi_spaces = "[ ]+".join(command_name.split())
         matcher = re.match(fr"({command_allow_multi_spaces})( |$)", command.upper())
         if matcher:

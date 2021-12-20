@@ -94,8 +94,8 @@ class TimestampCompleter(Completer):
             return
         current = int(text)
         now = pendulum.now()
-        for unit, minium in self.when_lower_than.items():
-            if current <= minium:
+        for unit, minimum in self.when_lower_than.items():
+            if current <= minimum:
                 dt = now.subtract(**{f"{unit}s": current})
                 meta = f"{text} {unit}{'s' if current > 1 else ''} ago ({dt.format('YYYY-MM-DD HH:mm:ss')})"
                 yield Completion(
@@ -205,7 +205,7 @@ class IRedisCompleter(Completer):
             for _token_in_command in tokens_in_command:
                 # prompt_toolkit didn't support multi tokens
                 # like DEL key1 key2 key3
-                # so we have to split them manualy
+                # so we have to split them manually
                 for single_token in strip_quote_args(_token_in_command):
                     _completer.touch(single_token)
 
@@ -310,7 +310,7 @@ class IRedisCompleter(Completer):
                 "member": member_completer,
                 "members": member_completer,
                 # zmember
-                # TODO sperate sorted set and set
+                # TODO separate sorted set and set
                 # hash fields
                 "field": field_completer,
                 "fields": field_completer,

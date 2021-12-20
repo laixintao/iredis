@@ -52,7 +52,7 @@ to match the one of this other system.
 documentation page for more information. This allows adding new entries and
 keeping the stream's size in check with a single call to `XADD`, effectively
 capping the stream with an arbitrary threshold. Although exact trimming is
-possible and is the default, due to the internal representation of steams it is
+possible and is the default, due to the internal representation of streams it is
 more efficient to add an entry and trim stream with `XADD` using **almost
 exact** trimming (the `~` argument).
 

@@ -405,7 +405,7 @@ def test_xread(judge_command):
             "count": "2",
             "streams": "STREAMS",
             # FIXME current grammar can't support multiple tokens
-            # so the ids will be recongized to keys.
+            # so the ids will be recognized to keys.
             "keys": "mystream writers 0-0",
             "stream_id": "0-0",
         },
