@@ -19,6 +19,7 @@ classifiers = [
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
     "Topic :: Database",
     "License :: OSI Approved :: MIT License",
     "Intended Audience :: Developers",
@@ -43,7 +44,7 @@ importlib-resources = "^5.1.0"
 wcwidth = "0.1.9"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5"
+pytest = "^6"
 pexpect = "^4.7"
 
 [tool.poetry.scripts]
