@@ -5,6 +5,7 @@
 - Feature: you can use <kbd>Ctrl</kbd> + <kbd>C</kbd> to cancel a blocking
   command like `BLPOP`.
 - Test: IRedis now tested under ubuntu-latest (before is ubuntu-16.04)
+- Dependency: Support Python 3.10 now, thanks to [tssujt].
 
 ### 1.9.4
 
@@ -243,3 +244,4 @@
 [otms61]: https://github.com/otms61
 [hanaasagi]: https://github.com/Hanaasagi
 [sid-maddy]: https://github.com/sid-maddy
+[tssujt]: https://github.com/tssujt
