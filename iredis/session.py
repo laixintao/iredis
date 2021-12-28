@@ -138,11 +138,10 @@ class Session:
             return
         # print(list)
         # 查看列表
-        arr = []
         f = open(self.file)
         line = f.readline()
         i = 1
-        isFound = False;
+        is_found = False
         while line:
             # print('---- ', i)
             if len(line) == 0:
@@ -154,15 +153,15 @@ class Session:
             if list == i:
                 ctx.params['h'] = v['h']
                 ctx.params['p'] = v['p']
-                isFound = True
-                return isFound
+                is_found = True
+                return is_found
             # print(v)
             i += 1
             # arr.append(line)
             line = f.readline()
-        if not isFound:
+        if not is_found:
             write_result('Invalid Input: ' + str(list))
-        return isFound
+        return is_found
 
     def write(self, h_, p_):
         self.check_file()
@@ -196,28 +195,13 @@ class Session:
         with open(path, 'r') as f:
             try:
                 json_arr = json.load(f)
-            except Exception as e:
+            except Exception:
                 print('Load the file error. The file content may be a not json array format.')
                 return
             # print(json_arr)
             for i in json_arr:
                 # print(i['host'], i['port'])
                 self.write(i['host'], i['port'])
-
-        # f = open(self.file, "r")
-        # while fline:
-        #     if len(fline) == 0:
-        #         break
-        #     if fline == '\n':
-        #         fline = f.readline()
-        #         continue
-        #     v = eval(fline)
-        #     # print(v)
-        #     if v['h'] == h_ and v['p'] == p_:
-        #         exists = True
-        #         break
-        #     fline = f.readline()
-        # f.close()
 
     def getByIdxap2pend(self, ctx, idx):
         file = 'session/host.json'
