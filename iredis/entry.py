@@ -26,6 +26,7 @@ from .utils import timer, exit, convert_formatted_text_to_bytes, parse_url
 from .completers import IRedisCompleter
 from .lexer import IRedisLexer
 from . import __version__
+from .session import Session
 
 logger = logging.getLogger(__name__)
 
@@ -239,10 +240,16 @@ Use Redis URL to indicate connection(Can set with env `IREDIS_URL`), Example:
 SHELL = """Allow to run shell commands, default to True."""
 PAGER_HELP = """Using pager when output is too tall for your window, default to True."""
 
+SS_HELP="""
+Server session. \n
+    input 'l' or 'list' show session list.
+    input index of session list, will connect the session after press enter key.
+"""
 
 # command line entry here...
 @click.command()
 @click.pass_context
+@click.option("--ss", help=SS_HELP)
 @click.option("-h", help="Server hostname (default: 127.0.0.1).", default="127.0.0.1")
 @click.option("-p", help="Server port (default: 6379).", default="6379")
 @click.option(
@@ -275,6 +282,7 @@ PAGER_HELP = """Using pager when output is too tall for your window, default to 
 @click.argument("cmd", nargs=-1)
 def gather_args(
     ctx,
+    ss,
     h,
     p,
     n,
@@ -421,6 +429,25 @@ def main():
         return
     if not ctx:  # called help
         return
+
+    params = ctx.params
+    ss_ = params['ss']
+    # print(ss_)
+    session = Session()
+    if ss_:
+        if 'l' == ss_ or 'list' == ss_:
+            session.list(ctx=ctx)
+            return
+        if os.path.exists(ss_):
+            session.load(ss_)
+            return
+        # read session by index
+        isFound = session.getByIdx(ctx=ctx)
+        if not isFound:
+            return
+    else:
+        # 快速链接时则缓存session
+        session.write(h_=params['h'], p_=params['p'])
 
     # redis client
     client = create_client(ctx.params)
