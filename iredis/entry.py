@@ -443,11 +443,11 @@ def main():
             session.load(ss_)
             return
         # read session by index
-        isFound = session.getByIdx(ctx=ctx)
+        isFound = session.get_by_idx(ctx=ctx)
         if not isFound:
             return
     else:
-        # 快速链接时则缓存session
+        # save session
         session.write(h_=params['h'], p_=params['p'])
 
     # redis client

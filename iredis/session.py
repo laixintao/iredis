@@ -89,13 +89,11 @@ class Session:
         '''
         return session list with index
         '''
-        # exists = os.path.exists(os.path.dirname(file))
-        # write_result("--000s--")
         self.check_file()
         # write_result("--2--")
         list = ctx.params['ss']
         arr = []
-        # 查看列表
+        # show list
         if list == 'list' or list == 'l':
             f = open(self.file)
             line = f.readline()
@@ -110,14 +108,12 @@ class Session:
                 # print(v)
                 arr.append(' '.join([str(i) + '.', ':'.join([v['h'], v['p']])]))
                 i += 1
-                # arr.append(line)
                 line = f.readline()
             f.close()
-            # write_result("--333--")
         write_result('\n'.join(arr))
         return arr
 
-    def getByIdx(self, ctx):
+    def get_by_idx(self, ctx):
         if not os.path.exists(self.file):
             print("check the sesson list[--ss l] before to do")
             return
@@ -137,13 +133,12 @@ class Session:
             print("(error)", str(e))
             return
         # print(list)
-        # 查看列表
+        # show list
         f = open(self.file)
         line = f.readline()
         i = 1
         is_found = False
         while line:
-            # print('---- ', i)
             if len(line) == 0:
                 break
             if line == '\n':
@@ -155,9 +150,7 @@ class Session:
                 ctx.params['p'] = v['p']
                 is_found = True
                 return is_found
-            # print(v)
             i += 1
-            # arr.append(line)
             line = f.readline()
         if not is_found:
             write_result('Invalid Input: ' + str(list))
@@ -202,70 +195,3 @@ class Session:
             for i in json_arr:
                 # print(i['host'], i['port'])
                 self.write(i['host'], i['port'])
-
-    def getByIdxap2pend(self, ctx, idx):
-        file = 'session/host.json'
-        # exists = os.path.exists(os.path.dirname(file))
-        dirname = os.path.dirname(file)
-        exists = os.path.exists(dirname)
-        if not exists:
-            os.makedirs(dirname)
-            t = open(file, "w")
-            # t.write("{'h': '127.0.0.1', 'p': '6379'}\n")
-            t.close()
-
-        sessionJson = [
-            {'h': '127.0.0.1', 'p': '6379'},
-            {'h': '192.168.88.155', 'p': '6379'}
-        ]
-        list = ctx.params['ss']
-        # write_result('-----------------;list='+str(sessionJson[0]['h']))
-        # 查看列表
-        if list == 'list' or list == 'l':
-            arr = []
-            f = open(file)
-            line = f.readline()
-            i = 1
-            while line:
-                if len(line) == 0:
-                    break
-                if line == '\n':
-                    line = f.readline()
-                    continue
-                v = eval(line)
-                print(v)
-                arr.append(' '.join([str(i) + '.', ':'.join([v['h'], v['p']])]))
-                i += 1
-                # arr.append(line)
-                line = f.readline()
-            f.close()
-
-            # for i, v in enumerate(sessionJson, 1):
-            #     arr.append(' '.join([str(i)+'.', ':'.join([v['h'], v['p']])]))
-            write_result('\n'.join(arr))
-            return
-        try:
-            list = int(list)
-        except Exception as e:
-            logger.exception(e)
-            # TODO red error color
-            print("(error)", str(e))
-            return
-
-        if isinstance(list, int):
-            write_result('\n-------------'.join([str(sessionJson[list - 1]), str(list - 1)]))
-            ctx.params['h'] = sessionJson[list - 1]['h']
-            ctx.params['p'] = sessionJson[list - 1]['p']
-#
-# if __name__=='__main__':
-#     print(sys.path)
-#     file = os.path.expanduser('~')+'/session/host.json'
-#     ctx = {}
-#     ctx["params"] = {"ss":"l"}
-#     arr = list(ctx=ctx)
-#     write_result('\n'.join(arr))
-#     ctx["params"] = {"ss": "6"}
-#     getByIdx(ctx=ctx)
-#     print(ctx)
-#     # ctx["params"] = {"h":"192.168.88.155","p": "6380"}
-#     # write(ctx)
