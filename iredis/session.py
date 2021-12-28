@@ -3,9 +3,19 @@ import sys
 import logging
 import click
 from prompt_toolkit import print_formatted_text
-from .config import config, load_config_files
+from prompt_toolkit.formatted_text import FormattedText
+from .utils import convert_formatted_text_to_bytes
+from .config import config
+from .style import STYLE
 import json
 logger = logging.getLogger(__name__)
+
+
+def is_too_tall(text, max_height):
+    if isinstance(text, FormattedText):
+        text = convert_formatted_text_to_bytes(text)
+    lines = len(text.split(b"\n"))
+    return lines > max_height
 
 
 def write_result(text, max_height=None):

@@ -240,11 +240,12 @@ Use Redis URL to indicate connection(Can set with env `IREDIS_URL`), Example:
 SHELL = """Allow to run shell commands, default to True."""
 PAGER_HELP = """Using pager when output is too tall for your window, default to True."""
 
-SS_HELP="""
+SS_HELP = """
 Server session. \n
     input 'l' or 'list' show session list.
     input index of session list, will connect the session after press enter key.
 """
+
 
 # command line entry here...
 @click.command()
@@ -281,24 +282,24 @@ Server session. \n
 @click.version_option()
 @click.argument("cmd", nargs=-1)
 def gather_args(
-    ctx,
-    ss,
-    h,
-    p,
-    n,
-    password,
-    client_name,
-    newbie,
-    iredisrc,
-    decode,
-    raw,
-    rainbow,
-    cmd,
-    dsn,
-    url,
-    socket,
-    shell,
-    pager,
+        ctx,
+        ss,
+        h,
+        p,
+        n,
+        password,
+        client_name,
+        newbie,
+        iredisrc,
+        decode,
+        raw,
+        rainbow,
+        cmd,
+        dsn,
+        url,
+        socket,
+        shell,
+        pager,
 ):
     """
     IRedis: Interactive Redis
