@@ -8,6 +8,7 @@ from .utils import convert_formatted_text_to_bytes
 from .config import config
 from .style import STYLE
 import json
+import platform
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +67,11 @@ class Session:
 
     def __init__(self):
         self,
-        self.file = os.path.expanduser('~') + '\\session\\host.json'
+        system_platform = platform.system().lower()
+        if system_platform == "windows":
+            self.file = os.path.expanduser('~') + '\\session\\host.json'
+        else:
+            self.file = os.path.expanduser('~') + '/session/host.json'
 
     def check_file(self):
         # write_result("session file="+self.file)
