@@ -8,6 +8,7 @@ from .utils import convert_formatted_text_to_bytes
 from .config import config
 from .style import STYLE
 import json
+
 logger = logging.getLogger(__name__)
 
 
@@ -62,9 +63,10 @@ class Session:
     """
     save session
     """
+
     def __init__(self):
         self,
-        self.file = os.path.expanduser('~')+'\\session\\host.json'
+        self.file = os.path.expanduser('~') + '\\session\\host.json'
 
     def check_file(self):
         # write_result("session file="+self.file)
@@ -102,7 +104,7 @@ class Session:
                 v = eval(line)
                 # print(v)
                 arr.append(' '.join([str(i) + '.', ':'.join([v['h'], v['p']])]))
-                i+=1
+                i += 1
                 # arr.append(line)
                 line = f.readline()
             f.close()
@@ -150,7 +152,7 @@ class Session:
                 isFound = True
                 return isFound
             # print(v)
-            i+=1
+            i += 1
             # arr.append(line)
             line = f.readline()
         if not isFound:
@@ -211,6 +213,7 @@ class Session:
         #         break
         #     fline = f.readline()
         # f.close()
+
     def getByIdxap2pend(self, ctx, idx):
         file = 'session/host.json'
         # exists = os.path.exists(os.path.dirname(file))
@@ -221,7 +224,6 @@ class Session:
             t = open(file, "w")
             # t.write("{'h': '127.0.0.1', 'p': '6379'}\n")
             t.close()
-
 
         sessionJson = [
             {'h': '127.0.0.1', 'p': '6379'},
@@ -244,7 +246,7 @@ class Session:
                 v = eval(line)
                 print(v)
                 arr.append(' '.join([str(i) + '.', ':'.join([v['h'], v['p']])]))
-                i+=1
+                i += 1
                 # arr.append(line)
                 line = f.readline()
             f.close()
@@ -262,9 +264,9 @@ class Session:
             return
 
         if isinstance(list, int):
-            write_result('\n-------------'.join([str(sessionJson[list-1]), str(list-1)]))
-            ctx.params['h'] = sessionJson[list-1]['h']
-            ctx.params['p'] = sessionJson[list-1]['p']
+            write_result('\n-------------'.join([str(sessionJson[list - 1]), str(list - 1)]))
+            ctx.params['h'] = sessionJson[list - 1]['h']
+            ctx.params['p'] = sessionJson[list - 1]['p']
 #
 # if __name__=='__main__':
 #     print(sys.path)
@@ -278,6 +280,3 @@ class Session:
 #     print(ctx)
 #     # ctx["params"] = {"h":"192.168.88.155","p": "6380"}
 #     # write(ctx)
-
-
-
