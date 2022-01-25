@@ -49,16 +49,18 @@ class TerminalRender(mistune.HTMLRenderer):
 renderer = TerminalRender()
 markdown_render = mistune.Markdown(renderer)
 
-# replace redis doc's title (and following newlines & spaces) with markdown's second level title
+# replace redis doc's title (and following newlines & spaces)
+# with markdown's second level title
 redisdoc_title_re = re.compile(r"^@(\w+) *(?:\n+|$)")
+
 
 def replace_to_markdown_title(original):
     replaced = redisdoc_title_re.sub(r"## \g<1>", original)
     return replaced
 
+
 def render(text):
     replaced = replace_to_markdown_title(text)
     html_text = markdown_render(replaced)
     logger.debug("[Document] {} ...".format(html_text)[:20])
-
     return to_formatted_text(HTML(html_text))
