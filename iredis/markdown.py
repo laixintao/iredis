@@ -13,24 +13,24 @@ from prompt_toolkit.formatted_text import to_formatted_text, HTML
 logger = logging.getLogger(__name__)
 
 
-class TerminalRender(mistune.Renderer):
+class TerminalRender(mistune.HTMLRenderer):
     def _to_title(self, text):
         return f"{text}\n{'='*len(text)}\n"
 
     def paragraph(self, text):
         return text + "\n\n"
 
-    def block_code(self, code, language=None):
+    def block_code(self, code, info=None):
         code = "\n".join(["  " + line for line in code.splitlines()])
         return super().block_code(code)
 
-    def header(self, text, level, raw=None):
+    def heading(self, text, level):
         if level == 2:
             header_text = self._to_title(text)
-            return super().header(header_text, 2)
-        return super().header(self._to_title(text), level)
+            return super().heading(header_text, 2)
+        return super().heading(self._to_title(text), level)
 
-    def list(self, body, ordered=True):
+    def list(self, body, ordered, level, start=None):
         """Rendering list tags like ``<ul>`` and ``<ol>``.
 
         :param body: body contents of the list.
@@ -41,29 +41,24 @@ class TerminalRender(mistune.Renderer):
             tag = "ol"
         return "<%s>%s</%s>\n" % (tag, body, tag)
 
-    def list_item(self, text):
+    def list_item(self, text, level):
         """Rendering list item snippet. Like ``<li>``."""
         return "<li> * %s</li>\n" % text
 
 
-class RedisDocLexer(mistune.BlockLexer):
-    def enable_at_title(self):
-        self.rules.at_title = re.compile(r"^@(\w+) *(?:\n+|$)")  # @example
-        self.default_rules.insert(0, "at_title")
-
-    def parse_at_title(self, m):
-        text = m.group(1)
-        self.tokens.append({"type": "heading", "level": 2, "text": text})
-
-
 renderer = TerminalRender()
-block_lexer = RedisDocLexer()
-block_lexer.enable_at_title()
-markdown_render = mistune.Markdown(renderer, block=block_lexer)
+markdown_render = mistune.Markdown(renderer)
 
+# replace redis doc's title (and following newlines & spaces) with markdown's second level title
+redisdoc_title_re = re.compile(r"^@(\w+) *(?:\n+|$)")
+
+def replace_to_markdown_title(original):
+    replaced = redisdoc_title_re.sub(r"## \g<1>", original)
+    return replaced
 
 def render(text):
-    html_text = markdown_render(text)
+    replaced = replace_to_markdown_title(text)
+    html_text = markdown_render(replaced)
     logger.debug("[Document] {} ...".format(html_text)[:20])
 
     return to_formatted_text(HTML(html_text))
