@@ -1,3 +1,8 @@
+## 1.11
+
+- Dependency: Upgrade mistune lib to ^2.0. (see
+  https://github.com/laixintao/iredis/issues/232)
+
 ## 1.10
 
 - Feature: more human readable output for `HELP` command like `ACL HELP` and
