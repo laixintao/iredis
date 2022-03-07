@@ -145,7 +145,7 @@ VALID_TOKEN = r"""(
 ('([^']|\\')*?')     |# with single quotes
 ([^\s"]+)            # without quotes
 )"""
-PATTERN = fr"(?P<pattern>{VALID_TOKEN})"
+PATTERN = rf"(?P<pattern>{VALID_TOKEN})"
 VALID_SLOT = r"\d+"  # TODO add range? max value:16384
 VALID_NODE = r"\w+"
 NUM = r"\d+"
@@ -153,40 +153,40 @@ NNUM = r"-?\+?\(?\[?(\d+|inf)"  # number cloud be negative
 _FLOAT = r"-?(\d|\.|e)+"
 LEXNUM = r"(\[\w+)|(\(\w+)|(\+)|(-)"
 
-SLOT = fr"(?P<slot>{VALID_SLOT})"
-SLOTS = fr"(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"
-NODE = fr"(?P<node>{VALID_NODE})"
-KEY = fr"(?P<key>{VALID_TOKEN})"
-PREFIX = fr"(?P<prefix>{VALID_TOKEN})"
-KEYS = fr"(?P<keys>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
-DESTINATION = fr"(?P<destination>{VALID_TOKEN})"
-NEWKEY = fr"(?P<newkey>{VALID_TOKEN})"
-VALUE = fr"(?P<value>{VALID_TOKEN})"
-VALUES = fr"(?P<values>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
-ELEMENT = fr"(?P<element>{VALID_TOKEN})"  # element for list
-FIELDS = fr"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
-FIELD = fr"(?P<field>{VALID_TOKEN})"
-SFIELD = fr"(?P<sfield>{VALID_TOKEN})"
-SVALUE = fr"(?P<svalue>{VALID_TOKEN})"
-MEMBER = fr"(?P<member>{VALID_TOKEN})"
-MEMBERS = fr"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
-COUNT = fr"(?P<count>{NNUM})"
-LEN = fr"(?P<len>{NNUM})"
-RANK = fr"(?P<rank>{NNUM})"
-VERSION_NUM = fr"(?P<version_num>{NUM})"
-MESSAGE = fr"(?P<message>{VALID_TOKEN})"
-CHANNEL = fr"(?P<channel>{VALID_TOKEN})"
-GROUP = fr"(?P<group>{VALID_TOKEN})"
-CONSUMER = fr"(?P<consumer>{VALID_TOKEN})"
-CATEGORYNAME = fr"(?P<categoryname>{VALID_TOKEN})"
-USERNAME = fr"(?P<username>{VALID_TOKEN})"
-RULE = fr"(?P<rule>{VALID_TOKEN})"
+SLOT = rf"(?P<slot>{VALID_SLOT})"
+SLOTS = rf"(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"
+NODE = rf"(?P<node>{VALID_NODE})"
+KEY = rf"(?P<key>{VALID_TOKEN})"
+PREFIX = rf"(?P<prefix>{VALID_TOKEN})"
+KEYS = rf"(?P<keys>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
+DESTINATION = rf"(?P<destination>{VALID_TOKEN})"
+NEWKEY = rf"(?P<newkey>{VALID_TOKEN})"
+VALUE = rf"(?P<value>{VALID_TOKEN})"
+VALUES = rf"(?P<values>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
+ELEMENT = rf"(?P<element>{VALID_TOKEN})"  # element for list
+FIELDS = rf"(?P<fields>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
+FIELD = rf"(?P<field>{VALID_TOKEN})"
+SFIELD = rf"(?P<sfield>{VALID_TOKEN})"
+SVALUE = rf"(?P<svalue>{VALID_TOKEN})"
+MEMBER = rf"(?P<member>{VALID_TOKEN})"
+MEMBERS = rf"(?P<members>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
+COUNT = rf"(?P<count>{NNUM})"
+LEN = rf"(?P<len>{NNUM})"
+RANK = rf"(?P<rank>{NNUM})"
+VERSION_NUM = rf"(?P<version_num>{NUM})"
+MESSAGE = rf"(?P<message>{VALID_TOKEN})"
+CHANNEL = rf"(?P<channel>{VALID_TOKEN})"
+GROUP = rf"(?P<group>{VALID_TOKEN})"
+CONSUMER = rf"(?P<consumer>{VALID_TOKEN})"
+CATEGORYNAME = rf"(?P<categoryname>{VALID_TOKEN})"
+USERNAME = rf"(?P<username>{VALID_TOKEN})"
+RULE = rf"(?P<rule>{VALID_TOKEN})"
 BIT = r"(?P<bit>0|1)"
-FLOAT = fr"(?P<float>{_FLOAT})"
-LONGITUDE = fr"(?P<longitude>{_FLOAT})"
-LATITUDE = fr"(?P<latitude>{_FLOAT})"
-CURSOR = fr"(?P<cursor>{NUM})"
-PARAMETER = fr"(?P<parameter>{VALID_TOKEN})"
+FLOAT = rf"(?P<float>{_FLOAT})"
+LONGITUDE = rf"(?P<longitude>{_FLOAT})"
+LATITUDE = rf"(?P<latitude>{_FLOAT})"
+CURSOR = rf"(?P<cursor>{NUM})"
+PARAMETER = rf"(?P<parameter>{VALID_TOKEN})"
 DOUBLE_LUA = r'(?P<double_lua>[^"]*)'
 SINGLE_LUA = r"(?P<single_lua>[^']*)"
 INTTYPE = r"(?P<inttype>(i|u)\d+)"
@@ -200,21 +200,21 @@ IP = r"""(?P<ip>(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.
 # https://stackoverflow.com/questions/12968093/regex-to-validate-port-number
 # pompt_toolkit limit: Exception: {4}-style repetition not yet supported
 PORT = r"(?P<port>[1-9]|[1-5]?\d\d\d?\d?|6[1-4][0-9]\d\d\d|65[1-4]\d\d|655[1-2][0-9]|6553[1-5])"
-EPOCH = fr"(?P<epoch>{NUM})"
-PASSWORD = fr"(?P<password>{VALID_TOKEN})"
-REPLICATIONID = fr"(?P<replicationid>{VALID_TOKEN})"
+EPOCH = rf"(?P<epoch>{NUM})"
+PASSWORD = rf"(?P<password>{VALID_TOKEN})"
+REPLICATIONID = rf"(?P<replicationid>{VALID_TOKEN})"
 INDEX = r"(?P<index>(1[0-5]|\d))"
-CLIENTID = fr"(?P<clientid>{NUM})"
-SECOND = fr"(?P<second>{NUM})"
-TIMESTAMP = fr"(?P<timestamp>{NUM})"
+CLIENTID = rf"(?P<clientid>{NUM})"
+SECOND = rf"(?P<second>{NUM})"
+TIMESTAMP = rf"(?P<timestamp>{NUM})"
 # TODO test lexer & completer for multi spaces in command
 # For now, redis command can have one space at most
 COMMAND = "(\s*  (?P<command>[\w -]+))"
-MILLISECOND = fr"(?P<millisecond>{NUM})"
-TIMESTAMPMS = fr"(?P<timestampms>{NUM})"
+MILLISECOND = rf"(?P<millisecond>{NUM})"
+TIMESTAMPMS = rf"(?P<timestampms>{NUM})"
 ANY = r"(?P<any>.*)"  # TODO deleted
-START = fr"(?P<start>{NNUM})"
-END = fr"(?P<end>{NNUM})"
+START = rf"(?P<start>{NNUM})"
+END = rf"(?P<end>{NNUM})"
 
 # for stream ids, special ids include:  -, +, $, > and *
 # please see:
@@ -223,111 +223,111 @@ END = fr"(?P<end>{NNUM})"
 # NOTE: if miss the outer (), multi IDS won't work.
 STREAM_ID = "(?P<stream_id>[T\d:>+*\-\$]+)"
 
-DELTA = fr"(?P<delta>{NNUM})"
-OFFSET = fr"(?P<offset>{NUM})"  # string offset, can't be negative
+DELTA = rf"(?P<delta>{NNUM})"
+OFFSET = rf"(?P<offset>{NUM})"  # string offset, can't be negative
 SHARP_OFFSET = f"(?P<offset>\#?{NUM})"  # for bitfield command
-MIN = fr"(?P<min>{NNUM})"
-MAX = fr"(?P<max>{NNUM})"
-POSITION = fr"(?P<position>{NNUM})"
-TIMEOUT = fr"(?P<timeout>{NUM})"
-SCORE = fr"(?P<score>{_FLOAT})"
-LEXMIN = fr"(?P<lexmin>{LEXNUM})"
-LEXMAX = fr"(?P<lexmax>{LEXNUM})"
-WEIGHTS = fr"(?P<weights>{_FLOAT}(\s+{_FLOAT})*)"
-IP_PORT = fr"(?P<ip_port>{IP}:{PORT})"
-HOST = fr"(?P<host>{VALID_TOKEN})"
+MIN = rf"(?P<min>{NNUM})"
+MAX = rf"(?P<max>{NNUM})"
+POSITION = rf"(?P<position>{NNUM})"
+TIMEOUT = rf"(?P<timeout>{NUM})"
+SCORE = rf"(?P<score>{_FLOAT})"
+LEXMIN = rf"(?P<lexmin>{LEXNUM})"
+LEXMAX = rf"(?P<lexmax>{LEXNUM})"
+WEIGHTS = rf"(?P<weights>{_FLOAT}(\s+{_FLOAT})*)"
+IP_PORT = rf"(?P<ip_port>{IP}:{PORT})"
+HOST = rf"(?P<host>{VALID_TOKEN})"
 
 # const choices
-FAILOVERCHOICE = fr"(?P<failoverchoice>{c('failoverchoice')})"
-WITHSCORES = fr"(?P<withscores>{c('withscores')})"
-LIMIT = fr"(?P<limit>{c('limit')})"
-EXPIRATION = fr"(?P<expiration>{c('expiration')})"
-CONDITION = fr"(?P<condition>{c('condition')})"
-OPERATION = fr"(?P<operation>{c('operation')})"
-CHANGED = fr"(?P<changed>{c('changed')})"
-INCR = fr"(?P<incr>{c('incr')})"
-RESETCHOICE = fr"(?P<resetchoice>{c('resetchoice')})"
-MATCH = fr"(?P<match>{c('match')})"
-COUNT_CONST = fr"(?P<count_const>{c('count_const')})"
-TYPE_CONST = fr"(?P<type_const>{c('type_const')})"
-TYPE = fr"(?P<type>{c('type')})"
-POSITION_CHOICE = fr"(?P<position_choice>{c('position_choice')})"
-ERROR = fr"(?P<error>{c('error')})"
-ASYNC = fr"(?P<async>{c('async')})"
-CONNTYPE = fr"(?P<conntype>{c('conntype')})"
-SAMPLES = fr"(?P<samples>{c('samples')})"
-SLOTSUBCMD = fr"(?P<slotsubcmd>{c('slotsubcmd')})"
-WEIGHTS_CONST = fr"(?P<weights_const>{c('weights_const')})"
-AGGREGATE_CONST = fr"(?P<aggregate_const>{c('aggregate_const')})"
-AGGREGATE = fr"(?P<aggregate>{c('aggregate')})"
-SLOWLOGSUB = fr"(?P<slowlogsub>{c('slowlogsub')})"
-SHUTDOWN = fr"(?P<shutdown>{c('shutdown')})"
-SWITCH = fr"(?P<switch>{c('switch')})"
-ON_OFF = fr"(?P<on_off>{c('on_off')})"
-CONST_ID = fr"(?P<const_id>{c('const_id')})"
-CONST_USER = fr"(?P<const_user>{c('const_user')})"
-ADDR = fr"(?P<addr>{c('addr')})"
-SKIPME = fr"(?P<skipme>{c('skipme')})"
-YES = fr"(?P<yes>{c('yes')})"
-MIGRATECHOICE = fr"(?P<migratechoice>{c('migratechoice')})"
-AUTH = fr"(?P<auth>{c('auth')})"
-CONST_KEYS = fr"(?P<const_keys>{c('const_keys')})"
-OBJECT = fr"(?P<object>{c('object')})"
-SUBRESTORE = fr"(?P<subrestore>{c('subrestore')})"
-DISTUNIT = fr"(?P<distunit>{c('distunit')})"
-GEOCHOICE = fr"(?P<geochoice>{c('geochoice')})"
-ORDER = fr"(?P<order>{c('order')})"
-CONST_STORE = fr"(?P<const_store>{c('const_store')})"
-CONST_STOREDIST = fr"(?P<const_storedist>{c('const_storedist')})"
-PUBSUBCMD = fr"(?P<pubsubcmd>{c('pubsubcmd')})"
-SCRIPTDEBUG = fr"(?P<scriptdebug>{c('scriptdebug')})"
-HELP = fr"(?P<help>{c('help')})"
-STREAM = fr"(?P<stream>{c('stream')})"
-STREAM_GROUPS = fr"(?P<stream_groups>{c('stream_groups')})"
-STREAM_GROUP = fr"(?P<stream_group>{c('stream_group')})"
-STREAM_CONSUMERS = fr"(?P<stream_consumers>{c('stream_consumers')})"
-STREAM_CREATE = fr"(?P<stream_create>{c('stream_create')})"
-STREAM_SETID = fr"(?P<stream_setid>{c('stream_setid')})"
-STREAM_DESTROY = fr"(?P<stream_destroy>{c('stream_destroy')})"
-STREAM_DELCONSUMER = fr"(?P<stream_delconsumer>{c('stream_delconsumer')})"
-MAXLEN = fr"(?P<maxlen>{c('maxlen')})"
+FAILOVERCHOICE = rf"(?P<failoverchoice>{c('failoverchoice')})"
+WITHSCORES = rf"(?P<withscores>{c('withscores')})"
+LIMIT = rf"(?P<limit>{c('limit')})"
+EXPIRATION = rf"(?P<expiration>{c('expiration')})"
+CONDITION = rf"(?P<condition>{c('condition')})"
+OPERATION = rf"(?P<operation>{c('operation')})"
+CHANGED = rf"(?P<changed>{c('changed')})"
+INCR = rf"(?P<incr>{c('incr')})"
+RESETCHOICE = rf"(?P<resetchoice>{c('resetchoice')})"
+MATCH = rf"(?P<match>{c('match')})"
+COUNT_CONST = rf"(?P<count_const>{c('count_const')})"
+TYPE_CONST = rf"(?P<type_const>{c('type_const')})"
+TYPE = rf"(?P<type>{c('type')})"
+POSITION_CHOICE = rf"(?P<position_choice>{c('position_choice')})"
+ERROR = rf"(?P<error>{c('error')})"
+ASYNC = rf"(?P<async>{c('async')})"
+CONNTYPE = rf"(?P<conntype>{c('conntype')})"
+SAMPLES = rf"(?P<samples>{c('samples')})"
+SLOTSUBCMD = rf"(?P<slotsubcmd>{c('slotsubcmd')})"
+WEIGHTS_CONST = rf"(?P<weights_const>{c('weights_const')})"
+AGGREGATE_CONST = rf"(?P<aggregate_const>{c('aggregate_const')})"
+AGGREGATE = rf"(?P<aggregate>{c('aggregate')})"
+SLOWLOGSUB = rf"(?P<slowlogsub>{c('slowlogsub')})"
+SHUTDOWN = rf"(?P<shutdown>{c('shutdown')})"
+SWITCH = rf"(?P<switch>{c('switch')})"
+ON_OFF = rf"(?P<on_off>{c('on_off')})"
+CONST_ID = rf"(?P<const_id>{c('const_id')})"
+CONST_USER = rf"(?P<const_user>{c('const_user')})"
+ADDR = rf"(?P<addr>{c('addr')})"
+SKIPME = rf"(?P<skipme>{c('skipme')})"
+YES = rf"(?P<yes>{c('yes')})"
+MIGRATECHOICE = rf"(?P<migratechoice>{c('migratechoice')})"
+AUTH = rf"(?P<auth>{c('auth')})"
+CONST_KEYS = rf"(?P<const_keys>{c('const_keys')})"
+OBJECT = rf"(?P<object>{c('object')})"
+SUBRESTORE = rf"(?P<subrestore>{c('subrestore')})"
+DISTUNIT = rf"(?P<distunit>{c('distunit')})"
+GEOCHOICE = rf"(?P<geochoice>{c('geochoice')})"
+ORDER = rf"(?P<order>{c('order')})"
+CONST_STORE = rf"(?P<const_store>{c('const_store')})"
+CONST_STOREDIST = rf"(?P<const_storedist>{c('const_storedist')})"
+PUBSUBCMD = rf"(?P<pubsubcmd>{c('pubsubcmd')})"
+SCRIPTDEBUG = rf"(?P<scriptdebug>{c('scriptdebug')})"
+HELP = rf"(?P<help>{c('help')})"
+STREAM = rf"(?P<stream>{c('stream')})"
+STREAM_GROUPS = rf"(?P<stream_groups>{c('stream_groups')})"
+STREAM_GROUP = rf"(?P<stream_group>{c('stream_group')})"
+STREAM_CONSUMERS = rf"(?P<stream_consumers>{c('stream_consumers')})"
+STREAM_CREATE = rf"(?P<stream_create>{c('stream_create')})"
+STREAM_SETID = rf"(?P<stream_setid>{c('stream_setid')})"
+STREAM_DESTROY = rf"(?P<stream_destroy>{c('stream_destroy')})"
+STREAM_DELCONSUMER = rf"(?P<stream_delconsumer>{c('stream_delconsumer')})"
+MAXLEN = rf"(?P<maxlen>{c('maxlen')})"
 APPROXIMATELY = r"(?P<approximately>~)"
-IDEL = fr"(?P<idel>{c('idel')})"
-TIME = fr"(?P<time>{c('time')})"
-RETRYCOUNT = fr"(?P<retrycount>{c('retrycount')})"
-FORCE = fr"(?P<force>{c('force')})"
-JUSTID = fr"(?P<justid>{c('justid')})"
-BLOCK = fr"(?P<block>{c('block')})"
-STREAMS = fr"(?P<streams>{c('streams')})"
-NOACK = fr"(?P<noack>{c('noack')})"
-GET = fr"(?P<get>{c('get')})"
-SET = fr"(?P<set>{c('set')})"
-INCRBY = fr"(?P<incrby>{c('incrby')})"
-OVERFLOW = fr"(?P<overflow>{c('overflow')})"
-OVERFLOW_OPTION = fr"(?P<overflow_option>{c('overflow_option')})"
-KEEPTTL = fr"(?P<keepttl>{c('keepttl')})"
-GRAPHEVENT = fr"(?P<graphevent>{c('graphevent')})"
-VERSION = fr"(?P<version>{c('version')})"
-SECTION = fr"(?P<section>{c('section')})"
-SCHEDULE = fr"(?P<schedule>{c('schedule')})"
+IDEL = rf"(?P<idel>{c('idel')})"
+TIME = rf"(?P<time>{c('time')})"
+RETRYCOUNT = rf"(?P<retrycount>{c('retrycount')})"
+FORCE = rf"(?P<force>{c('force')})"
+JUSTID = rf"(?P<justid>{c('justid')})"
+BLOCK = rf"(?P<block>{c('block')})"
+STREAMS = rf"(?P<streams>{c('streams')})"
+NOACK = rf"(?P<noack>{c('noack')})"
+GET = rf"(?P<get>{c('get')})"
+SET = rf"(?P<set>{c('set')})"
+INCRBY = rf"(?P<incrby>{c('incrby')})"
+OVERFLOW = rf"(?P<overflow>{c('overflow')})"
+OVERFLOW_OPTION = rf"(?P<overflow_option>{c('overflow_option')})"
+KEEPTTL = rf"(?P<keepttl>{c('keepttl')})"
+GRAPHEVENT = rf"(?P<graphevent>{c('graphevent')})"
+VERSION = rf"(?P<version>{c('version')})"
+SECTION = rf"(?P<section>{c('section')})"
+SCHEDULE = rf"(?P<schedule>{c('schedule')})"
 
-REDIRECT_CONST = fr"(?P<redirect_const>{c('redirect_const')})"
-PREFIX_CONST = fr"(?P<prefix_const>{c('prefix_const')})"
-BCAST_CONST = fr"(?P<bcast_const>{c('bcast_const')})"
-OPTIN_CONST = fr"(?P<optin_const>{c('optin_const')})"
-OPTOUT_CONST = fr"(?P<optout_const>{c('optout_const')})"
-NOLOOP_CONST = fr"(?P<noloop_const>{c('noloop_const')})"
+REDIRECT_CONST = rf"(?P<redirect_const>{c('redirect_const')})"
+PREFIX_CONST = rf"(?P<prefix_const>{c('prefix_const')})"
+BCAST_CONST = rf"(?P<bcast_const>{c('bcast_const')})"
+OPTIN_CONST = rf"(?P<optin_const>{c('optin_const')})"
+OPTOUT_CONST = rf"(?P<optout_const>{c('optout_const')})"
+NOLOOP_CONST = rf"(?P<noloop_const>{c('noloop_const')})"
 
-RESET_CONST = fr"(?P<reset_const>{c('reset_const')})"
-FULL_CONST = fr"(?P<full_const>{c('full_const')})"
+RESET_CONST = rf"(?P<reset_const>{c('reset_const')})"
+FULL_CONST = rf"(?P<full_const>{c('full_const')})"
 
-STR_ALGO = fr"(?P<str_algo>{c('str_algo')})"
-LEN_CONST = fr"(?P<len_const>{c('len_const')})"
-IDX_CONST = fr"(?P<idx_const>{c('idx_const')})"
-MINMATCHLEN_CONST = fr"(?P<minmatchlen_const>{c('minmatchlen_const')})"
-WITHMATCHLEN_CONST = fr"(?P<withmatchlen_const>{c('withmatchlen_const')})"
-STRINGS_CONST = fr"(?P<strings_const>{c('strings_const')})"
-RANK_CONST = fr"(?P<rank_const>{c('rank_const')})"
+STR_ALGO = rf"(?P<str_algo>{c('str_algo')})"
+LEN_CONST = rf"(?P<len_const>{c('len_const')})"
+IDX_CONST = rf"(?P<idx_const>{c('idx_const')})"
+MINMATCHLEN_CONST = rf"(?P<minmatchlen_const>{c('minmatchlen_const')})"
+WITHMATCHLEN_CONST = rf"(?P<withmatchlen_const>{c('withmatchlen_const')})"
+STRINGS_CONST = rf"(?P<strings_const>{c('strings_const')})"
+RANK_CONST = rf"(?P<rank_const>{c('rank_const')})"
 
 command_grammar = compile(COMMAND)
 
@@ -337,9 +337,9 @@ command_grammar = compile(COMMAND)
 # here because every syntaxes starts with `command` so we will prepend `command`
 # in get_command_grammar function.
 GRAMMAR = {
-    "command_key": fr"\s+ {KEY} \s*",
-    "command_pattern": fr"\s+ {PATTERN} \s*",
-    "command_georadiusbymember": fr"""
+    "command_key": rf"\s+ {KEY} \s*",
+    "command_pattern": rf"\s+ {PATTERN} \s*",
+    "command_georadiusbymember": rf"""
         \s+ {KEY} \s+ {MEMBER}
         \s+ {FLOAT} \s+ {DISTUNIT}
         (\s+ {GEOCHOICE})*
@@ -347,53 +347,53 @@ GRAMMAR = {
         (\s+ {ORDER})?
         (\s+ {CONST_STORE} \s+ {KEY})?
         (\s+ {CONST_STOREDIST} \s+ {KEY})? \s*""",
-    "command_command": fr"\s+ {COMMAND} \s*",
-    "command_slots": fr"\s+ {SLOTS} \s*",
-    "command_node": fr"\s+ {NODE} \s*",
-    "command_slot": fr"\s+ {SLOT} \s*",
-    "command_failoverchoice": fr"\s+ {FAILOVERCHOICE} \s*",
-    "command_resetchoice": fr"\s+ {RESETCHOICE} \s*",
-    "command_slot_count": fr"\s+ {SLOT} \s+ {COUNT} \s*",
-    "command_key_samples_count": fr"""
+    "command_command": rf"\s+ {COMMAND} \s*",
+    "command_slots": rf"\s+ {SLOTS} \s*",
+    "command_node": rf"\s+ {NODE} \s*",
+    "command_slot": rf"\s+ {SLOT} \s*",
+    "command_failoverchoice": rf"\s+ {FAILOVERCHOICE} \s*",
+    "command_resetchoice": rf"\s+ {RESETCHOICE} \s*",
+    "command_slot_count": rf"\s+ {SLOT} \s+ {COUNT} \s*",
+    "command_key_samples_count": rf"""
         \s+ {KEY} \s+ {SAMPLES} \s+ {COUNT} \s*""",
     "command": r"\s*",
-    "command_ip_port": fr"\s+ {IP} \s+ {PORT} \s*",
-    "command_epoch": fr"\s+ {EPOCH} \s*",
-    "command_yes": fr"\s+ {YES} \s*",
-    "command_sectionx": fr"(\s+ {SECTION})? \s*",
-    "command_asyncx": fr"(\s+ {ASYNC})? \s*",
-    "command_slot_slotsubcmd_nodex": fr"""
+    "command_ip_port": rf"\s+ {IP} \s+ {PORT} \s*",
+    "command_epoch": rf"\s+ {EPOCH} \s*",
+    "command_yes": rf"\s+ {YES} \s*",
+    "command_sectionx": rf"(\s+ {SECTION})? \s*",
+    "command_asyncx": rf"(\s+ {ASYNC})? \s*",
+    "command_slot_slotsubcmd_nodex": rf"""
         \s+ {SLOT} \s+ {SLOTSUBCMD} (\s+ {NODE})? \s*""",
-    "command_password": fr"\s+ {PASSWORD} \s*",
-    "command_usernamex_password": fr"(\s+ {USERNAME})? \s+ {PASSWORD} \s*",
-    "command_message": fr"\s+ {MESSAGE} \s*",
-    "command_messagex": fr"(\s+{MESSAGE})? \s*",
-    "command_index": fr"\s+ {INDEX} \s*",
-    "command_index_index": fr"\s+ {INDEX} \s+ {INDEX} \s*",
-    "command_type_conntype_x": fr"""
+    "command_password": rf"\s+ {PASSWORD} \s*",
+    "command_usernamex_password": rf"(\s+ {USERNAME})? \s+ {PASSWORD} \s*",
+    "command_message": rf"\s+ {MESSAGE} \s*",
+    "command_messagex": rf"(\s+{MESSAGE})? \s*",
+    "command_index": rf"\s+ {INDEX} \s*",
+    "command_index_index": rf"\s+ {INDEX} \s+ {INDEX} \s*",
+    "command_type_conntype_x": rf"""
         (\s+ {TYPE_CONST} \s+ {CONNTYPE})? \s*""",
-    "command_clientid_errorx": fr"\s+ {CLIENTID} (\s+ {ERROR})? \s*",
-    "command_keys": fr"\s+ {KEYS} \s*",
-    "command_key_value": fr"\s+ {KEY} \s+ {VALUE} \s*",
-    "command_parameter_value": fr"\s+ {PARAMETER} \s+ {VALUE} \s*",
-    "command_parameter": fr"\s+ {PARAMETER} \s+ {VALUE} \s*",
-    "command_value": fr"\s+ {VALUE} \s*",
-    "command_key_second": fr"\s+ {KEY} \s+ {SECOND} \s*",
-    "command_key_timestamp": fr"\s+ {KEY} \s+ {TIMESTAMP} \s*",
-    "command_key_index": fr"\s+ {KEY} \s+ {INDEX} \s*",
-    "command_key_millisecond": fr"\s+ {KEY} \s+ {MILLISECOND} \s*",
-    "command_key_timestampms": fr"\s+ {KEY} \s+ {TIMESTAMPMS} \s*",
-    "command_key_newkey": fr"\s+ {KEY} \s+ {NEWKEY} \s*",
-    "command_newkey_keys": fr"\s+ {NEWKEY} \s+ {KEYS} \s*",
-    "command_key_newkey_timeout": fr"\s+ {KEY} \s+ {NEWKEY} \s+ {TIMEOUT} \s*",
-    "command_keys_timeout": fr"\s+ {KEYS} \s+ {TIMEOUT} \s*",
-    "command_count_timeout": fr"\s+ {COUNT} \s+ {TIMEOUT} \s*",
-    "command_timeout": fr"\s+ {TIMEOUT} \s*",
-    "command_key_positionchoice_pivot_value": fr"""
+    "command_clientid_errorx": rf"\s+ {CLIENTID} (\s+ {ERROR})? \s*",
+    "command_keys": rf"\s+ {KEYS} \s*",
+    "command_key_value": rf"\s+ {KEY} \s+ {VALUE} \s*",
+    "command_parameter_value": rf"\s+ {PARAMETER} \s+ {VALUE} \s*",
+    "command_parameter": rf"\s+ {PARAMETER} \s+ {VALUE} \s*",
+    "command_value": rf"\s+ {VALUE} \s*",
+    "command_key_second": rf"\s+ {KEY} \s+ {SECOND} \s*",
+    "command_key_timestamp": rf"\s+ {KEY} \s+ {TIMESTAMP} \s*",
+    "command_key_index": rf"\s+ {KEY} \s+ {INDEX} \s*",
+    "command_key_millisecond": rf"\s+ {KEY} \s+ {MILLISECOND} \s*",
+    "command_key_timestampms": rf"\s+ {KEY} \s+ {TIMESTAMPMS} \s*",
+    "command_key_newkey": rf"\s+ {KEY} \s+ {NEWKEY} \s*",
+    "command_newkey_keys": rf"\s+ {NEWKEY} \s+ {KEYS} \s*",
+    "command_key_newkey_timeout": rf"\s+ {KEY} \s+ {NEWKEY} \s+ {TIMEOUT} \s*",
+    "command_keys_timeout": rf"\s+ {KEYS} \s+ {TIMEOUT} \s*",
+    "command_count_timeout": rf"\s+ {COUNT} \s+ {TIMEOUT} \s*",
+    "command_timeout": rf"\s+ {TIMEOUT} \s*",
+    "command_key_positionchoice_pivot_value": rf"""
         \s+ {KEY} \s+ {POSITION_CHOICE} \s+ {VALUE} \s+ {VALUE} \s*""",
-    "command_pass": fr"\s+ {ANY} \s*",
-    "command_any": fr"\s+ {ANY} \s*",
-    "command_set": fr"""
+    "command_pass": rf"\s+ {ANY} \s*",
+    "command_any": rf"\s+ {ANY} \s*",
+    "command_set": rf"""
         \s+ {KEY} \s+ {VALUE}
         (
             (\s+ {EXPIRATION} \s+ {MILLISECOND})|
@@ -401,61 +401,61 @@ GRAMMAR = {
             (\s+ {KEEPTTL})
         )*
         \s*""",
-    "command_key_start_end_x": fr"\s+ {KEY} (\s+ {START} \s+ {END})? \s*",
-    "command_key_start_end": fr"\s+ {KEY} \s+ {START} \s+ {END} \s*",
-    "command_key_delta": fr"\s+ {KEY} \s+ {DELTA} \s*",
-    "command_key_offset_value": fr"\s+ {KEY} \s+ {OFFSET} \s+ {VALUE} \s*",
-    "command_key_field_value": fr"\s+ {KEY} (\s+ {FIELD} \s+ {VALUE})+ \s*",
-    "command_key_offset_bit": fr"\s+ {KEY} \s+ {OFFSET} \s+ {BIT} \s*",
-    "command_key_offset": fr"\s+ {KEY} \s+ {OFFSET} \s*",
-    "command_key_position": fr"\s+ {KEY} \s+ {POSITION} \s*",
-    "command_key_position_value": fr"\s+ {KEY} \s+ {POSITION} \s+ {VALUE} \s*",
-    "command_key_second_value": fr"\s+ {KEY} \s+ {SECOND} \s+ {VALUE} \s*",
-    "command_key_float": fr"\s+ {KEY} \s+ {FLOAT} \s*",
-    "command_key_valuess": fr"(\s+ {KEY} \s+ {VALUE})+ \s*",
-    "command_key_values": fr"\s+ {KEY} \s+ {VALUES} \s*",
-    "command_key_millisecond_value": fr"\s+ {KEY} \s+ {MILLISECOND} \s+ {VALUE} \s*",
-    "command_operation_key_keys": fr"\s+ {OPERATION} \s+ {KEY} \s+ {KEYS} \s*",
-    "command_key_bit_start_end": fr"\s+ {KEY} \s+ {BIT} (\s+ {START})? (\s+ {END})? \s*",
-    "command_key_members": fr"\s+ {KEY} \s+ {MEMBERS} \s*",
-    "command_geodist": fr"\s+ {KEY} \s+ {MEMBER} \s+ {MEMBER} (\s+ {DISTUNIT})? \s*",
-    "command_key_longitude_latitude_members": fr"""
+    "command_key_start_end_x": rf"\s+ {KEY} (\s+ {START} \s+ {END})? \s*",
+    "command_key_start_end": rf"\s+ {KEY} \s+ {START} \s+ {END} \s*",
+    "command_key_delta": rf"\s+ {KEY} \s+ {DELTA} \s*",
+    "command_key_offset_value": rf"\s+ {KEY} \s+ {OFFSET} \s+ {VALUE} \s*",
+    "command_key_field_value": rf"\s+ {KEY} (\s+ {FIELD} \s+ {VALUE})+ \s*",
+    "command_key_offset_bit": rf"\s+ {KEY} \s+ {OFFSET} \s+ {BIT} \s*",
+    "command_key_offset": rf"\s+ {KEY} \s+ {OFFSET} \s*",
+    "command_key_position": rf"\s+ {KEY} \s+ {POSITION} \s*",
+    "command_key_position_value": rf"\s+ {KEY} \s+ {POSITION} \s+ {VALUE} \s*",
+    "command_key_second_value": rf"\s+ {KEY} \s+ {SECOND} \s+ {VALUE} \s*",
+    "command_key_float": rf"\s+ {KEY} \s+ {FLOAT} \s*",
+    "command_key_valuess": rf"(\s+ {KEY} \s+ {VALUE})+ \s*",
+    "command_key_values": rf"\s+ {KEY} \s+ {VALUES} \s*",
+    "command_key_millisecond_value": rf"\s+ {KEY} \s+ {MILLISECOND} \s+ {VALUE} \s*",
+    "command_operation_key_keys": rf"\s+ {OPERATION} \s+ {KEY} \s+ {KEYS} \s*",
+    "command_key_bit_start_end": rf"\s+ {KEY} \s+ {BIT} (\s+ {START})? (\s+ {END})? \s*",
+    "command_key_members": rf"\s+ {KEY} \s+ {MEMBERS} \s*",
+    "command_geodist": rf"\s+ {KEY} \s+ {MEMBER} \s+ {MEMBER} (\s+ {DISTUNIT})? \s*",
+    "command_key_longitude_latitude_members": rf"""
         \s+ {KEY} (\s+ {LONGITUDE} \s+ {LATITUDE} \s {MEMBER})+ \s*""",
-    "command_destination_keys": fr"\s+ {DESTINATION} \s+ {KEYS} \s*",
-    "command_object_key": fr"\s+ {OBJECT} \s+ {KEY} \s*",
-    "command_key_member": fr"\s+ {KEY} \s+ {MEMBER} \s*",
-    "command_key_newkey_member": fr"\s+ {KEY} \s+ {NEWKEY} \s+ {MEMBER} \s*",
-    "command_key_count_x": fr"\s+ {KEY} (\s+ {COUNT})? \s*",
-    "command_key_min_max": fr"\s+ {KEY} \s+ {MIN} \s+ {MAX} \s*",
-    "command_key_condition_changed_incr_score_members": fr"""
+    "command_destination_keys": rf"\s+ {DESTINATION} \s+ {KEYS} \s*",
+    "command_object_key": rf"\s+ {OBJECT} \s+ {KEY} \s*",
+    "command_key_member": rf"\s+ {KEY} \s+ {MEMBER} \s*",
+    "command_key_newkey_member": rf"\s+ {KEY} \s+ {NEWKEY} \s+ {MEMBER} \s*",
+    "command_key_count_x": rf"\s+ {KEY} (\s+ {COUNT})? \s*",
+    "command_key_min_max": rf"\s+ {KEY} \s+ {MIN} \s+ {MAX} \s*",
+    "command_key_condition_changed_incr_score_members": rf"""
         \s+ {KEY} (\s+ {CONDITION})?
         (\s+ {CHANGED})?
         (\s+ {INCR})?
         (\s+ {SCORE} \s+ {MEMBER})+ \s*""",
-    "command_key_float_member": fr"\s+ {KEY} \s+ {FLOAT} \s+ {MEMBER} \s*",
-    "command_key_lexmin_lexmax": fr"\s+ {KEY} \s+ {LEXMIN} \s+ {LEXMAX} \s*",
-    "command_key_start_end_withscores_x": fr"""
+    "command_key_float_member": rf"\s+ {KEY} \s+ {FLOAT} \s+ {MEMBER} \s*",
+    "command_key_lexmin_lexmax": rf"\s+ {KEY} \s+ {LEXMIN} \s+ {LEXMAX} \s*",
+    "command_key_start_end_withscores_x": rf"""
         \s+ {KEY} \s+ {START} \s+ {END} (\s+ {WITHSCORES})? \s*""",
-    "command_key_lexmin_lexmax_limit_offset_count": fr"""
+    "command_key_lexmin_lexmax_limit_offset_count": rf"""
         \s+ {KEY} \s+ {LEXMIN} \s+ {LEXMAX}
         (\s+ {LIMIT} \s+ {OFFSET} \s+ {COUNT})? \s*""",
-    "command_key_min_max_withscore_x_limit_offset_count_x": fr"""
+    "command_key_min_max_withscore_x_limit_offset_count_x": rf"""
         \s+ {KEY} \s+ {MIN} \s+ {MAX} (\s+ {WITHSCORES})?
         (\s+ {LIMIT} \s+ {OFFSET} \s+ {COUNT})? \s*""",
-    "command_cursor_match_pattern_count_type": fr"""
+    "command_cursor_match_pattern_count_type": rf"""
         \s+ {CURSOR} (\s+ {MATCH} \s+ {PATTERN})?
         (\s+ {COUNT_CONST} \s+ {COUNT})? (\s+ {TYPE_CONST} \s+ {TYPE})? \s*""",
-    "command_key_cursor_match_pattern_count": fr"""\s+ {KEY}
+    "command_key_cursor_match_pattern_count": rf"""\s+ {KEY}
         \s+ {CURSOR} (\s+ {MATCH} \s+ {PATTERN})? (\s+ {COUNT_CONST} \s+ {COUNT})? \s*""",
-    "command_key_fields": fr"\s+ {KEY} \s+ {FIELDS} \s*",
-    "command_key_field": fr"\s+ {KEY} \s+ {FIELD} \s*",
-    "command_key_field_delta": fr"\s+ {KEY} \s+ {FIELD} \s+ {DELTA} \s*",
-    "command_key_field_float": fr"\s+ {KEY} \s+ {FIELD} \s+ {FLOAT} \s*",
-    "command_key_fieldvalues": fr"\s+ {KEY} (\s+ {FIELD} \s+ {VALUE})+ \s*",
-    "command_slowlog": fr"\s+ {SLOWLOGSUB} \s+ {NUM} \s*",
-    "command_switch": fr"\s+ {SWITCH} \s*",
-    "command_schedulex": fr"(\s+ {SCHEDULE})? \s*",
-    "command_clientkill": fr"""
+    "command_key_fields": rf"\s+ {KEY} \s+ {FIELDS} \s*",
+    "command_key_field": rf"\s+ {KEY} \s+ {FIELD} \s*",
+    "command_key_field_delta": rf"\s+ {KEY} \s+ {FIELD} \s+ {DELTA} \s*",
+    "command_key_field_float": rf"\s+ {KEY} \s+ {FIELD} \s+ {FLOAT} \s*",
+    "command_key_fieldvalues": rf"\s+ {KEY} (\s+ {FIELD} \s+ {VALUE})+ \s*",
+    "command_slowlog": rf"\s+ {SLOWLOGSUB} \s+ {NUM} \s*",
+    "command_switch": rf"\s+ {SWITCH} \s*",
+    "command_schedulex": rf"(\s+ {SCHEDULE})? \s*",
+    "command_clientkill": rf"""
         (
             (\s+ {IP_PORT})|
             (\s+ {ADDR} \s+ {IP_PORT})|
@@ -464,7 +464,7 @@ GRAMMAR = {
             (\s+ {CONST_USER} \s+ {USERNAME})|
             (\s+ {SKIPME} \s+ {YES})
         )+ \s*""",
-    "command_migrate": fr"""
+    "command_migrate": rf"""
         \s+ {HOST} \s+ {PORT}
         \s+ {KEY} \s+ {INDEX} \s+ {TIMEOUT}
         (\s+ {MIGRATECHOICE})?
@@ -474,26 +474,26 @@ GRAMMAR = {
         )?
         (\s+ {CONST_KEYS} \s+ {KEYS})?
     \s*""",
-    "command_radius": fr"""\s+ {KEY}
+    "command_radius": rf"""\s+ {KEY}
         \s+ {LONGITUDE} \s+ {LATITUDE} \s+ {FLOAT} \s+ {DISTUNIT}
         (\s+ {GEOCHOICE})* (\s+ {COUNT_CONST} \s+ {COUNT})?
         (\s+ {ORDER})?
         (\s+ {CONST_STORE} \s+ {KEY})?
         (\s+ {CONST_STOREDIST} \s+ {KEY})? \s*""",
-    "command_restore": fr"""\s+ {KEY}
+    "command_restore": rf"""\s+ {KEY}
         \s+ {TIMEOUT} \s+ {VALUE} (\s+ {SUBRESTORE} \s+ {SECOND})? \s*""",
-    "command_pubsubcmd_channels": fr"\s+ {PUBSUBCMD} (\s+ {CHANNEL})+ \s*",
-    "command_channel_message": fr"\s+ {CHANNEL} \s+ {MESSAGE} \s*",
-    "command_channels": fr"(\s+ {CHANNEL})+ \s*",
-    "command_lua_any": fr"""(\s+"{DOUBLE_LUA}")? (\s+'{SINGLE_LUA}')? \s+ {ANY} \s*""",
-    "command_scriptdebug": fr"\s+ {SCRIPTDEBUG} \s*",
-    "command_shutdown": fr"\s+ {SHUTDOWN} \s*",
-    "command_key_start_end_countx": fr"""\s+ {KEY}
+    "command_pubsubcmd_channels": rf"\s+ {PUBSUBCMD} (\s+ {CHANNEL})+ \s*",
+    "command_channel_message": rf"\s+ {CHANNEL} \s+ {MESSAGE} \s*",
+    "command_channels": rf"(\s+ {CHANNEL})+ \s*",
+    "command_lua_any": rf"""(\s+"{DOUBLE_LUA}")? (\s+'{SINGLE_LUA}')? \s+ {ANY} \s*""",
+    "command_scriptdebug": rf"\s+ {SCRIPTDEBUG} \s*",
+    "command_shutdown": rf"\s+ {SHUTDOWN} \s*",
+    "command_key_start_end_countx": rf"""\s+ {KEY}
         \s+ {STREAM_ID}
         \s+ {STREAM_ID}
         (\s+ {COUNT_CONST} \s+ {COUNT})?
         \s*""",
-    "command_xgroup": fr"""
+    "command_xgroup": rf"""
         (
             (\s+ {STREAM_CREATE} \s+ {KEY} \s+ {GROUP} \s+ {STREAM_ID})|
             (\s+ {STREAM_SETID} \s+ {KEY} \s+ {GROUP} \s+ {STREAM_ID})|
@@ -501,11 +501,11 @@ GRAMMAR = {
             (\s+ {STREAM_DELCONSUMER} \s+ {KEY} \s+ {GROUP} \s+ {CONSUMER})
         )
         \s*""",
-    "command_key_group_ids": fr"""
+    "command_key_group_ids": rf"""
         \s+ {KEY} \s+ {GROUP} (\s+ {STREAM_ID})+ \s*""",
-    "command_key_ids": fr"""
+    "command_key_ids": rf"""
         \s+ {KEY} (\s+ {STREAM_ID})+ \s*""",
-    "command_xinfo": fr"""
+    "command_xinfo": rf"""
         (
             (\s+ {STREAM_CONSUMERS} \s+ {KEY} \s+ {GROUP})|
             (\s+ {STREAM_GROUPS} \s+ {KEY})|
@@ -516,20 +516,20 @@ GRAMMAR = {
             (\s+ {HELP})
         )
         \s*""",
-    "command_xpending": fr"""
+    "command_xpending": rf"""
         \s+ {KEY} \s+ {GROUP}
         (\s+ {STREAM_ID} \s+ {STREAM_ID} \s+ {COUNT})?
         (\s+ {CONSUMER})?
         \s*""",
-    "command_xadd": fr"""
+    "command_xadd": rf"""
         \s+ {KEY}
         (\s+ {MAXLEN} (\s+ {APPROXIMATELY})? \s+ {COUNT})?
         \s+ {STREAM_ID}
         (\s+ {SFIELD} \s+ {SVALUE})+ \s*""",
-    "command_key_maxlen": fr"""
+    "command_key_maxlen": rf"""
         \s+ {KEY} \s+ {MAXLEN} (\s+ {APPROXIMATELY})? \s+ {COUNT}
         \s*""",
-    "command_xclaim": fr"""
+    "command_xclaim": rf"""
         \s+ {KEY} \s+ {GROUP} \s+ {CONSUMER} \s+ {MILLISECOND}
         (\s+ {STREAM_ID})+
         (\s+ {IDEL} \s+ {MILLISECOND})?
@@ -538,14 +538,14 @@ GRAMMAR = {
         (\s+ {FORCE})?
         (\s+ {JUSTID})?
         \s*""",
-    "command_xread": fr"""
+    "command_xread": rf"""
         (\s+ {COUNT_CONST} \s+ {COUNT})?
         (\s+ {BLOCK} \s+ {MILLISECOND})?
         \s+ {STREAMS}
         \s+ {KEYS}
         (\s+ {STREAM_ID})+
         \s*""",
-    "command_xreadgroup": fr"""
+    "command_xreadgroup": rf"""
         \s+ {STREAM_GROUP} \s+ {GROUP} \s+ {CONSUMER}
         (\s+ {COUNT_CONST} \s+ {COUNT})?
         (\s+ {BLOCK} \s+ {MILLISECOND})?
@@ -554,7 +554,7 @@ GRAMMAR = {
         \s+ {KEYS}
         (\s+ {STREAM_ID})+
         \s*""",
-    "command_bitfield": fr"""
+    "command_bitfield": rf"""
         \s+ {KEY}
         (
             (\s+ {GET} \s+ {INTTYPE} \s+ {SHARP_OFFSET})|
@@ -563,13 +563,13 @@ GRAMMAR = {
             (\s+ {OVERFLOW} \s+ {OVERFLOW_OPTION})
         )+
         \s*""",
-    "command_replicationid_offset": fr"\s+ {REPLICATIONID} \s+ {OFFSET} \s*",
-    "command_graphevent": fr"\s+ {GRAPHEVENT} \s*",
-    "command_graphevents": fr"(\s+ {GRAPHEVENT})* \s*",
+    "command_replicationid_offset": rf"\s+ {REPLICATIONID} \s+ {OFFSET} \s*",
+    "command_graphevent": rf"\s+ {GRAPHEVENT} \s*",
+    "command_graphevents": rf"(\s+ {GRAPHEVENT})* \s*",
     # before redis 5: lolwut 5 1
     # start from redis 6: lolwut VERSION 5 1
-    "command_version": fr"(\s+ {VERSION} \s+ {VERSION_NUM})? (\s+ {ANY})? \s*",
-    "command_client_tracking": fr"""
+    "command_version": rf"(\s+ {VERSION} \s+ {VERSION_NUM})? (\s+ {ANY})? \s*",
+    "command_client_tracking": rf"""
         \s+ {ON_OFF}
         (
             (\s+ {REDIRECT_CONST} \s+ {CLIENTID})|
@@ -580,13 +580,13 @@ GRAMMAR = {
             (\s+ {NOLOOP_CONST})
         )*
         \s*""",
-    "command_categorynamex": fr"(\s+ {CATEGORYNAME})? \s*",
-    "command_usernames": fr"(\s+ {USERNAME})+ \s*",
-    "command_username": fr"\s+ {USERNAME} \s*",
-    "command_count_or_resetx": fr"( (\s+ {COUNT}) | (\s+ {RESET_CONST}) )? \s*",
-    "command_username_rules": fr"\s+ {USERNAME} (\s+ {RULE})* \s*",
-    "command_count": fr"(\s+ {COUNT})? \s*",
-    "command_stralgo": fr"""
+    "command_categorynamex": rf"(\s+ {CATEGORYNAME})? \s*",
+    "command_usernames": rf"(\s+ {USERNAME})+ \s*",
+    "command_username": rf"\s+ {USERNAME} \s*",
+    "command_count_or_resetx": rf"( (\s+ {COUNT}) | (\s+ {RESET_CONST}) )? \s*",
+    "command_username_rules": rf"\s+ {USERNAME} (\s+ {RULE})* \s*",
+    "command_count": rf"(\s+ {COUNT})? \s*",
+    "command_stralgo": rf"""
         (
             \s+ {STR_ALGO}
             (
@@ -599,7 +599,7 @@ GRAMMAR = {
             (\s+ {WITHMATCHLEN_CONST})?
         )
     \s*""",
-    "command_lpos": fr"""
+    "command_lpos": rf"""
         \s+ {KEY} \s+ {ELEMENT}
         (
             (\s+ {RANK_CONST} \s+ {RANK})|
@@ -628,7 +628,7 @@ def get_command_grammar(command):
         return command_grammar
     # prepend command token for this syntax
     command_allow_multi_spaces = command.replace(r" ", r"\s+")
-    syntax = fr"\s* (?P<command>{command_allow_multi_spaces}) " + syntax
+    syntax = rf"\s* (?P<command>{command_allow_multi_spaces}) " + syntax
     # allow user input pipeline to redirect to shell, like `get json | jq .`
     syntax += pipeline
 
