@@ -510,6 +510,7 @@ def test_reissue_command_on_redis_cluster_with_password_in_dsn(
         assert list(call_args[1:]) == ["set", "foo", "bar"]
         assert call_args[0].password == "bar"
 
+
 def test_version_parse(iredis_client):
     """
     fix: https://github.com/laixintao/iredis/issues/418

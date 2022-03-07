@@ -162,7 +162,6 @@ class Client:
         else:
             command2syntax["AUTH"] = "command_password"
 
-
     def set_default_pager(self, config):
         configured_pager = config.pager
         os_environ_pager = os.environ.get("PAGER")
