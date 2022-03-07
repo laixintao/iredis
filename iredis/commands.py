@@ -127,7 +127,7 @@ def split_command_args(command):
             raise AmbiguousCommand("command is not finished")
         # allow multiple space in user input command
         command_allow_multi_spaces = "[ ]+".join(command_name.split())
-        matcher = re.match(fr"({command_allow_multi_spaces})( |$)", command.upper())
+        matcher = re.match(rf"({command_allow_multi_spaces})( |$)", command.upper())
         if matcher:
             matched_command_len = len(matcher.group(1))
             input_command = command[:matched_command_len]
