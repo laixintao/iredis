@@ -11,6 +11,7 @@ from iredis.config import config, load_config_files
 from iredis.completers import IRedisCompleter
 from iredis.entry import Rainbow, prompt_message
 from iredis.exceptions import NotSupport
+from iredis.commands import command2syntax
 from ..helpers import formatted_text_rematch
 
 
@@ -508,3 +509,14 @@ def test_reissue_command_on_redis_cluster_with_password_in_dsn(
         print(call_args)
         assert list(call_args[1:]) == ["set", "foo", "bar"]
         assert call_args[0].password == "bar"
+
+def test_version_parse(iredis_client):
+    """
+    fix: https://github.com/laixintao/iredis/issues/418
+    """
+    iredis_client.auth_compat("6.1.0")
+    assert command2syntax["AUTH"] == "command_usernamex_password"
+    iredis_client.auth_compat("5.0")
+    assert command2syntax["AUTH"] == "command_password"
+    iredis_client.auth_compat("5.0.14.1")
+    assert command2syntax["AUTH"] == "command_password"

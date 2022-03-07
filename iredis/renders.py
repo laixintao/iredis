@@ -6,7 +6,7 @@ func(redis-response) -> formatted result(str)
 """
 import logging
 import time
-from distutils.version import StrictVersion
+from packaging.version import parse as version_parse
 
 from prompt_toolkit.formatted_text import FormattedText
 
@@ -260,7 +260,7 @@ class OutputRender:
     @staticmethod
     def render_slowlog(raw):
         fields = ["Slow log id", "Start at", "Running time(ms)", "Command"]
-        if StrictVersion(config.version) > StrictVersion("4.0"):
+        if version_parse(config.version) > version_parse("4.0"):
             fields.extend(["Client IP and port", "Client name"])
 
         rendered = []
