@@ -1,4 +1,4 @@
-## 1.12
+## 1.11.1
 
 - Bugfix: Switch `distutils.version` to `packaging.version` to fix the version parse
   for windows. (new dependency: pypi's python-packaging.
