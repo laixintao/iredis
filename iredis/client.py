@@ -7,7 +7,7 @@ import sys
 import logging
 from subprocess import run
 from importlib_resources import read_text
-from distutils.version import StrictVersion
+from packaging.version import parse as version_parse
 
 import redis
 from prompt_toolkit.shortcuts import clear
@@ -156,9 +156,11 @@ class Client:
         return connection_class(**connection_kwargs)
 
     def auth_compat(self, redis_version: str):
-        with_username = StrictVersion(redis_version) >= StrictVersion("6.0.0")
+        with_username = version_parse(redis_version) >= version_parse("6.0.0")
         if with_username:
             command2syntax["AUTH"] = "command_usernamex_password"
+        else:
+            command2syntax["AUTH"] = "command_password"
 
     def set_default_pager(self, config):
         configured_pager = config.pager
@@ -532,7 +534,7 @@ class Client:
         # FIXME anything strange with single quotes?
         logger.debug(f"[--version--] '{server_version}'")
         try:
-            is_available = StrictVersion(server_version) > StrictVersion(
+            is_available = version_parse(server_version) > version_parse(
                 available_version
             )
         except Exception as e:
@@ -670,7 +672,7 @@ class Client:
 
         # use `memory usage` to get memory, this command available from redis4.0
         mem = ""
-        if config.version and StrictVersion(config.version) >= StrictVersion("4.0.0"):
+        if config.version and version_parse(config.version) >= version_parse("4.0.0"):
             memory_usage_value = str(self.execute("memory usage", key))
             mem = f"  mem: {memory_usage_value} bytes"
 

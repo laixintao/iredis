@@ -1,3 +1,8 @@
+## 1.11.1
+
+- Bugfix: Switch `distutils.version` to `packaging.version` to fix the version parse
+  for windows. (new dependency: pypi's python-packaging.
+
 ## 1.11
 
 - Dependency: Upgrade mistune lib to ^2.0. (see
