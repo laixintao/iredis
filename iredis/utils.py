@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 _last_timer = time.time()
 _timer_counter = 0
-sperator = re.compile(r"\s")
+separator = re.compile(r"\s")
 logger.debug(f"[timer] start on {_last_timer}")
 
 
@@ -73,8 +73,8 @@ def strip_quote_args(s):
                 word.append(char)
         # not in quote
         else:
-            # sperator
-            if sperator.match(char):
+            # separator
+            if separator.match(char):
                 if word:
                     yield "".join(word)
                     word = []
