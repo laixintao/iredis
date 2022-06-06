@@ -523,22 +523,43 @@ def test_version_parse_for_auth(iredis_client):
     assert command2syntax["AUTH"] == "command_password"
 
 
-
 @pytest.mark.parametrize(
     "info, version",
     [
-        ("# Server\r\nredis_version:df--128-NOTFOUND\r\nredis_mode:standalone\r\narch_bits:64", "df--128-NOTFOUND"),
-        ("# Server\r\nredis_version:6.2.5\r\nredis_git_sha1:00000000\r\nredis_git_dirty:0\r\nredis_build_id:915e5480613bc9b6\r\nredis_mode:standalone ", "6.2.5"),
-        ("# Server\r\nredis_version:5.0.14.1\r\nredis_git_sha1:00000000\r\nredis_git_dirty:0\r\nredis_build_id:915e5480613bc9b6\r\nredis_mode:standalone ", "5.0.14.1")],
+        (
+            (
+                "# Server\r\nredis_version:df--128-NOTFOUND\r\n"
+                "redis_mode:standalone\r\narch_bits:64"
+            ),
+            "df--128-NOTFOUND",
+        ),
+        (
+            (
+                "# Server\r\nredis_version:6.2.5\r\n"
+                "redis_git_sha1:00000000\r\n"
+                "redis_git_dirty:0\r\n"
+                "redis_build_id:915e5480613bc9b6\r\n"
+                "redis_mode:standalone "
+            ),
+            "6.2.5",
+        ),
+        (
+            (
+                "# Server\r\nredis_version:5.0.14.1\r\n"
+                "redis_git_sha1:00000000\r\nredis_git_dirty:0\r\n"
+                "redis_build_id:915e5480613bc9b6\r\n"
+                "redis_mode:standalone "
+            ),
+            "5.0.14.1",
+        ),
+    ],
 )
 def test_version_path(info, version):
     with patch("iredis.client.config") as mock_config:
-        mock_config.no_info=True
-        mock_config.pager="less"
-        mock_config.version="5.0.0"
-        with patch(
-            "iredis.client.Client.execute"
-        ) as mock_execute:
+        mock_config.no_info = True
+        mock_config.pager = "less"
+        mock_config.version = "5.0.0"
+        with patch("iredis.client.Client.execute") as mock_execute:
             mock_execute.return_value = info
             client = Client("127.0.0.1", "6379", None)
             client.get_server_info()
