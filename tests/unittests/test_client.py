@@ -33,7 +33,7 @@ def test_send_command(_input, command_name, expect_args):
     client = Client("127.0.0.1", "6379", None)
     client.execute = MagicMock()
     next(client.send_command(_input, None))
-    args, kwargs = client.execute.call_args
+    args, _ = client.execute.call_args
     assert args == (command_name, *expect_args)
 
 
@@ -511,7 +511,7 @@ def test_reissue_command_on_redis_cluster_with_password_in_dsn(
         assert call_args[0].password == "bar"
 
 
-def test_version_parse(iredis_client):
+def test_version_parse_for_auth(iredis_client):
     """
     fix: https://github.com/laixintao/iredis/issues/418
     """
@@ -521,3 +521,15 @@ def test_version_parse(iredis_client):
     assert command2syntax["AUTH"] == "command_password"
     iredis_client.auth_compat("5.0.14.1")
     assert command2syntax["AUTH"] == "command_password"
+
+
+DRAGONFLY_INFO = "# Server\r\nredis_version:df--128-NOTFOUND\r\nredis_mode:standalone\r\narch_bits:64"
+
+
+def test_version_path(iredis_client):
+    with patch("iredis.client.config") as mock_config:
+        with patch(
+            "iredis.client.Client.execute", side_effect=DRAGONFLY_INFO
+        ) as mock_execute:
+            iredis_client.get_server_info()
+            assert mock_config.version == "123"
