@@ -186,7 +186,6 @@ class Client:
     def get_server_info(self):
         # safe to decode Redis's INFO response
         info_resp = nativestr(self.execute("INFO"))
-        print(info_resp)
         version = re.findall(r"redis_version:(.+)\r\n", info_resp)[
             0
         ]
