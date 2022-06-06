@@ -61,6 +61,7 @@ def test_hello_command_is_not_supported(cli):
     cli.expect("IRedis currently not support RESP3")
 
 
+@pytest.mark.xfail(reason="unstable, maybe due to github action's signal handling")
 def test_abort_reading_connection(cli):
     cli.sendline("blpop mylist 30")
     cli.send(chr(3))

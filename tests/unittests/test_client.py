@@ -33,7 +33,7 @@ def test_send_command(_input, command_name, expect_args):
     client = Client("127.0.0.1", "6379", None)
     client.execute = MagicMock()
     next(client.send_command(_input, None))
-    args, kwargs = client.execute.call_args
+    args, _ = client.execute.call_args
     assert args == (command_name, *expect_args)
 
 
@@ -511,7 +511,7 @@ def test_reissue_command_on_redis_cluster_with_password_in_dsn(
         assert call_args[0].password == "bar"
 
 
-def test_version_parse(iredis_client):
+def test_version_parse_for_auth(iredis_client):
     """
     fix: https://github.com/laixintao/iredis/issues/418
     """
@@ -521,3 +521,46 @@ def test_version_parse(iredis_client):
     assert command2syntax["AUTH"] == "command_password"
     iredis_client.auth_compat("5.0.14.1")
     assert command2syntax["AUTH"] == "command_password"
+
+
+@pytest.mark.parametrize(
+    "info, version",
+    [
+        (
+            (
+                "# Server\r\nredis_version:df--128-NOTFOUND\r\n"
+                "redis_mode:standalone\r\narch_bits:64"
+            ),
+            "df--128-NOTFOUND",
+        ),
+        (
+            (
+                "# Server\r\nredis_version:6.2.5\r\n"
+                "redis_git_sha1:00000000\r\n"
+                "redis_git_dirty:0\r\n"
+                "redis_build_id:915e5480613bc9b6\r\n"
+                "redis_mode:standalone "
+            ),
+            "6.2.5",
+        ),
+        (
+            (
+                "# Server\r\nredis_version:5.0.14.1\r\n"
+                "redis_git_sha1:00000000\r\nredis_git_dirty:0\r\n"
+                "redis_build_id:915e5480613bc9b6\r\n"
+                "redis_mode:standalone "
+            ),
+            "5.0.14.1",
+        ),
+    ],
+)
+def test_version_path(info, version):
+    with patch("iredis.client.config") as mock_config:
+        mock_config.no_info = True
+        mock_config.pager = "less"
+        mock_config.version = "5.0.0"
+        with patch("iredis.client.Client.execute") as mock_execute:
+            mock_execute.return_value = info
+            client = Client("127.0.0.1", "6379", None)
+            client.get_server_info()
+            assert mock_config.version == version

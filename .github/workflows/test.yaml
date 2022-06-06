@@ -49,7 +49,7 @@ jobs:
           REDIS_VERSION: ${{ matrix.redis }}
         run: |
           . venv/bin/activate
-          pytest || cat cli_test.log
+          pytest
   lint:
     name: flake8 & black
     runs-on: ubuntu-latest
