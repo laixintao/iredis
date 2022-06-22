@@ -1,7 +1,9 @@
 ## UPCOMING
 
 - Feature: `CLIENT KILL` now support `LADDR` argument.
+- Feature: `CLIENT LIST` now support `ID` argument.
 -
+
 ## 1.11.1
 
 - Bugfix: Switch `distutils.version` to `packaging.version` to fix the version parse

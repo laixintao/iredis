@@ -208,6 +208,8 @@ PASSWORD = rf"(?P<password>{VALID_TOKEN})"
 REPLICATIONID = rf"(?P<replicationid>{VALID_TOKEN})"
 INDEX = r"(?P<index>(1[0-5]|\d))"
 CLIENTID = rf"(?P<clientid>{NUM})"
+CLIENTIDS = rf"(?P<clientids>{NUM}(\s+{NUM})*)"
+
 SECOND = rf"(?P<second>{NUM})"
 TIMESTAMP = rf"(?P<timestamp>{NUM})"
 # TODO test lexer & completer for multi spaces in command
@@ -386,8 +388,12 @@ GRAMMAR = {
     "command_messagex": rf"(\s+{MESSAGE})? \s*",
     "command_index": rf"\s+ {INDEX} \s*",
     "command_index_index": rf"\s+ {INDEX} \s+ {INDEX} \s*",
-    "command_type_conntype_x": rf"""
-        (\s+ {TYPE_CONST} \s+ {CONNTYPE})? \s*""",
+    "command_client_list": rf"""
+        (
+            (\s+ {TYPE_CONST} \s+ {CONNTYPE})|
+            (\s+ {CONST_ID} \s+ {CLIENTIDS})
+        )*
+    \s*""",
     "command_clientid_errorx": rf"\s+ {CLIENTID} (\s+ {ERROR})? \s*",
     "command_keys": rf"\s+ {KEYS} \s*",
     "command_key_value": rf"\s+ {KEY} \s+ {VALUE} \s*",
