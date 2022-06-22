@@ -32,6 +32,7 @@ connection,SELECT,command_index,render_simple_string
 connection,CLIENT CACHING,command_yes,render_simple_string
 connection,CLIENT GETREDIR,command,render_int
 connection,CLIENT TRACKING,command_client_tracking,render_simple_string
+connection,CLIENT TRACKINGINFO,command,render_list
 connection,CLIENT LIST,command_client_list,render_bulk_string_decode
 connection,CLIENT GETNAME,command,render_bulk_string
 connection,CLIENT ID,command,render_int

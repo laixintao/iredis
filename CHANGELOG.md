@@ -4,6 +4,7 @@
 - Feature: `CLIENT LIST` now support `ID` argument.
 - Feature: `CLIENT PAUSE` support options and added `CLIENT UNPAUSE` command.
 - Feature: `CLIENT TRACKING` support multiple prefixes.
+- Feature: new command: `CLIENT TRACKINGINFO`.
 
 ## 1.11.1
 
