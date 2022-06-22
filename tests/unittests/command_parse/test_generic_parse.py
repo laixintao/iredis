@@ -177,3 +177,21 @@ def test_restore(judge_command):
             "value": '"\n\x17\x17\x00\x00\x00\x12\x00\x00\x00\x03\x00\x00\xc0\x01\x00\x04\xc0\x02\x00\x04\xc0\x03\x00\xff\x04\x00u#<\xc0;.\xe9\xdd"',  # noqa
         },
     )
+
+
+def test_copy(judge_command):
+    judge_command(
+        "COPY foo bar DB 3 REPLACE",
+        {
+            "command": "COPY",
+            "key": ["foo", "bar"],
+            "db_const": "DB",
+            "index": "3",
+            "replace_const": "REPLACE",
+        },
+    )
+    judge_command(
+        "COPY foo bar REPLACE",
+        {"command": "COPY", "key": ["foo", "bar"], "replace_const": "REPLACE"},
+    )
+    judge_command("COPY foo bar", {"command": "COPY", "key": ["foo", "bar"]})

@@ -133,6 +133,8 @@ CONST = {
     "rank_const": "RANK",
     "lr_const": "LEFT RIGHT",
     "pause_type": "WRITE ALL",
+    "db_const": "DB",
+    "replace_const": "REPLACE",
 }
 
 
@@ -349,6 +351,8 @@ RANK_CONST = rf"(?P<rank_const>{c('rank_const')})"
 
 LR_CONST = rf"(?P<lr_const>{c('lr_const')})"
 PAUSE_TYPE = rf"(?P<pause_type>{c('pause_type')})"
+DB_CONST = rf"(?P<db_const>{c('db_const')})"
+REPLACE_CONST = rf"(?P<replace_const>{c('replace_const')})"
 
 command_grammar = compile(COMMAND)
 
@@ -637,6 +641,11 @@ GRAMMAR = {
         \s+ {KEY} \s+ {KEY}
         \s+ {LR_CONST} \s+ {LR_CONST}
         \s+ {TIMEOUT} \s*""",
+    "command_copy": rf"""
+        \s+ {KEY} \s+ {KEY}
+        (\s+ {DB_CONST} \s+ {INDEX})?
+        (\s+ {REPLACE_CONST})?
+        \s*""",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"
