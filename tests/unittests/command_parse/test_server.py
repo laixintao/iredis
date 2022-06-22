@@ -72,6 +72,18 @@ def test_client_kill(judge_command):
         {"command": "CLIENT KILL", "ip_port": "127.0.0.1:12345"},
     )
     judge_command(
+        "CLIENT KILL ADDR 127.0.0.1:12345 ",
+        {"command": "CLIENT KILL", "ip_port": "127.0.0.1:12345", "addr": "ADDR"},
+    )
+    judge_command(
+        "CLIENT KILL LADDR 127.0.0.1:12345 ",
+        {"command": "CLIENT KILL", "ip_port": "127.0.0.1:12345", "laddr": "LADDR"},
+    )
+    judge_command(
+        "CLIENT KILL USER myuser",
+        {"command": "CLIENT KILL", "const_user": "USER", "username": "myuser"},
+    )
+    judge_command(
         "CLIENT KILL id 123455 type pubsub skipme no",
         {
             "command": "CLIENT KILL",

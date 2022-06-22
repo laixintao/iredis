@@ -45,6 +45,7 @@ CONST = {
     "on_off": "ON OFF",
     "const_id": "ID",
     "addr": "ADDR",
+    "laddr": "LADDR",
     "skipme": "SKIPME",
     "yes": "YES NO",
     "migratechoice": "COPY REPLACE",
@@ -279,6 +280,7 @@ ON_OFF = rf"(?P<on_off>{c('on_off')})"
 CONST_ID = rf"(?P<const_id>{c('const_id')})"
 CONST_USER = rf"(?P<const_user>{c('const_user')})"
 ADDR = rf"(?P<addr>{c('addr')})"
+LADDR = rf"(?P<laddr>{c('laddr')})"
 SKIPME = rf"(?P<skipme>{c('skipme')})"
 YES = rf"(?P<yes>{c('yes')})"
 MIGRATECHOICE = rf"(?P<migratechoice>{c('migratechoice')})"
@@ -473,6 +475,7 @@ GRAMMAR = {
         (
             (\s+ {IP_PORT})|
             (\s+ {ADDR} \s+ {IP_PORT})|
+            (\s+ {LADDR} \s+ {IP_PORT})|
             (\s+ {CONST_ID} \s+ {CLIENTID})|
             (\s+ {TYPE_CONST} \s+ {CONNTYPE})|
             (\s+ {CONST_USER} \s+ {USERNAME})|
