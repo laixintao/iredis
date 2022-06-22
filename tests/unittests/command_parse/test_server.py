@@ -31,6 +31,20 @@ def test_client_list(judge_command):
         {"command": "client list", "type_const": "TYPE", "conntype": "REPLICA"},
     )
 
+    judge_command(
+        "client list TYPE REPLICA id 1 2 3",
+        {
+            "command": "client list",
+            "type_const": "TYPE",
+            "conntype": "REPLICA",
+            "clientids": "1 2 3",
+        },
+    )
+    judge_command(
+        "client list  ID 1 2 3",
+        {"command": "client list", "clientids": "1 2 3"},
+    )
+
 
 def test_configset(judge_command):
     judge_command(
@@ -70,6 +84,18 @@ def test_client_kill(judge_command):
     judge_command(
         "CLIENT KILL 127.0.0.1:12345 ",
         {"command": "CLIENT KILL", "ip_port": "127.0.0.1:12345"},
+    )
+    judge_command(
+        "CLIENT KILL ADDR 127.0.0.1:12345 ",
+        {"command": "CLIENT KILL", "ip_port": "127.0.0.1:12345", "addr": "ADDR"},
+    )
+    judge_command(
+        "CLIENT KILL LADDR 127.0.0.1:12345 ",
+        {"command": "CLIENT KILL", "ip_port": "127.0.0.1:12345", "laddr": "LADDR"},
+    )
+    judge_command(
+        "CLIENT KILL USER myuser",
+        {"command": "CLIENT KILL", "const_user": "USER", "username": "myuser"},
     )
     judge_command(
         "CLIENT KILL id 123455 type pubsub skipme no",

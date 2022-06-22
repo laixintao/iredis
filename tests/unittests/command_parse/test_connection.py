@@ -71,7 +71,7 @@ def test_client_tracking(judge_command):
             "command": "CLIENT TRACKING",
             "on_off": "ON",
             "prefix_const": "PREFIX",
-            "prefix": "foo",
+            "prefixes": "foo",
         },
     )
     judge_command(
@@ -80,7 +80,7 @@ def test_client_tracking(judge_command):
             "command": "CLIENT TRACKING",
             "on_off": "ON",
             "prefix_const": "PREFIX",
-            "prefix": "foo",
+            "prefixes": "foo",
         },
     )
     judge_command(
@@ -89,9 +89,28 @@ def test_client_tracking(judge_command):
             "command": "CLIENT TRACKING",
             "on_off": "ON",
             "prefix_const": "PREFIX",
-            "prefix": "foo",
+            "prefixes": "foo",
             "bcast_const": "BCAST",
             "noloop_const": "NOLOOP",
             "optin_const": "OPTIN",
         },
+    )
+    judge_command(
+        "CLIENT TRACKING ON PREFIX foo bar ok BCAST NOLOOP OPTIN",
+        {
+            "command": "CLIENT TRACKING",
+            "on_off": "ON",
+            "prefix_const": "PREFIX",
+            "prefixes": "foo bar ok",
+            "bcast_const": "BCAST",
+            "noloop_const": "NOLOOP",
+            "optin_const": "OPTIN",
+        },
+    )
+
+
+def test_client_pause(judge_command):
+    judge_command(
+        "CLIENT PAUSE 20 WRITE",
+        {"command": "CLIENT PAUSE", "timeout": "20", "pause_type": "WRITE"},
     )

@@ -41,6 +41,18 @@ def test_brpoplpush(judge_command):
     judge_command("BRPOPLPUSH list1 list2 -1", None)
 
 
+def test_brpoplpush_with_double_timeout(judge_command):
+    judge_command(
+        "BRPOPLPUSH list1 list2 10.0",
+        {"command": "BRPOPLPUSH", "key": "list1", "newkey": "list2", "timeout": "10.0"},
+    )
+    judge_command(
+        "BRPOPLPUSH list1 list2 .2",
+        {"command": "BRPOPLPUSH", "key": "list1", "newkey": "list2", "timeout": ".2"},
+    )
+    judge_command("BRPOPLPUSH list1 list2 12.", None)
+
+
 def test_linsert(judge_command):
     judge_command(
         'LINSERT mylist BEFORE "World" "There"',
@@ -106,3 +118,26 @@ def test_lpos(judge_command):
             "rank": "-1",
         },
     )
+
+
+def test_blmove(judge_command):
+    judge_command(
+        "blmove list1 list2 left right 1.2",
+        {
+            "command": "blmove",
+            "key": ["list1", "list2"],
+            "lr_const": ["left", "right"],
+            "timeout": "1.2",
+        },
+    )
+    judge_command(
+        "blmove list1 list2 right right .2",
+        {
+            "command": "blmove",
+            "key": ["list1", "list2"],
+            "lr_const": ["right", "right"],
+            "timeout": ".2",
+        },
+    )
+    judge_command("blmove list1 list2 right right", None)
+    judge_command("blmove list1 right right 1", None)

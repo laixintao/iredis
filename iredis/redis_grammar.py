@@ -45,6 +45,7 @@ CONST = {
     "on_off": "ON OFF",
     "const_id": "ID",
     "addr": "ADDR",
+    "laddr": "LADDR",
     "skipme": "SKIPME",
     "yes": "YES NO",
     "migratechoice": "COPY REPLACE",
@@ -130,6 +131,8 @@ CONST = {
     "withmatchlen_const": "WITHMATCHLEN",
     "strings_const": "STRINGS",
     "rank_const": "RANK",
+    "lr_const": "LEFT RIGHT",
+    "pause_type": "WRITE ALL",
 }
 
 
@@ -151,14 +154,16 @@ VALID_NODE = r"\w+"
 NUM = r"\d+"
 NNUM = r"-?\+?\(?\[?(\d+|inf)"  # number cloud be negative
 _FLOAT = r"-?(\d|\.|e)+"
+DOUBLE = r"\d*(\.\d+)?"
 LEXNUM = r"(\[\w+)|(\(\w+)|(\+)|(-)"
 
 SLOT = rf"(?P<slot>{VALID_SLOT})"
 SLOTS = rf"(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"
 NODE = rf"(?P<node>{VALID_NODE})"
 KEY = rf"(?P<key>{VALID_TOKEN})"
-PREFIX = rf"(?P<prefix>{VALID_TOKEN})"
 KEYS = rf"(?P<keys>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
+PREFIX = rf"(?P<prefix>{VALID_TOKEN})"
+PREFIXES = rf"(?P<prefixes>{VALID_TOKEN}(\s+{VALID_TOKEN})*?)"
 DESTINATION = rf"(?P<destination>{VALID_TOKEN})"
 NEWKEY = rf"(?P<newkey>{VALID_TOKEN})"
 VALUE = rf"(?P<value>{VALID_TOKEN})"
@@ -205,6 +210,8 @@ PASSWORD = rf"(?P<password>{VALID_TOKEN})"
 REPLICATIONID = rf"(?P<replicationid>{VALID_TOKEN})"
 INDEX = r"(?P<index>(1[0-5]|\d))"
 CLIENTID = rf"(?P<clientid>{NUM})"
+CLIENTIDS = rf"(?P<clientids>{NUM}(\s+{NUM})*)"
+
 SECOND = rf"(?P<second>{NUM})"
 TIMESTAMP = rf"(?P<timestamp>{NUM})"
 # TODO test lexer & completer for multi spaces in command
@@ -230,6 +237,16 @@ MIN = rf"(?P<min>{NNUM})"
 MAX = rf"(?P<max>{NNUM})"
 POSITION = rf"(?P<position>{NNUM})"
 TIMEOUT = rf"(?P<timeout>{NUM})"
+SCORE = rf"(?P<score>{_FLOAT})"
+LEXMIN = rf"(?P<lexmin>{LEXNUM})"
+LEXMAX = rf"(?P<lexmax>{LEXNUM})"
+WEIGHTS = rf"(?P<weights>{_FLOAT}(\s+{_FLOAT})*)"
+IP_PORT = rf"(?P<ip_port>{IP}:{PORT})"
+HOST = rf"(?P<host>{VALID_TOKEN})"
+MIN = rf"(?P<min>{NNUM})"
+MAX = rf"(?P<max>{NNUM})"
+POSITION = rf"(?P<position>{NNUM})"
+TIMEOUT = rf"(?P<timeout>{DOUBLE})"
 SCORE = rf"(?P<score>{_FLOAT})"
 LEXMIN = rf"(?P<lexmin>{LEXNUM})"
 LEXMAX = rf"(?P<lexmax>{LEXNUM})"
@@ -267,6 +284,7 @@ ON_OFF = rf"(?P<on_off>{c('on_off')})"
 CONST_ID = rf"(?P<const_id>{c('const_id')})"
 CONST_USER = rf"(?P<const_user>{c('const_user')})"
 ADDR = rf"(?P<addr>{c('addr')})"
+LADDR = rf"(?P<laddr>{c('laddr')})"
 SKIPME = rf"(?P<skipme>{c('skipme')})"
 YES = rf"(?P<yes>{c('yes')})"
 MIGRATECHOICE = rf"(?P<migratechoice>{c('migratechoice')})"
@@ -329,6 +347,9 @@ WITHMATCHLEN_CONST = rf"(?P<withmatchlen_const>{c('withmatchlen_const')})"
 STRINGS_CONST = rf"(?P<strings_const>{c('strings_const')})"
 RANK_CONST = rf"(?P<rank_const>{c('rank_const')})"
 
+LR_CONST = rf"(?P<lr_const>{c('lr_const')})"
+PAUSE_TYPE = rf"(?P<pause_type>{c('pause_type')})"
+
 command_grammar = compile(COMMAND)
 
 # Here are the core grammars, those are tokens after ``command``.
@@ -370,8 +391,12 @@ GRAMMAR = {
     "command_messagex": rf"(\s+{MESSAGE})? \s*",
     "command_index": rf"\s+ {INDEX} \s*",
     "command_index_index": rf"\s+ {INDEX} \s+ {INDEX} \s*",
-    "command_type_conntype_x": rf"""
-        (\s+ {TYPE_CONST} \s+ {CONNTYPE})? \s*""",
+    "command_client_list": rf"""
+        (
+            (\s+ {TYPE_CONST} \s+ {CONNTYPE})|
+            (\s+ {CONST_ID} \s+ {CLIENTIDS})
+        )*
+    \s*""",
     "command_clientid_errorx": rf"\s+ {CLIENTID} (\s+ {ERROR})? \s*",
     "command_keys": rf"\s+ {KEYS} \s*",
     "command_key_value": rf"\s+ {KEY} \s+ {VALUE} \s*",
@@ -388,7 +413,7 @@ GRAMMAR = {
     "command_key_newkey_timeout": rf"\s+ {KEY} \s+ {NEWKEY} \s+ {TIMEOUT} \s*",
     "command_keys_timeout": rf"\s+ {KEYS} \s+ {TIMEOUT} \s*",
     "command_count_timeout": rf"\s+ {COUNT} \s+ {TIMEOUT} \s*",
-    "command_timeout": rf"\s+ {TIMEOUT} \s*",
+    "command_pause": rf"\s+ {TIMEOUT} (\s+ {PAUSE_TYPE})? \s*",
     "command_key_positionchoice_pivot_value": rf"""
         \s+ {KEY} \s+ {POSITION_CHOICE} \s+ {VALUE} \s+ {VALUE} \s*""",
     "command_pass": rf"\s+ {ANY} \s*",
@@ -459,6 +484,7 @@ GRAMMAR = {
         (
             (\s+ {IP_PORT})|
             (\s+ {ADDR} \s+ {IP_PORT})|
+            (\s+ {LADDR} \s+ {IP_PORT})|
             (\s+ {CONST_ID} \s+ {CLIENTID})|
             (\s+ {TYPE_CONST} \s+ {CONNTYPE})|
             (\s+ {CONST_USER} \s+ {USERNAME})|
@@ -573,7 +599,7 @@ GRAMMAR = {
         \s+ {ON_OFF}
         (
             (\s+ {REDIRECT_CONST} \s+ {CLIENTID})|
-            (\s+ {PREFIX_CONST} \s+ {PREFIX})|
+            (\s+ {PREFIX_CONST} \s+ {PREFIXES})|
             (\s+ {BCAST_CONST})|
             (\s+ {OPTIN_CONST})|
             (\s+ {OPTOUT_CONST})|
@@ -607,6 +633,10 @@ GRAMMAR = {
             (\s+ {MAXLEN} \s+ {LEN})
         )*
         \s*""",
+    "command_key_key_lr_lr_timeout": rf"""
+        \s+ {KEY} \s+ {KEY}
+        \s+ {LR_CONST} \s+ {LR_CONST}
+        \s+ {TIMEOUT} \s*""",
 }
 
 pipeline = r"(?P<shellcommand>\|.*)?"

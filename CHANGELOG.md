@@ -1,3 +1,11 @@
+## UPCOMING
+
+- Feature: `CLIENT KILL` now support `LADDR` argument.
+- Feature: `CLIENT LIST` now support `ID` argument.
+- Feature: `CLIENT PAUSE` support options and added `CLIENT UNPAUSE` command.
+- Feature: `CLIENT TRACKING` support multiple prefixes.
+- Feature: new command: `CLIENT TRACKINGINFO`.
+
 ## 1.11.1
 
 - Bugfix: Switch `distutils.version` to `packaging.version` to fix the version parse
@@ -16,6 +24,12 @@
   command like `BLPOP`.
 - Test: IRedis now tested under ubuntu-latest (before is ubuntu-16.04)
 - Dependency: Support Python 3.10 now, thanks to [tssujt].
+- Add new command group: `bitmap`.
+- Support new command in Redis:
+  - `ACL GETUSER`
+  - `ACL HELP`
+  - `BLMOVE`
+  - `CLIENT INFO`
 
 ### 1.9.4
 

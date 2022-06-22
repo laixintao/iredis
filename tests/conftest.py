@@ -1,4 +1,5 @@
 import os
+import re
 import tempfile
 from textwrap import dedent
 
@@ -15,6 +16,22 @@ from iredis.config import Config, config as global_config
 
 TIMEOUT = 2
 HISTORY_FILE = ".iredis_history"
+
+
+@pytest.fixture
+def token_should_match():
+    def match_func(token, tomatch):
+        assert re.fullmatch(token, tomatch) is not None
+
+    return match_func
+
+
+@pytest.fixture
+def token_should_not_match():
+    def match_func(token, tomatch):
+        assert re.fullmatch(token, tomatch) is None
+
+    return match_func
 
 
 @pytest.fixture
