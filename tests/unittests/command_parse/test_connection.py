@@ -108,12 +108,9 @@ def test_client_tracking(judge_command):
         },
     )
 
+
 def test_client_pause(judge_command):
     judge_command(
         "CLIENT PAUSE 20 WRITE",
-        {
-            "command": "CLIENT PAUSE",
-            "timeout": "20",
-            "pause_type": "WRITE"
-        },
+        {"command": "CLIENT PAUSE", "timeout": "20", "pause_type": "WRITE"},
     )

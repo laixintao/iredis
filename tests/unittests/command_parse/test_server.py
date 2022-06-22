@@ -33,12 +33,18 @@ def test_client_list(judge_command):
 
     judge_command(
         "client list TYPE REPLICA id 1 2 3",
-        {"command": "client list", "type_const": "TYPE", "conntype": "REPLICA", "clientids": "1 2 3"},
+        {
+            "command": "client list",
+            "type_const": "TYPE",
+            "conntype": "REPLICA",
+            "clientids": "1 2 3",
+        },
     )
     judge_command(
         "client list  ID 1 2 3",
         {"command": "client list", "clientids": "1 2 3"},
     )
+
 
 def test_configset(judge_command):
     judge_command(
