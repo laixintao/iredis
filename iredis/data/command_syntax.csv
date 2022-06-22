@@ -37,7 +37,8 @@ connection,CLIENT GETNAME,command,render_bulk_string
 connection,CLIENT ID,command,render_int
 connection,CLIENT INFO,command,render_bulk_string_decode
 connection,CLIENT KILL,command_clientkill,render_string_or_int
-connection,CLIENT PAUSE,command_timeout,render_simple_string
+connection,CLIENT PAUSE,command_pause,render_simple_string
+connection,CLIENT UNPAUSE,command,render_simple_string
 connection,CLIENT REPLY,command_switch,render_simple_string
 connection,CLIENT SETNAME,command_value,render_simple_string
 connection,CLIENT UNBLOCK,command_clientid_errorx,render_int

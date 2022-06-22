@@ -95,3 +95,13 @@ def test_client_tracking(judge_command):
             "optin_const": "OPTIN",
         },
     )
+
+def test_client_pause(judge_command):
+    judge_command(
+        "CLIENT PAUSE 20 WRITE",
+        {
+            "command": "CLIENT PAUSE",
+            "timeout": "20",
+            "pause_type": "WRITE"
+        },
+    )

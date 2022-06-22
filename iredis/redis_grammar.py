@@ -132,6 +132,7 @@ CONST = {
     "strings_const": "STRINGS",
     "rank_const": "RANK",
     "lr_const": "LEFT RIGHT",
+    "pause_type": "WRITE ALL",
 }
 
 
@@ -346,6 +347,7 @@ STRINGS_CONST = rf"(?P<strings_const>{c('strings_const')})"
 RANK_CONST = rf"(?P<rank_const>{c('rank_const')})"
 
 LR_CONST = rf"(?P<lr_const>{c('lr_const')})"
+PAUSE_TYPE = rf"(?P<pause_type>{c('pause_type')})"
 
 command_grammar = compile(COMMAND)
 
@@ -410,7 +412,7 @@ GRAMMAR = {
     "command_key_newkey_timeout": rf"\s+ {KEY} \s+ {NEWKEY} \s+ {TIMEOUT} \s*",
     "command_keys_timeout": rf"\s+ {KEYS} \s+ {TIMEOUT} \s*",
     "command_count_timeout": rf"\s+ {COUNT} \s+ {TIMEOUT} \s*",
-    "command_timeout": rf"\s+ {TIMEOUT} \s*",
+    "command_pause": rf"\s+ {TIMEOUT} (\s+ {PAUSE_TYPE})? \s*",
     "command_key_positionchoice_pivot_value": rf"""
         \s+ {KEY} \s+ {POSITION_CHOICE} \s+ {VALUE} \s+ {VALUE} \s*""",
     "command_pass": rf"\s+ {ANY} \s*",
