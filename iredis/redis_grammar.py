@@ -238,16 +238,16 @@ LEXMAX = rf"(?P<lexmax>{LEXNUM})"
 WEIGHTS = rf"(?P<weights>{_FLOAT}(\s+{_FLOAT})*)"
 IP_PORT = rf"(?P<ip_port>{IP}:{PORT})"
 HOST = rf"(?P<host>{VALID_TOKEN})"
-MIN = fr"(?P<min>{NNUM})"
-MAX = fr"(?P<max>{NNUM})"
-POSITION = fr"(?P<position>{NNUM})"
-TIMEOUT = fr"(?P<timeout>{DOUBLE})"
-SCORE = fr"(?P<score>{_FLOAT})"
-LEXMIN = fr"(?P<lexmin>{LEXNUM})"
-LEXMAX = fr"(?P<lexmax>{LEXNUM})"
-WEIGHTS = fr"(?P<weights>{_FLOAT}(\s+{_FLOAT})*)"
-IP_PORT = fr"(?P<ip_port>{IP}:{PORT})"
-HOST = fr"(?P<host>{VALID_TOKEN})"
+MIN = rf"(?P<min>{NNUM})"
+MAX = rf"(?P<max>{NNUM})"
+POSITION = rf"(?P<position>{NNUM})"
+TIMEOUT = rf"(?P<timeout>{DOUBLE})"
+SCORE = rf"(?P<score>{_FLOAT})"
+LEXMIN = rf"(?P<lexmin>{LEXNUM})"
+LEXMAX = rf"(?P<lexmax>{LEXNUM})"
+WEIGHTS = rf"(?P<weights>{_FLOAT}(\s+{_FLOAT})*)"
+IP_PORT = rf"(?P<ip_port>{IP}:{PORT})"
+HOST = rf"(?P<host>{VALID_TOKEN})"
 
 # const choices
 FAILOVERCHOICE = rf"(?P<failoverchoice>{c('failoverchoice')})"
@@ -341,7 +341,7 @@ WITHMATCHLEN_CONST = rf"(?P<withmatchlen_const>{c('withmatchlen_const')})"
 STRINGS_CONST = rf"(?P<strings_const>{c('strings_const')})"
 RANK_CONST = rf"(?P<rank_const>{c('rank_const')})"
 
-LR_CONST = fr"(?P<lr_const>{c('lr_const')})"
+LR_CONST = rf"(?P<lr_const>{c('lr_const')})"
 
 command_grammar = compile(COMMAND)
 
@@ -621,7 +621,7 @@ GRAMMAR = {
             (\s+ {MAXLEN} \s+ {LEN})
         )*
         \s*""",
-    "command_key_key_lr_lr_timeout": fr"""
+    "command_key_key_lr_lr_timeout": rf"""
         \s+ {KEY} \s+ {KEY}
         \s+ {LR_CONST} \s+ {LR_CONST}
         \s+ {TIMEOUT} \s*""",
