@@ -3,6 +3,7 @@
 - Feature: `CLIENT KILL` now support `LADDR` argument.
 - Feature: `CLIENT LIST` now support `ID` argument.
 - Feature: `CLIENT PAUSE` support options and added `CLIENT UNPAUSE` command.
+- Feature: `CLIENT TRACKING` support multiple prefixes.
 
 ## 1.11.1
 

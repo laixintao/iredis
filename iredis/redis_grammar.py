@@ -161,8 +161,9 @@ SLOT = rf"(?P<slot>{VALID_SLOT})"
 SLOTS = rf"(?P<slots>{VALID_SLOT}(\s+{VALID_SLOT})*)"
 NODE = rf"(?P<node>{VALID_NODE})"
 KEY = rf"(?P<key>{VALID_TOKEN})"
-PREFIX = rf"(?P<prefix>{VALID_TOKEN})"
 KEYS = rf"(?P<keys>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
+PREFIX = rf"(?P<prefix>{VALID_TOKEN})"
+PREFIXES = rf"(?P<prefixes>{VALID_TOKEN}(\s+{VALID_TOKEN})*?)"
 DESTINATION = rf"(?P<destination>{VALID_TOKEN})"
 NEWKEY = rf"(?P<newkey>{VALID_TOKEN})"
 VALUE = rf"(?P<value>{VALID_TOKEN})"
@@ -598,7 +599,7 @@ GRAMMAR = {
         \s+ {ON_OFF}
         (
             (\s+ {REDIRECT_CONST} \s+ {CLIENTID})|
-            (\s+ {PREFIX_CONST} \s+ {PREFIX})|
+            (\s+ {PREFIX_CONST} \s+ {PREFIXES})|
             (\s+ {BCAST_CONST})|
             (\s+ {OPTIN_CONST})|
             (\s+ {OPTOUT_CONST})|
