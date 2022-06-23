@@ -446,10 +446,10 @@ GRAMMAR = {
     "command_key_members": rf"\s+ {KEY} \s+ {MEMBERS} \s*",
     "command_geodist": rf"\s+ {KEY} \s+ {MEMBER} \s+ {MEMBER} (\s+ {DISTUNIT})? \s*",
     "command_key_longitude_latitude_members": rf"""
-        \s+ {KEY} 
+        \s+ {KEY}
         (\s+ {CONDITION})?
         (\s+ {CHANGED})?
-        (\s+ {LONGITUDE} \s+ {LATITUDE} \s {MEMBER})+ 
+        (\s+ {LONGITUDE} \s+ {LATITUDE} \s {MEMBER})+
     \s*""",
     "command_destination_keys": rf"\s+ {DESTINATION} \s+ {KEYS} \s*",
     "command_object_key": rf"\s+ {OBJECT} \s+ {KEY} \s*",
