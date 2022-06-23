@@ -225,3 +225,48 @@ def test_acl_setuser(judge_command):
 def test_acl_getuser(judge_command):
     judge_command("acl getuser alan", {"command": "acl getuser", "username": "alan"})
     judge_command("acl getuser", None)
+
+
+def test_failover(judge_command):
+    judge_command(
+        "failover to 10.0.0.5 7379 abort timeout 101",
+        {
+            "command": "failover",
+            "to_const": "to",
+            "host": "10.0.0.5",
+            "port": "7379",
+            "abort_const": "abort",
+            "timeout_const": "timeout",
+            "millisecond": "101",
+        },
+    )
+    judge_command(
+        "failover abort timeout 101",
+        {
+            "command": "failover",
+            "abort_const": "abort",
+            "timeout_const": "timeout",
+            "millisecond": "101",
+        },
+    )
+    judge_command(
+        "failover timeout 101",
+        {
+            "command": "failover",
+            "timeout_const": "timeout",
+            "millisecond": "101",
+        },
+    )
+    judge_command(
+        "failover to 10.0.0.5 7379 force abort timeout 101",
+        {
+            "command": "failover",
+            "to_const": "to",
+            "force": "force",
+            "host": "10.0.0.5",
+            "port": "7379",
+            "abort_const": "abort",
+            "timeout_const": "timeout",
+            "millisecond": "101",
+        },
+    )

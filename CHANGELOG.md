@@ -6,6 +6,13 @@
 - Feature: `CLIENT TRACKING` support multiple prefixes.
 - Feature: support new command: `CLIENT TRACKINGINFO`.
 - Feature: support new command: `COPY`.
+- Feature: support new command: `EVAL_RO` and `EVALSHA_RO`.
+- Feature: support new command: `EXPIRETIME`.
+- Feature: support new command: `FAILOVER`.
+- Feature: `FLUSHDB` and `FLUSHALL` supports `SYNC` option.
+- Feature: `GEOADD` supports `CH XX NX` options.
+- Deprecate: `GEORADIUS` is deprecated, no auto-complete for this command anymore.
+- Deprecate: `GEORADIUSBYMEMBER` is deprecated, no auto-complete for this command anymore.
 
 ## 1.11.1
 

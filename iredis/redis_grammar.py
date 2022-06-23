@@ -32,7 +32,7 @@ CONST = {
     "type": "string list set zset hash stream",
     "position_choice": "BEFORE AFTER",
     "error": "TIMEOUT ERROR",
-    "async": "ASYNC",
+    "async": "ASYNC SYNC",
     "conntype": "NORMAL MASTER REPLICA PUBSUB",
     "samples": "SAMPLES",
     "slotsubcmd": "IMPORTING MIGRATING NODE STABLE",
@@ -135,6 +135,9 @@ CONST = {
     "pause_type": "WRITE ALL",
     "db_const": "DB",
     "replace_const": "REPLACE",
+    "to_const": "TO",
+    "timeout_const": "TIMEOUT",
+    "abort_const": "ABORT",
 }
 
 
@@ -218,7 +221,7 @@ SECOND = rf"(?P<second>{NUM})"
 TIMESTAMP = rf"(?P<timestamp>{NUM})"
 # TODO test lexer & completer for multi spaces in command
 # For now, redis command can have one space at most
-COMMAND = "(\s*  (?P<command>[\w -]+))"
+COMMAND = r"(\s*  (?P<command>[\w -]+))"
 MILLISECOND = rf"(?P<millisecond>{NUM})"
 TIMESTAMPMS = rf"(?P<timestampms>{NUM})"
 ANY = r"(?P<any>.*)"  # TODO deleted
@@ -230,15 +233,14 @@ END = rf"(?P<end>{NNUM})"
 # https://redis.io/topics/streams-intro#special-ids-in-the-streams-api
 # stream id, DO NOT use r"" here, or the \+ will be two string
 # NOTE: if miss the outer (), multi IDS won't work.
-STREAM_ID = "(?P<stream_id>[T\d:>+*\-\$]+)"
+STREAM_ID = r"(?P<stream_id>[T\d:>+*\-\$]+)"
 
 DELTA = rf"(?P<delta>{NNUM})"
 OFFSET = rf"(?P<offset>{NUM})"  # string offset, can't be negative
-SHARP_OFFSET = f"(?P<offset>\#?{NUM})"  # for bitfield command
+SHARP_OFFSET = rf"(?P<offset>\#?{NUM})"  # for bitfield command
 MIN = rf"(?P<min>{NNUM})"
 MAX = rf"(?P<max>{NNUM})"
 POSITION = rf"(?P<position>{NNUM})"
-TIMEOUT = rf"(?P<timeout>{NUM})"
 SCORE = rf"(?P<score>{_FLOAT})"
 LEXMIN = rf"(?P<lexmin>{LEXNUM})"
 LEXMAX = rf"(?P<lexmax>{LEXNUM})"
@@ -353,6 +355,9 @@ LR_CONST = rf"(?P<lr_const>{c('lr_const')})"
 PAUSE_TYPE = rf"(?P<pause_type>{c('pause_type')})"
 DB_CONST = rf"(?P<db_const>{c('db_const')})"
 REPLACE_CONST = rf"(?P<replace_const>{c('replace_const')})"
+TO_CONST = rf"(?P<to_const>{c('to_const')})"
+TIMEOUT_CONST = rf"(?P<timeout_const>{c('timeout_const')})"
+ABORT_CONST = rf"(?P<abort_const>{c('abort_const')})"
 
 command_grammar = compile(COMMAND)
 
@@ -364,14 +369,6 @@ command_grammar = compile(COMMAND)
 GRAMMAR = {
     "command_key": rf"\s+ {KEY} \s*",
     "command_pattern": rf"\s+ {PATTERN} \s*",
-    "command_georadiusbymember": rf"""
-        \s+ {KEY} \s+ {MEMBER}
-        \s+ {FLOAT} \s+ {DISTUNIT}
-        (\s+ {GEOCHOICE})*
-        (\s+ {COUNT_CONST} \s+ {COUNT})?
-        (\s+ {ORDER})?
-        (\s+ {CONST_STORE} \s+ {KEY})?
-        (\s+ {CONST_STOREDIST} \s+ {KEY})? \s*""",
     "command_command": rf"\s+ {COMMAND} \s*",
     "command_slots": rf"\s+ {SLOTS} \s*",
     "command_node": rf"\s+ {NODE} \s*",
@@ -449,7 +446,11 @@ GRAMMAR = {
     "command_key_members": rf"\s+ {KEY} \s+ {MEMBERS} \s*",
     "command_geodist": rf"\s+ {KEY} \s+ {MEMBER} \s+ {MEMBER} (\s+ {DISTUNIT})? \s*",
     "command_key_longitude_latitude_members": rf"""
-        \s+ {KEY} (\s+ {LONGITUDE} \s+ {LATITUDE} \s {MEMBER})+ \s*""",
+        \s+ {KEY}
+        (\s+ {CONDITION})?
+        (\s+ {CHANGED})?
+        (\s+ {LONGITUDE} \s+ {LATITUDE} \s {MEMBER})+
+    \s*""",
     "command_destination_keys": rf"\s+ {DESTINATION} \s+ {KEYS} \s*",
     "command_object_key": rf"\s+ {OBJECT} \s+ {KEY} \s*",
     "command_key_member": rf"\s+ {KEY} \s+ {MEMBER} \s*",
@@ -504,12 +505,6 @@ GRAMMAR = {
         )?
         (\s+ {CONST_KEYS} \s+ {KEYS})?
     \s*""",
-    "command_radius": rf"""\s+ {KEY}
-        \s+ {LONGITUDE} \s+ {LATITUDE} \s+ {FLOAT} \s+ {DISTUNIT}
-        (\s+ {GEOCHOICE})* (\s+ {COUNT_CONST} \s+ {COUNT})?
-        (\s+ {ORDER})?
-        (\s+ {CONST_STORE} \s+ {KEY})?
-        (\s+ {CONST_STOREDIST} \s+ {KEY})? \s*""",
     "command_restore": rf"""\s+ {KEY}
         \s+ {TIMEOUT} \s+ {VALUE} (\s+ {SUBRESTORE} \s+ {SECOND})? \s*""",
     "command_pubsubcmd_channels": rf"\s+ {PUBSUBCMD} (\s+ {CHANNEL})+ \s*",
@@ -645,6 +640,12 @@ GRAMMAR = {
         \s+ {KEY} \s+ {KEY}
         (\s+ {DB_CONST} \s+ {INDEX})?
         (\s+ {REPLACE_CONST})?
+        \s*""",
+    "command_failover": rf"""
+        (\s+ {TO_CONST} \s+ {HOST} \s+ {PORT} (\s+ {FORCE})? )?
+        (\s+ {ABORT_CONST})?
+        (\s+ {TIMEOUT_CONST} \s+ {MILLISECOND})?
+
         \s*""",
 }
 

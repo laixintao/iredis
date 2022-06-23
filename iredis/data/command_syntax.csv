@@ -49,6 +49,7 @@ generic,DUMP,command_key,render_bulk_string
 generic,EXISTS,command_keys,render_int
 generic,EXPIRE,command_key_second,render_int
 generic,EXPIREAT,command_key_timestamp,render_int
+generic,EXPIRETIME,command_key,render_int
 generic,KEYS,command_pattern,command_keys
 generic,MIGRATE,command_migrate,render_simple_string
 generic,MOVE,command_key_index,render_int
@@ -72,8 +73,8 @@ geo,GEOADD,command_key_longitude_latitude_members,render_int
 geo,GEODIST,command_geodist,render_bulk_string
 geo,GEOHASH,command_key_members,render_list
 geo,GEOPOS,command_key_members,render_list
-geo,GEORADIUS,command_radius,render_list_or_string
-geo,GEORADIUSBYMEMBER,command_georadiusbymember,render_list_or_string
+geo,GEORADIUS,command_any,render_list_or_string
+geo,GEORADIUSBYMEMBER,command_any,render_list_or_string
 hash,HDEL,command_key_fields,render_int
 hash,HEXISTS,command_key_field,render_int
 hash,HGET,command_key_field,render_bulk_string
@@ -118,7 +119,9 @@ pubsub,PUNSUBSCRIBE,command_channels,render_subscribe
 pubsub,SUBSCRIBE,command_channels,render_subscribe
 pubsub,UNSUBSCRIBE,command_channels,render_subscribe
 scripting,EVAL,command_lua_any,render_list_or_string
+scripting,EVAL_RO,command_lua_any,render_list_or_string
 scripting,EVALSHA,command_any,render_list_or_string
+scripting,EVALSHA_RO,command_any,render_list_or_string
 scripting,SCRIPT DEBUG,command_scriptdebug,render_simple_string
 scripting,SCRIPT EXISTS,command_any,render_list
 scripting,SCRIPT FLUSH,command,render_simple_string
@@ -150,6 +153,7 @@ server,CONFIG SET,command_parameter_value,render_simple_string
 server,DBSIZE,command,render_int
 server,DEBUG OBJECT,command_key,render_simple_string
 server,DEBUG SEGFAULT,command,render_simple_string
+server,FAILOVER,command_failover,render_simple_string
 server,FLUSHALL,command_asyncx,render_simple_string
 server,FLUSHDB,command_asyncx,render_simple_string
 server,INFO,command_sectionx,render_bulk_string_decode
