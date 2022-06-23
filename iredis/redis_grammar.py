@@ -369,14 +369,6 @@ command_grammar = compile(COMMAND)
 GRAMMAR = {
     "command_key": rf"\s+ {KEY} \s*",
     "command_pattern": rf"\s+ {PATTERN} \s*",
-    "command_georadiusbymember": rf"""
-        \s+ {KEY} \s+ {MEMBER}
-        \s+ {FLOAT} \s+ {DISTUNIT}
-        (\s+ {GEOCHOICE})*
-        (\s+ {COUNT_CONST} \s+ {COUNT})?
-        (\s+ {ORDER})?
-        (\s+ {CONST_STORE} \s+ {KEY})?
-        (\s+ {CONST_STOREDIST} \s+ {KEY})? \s*""",
     "command_command": rf"\s+ {COMMAND} \s*",
     "command_slots": rf"\s+ {SLOTS} \s*",
     "command_node": rf"\s+ {NODE} \s*",
@@ -513,12 +505,6 @@ GRAMMAR = {
         )?
         (\s+ {CONST_KEYS} \s+ {KEYS})?
     \s*""",
-    "command_radius": rf"""\s+ {KEY}
-        \s+ {LONGITUDE} \s+ {LATITUDE} \s+ {FLOAT} \s+ {DISTUNIT}
-        (\s+ {GEOCHOICE})* (\s+ {COUNT_CONST} \s+ {COUNT})?
-        (\s+ {ORDER})?
-        (\s+ {CONST_STORE} \s+ {KEY})?
-        (\s+ {CONST_STOREDIST} \s+ {KEY})? \s*""",
     "command_restore": rf"""\s+ {KEY}
         \s+ {TIMEOUT} \s+ {VALUE} (\s+ {SUBRESTORE} \s+ {SECOND})? \s*""",
     "command_pubsubcmd_channels": rf"\s+ {PUBSUBCMD} (\s+ {CHANNEL})+ \s*",
