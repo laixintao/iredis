@@ -262,7 +262,7 @@ def test_failover(judge_command):
         {
             "command": "failover",
             "to_const": "to",
-            "force_const": "force",
+            "force": "force",
             "host": "10.0.0.5",
             "port": "7379",
             "abort_const": "abort",
