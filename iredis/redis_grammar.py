@@ -136,6 +136,8 @@ CONST = {
     "db_const": "DB",
     "replace_const": "REPLACE",
     "to_const": "TO",
+    "timeout_const": "TIMEOUT",
+    "abort_const": "ABORT",
 }
 
 
@@ -219,7 +221,7 @@ SECOND = rf"(?P<second>{NUM})"
 TIMESTAMP = rf"(?P<timestamp>{NUM})"
 # TODO test lexer & completer for multi spaces in command
 # For now, redis command can have one space at most
-COMMAND = "(\s*  (?P<command>[\w -]+))"
+COMMAND = r"(\s*  (?P<command>[\w -]+))"
 MILLISECOND = rf"(?P<millisecond>{NUM})"
 TIMESTAMPMS = rf"(?P<timestampms>{NUM})"
 ANY = r"(?P<any>.*)"  # TODO deleted
@@ -231,15 +233,14 @@ END = rf"(?P<end>{NNUM})"
 # https://redis.io/topics/streams-intro#special-ids-in-the-streams-api
 # stream id, DO NOT use r"" here, or the \+ will be two string
 # NOTE: if miss the outer (), multi IDS won't work.
-STREAM_ID = "(?P<stream_id>[T\d:>+*\-\$]+)"
+STREAM_ID = r"(?P<stream_id>[T\d:>+*\-\$]+)"
 
 DELTA = rf"(?P<delta>{NNUM})"
 OFFSET = rf"(?P<offset>{NUM})"  # string offset, can't be negative
-SHARP_OFFSET = f"(?P<offset>\#?{NUM})"  # for bitfield command
+SHARP_OFFSET = rf"(?P<offset>\#?{NUM})"  # for bitfield command
 MIN = rf"(?P<min>{NNUM})"
 MAX = rf"(?P<max>{NNUM})"
 POSITION = rf"(?P<position>{NNUM})"
-TIMEOUT = rf"(?P<timeout>{NUM})"
 SCORE = rf"(?P<score>{_FLOAT})"
 LEXMIN = rf"(?P<lexmin>{LEXNUM})"
 LEXMAX = rf"(?P<lexmax>{LEXNUM})"
@@ -355,6 +356,8 @@ PAUSE_TYPE = rf"(?P<pause_type>{c('pause_type')})"
 DB_CONST = rf"(?P<db_const>{c('db_const')})"
 REPLACE_CONST = rf"(?P<replace_const>{c('replace_const')})"
 TO_CONST = rf"(?P<to_const>{c('to_const')})"
+TIMEOUT_CONST = rf"(?P<timeout_const>{c('timeout_const')})"
+ABORT_CONST = rf"(?P<abort_const>{c('abort_const')})"
 
 command_grammar = compile(COMMAND)
 
@@ -649,10 +652,10 @@ GRAMMAR = {
         (\s+ {REPLACE_CONST})?
         \s*""",
     "command_failover": rf"""
-        (\s+ {TO_CONST} \s+ {HOST} \s+ {PORT} )?
-        (\s+ {LEN_CONST})?
-        (\s+ {MINMATCHLEN_CONST} \s+ {LEN})?
-        (\s+ {WITHMATCHLEN_CONST})?
+        (\s+ {TO_CONST} \s+ {HOST} \s+ {PORT} (\s+ {FORCE})? )?
+        (\s+ {ABORT_CONST})?
+        (\s+ {TIMEOUT_CONST} \s+ {MILLISECOND})?
+
         \s*""",
 }
 

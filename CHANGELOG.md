@@ -8,6 +8,7 @@
 - Feature: support new command: `COPY`.
 - Feature: support new command: `EVAL_RO` and `EVALSHA_RO`.
 - Feature: support new command: `EXPIRETIME`.
+- Feature: support new command: `FAILOVER`.
 
 ## 1.11.1
 
