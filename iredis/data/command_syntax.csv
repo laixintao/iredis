@@ -49,6 +49,7 @@ generic,DUMP,command_key,render_bulk_string
 generic,EXISTS,command_keys,render_int
 generic,EXPIRE,command_key_second,render_int
 generic,EXPIREAT,command_key_timestamp,render_int
+generic,EXPIRETIME,command_key,render_int
 generic,KEYS,command_pattern,command_keys
 generic,MIGRATE,command_migrate,render_simple_string
 generic,MOVE,command_key_index,render_int
@@ -120,6 +121,7 @@ pubsub,UNSUBSCRIBE,command_channels,render_subscribe
 scripting,EVAL,command_lua_any,render_list_or_string
 scripting,EVAL_RO,command_lua_any,render_list_or_string
 scripting,EVALSHA,command_any,render_list_or_string
+scripting,EVALSHA_RO,command_any,render_list_or_string
 scripting,SCRIPT DEBUG,command_scriptdebug,render_simple_string
 scripting,SCRIPT EXISTS,command_any,render_list
 scripting,SCRIPT FLUSH,command,render_simple_string

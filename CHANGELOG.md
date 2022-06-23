@@ -6,7 +6,8 @@
 - Feature: `CLIENT TRACKING` support multiple prefixes.
 - Feature: support new command: `CLIENT TRACKINGINFO`.
 - Feature: support new command: `COPY`.
-- Feature: support new command: `EVAL_RO`.
+- Feature: support new command: `EVAL_RO` and `EVALSHA_RO`.
+- Feature: support new command: `EXPIRETIME`.
 
 ## 1.11.1
 

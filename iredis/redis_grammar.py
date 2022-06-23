@@ -135,6 +135,7 @@ CONST = {
     "pause_type": "WRITE ALL",
     "db_const": "DB",
     "replace_const": "REPLACE",
+    "to_const": "TO",
 }
 
 
@@ -353,6 +354,7 @@ LR_CONST = rf"(?P<lr_const>{c('lr_const')})"
 PAUSE_TYPE = rf"(?P<pause_type>{c('pause_type')})"
 DB_CONST = rf"(?P<db_const>{c('db_const')})"
 REPLACE_CONST = rf"(?P<replace_const>{c('replace_const')})"
+TO_CONST = rf"(?P<to_const>{c('to_const')})"
 
 command_grammar = compile(COMMAND)
 
@@ -645,6 +647,12 @@ GRAMMAR = {
         \s+ {KEY} \s+ {KEY}
         (\s+ {DB_CONST} \s+ {INDEX})?
         (\s+ {REPLACE_CONST})?
+        \s*""",
+    "command_failover": rf"""
+        (\s+ {TO_CONST} \s+ {HOST} \s+ {PORT} )?
+        (\s+ {LEN_CONST})?
+        (\s+ {MINMATCHLEN_CONST} \s+ {LEN})?
+        (\s+ {WITHMATCHLEN_CONST})?
         \s*""",
 }
 
