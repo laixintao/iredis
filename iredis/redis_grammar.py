@@ -32,7 +32,7 @@ CONST = {
     "type": "string list set zset hash stream",
     "position_choice": "BEFORE AFTER",
     "error": "TIMEOUT ERROR",
-    "async": "ASYNC",
+    "async": "ASYNC SYNC",
     "conntype": "NORMAL MASTER REPLICA PUBSUB",
     "samples": "SAMPLES",
     "slotsubcmd": "IMPORTING MIGRATING NODE STABLE",
@@ -454,7 +454,11 @@ GRAMMAR = {
     "command_key_members": rf"\s+ {KEY} \s+ {MEMBERS} \s*",
     "command_geodist": rf"\s+ {KEY} \s+ {MEMBER} \s+ {MEMBER} (\s+ {DISTUNIT})? \s*",
     "command_key_longitude_latitude_members": rf"""
-        \s+ {KEY} (\s+ {LONGITUDE} \s+ {LATITUDE} \s {MEMBER})+ \s*""",
+        \s+ {KEY} 
+        (\s+ {CONDITION})?
+        (\s+ {CHANGED})?
+        (\s+ {LONGITUDE} \s+ {LATITUDE} \s {MEMBER})+ 
+    \s*""",
     "command_destination_keys": rf"\s+ {DESTINATION} \s+ {KEYS} \s*",
     "command_object_key": rf"\s+ {OBJECT} \s+ {KEY} \s*",
     "command_key_member": rf"\s+ {KEY} \s+ {MEMBER} \s*",
