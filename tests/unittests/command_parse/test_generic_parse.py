@@ -215,7 +215,4 @@ def test_getex(judge_command):
         "GETEX bar exat 5",
         {"command": "GETEX", "key": "bar", "exat_const": "exat", "timestamp": "5"},
     )
-    judge_command(
-        "GETEX bar ex 5 exat 5",
-        None
-    )
+    judge_command("GETEX bar ex 5 exat 5", None)
