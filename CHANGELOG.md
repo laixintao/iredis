@@ -12,8 +12,10 @@
 - Feature: support new command: `GEOSEARCH`.
 - Feature: support new command: `GEOSEARCHRESTORE`.
 - Feature: support new command: `GETDEL`.
+- Feature: support new command: `GETEX`.
 - Feature: `FLUSHDB` and `FLUSHALL` supports `SYNC` option.
 - Feature: `GEOADD` supports `CH XX NX` options.
+- Feature: Timestamp Completers are now support completion for timestamp fields and milliseconds timestamp fields.
 - Deprecate: `GEORADIUS` is deprecated, no auto-complete for this command anymore.
 - Deprecate: `GEORADIUSBYMEMBER` is deprecated, no auto-complete for this command anymore.
 

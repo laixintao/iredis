@@ -260,6 +260,85 @@ def test_timestamp_completer_humanize_time_completion(fake_now):
     ]
 
 
+@patch("iredis.completers.pendulum.now")
+def test_timestamp_completer_humanize_time_completion_seconds(fake_now):
+    fake_now.return_value = pendulum.from_timestamp(1578487013)
+    c = TimestampCompleter(is_milliseconds=False, future_time=False)
+
+    fake_document = MagicMock()
+    fake_document.text = fake_document.text_before_cursor = "30"
+    completions = list(c.get_completions(fake_document, None))
+
+    assert completions == [
+        Completion(
+            text="1575895013",
+            start_position=-2,
+            display=FormattedText([("", "1575895013")]),
+            display_meta="30 days ago (2019-12-09 12:36:53)",
+        ),
+        Completion(
+            text="1578379013",
+            start_position=-2,
+            display=FormattedText([("", "1578379013")]),
+            display_meta="30 hours ago (2020-01-07 06:36:53)",
+        ),
+        Completion(
+            text="1578485213",
+            start_position=-2,
+            display=FormattedText([("", "1578485213")]),
+            display_meta="30 minutes ago (2020-01-08 12:06:53)",
+        ),
+        Completion(
+            text="1578486983",
+            start_position=-2,
+            display=FormattedText([("", "1578486983")]),
+            display_meta="30 seconds ago (2020-01-08 12:36:23)",
+        ),
+    ]
+
+
+@patch("iredis.completers.pendulum.now")
+def test_timestamp_completer_humanize_time_completion_seconds_future_time(fake_now):
+    fake_now.return_value = pendulum.from_timestamp(1578487013)
+    c = TimestampCompleter(is_milliseconds=False, future_time=True)
+
+    fake_document = MagicMock()
+    fake_document.text = fake_document.text_before_cursor = "30"
+    completions = list(c.get_completions(fake_document, None))
+
+    print(completions)
+    for c in completions:
+        print(c.text)
+        print(c.display)
+        print(c.display_meta)
+    assert completions == [
+        Completion(
+            text="1578487043",
+            start_position=-2,
+            display=FormattedText([("", "1578487043")]),
+            display_meta="30 seconds later (2020-01-08 12:37:23)",
+        ),
+        Completion(
+            text="1578488813",
+            start_position=-2,
+            display=FormattedText([("", "1578488813")]),
+            display_meta="30 minutes later (2020-01-08 13:06:53)",
+        ),
+        Completion(
+            text="1578595013",
+            start_position=-2,
+            display=FormattedText([("", "1578595013")]),
+            display_meta="30 hours later (2020-01-09 18:36:53)",
+        ),
+        Completion(
+            text="1581079013",
+            start_position=-2,
+            display=FormattedText([("", "1581079013")]),
+            display_meta="30 days later (2020-02-07 12:36:53)",
+        ),
+    ]
+
+
 def test_timestamp_completer_datetime_format_time_completion():
     c = TimestampCompleter(is_milliseconds=True, future_time=False)
     fake_document = MagicMock()
