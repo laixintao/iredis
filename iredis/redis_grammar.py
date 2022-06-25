@@ -220,12 +220,12 @@ CLIENTID = rf"(?P<clientid>{NUM})"
 CLIENTIDS = rf"(?P<clientids>{NUM}(\s+{NUM})*)"
 
 SECOND = rf"(?P<second>{NUM})"
-TIMESTAMP = rf"(?P<timestamp>{NUM})"
+TIMESTAMP = r"(?P<timestamp>[T\d:>+*\-\$]+)"
 # TODO test lexer & completer for multi spaces in command
 # For now, redis command can have one space at most
 COMMAND = r"(\s*  (?P<command>[\w -]+))"
 MILLISECOND = rf"(?P<millisecond>{NUM})"
-TIMESTAMPMS = rf"(?P<timestampms>{NUM})"
+TIMESTAMPMS = r"(?P<timestampms>[T\d:>+*\-\$]+)"
 ANY = r"(?P<any>.*)"  # TODO deleted
 START = rf"(?P<start>{NNUM})"
 END = rf"(?P<end>{NNUM})"
