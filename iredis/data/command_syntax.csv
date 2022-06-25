@@ -248,6 +248,7 @@ string,DECR,command_key,render_int
 string,DECRBY,command_key_delta,render_int
 string,GET,command_key,render_bulk_string
 string,GETBIT,command_key_offset,render_int
+string,GETDEL,command_key,render_bulk_string
 string,GETRANGE,command_key_start_end,render_bulk_string
 string,GETSET,command_key_value,render_bulk_string
 string,INCR,command_key,render_int

@@ -11,6 +11,7 @@
 - Feature: support new command: `FAILOVER`.
 - Feature: support new command: `GEOSEARCH`.
 - Feature: support new command: `GEOSEARCHRESTORE`.
+- Feature: support new command: `GETDEL`.
 - Feature: `FLUSHDB` and `FLUSHALL` supports `SYNC` option.
 - Feature: `GEOADD` supports `CH XX NX` options.
 - Deprecate: `GEORADIUS` is deprecated, no auto-complete for this command anymore.
