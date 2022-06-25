@@ -79,6 +79,15 @@ class TimestampCompleter(Completer):
     The timezone is read from system.
     """
 
+    def __init__(self, is_milliseconds, future_time, *args, **kwargs):
+        if is_milliseconds:
+            self.factor = 1000
+        else:
+            self.factor = 1
+
+        self.future_time = future_time
+        super().__init__(*args, **kwargs)
+
     when_lower_than = {
         "year": 20,
         "month": 12,
@@ -96,10 +105,17 @@ class TimestampCompleter(Completer):
         now = pendulum.now()
         for unit, minimum in self.when_lower_than.items():
             if current <= minimum:
-                dt = now.subtract(**{f"{unit}s": current})
-                meta = f"{text} {unit}{'s' if current > 1 else ''} ago ({dt.format('YYYY-MM-DD HH:mm:ss')})"
+
+                if self.future_time:
+                    dt = now.add(**{f"{unit}s": current})
+                    offset_text = "later"
+                else:
+                    dt = now.subtract(**{f"{unit}s": current})
+                    offset_text = "ago"
+
+                meta = f"{text} {unit}{'s' if current > 1 else ''} {offset_text} ({dt.format('YYYY-MM-DD HH:mm:ss')})"
                 yield Completion(
-                    str(dt.int_timestamp * 1000),
+                    str(dt.int_timestamp * self.factor),
                     start_position=-len(document.text_before_cursor),
                     display_meta=meta,
                 )
@@ -111,7 +127,7 @@ class TimestampCompleter(Completer):
         except Exception:
             return
         yield Completion(
-            str(dt.int_timestamp * 1000),
+            str(dt.int_timestamp * self.factor),
             start_position=-len(document.text_before_cursor),
             display_meta=str(dt),
         )
@@ -296,7 +312,16 @@ class IRedisCompleter(Completer):
             config.completer_max, []
         )
         categoryname_completer = MostRecentlyUsedFirstWordCompleter(100, [])
-        timestamp_completer = TimestampCompleter()
+
+        timestamp_ms_ago_completer = TimestampCompleter(
+            is_milliseconds=True, future_time=False
+        )
+        timestamp_ms_after_completer = TimestampCompleter(
+            is_milliseconds=True, future_time=True
+        )
+        timestamp_after_completer = TimestampCompleter(
+            is_milliseconds=False, future_time=True
+        )
         integer_type_completer = IntegerTypeCompleter()
 
         completer_mapping.update(
@@ -317,7 +342,9 @@ class IRedisCompleter(Completer):
                 # stream groups
                 "group": group_completer,
                 # stream id
-                "stream_id": timestamp_completer,
+                "stream_id": timestamp_ms_ago_completer,
+                "timestampms": timestamp_ms_after_completer,
+                "timestamp": timestamp_after_completer,
                 "inttype": integer_type_completer,
                 "categoryname": categoryname_completer,
                 "username": username_completer,

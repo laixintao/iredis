@@ -195,3 +195,24 @@ def test_copy(judge_command):
         {"command": "COPY", "key": ["foo", "bar"], "replace_const": "REPLACE"},
     )
     judge_command("COPY foo bar", {"command": "COPY", "key": ["foo", "bar"]})
+
+
+def test_getex(judge_command):
+    judge_command("GETEX foo", {"command": "GETEX", "key": "foo"})
+    judge_command(
+        "GETEX bar ex 5",
+        {"command": "GETEX", "key": "bar", "expiration": "ex", "millisecond": "5"},
+    )
+    judge_command(
+        "GETEX bar px 5",
+        {"command": "GETEX", "key": "bar", "expiration": "px", "millisecond": "5"},
+    )
+    judge_command(
+        "GETEX bar pxat 5",
+        {"command": "GETEX", "key": "bar", "pxat_const": "pxat", "timestampms": "5"},
+    )
+    judge_command(
+        "GETEX bar exat 5",
+        {"command": "GETEX", "key": "bar", "exat_const": "exat", "timestamp": "5"},
+    )
+    judge_command("GETEX bar ex 5 exat 5", None)

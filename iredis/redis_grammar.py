@@ -18,6 +18,8 @@ CONST = {
     "withscores": "WITHSCORES",
     "limit": "LIMIT",
     "expiration": "EX PX",
+    "exat_const": "EXAT",
+    "pxat_const": "PXAT",
     "condition": "NX XX",
     "keepttl": "KEEPTTL",
     "operation": "AND OR XOR NOT",
@@ -218,12 +220,12 @@ CLIENTID = rf"(?P<clientid>{NUM})"
 CLIENTIDS = rf"(?P<clientids>{NUM}(\s+{NUM})*)"
 
 SECOND = rf"(?P<second>{NUM})"
-TIMESTAMP = rf"(?P<timestamp>{NUM})"
+TIMESTAMP = r"(?P<timestamp>[T\d:>+*\-\$]+)"
 # TODO test lexer & completer for multi spaces in command
 # For now, redis command can have one space at most
 COMMAND = r"(\s*  (?P<command>[\w -]+))"
 MILLISECOND = rf"(?P<millisecond>{NUM})"
-TIMESTAMPMS = rf"(?P<timestampms>{NUM})"
+TIMESTAMPMS = r"(?P<timestampms>[T\d:>+*\-\$]+)"
 ANY = r"(?P<any>.*)"  # TODO deleted
 START = rf"(?P<start>{NNUM})"
 END = rf"(?P<end>{NNUM})"
@@ -358,6 +360,8 @@ REPLACE_CONST = rf"(?P<replace_const>{c('replace_const')})"
 TO_CONST = rf"(?P<to_const>{c('to_const')})"
 TIMEOUT_CONST = rf"(?P<timeout_const>{c('timeout_const')})"
 ABORT_CONST = rf"(?P<abort_const>{c('abort_const')})"
+PXAT_CONST = rf"(?P<pxat_const>{c('pxat_const')})"
+EXAT_CONST = rf"(?P<exat_const>{c('exat_const')})"
 
 command_grammar = compile(COMMAND)
 
@@ -454,6 +458,8 @@ GRAMMAR = {
     "command_destination_keys": rf"\s+ {DESTINATION} \s+ {KEYS} \s*",
     "command_object_key": rf"\s+ {OBJECT} \s+ {KEY} \s*",
     "command_key_member": rf"\s+ {KEY} \s+ {MEMBER} \s*",
+    "command_key_any": rf"\s+ {KEY} \s+ {ANY} \s*",
+    "command_key_key_any": rf"\s+ {KEY} \s+ {KEY} \s+ {ANY} \s*",
     "command_key_newkey_member": rf"\s+ {KEY} \s+ {NEWKEY} \s+ {MEMBER} \s*",
     "command_key_count_x": rf"\s+ {KEY} (\s+ {COUNT})? \s*",
     "command_key_min_max": rf"\s+ {KEY} \s+ {MIN} \s+ {MAX} \s*",
@@ -645,7 +651,14 @@ GRAMMAR = {
         (\s+ {TO_CONST} \s+ {HOST} \s+ {PORT} (\s+ {FORCE})? )?
         (\s+ {ABORT_CONST})?
         (\s+ {TIMEOUT_CONST} \s+ {MILLISECOND})?
-
+        \s*""",
+    "command_key_expire": rf"""
+        \s+ {KEY}
+        (
+            (\s+ {EXPIRATION} \s+ {MILLISECOND})|
+            (\s+ {PXAT_CONST} \s+ {TIMESTAMPMS})|
+            (\s+ {EXAT_CONST} \s+ {TIMESTAMP})
+        )?
         \s*""",
 }
 
