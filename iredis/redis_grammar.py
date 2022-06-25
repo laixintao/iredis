@@ -454,6 +454,7 @@ GRAMMAR = {
     "command_destination_keys": rf"\s+ {DESTINATION} \s+ {KEYS} \s*",
     "command_object_key": rf"\s+ {OBJECT} \s+ {KEY} \s*",
     "command_key_member": rf"\s+ {KEY} \s+ {MEMBER} \s*",
+    "command_key_any": rf"\s+ {KEY} \s+ {ANY} \s*",
     "command_key_newkey_member": rf"\s+ {KEY} \s+ {NEWKEY} \s+ {MEMBER} \s*",
     "command_key_count_x": rf"\s+ {KEY} (\s+ {COUNT})? \s*",
     "command_key_min_max": rf"\s+ {KEY} \s+ {MIN} \s+ {MAX} \s*",

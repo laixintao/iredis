@@ -9,6 +9,7 @@
 - Feature: support new command: `EVAL_RO` and `EVALSHA_RO`.
 - Feature: support new command: `EXPIRETIME`.
 - Feature: support new command: `FAILOVER`.
+- Feature: support new command: `GEOSEARCH`.
 - Feature: `FLUSHDB` and `FLUSHALL` supports `SYNC` option.
 - Feature: `GEOADD` supports `CH XX NX` options.
 - Deprecate: `GEORADIUS` is deprecated, no auto-complete for this command anymore.
