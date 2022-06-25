@@ -183,7 +183,7 @@ def test_group_completer():
 @patch("iredis.completers.pendulum.now")
 def test_timestamp_completer_humanize_time_completion(fake_now):
     fake_now.return_value = pendulum.from_timestamp(1578487013)
-    c = TimestampCompleter()
+    c = TimestampCompleter(is_milliseconds=True, future_time=False)
 
     fake_document = MagicMock()
     fake_document.text = fake_document.text_before_cursor = "30"
@@ -261,7 +261,7 @@ def test_timestamp_completer_humanize_time_completion(fake_now):
 
 
 def test_timestamp_completer_datetime_format_time_completion():
-    c = TimestampCompleter()
+    c = TimestampCompleter(is_milliseconds=True, future_time=False)
     fake_document = MagicMock()
     fake_document.text = fake_document.text_before_cursor = "2020-02-07"
     completions = list(c.get_completions(fake_document, None))
@@ -299,14 +299,18 @@ def test_completion_casing():
         completion.text for completion in c.get_completions(fake_document, None)
     ] == [
         "get",
+        "getex",
         "getset",
+        "getdel",
         "getbit",
         "geopos",
         "geoadd",
         "geohash",
         "geodist",
         "getrange",
+        "geosearch",
         "georadius",
+        "geosearchstore",
         "georadiusbymember",
     ]
 
@@ -314,19 +318,19 @@ def test_completion_casing():
     fake_document.text = fake_document.text_before_cursor = "GET"
     assert [
         completion.text for completion in c.get_completions(fake_document, None)
-    ] == ["GET", "GETSET", "GETBIT", "GETRANGE"]
+    ] == ["GET", "GETEX", "GETSET", "GETDEL", "GETBIT", "GETRANGE"]
 
     c = IRedisCompleter(completion_casing="upper")
     fake_document.text = fake_document.text_before_cursor = "get"
     assert [
         completion.text for completion in c.get_completions(fake_document, None)
-    ] == ["GET", "GETSET", "GETBIT", "GETRANGE"]
+    ] == ["GET", "GETEX", "GETSET", "GETDEL", "GETBIT", "GETRANGE"]
 
     c = IRedisCompleter(completion_casing="lower")
     fake_document.text = fake_document.text_before_cursor = "GET"
     assert [
         completion.text for completion in c.get_completions(fake_document, None)
-    ] == ["get", "getset", "getbit", "getrange"]
+    ] == ["get", "getex", "getset", "getdel", "getbit", "getrange"]
 
 
 def test_username_completer():

@@ -18,6 +18,8 @@ CONST = {
     "withscores": "WITHSCORES",
     "limit": "LIMIT",
     "expiration": "EX PX",
+    "exat_const": "EXAT",
+    "pxat_const": "PXAT",
     "condition": "NX XX",
     "keepttl": "KEEPTTL",
     "operation": "AND OR XOR NOT",
@@ -358,6 +360,8 @@ REPLACE_CONST = rf"(?P<replace_const>{c('replace_const')})"
 TO_CONST = rf"(?P<to_const>{c('to_const')})"
 TIMEOUT_CONST = rf"(?P<timeout_const>{c('timeout_const')})"
 ABORT_CONST = rf"(?P<abort_const>{c('abort_const')})"
+PXAT_CONST = rf"(?P<pxat_const>{c('pxat_const')})"
+EXAT_CONST = rf"(?P<exat_const>{c('exat_const')})"
 
 command_grammar = compile(COMMAND)
 
@@ -647,7 +651,14 @@ GRAMMAR = {
         (\s+ {TO_CONST} \s+ {HOST} \s+ {PORT} (\s+ {FORCE})? )?
         (\s+ {ABORT_CONST})?
         (\s+ {TIMEOUT_CONST} \s+ {MILLISECOND})?
-
+        \s*""",
+    "command_key_expire": rf"""
+        \s+ {KEY}
+        (
+            (\s+ {EXPIRATION} \s+ {MILLISECOND})|
+            (\s+ {PXAT_CONST} \s+ {TIMESTAMPMS})|
+            (\s+ {EXAT_CONST} \s+ {TIMESTAMP})
+        )?
         \s*""",
 }
 
