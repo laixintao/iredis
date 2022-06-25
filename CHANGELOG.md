@@ -1,4 +1,4 @@
-## UPCOMING
+## 1.12
 
 - Feature: `CLIENT KILL` now support `LADDR` argument.
 - Feature: `CLIENT LIST` now support `ID` argument.
@@ -19,7 +19,7 @@
 - Deprecate: `GEORADIUS` is deprecated, no auto-complete for this command anymore.
 - Deprecate: `GEORADIUSBYMEMBER` is deprecated, no auto-complete for this command anymore.
 
-## 1.11.1
+### 1.11.1
 
 - Bugfix: Switch `distutils.version` to `packaging.version` to fix the version parse
   for windows. (new dependency: pypi's python-packaging.
