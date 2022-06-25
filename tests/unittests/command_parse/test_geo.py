@@ -32,3 +32,14 @@ def test_geosearch(judge_command):
             "any": "FROMLONLAT 15 37 BYBOX 400 400 km ASC WITHCOORD WITHDIST",
         },
     )
+
+
+def test_geosearchstore(judge_command):
+    judge_command(
+        "GEOSEARCHSTORE key2 Sicily FROMLONLAT 15 37 BYBOX 400 400 km ASC COUNT 3 STOREDIST",
+        {
+            "command": "GEOSEARCHSTORE",
+            "key": ["Sicily", "key2"],
+            "any": "FROMLONLAT 15 37 BYBOX 400 400 km ASC COUNT 3 STOREDIST",
+        },
+    )
