@@ -87,6 +87,7 @@ hash,HKEYS,command_key,command_hkeys
 hash,HLEN,command_key,render_int
 hash,HMGET,command_key_fields,render_list
 hash,HMSET,command_key_fieldvalues,render_bulk_string
+hash,HRANDFIELD,command_key_count_withvalues,render_list_or_string
 hash,HSCAN,command_key_cursor_match_pattern_count,command_hscan
 hash,HSET,command_key_field_value,render_int
 hash,HSETNX,command_key_field_value,render_int

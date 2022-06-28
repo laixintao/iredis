@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 CONST = {
     "failoverchoice": "TAKEOVER FORCE",
     "withscores": "WITHSCORES",
+    "withvalues_const": "WITHVALUES",
     "limit": "LIMIT",
     "expiration": "EX PX",
     "exat_const": "EXAT",
@@ -362,6 +363,7 @@ TIMEOUT_CONST = rf"(?P<timeout_const>{c('timeout_const')})"
 ABORT_CONST = rf"(?P<abort_const>{c('abort_const')})"
 PXAT_CONST = rf"(?P<pxat_const>{c('pxat_const')})"
 EXAT_CONST = rf"(?P<exat_const>{c('exat_const')})"
+WITHVALUES_CONST = rf"(?P<withvalues_const>{c('withvalues_const')})"
 
 command_grammar = compile(COMMAND)
 
@@ -659,6 +661,10 @@ GRAMMAR = {
             (\s+ {PXAT_CONST} \s+ {TIMESTAMPMS})|
             (\s+ {EXAT_CONST} \s+ {TIMESTAMP})
         )?
+        \s*""",
+    "command_key_count_withvalues": rf"""
+        \s+ {KEY}
+        (\s+ {COUNT} (\s+ {WITHVALUES_CONST})?)?
         \s*""",
 }
 

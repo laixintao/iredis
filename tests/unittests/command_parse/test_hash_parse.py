@@ -43,3 +43,24 @@ def test_hset(judge_command):
         "HSET foo bar hello",
         {"command": "HSET", "key": "foo", "field": "bar", "value": "hello"},
     )
+
+
+def test_hrandfield(judge_command):
+    judge_command(
+        "HRANDFIELD coin",
+        {"command": "HRANDFIELD", "key": "coin"},
+    )
+    judge_command(
+        "HRANDFIELD coin -5 WITHVALUES",
+        {
+            "command": "HRANDFIELD",
+            "key": "coin",
+            "count": "-5",
+            "withvalues_const": "WITHVALUES",
+        },
+    )
+    judge_command(
+        "HRANDFIELD coin -5",
+        {"command": "HRANDFIELD", "key": "coin", "count": "-5"},
+    )
+    judge_command("HRANDFIELD coin WITHVALUES", None)

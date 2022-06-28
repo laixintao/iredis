@@ -1,3 +1,7 @@
+## UPCOMING
+
+- Feature: support new command: `HRANDFIELD`.
+
 ## 1.12
 
 - Feature: `CLIENT KILL` now support `LADDR` argument.
