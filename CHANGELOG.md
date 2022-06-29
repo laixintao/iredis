@@ -1,6 +1,7 @@
 ## UPCOMING
 
 - Feature: support new command: `HRANDFIELD`.
+- Bugfix: all tests pass on redis:7 now.
 
 ## 1.12
 
