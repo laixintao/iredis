@@ -1,3 +1,4 @@
+import os
 import re
 import pytest
 import redis
@@ -18,6 +19,11 @@ from ..helpers import formatted_text_rematch
 @pytest.fixture
 def completer():
     return IRedisCompleter()
+
+
+zset_type = "ziplist"
+if os.environ["REDIS_VERSION"] == "7":
+    zset_type = "listpack"
 
 
 @pytest.mark.parametrize(
@@ -169,7 +175,16 @@ def test_not_retry_on_authentication_error(iredis_client, config):
         iredis_client.execute("None", "GET", ["foo"])
 
 
-@pytest.mark.skipif("int(os.environ['REDIS_VERSION']) < 6")
+@pytest.mark.skipif(
+    "int(os.environ['REDIS_VERSION']) != 6",
+    reason="""
+in redis7, it will not work if you:
+1. connect redis without password
+2. set a password
+3. auth
+
+the auth will fail""",
+)
 def test_auto_select_db_and_auth_for_reconnect_only_6(iredis_client, config):
     config.retry_times = 2
     config.raw = True
@@ -337,12 +352,13 @@ def test_peek_zset_fetch_all(iredis_client, clean_redis):
         "myzset", dict(zip([f"hello-{index}" for index in range(3)], range(3)))
     )
     peek_result = list(iredis_client.do_peek("myzset"))
+
     formatted_text_rematch(
         peek_result[0][0:9],
         FormattedText(
             [
                 ("class:dockey", "key: "),
-                ("", r"zset \(ziplist\)  mem: \d+ bytes, ttl: -1"),
+                ("", rf"zset \({zset_type}\)  mem: \d+ bytes, ttl: -1"),
                 ("", "\n"),
                 ("class:dockey", "zcount: "),
                 ("", "3"),
@@ -365,7 +381,7 @@ def test_peek_zset_fetch_part(iredis_client, clean_redis):
         FormattedText(
             [
                 ("class:dockey", "key: "),
-                ("", r"zset \(ziplist\)  mem: \d+ bytes, ttl: -1"),
+                ("", rf"zset \({zset_type}\)  mem: \d+ bytes, ttl: -1"),
                 ("", "\n"),
                 ("class:dockey", "zcount: "),
                 ("", "40"),
