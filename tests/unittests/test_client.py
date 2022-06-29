@@ -169,7 +169,13 @@ def test_not_retry_on_authentication_error(iredis_client, config):
         iredis_client.execute("None", "GET", ["foo"])
 
 
-@pytest.mark.skipif("int(os.environ['REDIS_VERSION']) < 6")
+@pytest.mark.skipif("int(os.environ['REDIS_VERSION']) != 6", reason="""
+in redis7, it will not work if you:
+1. connect redis without password
+2. set a password
+3. auth
+
+the auth will fail""")
 def test_auto_select_db_and_auth_for_reconnect_only_6(iredis_client, config):
     config.retry_times = 2
     config.raw = True
