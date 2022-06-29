@@ -1,3 +1,4 @@
+import os
 import re
 import pytest
 import redis
@@ -19,6 +20,9 @@ from ..helpers import formatted_text_rematch
 def completer():
     return IRedisCompleter()
 
+zset_type = "ziplist"
+if os.environ['REDIS_VERSION'] == '7':
+    zset_type = "listpack"
 
 @pytest.mark.parametrize(
     "_input, command_name, expect_args",
@@ -343,12 +347,14 @@ def test_peek_zset_fetch_all(iredis_client, clean_redis):
         "myzset", dict(zip([f"hello-{index}" for index in range(3)], range(3)))
     )
     peek_result = list(iredis_client.do_peek("myzset"))
+
+
     formatted_text_rematch(
         peek_result[0][0:9],
         FormattedText(
             [
                 ("class:dockey", "key: "),
-                ("", r"zset \(ziplist\)  mem: \d+ bytes, ttl: -1"),
+                ("", rf"zset \({zset_type}\)  mem: \d+ bytes, ttl: -1"),
                 ("", "\n"),
                 ("class:dockey", "zcount: "),
                 ("", "3"),
@@ -371,7 +377,7 @@ def test_peek_zset_fetch_part(iredis_client, clean_redis):
         FormattedText(
             [
                 ("class:dockey", "key: "),
-                ("", r"zset \(ziplist\)  mem: \d+ bytes, ttl: -1"),
+                ("", rf"zset \({zset_type}\)  mem: \d+ bytes, ttl: -1"),
                 ("", "\n"),
                 ("class:dockey", "zcount: "),
                 ("", "40"),
