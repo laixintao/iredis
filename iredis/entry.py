@@ -452,6 +452,7 @@ def main():
         ),
         enable_open_in_editor=True,
         tempfile_suffix=".redis",
+        vi_mode=config.vi_mode,
     )
 
     # print hello message
