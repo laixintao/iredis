@@ -60,7 +60,7 @@ log_location =
 
 # You can change the prompt str, if left blank, the default prompt would be:
 # 127.0.0.1:6379> 
-# which is redered by "{host}:{port}[{db}]> "
+# which is rendered by "{host}:{port}[{db}]> "
 # supported interpolations:
 # {client_name}
 # {db}
