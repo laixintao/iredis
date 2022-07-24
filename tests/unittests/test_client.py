@@ -196,8 +196,7 @@ def test_auto_select_db_and_auth_for_reconnect_only_6(iredis_client, config):
     assert (
         b"ERROR AUTH <password> called without any "
         b"password configured for the default user. "
-        b"Are you sure your configuration is correct?"
-        in resp
+        b"Are you sure your configuration is correct?" in resp
     )
     assert iredis_client.connection.password is None
 
@@ -582,3 +581,22 @@ def test_version_path(info, version):
             client = Client("127.0.0.1", "6379", None)
             client.get_server_info()
             assert mock_config.version == version
+
+
+def test_prompt():
+    c = Client()
+    assert str(c) == "127.0.0.1:6379> "
+
+    c = Client(prompt="{host} {port} {db}")
+    assert str(c) == "127.0.0.1 6379 0"
+
+    c = Client(prompt="{host} {port} {db} {username}")
+    assert str(c) == "127.0.0.1 6379 0 None"
+
+    c = Client(prompt="{host} {port} {db} {username}", username="foo1")
+    assert str(c) == "127.0.0.1 6379 0 foo1"
+
+    c = Client(prompt="{client_id} aabc")
+    assert re.match(r"^\d+ aabc$", str(c))
+    c = Client(prompt="{client_addr} >")
+    assert re.match(r"^127.0.0.1:\d+ >$", str(c))

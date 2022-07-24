@@ -2,6 +2,9 @@
 
 - Feature: support new command: `HRANDFIELD`.
 - Bugfix: all tests pass on redis:7 now.
+- Feature: IRedis now accept `username` for auth, redis server version under 6
+  will ignore `username`.
+- Feature: IRedis support prompt now, you can customize prompt string. (thanks to [aymericbeaumet])
 
 ## 1.12
 
@@ -20,14 +23,17 @@
 - Feature: support new command: `GETEX`.
 - Feature: `FLUSHDB` and `FLUSHALL` supports `SYNC` option.
 - Feature: `GEOADD` supports `CH XX NX` options.
-- Feature: Timestamp Completers are now support completion for timestamp fields and milliseconds timestamp fields.
-- Deprecate: `GEORADIUS` is deprecated, no auto-complete for this command anymore.
-- Deprecate: `GEORADIUSBYMEMBER` is deprecated, no auto-complete for this command anymore.
+- Feature: Timestamp Completers are now support completion for timestamp fields
+  and milliseconds timestamp fields.
+- Deprecate: `GEORADIUS` is deprecated, no auto-complete for this command
+  anymore.
+- Deprecate: `GEORADIUSBYMEMBER` is deprecated, no auto-complete for this
+  command anymore.
 
 ### 1.11.1
 
-- Bugfix: Switch `distutils.version` to `packaging.version` to fix the version parse
-  for windows. (new dependency: pypi's python-packaging.
+- Bugfix: Switch `distutils.version` to `packaging.version` to fix the version
+  parse for windows. (new dependency: pypi's python-packaging.
 
 ## 1.11
 
@@ -287,3 +293,4 @@
 [hanaasagi]: https://github.com/Hanaasagi
 [sid-maddy]: https://github.com/sid-maddy
 [tssujt]: https://github.com/tssujt
+[aymericbeaumet]: https://github.com/aymericbeaumet
