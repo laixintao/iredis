@@ -248,7 +248,7 @@ PAGER_HELP = """Using pager when output is too tall for your window, default to 
     "-s", "--socket", default=None, help="Server socket (overrides hostname and port)."
 )
 @click.option(
-    "-n", help="Database number.(overwrites dsn/url's db number)", default=None
+    "-n", help="Database number.(overwrites dsn/url's db number)", default=0
 )
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
 @click.option("--url", default=None, envvar="IREDIS_URL", help=URL_HELP)
