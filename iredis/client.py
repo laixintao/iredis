@@ -74,6 +74,8 @@ class Client:
         self.scheme = scheme
         self.password = password
         self.prompt = prompt
+        self.client_id = None
+        self.client_addr = None
 
         self.build_connection()
 
@@ -94,8 +96,10 @@ class Client:
         else:
             config.no_version_reason = "--no-info flag activated"
 
-        if "client_addr" or "client_id" in self.prompt:
-            pass # TODO get client info
+        if "client_addr" in self.prompt:
+            self.client_addr = ":".join(str(x) for x in self.connection._sock.getsockname())
+        if "client_id" in self.prompt:
+            self.client_id = nativestr(self.execute("CLIENG ID"))
 
         if config.version and re.match(r"([\d\.]+)", config.version):
             self.auth_compat(config.version)
@@ -138,7 +142,7 @@ class Client:
 
             # if username is set without setting paswword, password will be ignored
             if password:
-                connection_kwargs['username'] = username
+                connection_kwargs["username"] = username
 
             if scheme == "rediss":
                 connection_class = SSLConnection
@@ -150,7 +154,7 @@ class Client:
                 "password": password,
                 "path": path,
                 "client_name": client_name,
-                'username': username,
+                "username": username,
             }
             connection_class = UnixDomainSocketConnection
 
@@ -210,6 +214,8 @@ class Client:
                 path=self.path,
                 port=self.port,
                 username=self.username,
+                client_addr=self.client_addr,
+                client_id=self.client_id,
             )
 
         if self.scheme == "unix":
