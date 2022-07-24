@@ -97,7 +97,9 @@ class Client:
             config.no_version_reason = "--no-info flag activated"
 
         if self.prompt and "client_addr" in self.prompt:
-            self.client_addr = ":".join(str(x) for x in self.connection._sock.getsockname())
+            self.client_addr = ":".join(
+                str(x) for x in self.connection._sock.getsockname()
+            )
         if self.prompt and "client_id" in self.prompt:
             self.client_id = str(self.execute("CLIENT ID"))
 
