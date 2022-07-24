@@ -160,8 +160,7 @@ class Rainbow:
 
 
 def prompt_message(client):
-    # TODO custom prompt
-    text = "{hostname}> ".format(hostname=str(client))
+    text = str(client)
     if config.rainbow:
         return list(zip(Rainbow(), text))
     return text
@@ -271,6 +270,11 @@ PAGER_HELP = """Using pager when output is too tall for your window, default to 
 @click.option("--rainbow/--no-rainbow", default=None, is_flag=True, help=RAINBOW)
 @click.option("--shell/--no-shell", default=None, is_flag=True, help=SHELL)
 @click.option("--pager/--no-pager", default=None, is_flag=True, help=PAGER_HELP)
+@click.option(
+    "--prompt",
+    default=None,
+    help="Prompt format (supported interpolations: {client_name}, {db}, {host}, {path}, {port}, {username}).",
+)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
 def gather_args(
@@ -291,6 +295,7 @@ def gather_args(
     socket,
     shell,
     pager,
+    prompt,
 ):
     """
     IRedis: Interactive Redis
@@ -370,6 +375,7 @@ def create_client(params):
     db = params["n"]
     password = params["password"]
     client_name = params["client_name"]
+    prompt = params["prompt"]
 
     dsn_from_url = None
     dsn = params["dsn"]
@@ -390,6 +396,7 @@ def create_client(params):
             scheme=dsn_from_url.scheme,
             username=dsn_from_url.username,
             client_name=client_name,
+            prompt=prompt,
         )
     if params["socket"]:
         return Client(
@@ -398,9 +405,15 @@ def create_client(params):
             db=db,
             password=password,
             client_name=client_name,
+            prompt=prompt,
         )
     return Client(
-        host=host, port=port, db=db, password=password, client_name=client_name
+        host=host,
+        port=port,
+        db=db,
+        password=password,
+        client_name=client_name,
+        prompt=prompt,
     )
 
 

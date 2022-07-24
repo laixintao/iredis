@@ -63,6 +63,7 @@ class Client:
         scheme="redis",
         username=None,
         client_name=None,
+        prompt=None,
     ):
         self.host = host
         self.port = port
@@ -73,6 +74,7 @@ class Client:
         self.client_name = client_name
         self.scheme = scheme
         self.password = password
+        self.prompt = prompt
 
         self.build_connection()
 
@@ -191,6 +193,16 @@ class Client:
         config.version = version
 
     def __str__(self):
+        if self.prompt:  # not None and not empty
+            return self.prompt.format(
+                client_name=self.client_name,
+                db=self.db,
+                host=self.host,
+                path=self.path,
+                port=self.port,
+                username=self.username,
+            )
+
         if self.scheme == "unix":
             prompt = f"redis {self.path}"
         else:
@@ -198,7 +210,8 @@ class Client:
 
         if self.db:
             prompt = f"{prompt}[{self.db}]"
-        return prompt
+
+        return f"{prompt}> "
 
     def client_execute_command(self, command_name, *args):
         command = command_name.upper()
