@@ -55,8 +55,8 @@ class Client:
 
     def __init__(
         self,
-        host=None,
-        port=None,
+        host="127.0.0.1",
+        port=6379,
         db=0,
         password=None,
         path=None,
@@ -96,10 +96,10 @@ class Client:
         else:
             config.no_version_reason = "--no-info flag activated"
 
-        if "client_addr" in self.prompt:
+        if self.prompt and "client_addr" in self.prompt:
             self.client_addr = ":".join(str(x) for x in self.connection._sock.getsockname())
-        if "client_id" in self.prompt:
-            self.client_id = nativestr(self.execute("CLIENG ID"))
+        if self.prompt and "client_id" in self.prompt:
+            self.client_id = str(self.execute("CLIENT ID"))
 
         if config.version and re.match(r"([\d\.]+)", config.version):
             self.auth_compat(config.version)
