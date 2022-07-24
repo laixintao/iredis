@@ -69,7 +69,6 @@ class Client:
         self.port = port
         self.db = db
         self.path = path
-        # FIXME username is not using...
         self.username = username
         self.client_name = client_name
         self.scheme = scheme
@@ -94,6 +93,9 @@ class Client:
                 config.no_version_reason = str(e)
         else:
             config.no_version_reason = "--no-info flag activated"
+
+        if "client_addr" or "client_id" in self.prompt:
+            pass # TODO get client info
 
         if config.version and re.match(r"([\d\.]+)", config.version):
             self.auth_compat(config.version)
@@ -133,6 +135,11 @@ class Client:
                 "socket_keepalive": config.socket_keepalive,
                 "client_name": client_name,
             }
+
+            # if username is set without setting paswword, password will be ignored
+            if password:
+                connection_kwargs['username'] = username
+
             if scheme == "rediss":
                 connection_class = SSLConnection
             else:
@@ -143,6 +150,7 @@ class Client:
                 "password": password,
                 "path": path,
                 "client_name": client_name,
+                'username': username,
             }
             connection_class = UnixDomainSocketConnection
 
@@ -152,7 +160,8 @@ class Client:
             connection_kwargs["encoding_errors"] = "replace"
 
         logger.debug(
-            f"connection_class={connection_class}, connection_kwargs={connection_kwargs}"
+            f"connection_class={connection_class},"
+            f" connection_kwargs={connection_kwargs}"
         )
 
         return connection_class(**connection_kwargs)
@@ -235,7 +244,8 @@ class Client:
         Here we retry once for ConnectionError.
         """
         logger.info(
-            f"execute by connection: connection={connection}, name={command_name}, {args}, {options}"
+            f"execute by connection: connection={connection}, name={command_name},"
+            f" {args}, {options}"
         )
         retry_times = config.retry_times  # FIXME configurable
         last_error = None
@@ -261,7 +271,7 @@ class Client:
                 last_error = e
                 retry_times -= 1
                 need_refresh_connection = True
-            except (ResponseError) as e:
+            except ResponseError as e:
                 response_message = str(e)
                 if response_message.startswith("MOVED"):
                     return self.reissue_with_redirect(

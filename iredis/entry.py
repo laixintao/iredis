@@ -123,22 +123,22 @@ def write_result(text, max_height=None):
 
 class Rainbow:
     color = [
-        ("#cc2244"),
-        ("#bb4444"),
-        ("#996644"),
-        ("#cc8844"),
-        ("#ccaa44"),
-        ("#bbaa44"),
-        ("#99aa44"),
-        ("#778844"),
-        ("#55aa44"),
-        ("#33aa44"),
-        ("#11aa44"),
-        ("#11aa66"),
-        ("#11aa88"),
-        ("#11aaaa"),
-        ("#11aacc"),
-        ("#11aaee"),
+        "#cc2244",
+        "#bb4444",
+        "#996644",
+        "#cc8844",
+        "#ccaa44",
+        "#bbaa44",
+        "#99aa44",
+        "#778844",
+        "#55aa44",
+        "#33aa44",
+        "#11aa44",
+        "#11aa66",
+        "#11aa88",
+        "#11aaaa",
+        "#11aacc",
+        "#11aaee",
     ]
 
     def __init__(self):
@@ -247,8 +247,11 @@ PAGER_HELP = """Using pager when output is too tall for your window, default to 
 @click.option(
     "-s", "--socket", default=None, help="Server socket (overrides hostname and port)."
 )
+@click.option("-n", help="Database number.(overwrites dsn/url's db number)", default=0)
 @click.option(
-    "-n", help="Database number.(overwrites dsn/url's db number)", default=0
+    "-u",
+    "--username",
+    help="User name used to auth, will be ignore for redis version < 6.",
 )
 @click.option("-a", "--password", help="Password to use when connecting to the server.")
 @click.option("--url", default=None, envvar="IREDIS_URL", help=URL_HELP)
@@ -273,7 +276,10 @@ PAGER_HELP = """Using pager when output is too tall for your window, default to 
 @click.option(
     "--prompt",
     default=None,
-    help="Prompt format (supported interpolations: {client_name}, {db}, {host}, {path}, {port}, {username}).",
+    help=(
+        "Prompt format (supported interpolations: {client_name}, {db}, {host}, {path},"
+        " {port}, {username})."
+    ),
 )
 @click.version_option()
 @click.argument("cmd", nargs=-1)
@@ -282,6 +288,7 @@ def gather_args(
     h,
     p,
     n,
+    username,
     password,
     client_name,
     newbie,
@@ -316,9 +323,9 @@ def gather_args(
     load_config_files(iredisrc)
     setup_log()
     logger.info(
-        f"[commandline args] host={h}, port={p}, db={n}, newbie={newbie}, "
-        f"iredisrc={iredisrc}, decode={decode}, raw={raw}, "
-        f"cmd={cmd}, rainbow={rainbow}."
+        f"[commandline args] host={h}, port={p}, db={n}, user={username},"
+        f" newbie={newbie}, iredisrc={iredisrc}, decode={decode}, raw={raw}, cmd={cmd},"
+        f" rainbow={rainbow}."
     )
     # raw config
     if raw is not None:
@@ -373,6 +380,7 @@ def create_client(params):
     host = params["h"]
     port = params["p"]
     db = params["n"]
+    username = params["username"]
     password = params["password"]
     client_name = params["client_name"]
     prompt = params["prompt"]
@@ -403,6 +411,7 @@ def create_client(params):
             scheme="unix",
             path=params["socket"],
             db=db,
+            username=username,
             password=password,
             client_name=client_name,
             prompt=prompt,
@@ -411,6 +420,7 @@ def create_client(params):
         host=host,
         port=port,
         db=db,
+        username=username,
         password=password,
         client_name=client_name,
         prompt=prompt,

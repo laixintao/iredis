@@ -196,7 +196,8 @@ def test_auto_select_db_and_auth_for_reconnect_only_6(iredis_client, config):
     assert (
         b"ERROR AUTH <password> called without any "
         b"password configured for the default user. "
-        b"Are you sure your configuration is correct?" in resp
+        b"Are you sure your configuration is correct?"
+        in resp
     )
     assert iredis_client.connection.password is None
 
@@ -269,6 +270,13 @@ def test_peek_key_not_exist(iredis_client, clean_redis, config):
     config.raw = False
     peek_result = list(iredis_client.do_peek("non-exist-key"))
     assert peek_result == ["non-exist-key doesn't exist."]
+
+
+def test_iredis_with_username():
+    with patch("redis.connection.Connection.connect"):
+        c = Client("127.0.0.1", "6379", username="abc", password="abc1")
+        assert c.connection.username == "abc"
+        assert c.connection.password == "abc1"
 
 
 def test_peek_string(iredis_client, clean_redis):
@@ -543,29 +551,23 @@ def test_version_parse_for_auth(iredis_client):
     "info, version",
     [
         (
-            (
-                "# Server\r\nredis_version:df--128-NOTFOUND\r\n"
-                "redis_mode:standalone\r\narch_bits:64"
-            ),
+            "# Server\r\nredis_version:df--128-NOTFOUND\r\n"
+            "redis_mode:standalone\r\narch_bits:64",
             "df--128-NOTFOUND",
         ),
         (
-            (
-                "# Server\r\nredis_version:6.2.5\r\n"
-                "redis_git_sha1:00000000\r\n"
-                "redis_git_dirty:0\r\n"
-                "redis_build_id:915e5480613bc9b6\r\n"
-                "redis_mode:standalone "
-            ),
+            "# Server\r\nredis_version:6.2.5\r\n"
+            "redis_git_sha1:00000000\r\n"
+            "redis_git_dirty:0\r\n"
+            "redis_build_id:915e5480613bc9b6\r\n"
+            "redis_mode:standalone ",
             "6.2.5",
         ),
         (
-            (
-                "# Server\r\nredis_version:5.0.14.1\r\n"
-                "redis_git_sha1:00000000\r\nredis_git_dirty:0\r\n"
-                "redis_build_id:915e5480613bc9b6\r\n"
-                "redis_mode:standalone "
-            ),
+            "# Server\r\nredis_version:5.0.14.1\r\n"
+            "redis_git_sha1:00000000\r\nredis_git_dirty:0\r\n"
+            "redis_build_id:915e5480613bc9b6\r\n"
+            "redis_mode:standalone ",
             "5.0.14.1",
         ),
     ],
