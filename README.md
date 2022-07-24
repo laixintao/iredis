@@ -60,6 +60,8 @@ like `KEYS *` (see
 - Written in pure Python, but IRedis was packaged into a single binary with
   [PyOxidizer](https://github.com/indygreg/PyOxidizer), you can use cURL to
   download and run, it just works, even you don't have a Python interpreter.
+- You can change the cli prompt using `--prompt` option or set via `~/.iredisrc`
+  config file.
 - Hide password for `AUTH` command.
 - Says "Goodbye!" to you when you exit!
 - For full features, please see: [iredis.io](https://www.iredis.io)
@@ -189,6 +191,29 @@ staging=redis://username:password@staging-redis.example.com:6379/1
 
 Put this in your `iredisrc` then connect via `iredis -d staging` or
 `iredis -d dev`.
+
+### Change The Default Prompt
+
+You can change the prompt str, the default prompt is:
+
+```shell
+127.0.0.1:6379>
+```
+
+Which is rendered by `{host}:{port}[{db}]> `, you can change this via `--prompt`
+option or change
+[iredisrc](https://github.com/laixintao/iredis/blob/master/iredis/data/iredisrc)
+config file. The prompwt string uses python string format engine, supported
+interpolations:
+
+- `{client_name}`
+- `{db}`
+- `{host}`
+- `{path}`
+- `{port}`
+- `{username}`
+- `{client_addr}`
+- `{client_id}`
 
 ### Configuration
 
