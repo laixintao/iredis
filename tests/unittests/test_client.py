@@ -196,7 +196,8 @@ def test_auto_select_db_and_auth_for_reconnect_only_6(iredis_client, config):
     assert (
         b"ERROR AUTH <password> called without any "
         b"password configured for the default user. "
-        b"Are you sure your configuration is correct?" in resp
+        b"Are you sure your configuration is correct?"
+        in resp
     )
     assert iredis_client.connection.password is None
 
