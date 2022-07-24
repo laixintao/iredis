@@ -75,6 +75,7 @@ class Client:
         self.password = password
 
         # cli args --prompt will overwrite the prompt in iredisrc config file
+        self.prompt = ""
         if config.prompt:
             self.prompt = config.prompt
         if prompt:
