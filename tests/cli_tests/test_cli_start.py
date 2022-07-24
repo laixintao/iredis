@@ -81,3 +81,11 @@ def test_connect_via_socket(fake_redis_socket):
     c.expect("redis /tmp/test.sock")
 
     c.close()
+
+
+def test_iredis_start_with_prompt():
+    cli = pexpect.spawn("iredis --prompt '{host}abc{port}def{client_name}'", timeout=2)
+    cli.logfile_read = open("cli_test.log", "ab")
+    cli.expect("iredis")
+    cli.expect("127.0.0.1abc6379defNone")
+    cli.close()
