@@ -1,5 +1,8 @@
 ## UPCOMING
 
+
+### 1.12.1
+
 - Feature: support new command: `HRANDFIELD`.
 - Bugfix: all tests pass on redis:7 now.
 - Feature: IRedis now accept `username` for auth, redis server version under 6
