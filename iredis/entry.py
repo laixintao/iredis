@@ -278,7 +278,7 @@ PAGER_HELP = """Using pager when output is too tall for your window, default to 
     default=None,
     help=(
         "Prompt format (supported interpolations: {client_name}, {db}, {host}, {path},"
-        " {port}, {username})."
+        " {port}, {username}, {client_addr}, {client_id})."
     ),
 )
 @click.version_option()

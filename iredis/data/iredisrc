@@ -58,6 +58,21 @@ warning = True
 # eg. ~/.iredis.log
 log_location =
 
+# You can change the prompt str, if left blank, the default prompt would be:
+# 127.0.0.1:6379> 
+# which is rendered by "{host}:{port}[{db}]> "
+# supported interpolations:
+# {client_name}
+# {db}
+# {host}
+# {path}
+# {port}
+# {username}
+# {client_addr}
+# {client_id}
+# The prompt string uses python string format engine
+prompt = 
+
 # History file location
 history_location = ~/.iredis_history
 
