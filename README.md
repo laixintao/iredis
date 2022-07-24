@@ -215,6 +215,13 @@ interpolations:
 - `{client_addr}`
 - `{client_id}`
 
+The `--prompt` utilize
+[Python String format engine](https://docs.python.org/3/library/string.html#formatstrings),
+so as long as it is a valid string formatter, it will work( anything that
+`"<your prompt>".format(...)` accepts). For example, you can limit your Redis
+server host name's length to 5 by setting `--prompt` to
+`iredis --prompt '{host:.5s}'`.
+
 ### Configuration
 
 IRedis supports config files. Command-line options will always take precedence
