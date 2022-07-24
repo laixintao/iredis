@@ -63,6 +63,8 @@ class Config:
         self.withscores = False
         self.version = "Unknown"
 
+        self.prompt = None
+
     def __setter__(self, name, value):
         # for every time start a transaction
         # clear the queued commands first
@@ -126,5 +128,6 @@ def load_config_files(iredisrc):
     config.shell = config_obj["main"].as_bool("shell")
     config.pager = config_obj["main"].get("pager")
     config.enable_pager = config_obj["main"].as_bool("enable_pager")
+    config.prompt = config_obj["main"].get("prompt")
 
     return config_obj

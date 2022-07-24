@@ -73,7 +73,13 @@ class Client:
         self.client_name = client_name
         self.scheme = scheme
         self.password = password
-        self.prompt = prompt
+
+        # cli args --prompt will overwrite the prompt in iredisrc config file
+        if config.prompt:
+            self.prompt = config.prompt
+        if prompt:
+            self.prompt = prompt
+
         self.client_id = None
         self.client_addr = None
 

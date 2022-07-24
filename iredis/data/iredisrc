@@ -58,6 +58,8 @@ warning = True
 # eg. ~/.iredis.log
 log_location =
 
+prompt = 
+
 # History file location
 history_location = ~/.iredis_history
 
