@@ -286,6 +286,9 @@ class Client:
                 last_error = e
                 retry_times -= 1
                 need_refresh_connection = True
+            except redis.exceptions.ExecAbortError:
+                config.transaction = False
+                raise
             except ResponseError as e:
                 response_message = str(e)
                 if response_message.startswith("MOVED"):
@@ -294,9 +297,6 @@ class Client:
                     )
                 raise e
 
-            except redis.exceptions.ExecAbortError:
-                config.transaction = False
-                raise
             except KeyboardInterrupt:
                 logger.warning("received KeyboardInterrupt... rebuild connection...")
                 connection.disconnect()
@@ -308,7 +308,8 @@ class Client:
                 return None
             else:
                 return response
-        raise last_error
+        if last_error:
+            raise last_error
 
     def reissue_with_redirect(self, response, *args, **kwargs):
         """
@@ -318,13 +319,21 @@ class Client:
         This feature is not supported for unix socket connection.
         """
         # Redis Cluster only supports database zero.
-        _, slot, ip_port = response.split(" ")
+        _, _, ip_port = response.split(" ")
         ip, port = ip_port.split(":")
         port = int(port)
 
         print(response, file=sys.stderr)
 
-        connection = self.create_connection(ip, port)
+        connection = self.create_connection(
+            ip,
+            port,
+            username=self.username,
+            password=self.password,
+            path=self.path,
+            scheme=self.scheme,
+            client_name=self.client_name,
+        )
         # if user sets dsn for dest node
         # use username and password from dsn settings
         if config.alias_dsn:
