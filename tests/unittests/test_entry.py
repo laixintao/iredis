@@ -107,6 +107,7 @@ def test_command_shell_options_higher_priority():
                 db=3,
                 username=None,
                 password=None,
+                verify_ssl=None,
             ),
         ),
         (
@@ -119,6 +120,7 @@ def test_command_shell_options_higher_priority():
                 db=0,
                 username=None,
                 password=None,
+                verify_ssl=None,
             ),
         ),
         (
@@ -131,6 +133,20 @@ def test_command_shell_options_higher_priority():
                 db=0,
                 username=None,
                 password=None,
+                verify_ssl=None,
+            ),
+        ),
+        (
+            "rediss://localhost:6379/1?ssl_cert_reqs=optional",
+            DSN(
+                scheme="rediss",
+                host="localhost",
+                port=6379,
+                path=None,
+                db=1,
+                username=None,
+                password=None,
+                verify_ssl="optional",
             ),
         ),
         (
@@ -143,6 +159,7 @@ def test_command_shell_options_higher_priority():
                 db=0,
                 username="username",
                 password="password",
+                verify_ssl=None,
             ),
         ),
         (
@@ -155,6 +172,7 @@ def test_command_shell_options_higher_priority():
                 db=0,
                 username=None,
                 password="password",
+                verify_ssl=None,
             ),
         ),
         (
@@ -167,6 +185,7 @@ def test_command_shell_options_higher_priority():
                 db=0,
                 username="username",
                 password=None,
+                verify_ssl=None,
             ),
         ),
         (
@@ -180,6 +199,7 @@ def test_command_shell_options_higher_priority():
                 db=0,
                 username="username",
                 password=None,
+                verify_ssl=None,
             ),
         ),
         (
@@ -192,6 +212,7 @@ def test_command_shell_options_higher_priority():
                 db=0,
                 username="username",
                 password="password2",
+                verify_ssl=None,
             ),
         ),
         (
@@ -204,6 +225,7 @@ def test_command_shell_options_higher_priority():
                 db=0,
                 username=None,
                 password="password3",
+                verify_ssl=None,
             ),
         ),
         (
@@ -216,6 +238,7 @@ def test_command_shell_options_higher_priority():
                 db=0,
                 username=None,
                 password=None,
+                verify_ssl=None,
             ),
         ),
     ],
