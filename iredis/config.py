@@ -8,7 +8,6 @@ from . import data as project_data
 # TODO verbose logger to print to stdout
 logger = logging.getLogger(__name__)
 
-
 system_config_file = "/etc/iredisrc"
 pwd_config_file = os.path.join(os.getcwd(), ".iredisrc")
 
@@ -40,6 +39,7 @@ class Config:
         self.shell = None
         self.enable_pager = None
         self.pager = None
+        self.verify_ssl = None
 
         self.warning = True
 
