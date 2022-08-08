@@ -406,7 +406,7 @@ def create_client(params):
     if dsn_from_url:
         # db from command lint options should be high priority
         db = db if db else dsn_from_url.db
-        verify_ssl = verify_ssl if verify_ssl else dsn_from_url.verify_ssl
+        verify_ssl = verify_ssl or dsn_from_url.verify_ssl
         return Client(
             host=dsn_from_url.host,
             port=dsn_from_url.port,

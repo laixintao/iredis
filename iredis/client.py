@@ -81,9 +81,7 @@ class Client:
         if prompt:
             self.prompt = prompt
 
-        self.verify_ssl = None
-        if self.scheme == "rediss":
-            self.verify_ssl = verify_ssl if verify_ssl is not None else "required"
+        self.verify_ssl = verify_ssl or "required"
 
         self.client_id = None
         self.client_addr = None
