@@ -8,6 +8,9 @@
 - Feature: IRedis now accept `username` for auth, redis server version under 6
   will ignore `username`.
 - Feature: IRedis support prompt now, you can customize prompt string. (thanks to [aymericbeaumet])
+- Feature: IRedis now honors the `ssl_cert_reqs` strategy, either specifying it via
+  command line (`--verify-ssl=<none|optional|required>`) or as an url parameter (`ssl_cert_reqs`)
+  when the connection is secured via tls (`rediss://`). (authored by [torrefatto])
 
 ## 1.12
 
@@ -297,3 +300,4 @@
 [sid-maddy]: https://github.com/sid-maddy
 [tssujt]: https://github.com/tssujt
 [aymericbeaumet]: https://github.com/aymericbeaumet
+[torrefatto]: https://github.com/torrefatto
