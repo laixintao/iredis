@@ -126,7 +126,7 @@ supports similar options like redis-cli, like `-h` for redis-server's host and
 ```
 $ iredis --help
 
-Usage:  [OPTIONS] [CMD]...
+Usage: iredis [OPTIONS] [CMD]...
 
   IRedis: Interactive Redis
 
@@ -143,39 +143,60 @@ Usage:  [OPTIONS] [CMD]...
   settings.
 
 Options:
-  -h TEXT                   Server hostname (default: 127.0.0.1).
-  -p TEXT                   Server port (default: 6379).
-  -s, --socket TEXT         Server socket (overrides hostname and port).
-  -n TEXT                   Database number.(overwrites dsn/url's db number)
-  -a, --password TEXT       Password to use when connecting to the server.
-  --url TEXT                Use Redis URL to indicate connection(Can set with
-                            env `IREDIS_URL`), Example:
-                            redis://[[username]:[password]]@localhost:6379/0
-                            rediss://[[username]:[password]]@localhost:6379/0
-                            unix://[[username]:[password]]@/path/to/socket.soc
-                            k?db=0
+  -h TEXT                         Server hostname (default: 127.0.0.1).
+  -p TEXT                         Server port (default: 6379).
+  -s, --socket TEXT               Server socket (overrides hostname and port).
+  -n INTEGER                      Database number.(overwrites dsn/url's db
+                                  number)
 
-  -d, --dsn TEXT            Use DSN configured into the [alias_dsn] section of
-                            iredisrc file. (Can set with env `IREDIS_DSN`)
+  -u, --username TEXT             User name used to auth, will be ignore for
+                                  redis version < 6.
 
-  --newbie / --no-newbie    Show command hints and useful helps.
-  --iredisrc TEXT           Config file for iredis, default is ~/.iredisrc.
-  --decode TEXT             decode response, default is No decode, which will
-                            output all bytes literals.
+  -a, --password TEXT             Password to use when connecting to the
+                                  server.
 
-  --client_name TEXT        Assign a name to the current connection.
-  --raw / --no-raw          Use raw formatting for replies (default when
-                            STDOUT is not a tty). However, you can use --no-
-                            raw to force formatted output even when STDOUT is
-                            not a tty.
+  --url TEXT                      Use Redis URL to indicate connection(Can set
+                                  with env `IREDIS_URL`), Example:     redis:/
+                                  /[[username]:[password]]@localhost:6379/0
+                                  rediss://[[username]:[password]]@localhost:6
+                                  379/0     unix://[[username]:[password]]@/pa
+                                  th/to/socket.sock?db=0
 
-  --rainbow / --no-rainbow  Display colorful prompt.
-  --shell / --no-shell      Allow to run shell commands, default to True.
-  --pager / --no-pager      Using pager when output is too tall for your
-                            window, default to True.
+  -d, --dsn TEXT                  Use DSN configured into the [alias_dsn]
+                                  section of iredisrc file. (Can set with env
+                                  `IREDIS_DSN`)
 
-  --version                 Show the version and exit.
-  --help                    Show this message and exit.
+  --newbie / --no-newbie          Show command hints and useful helps.
+  --iredisrc TEXT                 Config file for iredis, default is
+                                  ~/.iredisrc.
+
+  --decode TEXT                   decode response, default is No decode, which
+                                  will output all bytes literals.
+
+  --client_name TEXT              Assign a name to the current connection.
+  --raw / --no-raw                Use raw formatting for replies (default when
+                                  STDOUT is not a tty). However, you can use
+                                  --no-raw to force formatted output even when
+                                  STDOUT is not a tty.
+
+  --rainbow / --no-rainbow        Display colorful prompt.
+  --shell / --no-shell            Allow to run shell commands, default to
+                                  True.
+
+  --pager / --no-pager            Using pager when output is too tall for your
+                                  window, default to True.
+
+  --verify-ssl [none|optional|required]
+                                  Set the TLS certificate verification
+                                  strategy
+
+  --prompt TEXT                   Prompt format (supported interpolations:
+                                  {client_name}, {db}, {host}, {path}, {port},
+                                  {username}, {client_addr}, {client_id}).
+
+  --version                       Show the version and exit.
+  --help                          Show this message and exit.
+
 ```
 
 ### Using DSN

@@ -20,7 +20,6 @@ from redis.exceptions import (
     ResponseError,
 )
 
-
 from . import markdown, renders
 from .data import commands as commands_data
 from .commands import (
@@ -64,6 +63,7 @@ class Client:
         username=None,
         client_name=None,
         prompt=None,
+        verify_ssl=None,
     ):
         self.host = host
         self.port = port
@@ -80,6 +80,8 @@ class Client:
             self.prompt = config.prompt
         if prompt:
             self.prompt = prompt
+
+        self.verify_ssl = verify_ssl or "required"
 
         self.client_id = None
         self.client_addr = None
@@ -125,6 +127,7 @@ class Client:
             self.path,
             self.scheme,
             self.username,
+            self.verify_ssl,
             client_name=self.client_name,
         )
 
@@ -137,6 +140,7 @@ class Client:
         path=None,
         scheme="redis",
         username=None,
+        verify_ssl=None,
         client_name=None,
     ):
         if scheme in ("redis", "rediss"):
@@ -154,6 +158,7 @@ class Client:
                 connection_kwargs["username"] = username
 
             if scheme == "rediss":
+                connection_kwargs["ssl_cert_reqs"] = verify_ssl
                 connection_class = SSLConnection
             else:
                 connection_class = Connection

@@ -9,7 +9,6 @@ from prompt_toolkit.formatted_text import FormattedText
 
 from iredis.exceptions import InvalidArguments
 
-
 logger = logging.getLogger(__name__)
 
 _last_timer = time.time()
@@ -261,7 +260,7 @@ def convert_formatted_text_to_bytes(formatted_text):
     return "".join(to_render).encode()
 
 
-DSN = namedtuple("DSN", "scheme host port path db username password")
+DSN = namedtuple("DSN", "scheme host port path db username password verify_ssl")
 
 
 def parse_url(url, db=0):
@@ -271,7 +270,7 @@ def parse_url(url, db=0):
     For example::
 
         redis://[[username]:[password]]@localhost:6379/0
-        rediss://[[username]:[password]]@localhost:6379/0
+        rediss://[[username]:[password]]@localhost:6379/0?ssl_cert_reqs=none
         unix://[[username]:[password]]@/path/to/socket.sock?db=0
 
     Three URL schemes are supported:
@@ -297,6 +296,7 @@ def parse_url(url, db=0):
 
     scheme = url.scheme
     path = unquote(url.path) if url.path else None
+    verify_ssl = None
     # We only support redis://, rediss:// and unix:// schemes.
     # if scheme is ``unix``, read ``db`` from query string
     # otherwise read ``db`` from path
@@ -312,6 +312,13 @@ def parse_url(url, db=0):
                 path = None
             except (AttributeError, ValueError):
                 pass
+        qs = parse_qs(url.query)
+        if "ssl_cert_reqs" in qs:
+            verify_ssl = qs["ssl_cert_reqs"][0]
+            if verify_ssl not in ["none", "optional", "required"]:
+                raise ValueError(
+                    f"ssl_cert_reqs must be one of 'none', 'optional', 'required' or must be omitted: {verify_ssl}"
+                )
     else:
         valid_schemes = ", ".join(("redis://", "rediss://", "unix://"))
         raise ValueError(
@@ -323,4 +330,4 @@ def parse_url(url, db=0):
     hostname = unquote(url.hostname) if url.hostname else None
     port = url.port
 
-    return DSN(scheme, hostname, port, path, db, username, password)
+    return DSN(scheme, hostname, port, path, db, username, password, verify_ssl)

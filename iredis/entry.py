@@ -237,6 +237,7 @@ Use Redis URL to indicate connection(Can set with env `IREDIS_URL`), Example:
 """
 SHELL = """Allow to run shell commands, default to True."""
 PAGER_HELP = """Using pager when output is too tall for your window, default to True."""
+VERIFY_SSL_HELP = """Set the TLS certificate verification strategy"""
 
 
 # command line entry here...
@@ -274,6 +275,12 @@ PAGER_HELP = """Using pager when output is too tall for your window, default to 
 @click.option("--shell/--no-shell", default=None, is_flag=True, help=SHELL)
 @click.option("--pager/--no-pager", default=None, is_flag=True, help=PAGER_HELP)
 @click.option(
+    "--verify-ssl",
+    default=None,
+    type=click.Choice(["none", "optional", "required"]),
+    help=VERIFY_SSL_HELP,
+)
+@click.option(
     "--prompt",
     default=None,
     help=(
@@ -302,6 +309,7 @@ def gather_args(
     socket,
     shell,
     pager,
+    verify_ssl,
     prompt,
 ):
     """
@@ -344,6 +352,8 @@ def gather_args(
         config.shell = shell
     if pager is not None:
         config.enable_pager = pager
+    if verify_ssl is not None:
+        config.verify_ssl = verify_ssl
 
     return ctx
 
@@ -384,6 +394,7 @@ def create_client(params):
     password = params["password"]
     client_name = params["client_name"]
     prompt = params["prompt"]
+    verify_ssl = params["verify_ssl"]
 
     dsn_from_url = None
     dsn = params["dsn"]
@@ -395,6 +406,7 @@ def create_client(params):
     if dsn_from_url:
         # db from command lint options should be high priority
         db = db if db else dsn_from_url.db
+        verify_ssl = verify_ssl or dsn_from_url.verify_ssl
         return Client(
             host=dsn_from_url.host,
             port=dsn_from_url.port,
@@ -405,6 +417,7 @@ def create_client(params):
             username=dsn_from_url.username,
             client_name=client_name,
             prompt=prompt,
+            verify_ssl=verify_ssl,
         )
     if params["socket"]:
         return Client(
@@ -424,6 +437,7 @@ def create_client(params):
         password=password,
         client_name=client_name,
         prompt=prompt,
+        verify_ssl=verify_ssl,
     )
 
 
