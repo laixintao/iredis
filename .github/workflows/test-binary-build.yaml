@@ -36,8 +36,7 @@ jobs:
         run: |
           python3 -m venv venv
           . venv/bin/activate
-          pip install pip==21.1
-          pip install poetry
+          pip install -U pip poetry
           poetry install
           python -c "import sys; print(sys.version)"
           pip list
