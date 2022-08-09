@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python: ['3.6', '3.7', '3.8', '3.9', '3.10']
+        python: ['3.7']
         redis: [5, 6, 7]
     runs-on: ${{ matrix.os }}
 
@@ -40,7 +40,7 @@ jobs:
           python3 -m venv venv
           . venv/bin/activate
           pip install -U pip setuptools poetry
-          poetry install
+          poetry install -vvv
           python -c "import sys; print(sys.version)"
           pip list
       - name: Pytest
@@ -49,36 +49,3 @@ jobs:
         run: |
           . venv/bin/activate
           pytest
-  lint:
-    name: flake8 & black
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: codespell-project/actions-codespell@master
-        with:
-          ignore_words_list: fo,ists,oll,optin,ot,smove,tre,whe
-          exclude_file: docs/assets/demo.svg
-      - uses: actions/setup-python@v1
-        with:
-          python-version: 3.7
-          architecture: 'x64'
-      - name: Cache venv
-        uses: actions/cache@v2
-        with:
-          path: venv
-          # Look to see if there is a cache hit for the corresponding requirements file
-          key: lintenv-v2
-      - name: Install Dependencies
-        run: |
-          python3 -m venv venv
-          . venv/bin/activate
-          pip install -U pip flake8 black
-      - name: Flake8 test
-        run: |
-          . venv/bin/activate
-          flake8 .
-      - name: Black test
-        run: |
-          . venv/bin/activate
-          black --check .
