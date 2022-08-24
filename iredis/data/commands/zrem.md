@@ -1,5 +1,5 @@
-Removes the specified members from the sorted set stored at `key`. Non existing
-members are ignored.
+Removes the specified members from the sorted set stored at `key`.
+Non existing members are ignored.
 
 An error is returned when `key` exists and does not hold a sorted set.
 
@@ -7,13 +7,8 @@ An error is returned when `key` exists and does not hold a sorted set.
 
 @integer-reply, specifically:
 
-- The number of members removed from the sorted set, not including non existing
+* The number of members removed from the sorted set, not including non existing
   members.
-
-@history
-
-- `>= 2.4`: Accepts multiple elements. In Redis versions older than 2.4 it was
-  possible to remove a single member per call.
 
 @examples
 

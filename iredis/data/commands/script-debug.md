@@ -15,12 +15,13 @@ finishes, so debugging can be restarted using the same initial state. The
 alternative synchronous debug mode blocks the server while the debugging session
 is active and retains all changes to the data set once it ends.
 
-- `YES`. Enable non-blocking asynchronous debugging of Lua scripts (changes are
-  discarded).
-- `!SYNC`. Enable blocking synchronous debugging of Lua scripts (saves changes
-  to data).
-- `NO`. Disables scripts debug mode.
+* `YES`. Enable non-blocking asynchronous debugging of Lua scripts (changes are discarded).
+* `!SYNC`. Enable blocking synchronous debugging of Lua scripts (saves changes to data).
+* `NO`. Disables scripts debug mode.
+
+For more information about `EVAL` scripts please refer to [Introduction to Eval Scripts](/topics/eval-intro).
 
 @return
 
 @simple-string-reply: `OK`.
+

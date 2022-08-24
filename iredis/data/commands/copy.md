@@ -12,8 +12,8 @@ The command returns an error when the `destination` key already exists. The
 
 @integer-reply, specifically:
 
-- `1` if `source` was copied.
-- `0` if `source` was not copied.
+* `1` if `source` was copied.
+* `0` if `source` was not copied.
 
 @examples
 

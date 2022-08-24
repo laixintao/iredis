@@ -1,5 +1,4 @@
-The `LATENCY DOCTOR` command reports about different latency-related issues and
-advises about possible remedies.
+The `LATENCY DOCTOR` command reports about different latency-related issues and advises about possible remedies.
 
 This command is the most powerful analysis tool in the latency monitoring
 framework, and is able to provide additional statistical data like the average
@@ -7,10 +6,10 @@ period between latency spikes, the median deviation, and a human-readable
 analysis of the event. For certain events, like `fork`, additional information
 is provided, like the rate at which the system forks processes.
 
-This is the output you should post in the Redis mailing list if you are looking
-for help about Latency related issues.
+This is the output you should post in the Redis mailing list if you are
+looking for help about Latency related issues.
 
-@example
+@examples
 
 ```
 127.0.0.1:6379> latency doctor
@@ -35,8 +34,7 @@ I have a few advices for you:
     fragment those objects into multiple smaller objects.
 ```
 
-**Note:** the doctor has erratic psychological behaviors, so we recommend
-interacting with it carefully.
+**Note:** the doctor has erratic psychological behaviors, so we recommend interacting with it carefully.
 
 For more information refer to the [Latency Monitoring Framework page][lm].
 

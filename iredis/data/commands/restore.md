@@ -4,20 +4,19 @@ provided serialized value (obtained via `DUMP`).
 If `ttl` is 0 the key is created without any expire, otherwise the specified
 expire time (in milliseconds) is set.
 
-If the `ABSTTL` modifier was used, `ttl` should represent an absolute [Unix
-timestamp][hewowu] (in milliseconds) in which the key will expire. (Redis 5.0 or
-greater).
+If the `ABSTTL` modifier was used, `ttl` should represent an absolute
+[Unix timestamp][hewowu] (in milliseconds) in which the key will expire.
 
 [hewowu]: http://en.wikipedia.org/wiki/Unix_time
 
 For eviction purposes, you may use the `IDLETIME` or `FREQ` modifiers. See
-`OBJECT` for more information (Redis 5.0 or greater).
+`OBJECT` for more information.
 
-`RESTORE` will return a "Target key name is busy" error when `key` already
-exists unless you use the `REPLACE` modifier (Redis 3.0 or greater).
+`!RESTORE` will return a "Target key name is busy" error when `key` already
+exists unless you use the `REPLACE` modifier.
 
-`RESTORE` checks the RDB version and data checksum. If they don't match an error
-is returned.
+`!RESTORE` checks the RDB version and data checksum.
+If they don't match an error is returned.
 
 @return
 

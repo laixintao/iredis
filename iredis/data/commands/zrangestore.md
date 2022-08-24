@@ -1,5 +1,4 @@
-This command is like `ZRANGE`, but stores the result in the `<dst>` destination
-key.
+This command is like `ZRANGE`, but stores the result in the `<dst>` destination key.
 
 @return
 

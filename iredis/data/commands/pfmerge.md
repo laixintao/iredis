@@ -1,12 +1,13 @@
-Merge multiple HyperLogLog values into an unique value that will approximate the
-cardinality of the union of the observed Sets of the source HyperLogLog
+Merge multiple HyperLogLog values into a unique value that will approximate
+the cardinality of the union of the observed Sets of the source HyperLogLog
 structures.
 
 The computed merged HyperLogLog is set to the destination variable, which is
 created if does not exist (defaulting to an empty HyperLogLog).
 
-If the destination variable exists, it is treated as one of the source sets and
-its cardinality will be included in the cardinality of the computed HyperLogLog.
+If the destination variable exists, it is treated as one of the source sets 
+and its cardinality will be included in the cardinality of the computed
+HyperLogLog.
 
 @return
 

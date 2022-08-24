@@ -1,6 +1,6 @@
-The command shows the available ACL categories if called without arguments. If a
-category name is given, the command shows all the Redis commands in the
-specified category.
+The command shows the available ACL categories if called without arguments.
+If a category name is given, the command shows all the Redis commands in
+the specified category.
 
 ACL categories are very useful in order to create ACL rules that include or
 exclude a large set of commands at once, without specifying every single
@@ -10,8 +10,8 @@ stability:
 
     ACL SETUSER karin on +@all -@dangerous
 
-We first add all the commands to the set of commands that `karin` is able to
-execute, but then we remove all the dangerous commands.
+We first add all the commands to the set of commands that `karin` is able
+to execute, but then we remove all the dangerous commands.
 
 Checking for all the available categories is as simple as:
 
@@ -79,6 +79,4 @@ Then we may want to know what commands are part of a given category:
 
 @return
 
-@array-reply: a list of ACL categories or a list of commands inside a given
-category. The command may return an error if an invalid category name is given
-as argument.
+@array-reply: a list of ACL categories or a list of commands inside a given category. The command may return an error if an invalid category name is given as argument.
