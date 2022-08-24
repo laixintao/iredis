@@ -1,12 +1,13 @@
 Computes the intersection of `numkeys` sorted sets given by the specified keys,
-and stores the result in `destination`. It is mandatory to provide the number of
-input keys (`numkeys`) before passing the input keys and the other (optional)
-arguments.
+and stores the result in `destination`.
+It is mandatory to provide the number of input keys (`numkeys`) before passing
+the input keys and the other (optional) arguments.
 
 By default, the resulting score of an element is the sum of its scores in the
-sorted sets where it exists. Because intersection requires an element to be a
-member of every given sorted set, this results in the score of every element in
-the resulting sorted set to be equal to the number of input sorted sets.
+sorted sets where it exists.
+Because intersection requires an element to be a member of every given sorted
+set, this results in the score of every element in the resulting sorted set to
+be equal to the number of input sorted sets.
 
 For a description of the `WEIGHTS` and `AGGREGATE` options, see `ZUNIONSTORE`.
 

@@ -4,9 +4,9 @@ The command shows a list of recent ACL security events:
 2. Commands denied because against the current ACL rules.
 3. Commands denied because accessing keys not allowed in the current ACL rules.
 
-The optional argument specifies how many entries to show. By default up to ten
-failures are returned. The special `RESET` argument clears the log. Entries are
-displayed starting from the most recent.
+The optional argument specifies how many entries to show. By default
+up to ten failures are returned. The special `RESET` argument clears the log.
+Entries are displayed starting from the most recent.
 
 @return
 

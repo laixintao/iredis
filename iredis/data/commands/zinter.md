@@ -5,7 +5,7 @@ For a description of the `WEIGHTS` and `AGGREGATE` options, see `ZUNIONSTORE`.
 
 @return
 
-@array-reply: the result of intersection (optionally with their scores, in case
+@array-reply: the result of intersection (optionally with their scores, in case 
 the `WITHSCORES` option is given).
 
 @examples

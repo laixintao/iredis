@@ -1,8 +1,8 @@
-The command shows the currently active ACL rules in the Redis server. Each line
-in the returned array defines a different user, and the format is the same used
-in the redis.conf file or the external ACL file, so you can cut and paste what
-is returned by the ACL LIST command directly inside a configuration file if you
-wish (but make sure to check `ACL SAVE`).
+The command shows the currently active ACL rules in the Redis server. Each
+line in the returned array defines a different user, and the format is the
+same used in the redis.conf file or the external ACL file, so you can
+cut and paste what is returned by the ACL LIST command directly inside a
+configuration file if you wish (but make sure to check `ACL SAVE`).
 
 @return
 

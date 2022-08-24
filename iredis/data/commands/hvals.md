@@ -2,8 +2,8 @@ Returns all values in the hash stored at `key`.
 
 @return
 
-@array-reply: list of values in the hash, or an empty list when `key` does not
-exist.
+@array-reply: list of values in the hash, or an empty list when `key` does
+not exist.
 
 @examples
 

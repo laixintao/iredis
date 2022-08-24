@@ -1,16 +1,16 @@
 Switch to a different protocol, optionally authenticating and setting the
 connection's name, or provide a contextual client report.
 
-Redis version 6 and above supports two protocols: the old protocol, RESP2, and a
-new one introduced with Redis 6, RESP3. RESP3 has certain advantages since when
-the connection is in this mode, Redis is able to reply with more semantical
-replies: for instance, `HGETALL` will return a _map type_, so a client library
+Redis version 6 and above supports two protocols: the old protocol, RESP2, and
+a new one introduced with Redis 6, RESP3. RESP3 has certain advantages since
+when the connection is in this mode, Redis is able to reply with more semantical
+replies: for instance, `HGETALL` will return a *map type*, so a client library
 implementation no longer requires to know in advance to translate the array into
 a hash before returning it to the caller. For a full coverage of RESP3, please
 [check this repository](https://github.com/antirez/resp3).
 
-In Redis 6 connections start in RESP2 mode, so clients implementing RESP2 do not
-need to updated or changed. There are no short term plans to drop support for
+In Redis 6 connections start in RESP2 mode, so clients implementing RESP2 do
+not need to updated or changed. There are no short term plans to drop support for
 RESP2, although future version may default to RESP3.
 
 `HELLO` always replies with a list of current server and connection properties,
@@ -53,21 +53,9 @@ command instead of the canonical `PING` when setting up the connection.
 When called with the optional `protover` argument, this command switches the
 protocol to the specified version and also accepts the following options:
 
-- `AUTH <username> <password>`: directly authenticate the connection in addition
-  to switching to the specified protocol version. This makes calling `AUTH`
-  before `HELLO` unnecessary when setting up a new connection. Note that the
-  `username` can be set to "default" to authenticate against a server that does
-  not use ACLs, but rather the simpler `requirepass` mechanism of Redis prior to
-  version 6.
-- `SETNAME <clientname>`: this is the equivalent of calling `CLIENT SETNAME`.
+* `AUTH <username> <password>`: directly authenticate the connection in addition to switching to the specified protocol version. This makes calling `AUTH` before `HELLO` unnecessary when setting up a new connection. Note that the `username` can be set to "default" to authenticate against a server that does not use ACLs, but rather the simpler `requirepass` mechanism of Redis prior to version 6.
+* `SETNAME <clientname>`: this is the equivalent of calling `CLIENT SETNAME`.
 
 @return
 
-@array-reply: a list of server properties. The reply is a map instead of an
-array when RESP3 is selected. The command returns an error if the `protover`
-requested does not exist.
-
-@history
-
-- `>= 6.2`: `protover` made optional; when called without arguments the command
-  reports the current connection's context.
+@array-reply: a list of server properties. The reply is a map instead of an array when RESP3 is selected. The command returns an error if the `protover` requested does not exist.

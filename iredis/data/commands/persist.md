@@ -6,8 +6,8 @@ is associated).
 
 @integer-reply, specifically:
 
-- `1` if the timeout was removed.
-- `0` if `key` does not exist or does not have an associated timeout.
+* `1` if the timeout was removed.
+* `0` if `key` does not exist or does not have an associated timeout.
 
 @examples
 
