@@ -1,5 +1,9 @@
 ## UPCOMING
 
+## 1.3
+
+- Dependency: Drop Python 3.6 support.
+
 ### 1.12.2
 
 - Feature: IRedis now honors the `ssl_cert_reqs` strategy, either specifying it via
