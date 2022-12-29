@@ -3,6 +3,7 @@
 ## 1.3
 
 - Dependency: Drop Python 3.6 support.
+- Bugfix: fix some typos.
 
 ### 1.12.2
 
