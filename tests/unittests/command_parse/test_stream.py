@@ -333,7 +333,7 @@ def test_xclaim(judge_command):
         },
     )
     judge_command(
-        "XCLAIM mystream mygroup Alice 3600000 1526569498055-0 IDEL 300",
+        "XCLAIM mystream mygroup Alice 3600000 1526569498055-0 IDLE 300",
         {
             "command": "XCLAIM",
             "key": "mystream",
@@ -341,7 +341,7 @@ def test_xclaim(judge_command):
             "consumer": "Alice",
             "millisecond": ["3600000", "300"],
             "stream_id": "1526569498055-0",
-            "idel": "IDEL",
+            "idle": "IDLE",
         },
     )
     judge_command(

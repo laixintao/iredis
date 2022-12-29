@@ -72,7 +72,7 @@ CONST = {
     "stream_groups": "GROUPS",
     "stream_group": "GROUP",
     "maxlen": "MAXLEN",
-    "idel": "IDEL",
+    "idle": "IDLE",
     "time": "TIME",
     "retrycount": "RETRYCOUNT",
     "force": "FORCE",
@@ -317,7 +317,7 @@ STREAM_DESTROY = rf"(?P<stream_destroy>{c('stream_destroy')})"
 STREAM_DELCONSUMER = rf"(?P<stream_delconsumer>{c('stream_delconsumer')})"
 MAXLEN = rf"(?P<maxlen>{c('maxlen')})"
 APPROXIMATELY = r"(?P<approximately>~)"
-IDEL = rf"(?P<idel>{c('idel')})"
+IDLE = rf"(?P<idle>{c('idle')})"
 TIME = rf"(?P<time>{c('time')})"
 RETRYCOUNT = rf"(?P<retrycount>{c('retrycount')})"
 FORCE = rf"(?P<force>{c('force')})"
@@ -565,7 +565,7 @@ GRAMMAR = {
     "command_xclaim": rf"""
         \s+ {KEY} \s+ {GROUP} \s+ {CONSUMER} \s+ {MILLISECOND}
         (\s+ {STREAM_ID})+
-        (\s+ {IDEL} \s+ {MILLISECOND})?
+        (\s+ {IDLE} \s+ {MILLISECOND})?
         (\s+ {TIME} \s+ {TIMESTAMP})?
         (\s+ {RETRYCOUNT} \s+ {COUNT})?
         (\s+ {FORCE})?

@@ -60,7 +60,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: codespell-project/actions-codespell@master
         with:
-          ignore_words_list: fo,ists,oll,optin,ot,smove,tre,whe
+          ignore_words_list: fo,ists,oll,optin,ot,smove,tre,whe,EXAT
           exclude_file: docs/assets/demo.svg
       - uses: actions/setup-python@v4
         with:
