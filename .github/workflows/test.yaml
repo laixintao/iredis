@@ -61,7 +61,7 @@ jobs:
       - uses: codespell-project/actions-codespell@master
         with:
           ignore_words_list: fo,ists,oll,optin,ot,smove,tre,whe,EXAT,exat
-          skip: ./docs/assets/demo.svg,./iredis/data/commands.json,./iredis/data/commands/*
+          skip: ./docs/assets/demo.svg,./iredis/data/commands.json,./iredis/data/commands/*,./tests/unittests/*
       - uses: actions/setup-python@v4
         with:
           python-version: 3.7
