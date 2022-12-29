@@ -1,5 +1,15 @@
 ## UPCOMING
 
+## 1.3
+
+- Dependency: Drop Python 3.6 support.
+- Bugfix: fix some typos.
+
+### 1.12.2
+
+- Feature: IRedis now honors the `ssl_cert_reqs` strategy, either specifying it via
+  command line (`--verify-ssl=<none|optional|required>`) or as an url parameter (`ssl_cert_reqs`)
+  when the connection is secured via tls (`rediss://`). (authored by [torrefatto])
 
 ### 1.12.1
 
@@ -8,9 +18,6 @@
 - Feature: IRedis now accept `username` for auth, redis server version under 6
   will ignore `username`.
 - Feature: IRedis support prompt now, you can customize prompt string. (thanks to [aymericbeaumet])
-- Feature: IRedis now honors the `ssl_cert_reqs` strategy, either specifying it via
-  command line (`--verify-ssl=<none|optional|required>`) or as an url parameter (`ssl_cert_reqs`)
-  when the connection is secured via tls (`rediss://`). (authored by [torrefatto])
 
 ## 1.12
 
