@@ -15,7 +15,6 @@ classifiers = [
     "Environment :: Console :: Curses",
     "Environment :: MacOS X",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -31,7 +30,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.7"
 prompt_toolkit = "^3"
 Pygments = "^2"
 mistune = "^2.0"
@@ -45,7 +44,7 @@ packaging = "^21.3"
 redis = "^4.3.4"
 
 [tool.poetry.dev-dependencies]
-pytest = "^6"
+pytest = "^7.2"
 pexpect = "^4.7"
 
 [tool.poetry.scripts]
