@@ -1,18 +1,16 @@
-FROM python:3
+FROM redis/redis-stack-server:latest
 
+COPY . /iredis
+
+RUN apt-get update --fix-missing
+RUN apt-get install -yqq python3 python3-pip python-is-python3
+RUN python3 -m pip install poetry
 WORKDIR /iredis
-COPY README.md poetry.lock pyproject.toml ./
-COPY iredis ./iredis
+RUN poetry config virtualenvs.create false
+RUN poetry build
+RUN pip install dist/iredis*.tar.gz
+WORKDIR /
+RUN rm -rf .cache /var/cache/apt
+RUN rm -rf /iredis
 
-RUN apt-get update && apt-get install -y --allow-unauthenticated \
-    redis-server && \
-    rm -rf /var/lib/apt/lists/*
-
-
-RUN python3 -m venv iredis_env && \
-    . iredis_env/bin/activate && \
-    pip install poetry && \
-    poetry install --no-dev && \
-    rm -rf ~/.cache
-
-CMD ["sh","-c","redis-server --daemonize yes && . iredis_env/bin/activate && iredis"]
+CMD ["sh", "-c", "/opt/redis-stack/bin/redis-stack-server --daemonize yes && iredis"]
