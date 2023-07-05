@@ -105,7 +105,6 @@ class TimestampCompleter(Completer):
         now = pendulum.now()
         for unit, minimum in self.when_lower_than.items():
             if current <= minimum:
-
                 if self.future_time:
                     dt = now.add(**{f"{unit}s": current})
                     offset_text = "later"
