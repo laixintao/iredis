@@ -41,7 +41,7 @@ importlib-resources = "^5.1.0"
 # wcwidth 0.2.x uses pkg_resources which is not supported by PyOxidizer
 wcwidth = "0.1.9"
 packaging = "^21.3"
-redis = "^4.3.4"
+redis = "^4.5.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.2"
