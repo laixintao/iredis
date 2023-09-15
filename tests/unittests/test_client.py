@@ -22,8 +22,12 @@ def completer():
 
 
 zset_type = "ziplist"
+hash_type = "hashtable"
+list_type = "quicklist"
 if os.environ["REDIS_VERSION"] == "7":
     zset_type = "listpack"
+    hash_type = "listpack"
+    list_type = "listpack"
 
 
 @pytest.mark.parametrize(
@@ -303,7 +307,7 @@ def test_peek_list_fetch_all(iredis_client, clean_redis):
         FormattedText(
             [
                 ("class:dockey", "key: "),
-                ("", r"list \(quicklist\)  mem: \d+ bytes, ttl: -1"),
+                ("", rf"list \({list_type}\)  mem: \d+ bytes, ttl: -1"),
                 ("", "\n"),
                 ("class:dockey", "llen: "),
                 ("", "5"),
@@ -351,7 +355,7 @@ def test_peek_set_fetch_part(iredis_client, clean_redis):
     peek_result = list(iredis_client.do_peek("myset"))
 
     assert peek_result[0][0] == ("class:dockey", "key: ")
-    assert peek_result[0][1][1].startswith("set (hashtable)  mem: ")
+    assert peek_result[0][1][1].startswith(f"set ({hash_type})  mem: ")
 
 
 def test_peek_zset_fetch_all(iredis_client, clean_redis):
