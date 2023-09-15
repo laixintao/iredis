@@ -53,9 +53,11 @@ def test_using_pager_works_for_help():
         child.expect("Set the string value of a key")
         child.expect(TEST_PAGER_BOUNDARY)
 
+
 long_list_type = "quicklist"
 if os.environ["REDIS_VERSION"] == "7":
     long_list_type = "listpack"
+
 
 def test_pager_works_for_peek(clean_redis):
     for index in range(100):
@@ -69,13 +71,11 @@ def test_pager_works_for_peek(clean_redis):
 
 
 def test_using_pager_from_config(clean_redis):
-    config_content = dedent(
-        f"""
+    config_content = dedent(f"""
         [main]
         log_location = /tmp/iredis1.log
         pager = {env_pager_numbers}
-        """
-    )
+        """)
 
     with open(TEST_IREDISRC, "w+") as test_iredisrc:
         test_iredisrc.write(config_content)
@@ -93,13 +93,11 @@ def test_using_pager_from_config(clean_redis):
 
 
 def test_using_pager_from_config_when_env_config_both_set(clean_redis):
-    config_content = dedent(
-        f"""
+    config_content = dedent(f"""
         [main]
         log_location = /tmp/iredis1.log
         pager = {env_pager_numbers}
-        """
-    )
+        """)
 
     with open(TEST_IREDISRC, "w+") as test_iredisrc:
         test_iredisrc.write(config_content)
