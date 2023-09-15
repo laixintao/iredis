@@ -6,7 +6,7 @@ https://github.com/antirez/redis-doc/commit/02b3d1a345093c1794fd86273e9d516fffd3
 """
 
 import pytest
-from importlib_resources import read_text
+from importlib.resources import read_text
 
 from iredis.commands import commands_summary
 from iredis.data import commands as commands_data

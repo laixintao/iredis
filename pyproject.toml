@@ -37,7 +37,6 @@ mistune = "^2.0"
 configobj = "^5.0"
 click = "^7.0"
 pendulum = "^2.0"
-importlib-resources = "^5.1.0"
 # wcwidth 0.2.x uses pkg_resources which is not supported by PyOxidizer
 wcwidth = "0.1.9"
 packaging = "^21.3"
