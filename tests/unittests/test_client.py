@@ -22,7 +22,7 @@ def completer():
 
 
 zset_type = "ziplist"
-hash_type = 'hashtable'
+hash_type = "hashtable"
 list_type = "quicklist"
 if os.environ["REDIS_VERSION"] == "7":
     zset_type = "listpack"
