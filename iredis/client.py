@@ -284,8 +284,7 @@ class Client:
                     logger.info(f"New connection created, retry on {connection}.")
                 logger.info(f"send_command: {command_name} , {args}")
 
-                escaped_args = [codecs.escape_decode(a)[0] for a in args]
-                connection.send_command(command_name, *escaped_args)
+                connection.send_command(command_name, *args)
                 response = connection.read_response()
             except AuthenticationError:
                 raise
@@ -550,10 +549,9 @@ class Client:
         if command_name.upper() in ["ZSCAN", "ZPOPMAX", "ZPOPMIN"]:
             config.withscores = True
 
-        # TODO should we using escape_decode on all strings??
-        if command_name.upper() == "RESTORE":
-            for i, a in enumerate(args):
-                serialized_value = codecs.escape_decode(a)[0]
+        if command_name.upper()  == "RESTORE":
+            for i in range(args):
+                serialized_value = codecs.escape_decode(args[i])[0]
                 args[i] = serialized_value
 
         # not a tty
