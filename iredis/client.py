@@ -551,8 +551,8 @@ class Client:
 
         # TODO should we using escape_decode on all strings??
         if command_name.upper() == "RESTORE":
-            for i in range(args):
-                serialized_value = codecs.escape_decode(args[i])[0]
+            for i, a in enumerate(args):
+                serialized_value = codecs.escape_decode(a)[0]
                 args[i] = serialized_value
 
         # not a tty
