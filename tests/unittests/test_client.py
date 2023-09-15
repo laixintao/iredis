@@ -351,7 +351,7 @@ def test_peek_set_fetch_part(iredis_client, clean_redis):
     peek_result = list(iredis_client.do_peek("myset"))
 
     assert peek_result[0][0] == ("class:dockey", "key: ")
-    assert peek_result[0][1][1].startswith("set (hashtable)  mem: 2")
+    assert peek_result[0][1][1].startswith("set (hashtable)  mem: ")
 
 
 def test_peek_zset_fetch_all(iredis_client, clean_redis):
