@@ -1,5 +1,13 @@
 ## UPCOMING
 
+## 1.3.1
+
+- Dependency: upgrade markdown render mistune to v3
+- Dependency: deprecated importlib_resources, use Python build in `importlib.resources` now
+- Dependency: upgrade redis-py to 4.5
+- Doc: update homepage link to iredis.xbin.io
+- Bugfix: Fix restore command caused by string literal escape
+
 ## 1.3
 
 - Dependency: Drop Python 3.6 support.
