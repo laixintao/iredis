@@ -1,6 +1,6 @@
 ## UPCOMING
 
-## 1.3.1
+## 1.13.2
 
 - Dependency: upgrade markdown render mistune to v3
 - Dependency: deprecated importlib_resources, use Python build in `importlib.resources` now
@@ -8,7 +8,7 @@
 - Doc: update homepage link to iredis.xbin.io
 - Bugfix: Fix restore command caused by string literal escape
 
-## 1.3
+## 1.13
 
 - Dependency: Drop Python 3.6 support.
 - Bugfix: fix some typos.
