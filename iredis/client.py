@@ -548,6 +548,15 @@ class Client:
         # score display for sorted set
         if command_name.upper() in ["ZSCAN", "ZPOPMAX", "ZPOPMIN"]:
             config.withscores = True
+        logger.debug("prehook run: %s", command_name.upper())
+        if command_name.upper()  == "RESTORE":
+            logger.debug("prehook run if")
+            if len(args) < 3:
+                raise InvalidArguments("RESTORE key ttl serialized-value, not enough arguments, your arguments: {}".format(args))
+            serialized_value = codecs.escape_decode(args[2])[0]
+            args[2] = serialized_value
+            logger.debug("serialized_value for restore: %s", args)
+            
 
         # TODO should we using escape_decode on all strings??
         if command_name.upper() == "RESTORE":
