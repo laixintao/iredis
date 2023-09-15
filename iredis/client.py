@@ -7,7 +7,7 @@ import sys
 import codecs
 import logging
 from subprocess import run
-from importlib_resources import read_text
+from importlib.resources import read_text
 from packaging.version import parse as version_parse
 
 import redis
