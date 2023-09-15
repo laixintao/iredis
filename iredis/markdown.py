@@ -30,7 +30,7 @@ class TerminalRender(mistune.HTMLRenderer):
             return super().heading(header_text, 2)
         return super().heading(self._to_title(text), level)
 
-    def list(self, body, ordered, level, start=None):
+    def list(self, body, ordered, *args, **kwargs):
         """Rendering list tags like ``<ul>`` and ``<ol>``.
 
         :param body: body contents of the list.
@@ -41,7 +41,7 @@ class TerminalRender(mistune.HTMLRenderer):
             tag = "ol"
         return "<%s>%s</%s>\n" % (tag, body, tag)
 
-    def list_item(self, text, level):
+    def list_item(self, text, *args):
         """Rendering list item snippet. Like ``<li>``."""
         return "<li> * %s</li>\n" % text
 
