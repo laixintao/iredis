@@ -64,7 +64,7 @@ like `KEYS *` (see
   config file.
 - Hide password for `AUTH` command.
 - Says "Goodbye!" to you when you exit!
-- For full features, please see: [iredis.io](https://www.iredis.io)
+- For full features, please see: [iredis.xbin.io](https://www.iredis.xbin.io)
 
 ## Install
 
