@@ -549,7 +549,8 @@ class Client:
         if command_name.upper() in ["ZSCAN", "ZPOPMAX", "ZPOPMIN"]:
             config.withscores = True
 
-        if command_name.upper()  == "RESTORE":
+        # TODO should we using escape_decode on all strings??
+        if command_name.upper() == "RESTORE":
             for i in range(args):
                 serialized_value = codecs.escape_decode(args[i])[0]
                 args[i] = serialized_value
