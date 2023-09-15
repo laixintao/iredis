@@ -53,6 +53,9 @@ def test_using_pager_works_for_help():
         child.expect("Set the string value of a key")
         child.expect(TEST_PAGER_BOUNDARY)
 
+long_list_type = "quicklist"
+if os.environ["REDIS_VERSION"] == "7":
+    long_list_type = "listpack"
 
 def test_pager_works_for_peek(clean_redis):
     for index in range(100):
@@ -60,7 +63,7 @@ def test_pager_works_for_peek(clean_redis):
     with pager_enabled_cli() as child:
         child.sendline("peek long-list")
         child.expect(TEST_PAGER_BOUNDARY)
-        child.expect("(quicklist)")
+        child.expect(f"({long_list_type})")
         child.expect("value-1")
         child.expect(TEST_PAGER_BOUNDARY)
 
