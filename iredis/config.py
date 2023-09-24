@@ -63,6 +63,8 @@ class Config:
         self.withscores = False
         self.version = "Unknown"
 
+        self.greetings = True
+
         self.prompt = None
 
     def __setter__(self, name, value):
@@ -129,5 +131,6 @@ def load_config_files(iredisrc):
     config.pager = config_obj["main"].get("pager")
     config.enable_pager = config_obj["main"].as_bool("enable_pager")
     config.prompt = config_obj["main"].get("prompt")
+    config.greetings = config_obj["main"].as_bool("greetings")
 
     return config_obj

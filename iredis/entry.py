@@ -61,8 +61,8 @@ def greetings():
         reason = ""
 
     server_version = f"redis-server  {config.version} {reason}"
-    home_page = "Home:   https://iredis.io"
-    issues = "Issues: https://iredis.io/issues"
+    home_page = "Home:   https://iredis.xbin.io/"
+    issues = "Issues: https://github.com/laixintao/iredis/issues"
     display = "\n".join([iredis_version, server_version, home_page, issues])
     if config.raw:
         display = display.encode()
@@ -274,6 +274,7 @@ VERIFY_SSL_HELP = """Set the TLS certificate verification strategy"""
 @click.option("--rainbow/--no-rainbow", default=None, is_flag=True, help=RAINBOW)
 @click.option("--shell/--no-shell", default=None, is_flag=True, help=SHELL)
 @click.option("--pager/--no-pager", default=None, is_flag=True, help=PAGER_HELP)
+@click.option("--greetings/--no-greetings", default=None, is_flag=True, help="Enable or disable greeting messages")
 @click.option(
     "--verify-ssl",
     default=None,
@@ -309,6 +310,7 @@ def gather_args(
     socket,
     shell,
     pager,
+    greetings,
     verify_ssl,
     prompt,
 ):
@@ -354,6 +356,8 @@ def gather_args(
         config.enable_pager = pager
     if verify_ssl is not None:
         config.verify_ssl = verify_ssl
+    if greetings is not None:
+        config.greetings = greetings
 
     return ctx
 
@@ -492,5 +496,6 @@ def main():
     )
 
     # print hello message
-    greetings()
+    if config.greetings:
+        greetings()
     repl(client, session, enter_main_time)
