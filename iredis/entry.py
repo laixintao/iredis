@@ -177,9 +177,9 @@ def repl(client, session, start_time):
         try:
             command = session.prompt(
                 prompt_message(client),
-                bottom_toolbar=BottomToolbar(command_holder).render
-                if config.bottom_bar
-                else None,
+                bottom_toolbar=(
+                    BottomToolbar(command_holder).render if config.bottom_bar else None
+                ),
                 input_processors=[
                     UpdateBottomProcessor(command_holder, session),
                     PasswordProcessor(),
@@ -274,7 +274,12 @@ VERIFY_SSL_HELP = """Set the TLS certificate verification strategy"""
 @click.option("--rainbow/--no-rainbow", default=None, is_flag=True, help=RAINBOW)
 @click.option("--shell/--no-shell", default=None, is_flag=True, help=SHELL)
 @click.option("--pager/--no-pager", default=None, is_flag=True, help=PAGER_HELP)
-@click.option("--greetings/--no-greetings", default=None, is_flag=True, help="Enable or disable greeting messages")
+@click.option(
+    "--greetings/--no-greetings",
+    default=None,
+    is_flag=True,
+    help="Enable or disable greeting messages",
+)
 @click.option(
     "--verify-ssl",
     default=None,
@@ -376,9 +381,11 @@ def resolve_dsn(dsn):
         dsn_uri = config.alias_dsn[dsn]
     except KeyError:
         click.secho(
-            "Could not find the specified DSN in the config file. "
-            'Please check the "[alias_dsn]" section in your '
-            "iredisrc.",
+            (
+                "Could not find the specified DSN in the config file. "
+                'Please check the "[alias_dsn]" section in your '
+                "iredisrc."
+            ),
             err=True,
             fg="red",
         )
