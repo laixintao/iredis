@@ -278,7 +278,7 @@
 
 ### 0.8.12
 
-- Bugfix: Multi spaces between commands can be recongnised as correct commands
+- Bugfix: Multi spaces between commands can be recognised as correct commands
   now.
 - Feature: Warning on dangerous command.
 
