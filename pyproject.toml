@@ -35,11 +35,11 @@ prompt_toolkit = "^3"
 Pygments = "^2"
 mistune = "^3.0"
 configobj = "^5.0"
-click = "^7.0"
+click = "^8.0"
 pendulum = "^2.0"
 # wcwidth 0.2.x uses pkg_resources which is not supported by PyOxidizer
 wcwidth = "0.1.9"
-packaging = "^21.3"
+packaging = "^23.0"
 redis = "^4.5.3"
 
 [tool.poetry.dev-dependencies]
