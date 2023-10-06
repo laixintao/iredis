@@ -381,11 +381,9 @@ def resolve_dsn(dsn):
         dsn_uri = config.alias_dsn[dsn]
     except KeyError:
         click.secho(
-            (
-                "Could not find the specified DSN in the config file. "
-                'Please check the "[alias_dsn]" section in your '
-                "iredisrc."
-            ),
+            "Could not find the specified DSN in the config file. "
+            'Please check the "[alias_dsn]" section in your '
+            "iredisrc.",
             err=True,
             fg="red",
         )
