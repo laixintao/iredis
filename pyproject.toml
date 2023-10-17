@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "iredis"
-version = "1.13.0"
+version = "1.13.2"
 description = "Terminal client for Redis with auto-completion and syntax highlighting."
 authors = ["laixintao <laixintao1995@163.com>"]
 readme = 'README.md'
@@ -20,6 +20,7 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Database",
     "License :: OSI Approved :: MIT License",
     "Intended Audience :: Developers",
@@ -33,15 +34,14 @@ packages = [
 python = "^3.7"
 prompt_toolkit = "^3"
 Pygments = "^2"
-mistune = "^2.0"
+mistune = "^3.0"
 configobj = "^5.0"
-click = "^7.0"
+click = "^8.0"
 pendulum = "^2.0"
-importlib-resources = "^5.1.0"
 # wcwidth 0.2.x uses pkg_resources which is not supported by PyOxidizer
 wcwidth = "0.1.9"
-packaging = "^21.3"
-redis = "^4.5.4"
+packaging = "^23.0"
+redis = "^5.0.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.2"

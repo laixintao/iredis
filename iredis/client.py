@@ -4,9 +4,10 @@ IRedis client.
 import re
 import os
 import sys
+import codecs
 import logging
 from subprocess import run
-from importlib_resources import read_text
+from importlib.resources import read_text
 from packaging.version import parse as version_parse
 
 import redis
@@ -282,6 +283,7 @@ class Client:
                     connection.connect()
                     logger.info(f"New connection created, retry on {connection}.")
                 logger.info(f"send_command: {command_name} , {args}")
+
                 connection.send_command(command_name, *args)
                 response = connection.read_response()
             except AuthenticationError:
@@ -546,6 +548,12 @@ class Client:
         # score display for sorted set
         if command_name.upper() in ["ZSCAN", "ZPOPMAX", "ZPOPMIN"]:
             config.withscores = True
+
+        # TODO should we using escape_decode on all strings??
+        if command_name.upper() == "RESTORE":
+            for i, a in enumerate(args):
+                serialized_value = codecs.escape_decode(a)[0]
+                args[i] = serialized_value
 
         # not a tty
         if not completer:

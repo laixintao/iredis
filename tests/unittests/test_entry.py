@@ -28,7 +28,6 @@ from iredis.utils import DSN
 def test_command_entry_tty(is_tty, raw_arg_is_raw, final_config_is_raw, config):
     # is tty + raw -> raw
     with patch("sys.stdout.isatty") as patch_tty:
-
         patch_tty.return_value = is_tty
         if raw_arg_is_raw is None:
             call = ["iredis"]

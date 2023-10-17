@@ -3,7 +3,7 @@ import csv
 import json
 import logging
 import functools
-from importlib_resources import read_text, open_text
+from importlib.resources import read_text, open_text
 
 from .utils import timer, strip_quote_args
 from .exceptions import InvalidArguments, AmbiguousCommand

@@ -259,7 +259,7 @@ class OutputRender:
 
     @staticmethod
     def render_slowlog(raw):
-        fields = ["Slow log id", "Start at", "Running time(ms)", "Command"]
+        fields = ["Slow log id", "Start at", "Running time(μs)", "Command"]
         if version_parse(config.version) > version_parse("4.0"):
             fields.extend(["Client IP and port", "Client name"])
 
