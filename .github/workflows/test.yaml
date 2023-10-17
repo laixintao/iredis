@@ -10,6 +10,7 @@ jobs:
   test:
     name: Pytest
     strategy:
+      fail-fast: false
       matrix:
         os: ["ubuntu-20.04"]
         python: ["3.7", "3.8", "3.9", "3.10", "3.11.1", "3.12.0"]
