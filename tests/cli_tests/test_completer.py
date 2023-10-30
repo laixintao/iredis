@@ -37,7 +37,7 @@ def test_command_completion_when_space_command(cli, clean_redis):
     cli.expect("command info")
 
 
-@pytest.mark.skipif("int(os.environ['REDIS_VERSION']) < 6")
+@pytest.mark.skipif("version_parse(os.environ['REDIS_VERSION']) < version_parse('6')")
 def test_username_completer(cli, iredis_client):
     iredis_client.execute("acl setuser", "foo1")
     iredis_client.execute("acl setuser", "bar2")

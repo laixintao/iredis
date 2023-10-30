@@ -213,7 +213,7 @@ def test_auto_select_db_and_auth_for_reconnect_only_6(iredis_client, config):
     )
 
 
-@pytest.mark.skipif("int(os.environ['REDIS_VERSION']) > 5")
+@pytest.mark.skipif("version_parse(os.environ['REDIS_VERSION']) > version_parse('5')")
 def test_auto_select_db_and_auth_for_reconnect_only_5(iredis_client, config):
     config.retry_times = 2
     config.raw = True
