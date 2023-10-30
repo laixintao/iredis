@@ -1,0 +1,7 @@
+tests
+scripts
+CHANGELOG.md
+Dockerfile
+docs
+pyoxidizer.template.bzl
+redis-doc
