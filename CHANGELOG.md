@@ -3,6 +3,9 @@
 ## 1.14
 
 - Dependency: upgrade redis-py to 5 (thanks to [chayim])
+- Feature: porting to redis-server 7.2 now
+- Feature: supports python 3.10, 3.11 now
+- Doc: update commands.json from redis-doc to latest version
 
 ## 1.13.2
 
