@@ -1,18 +1,20 @@
 import os
 import re
+from textwrap import dedent
+from unittest.mock import MagicMock, patch
+
+from packaging.version import parse as version_parse
+from prompt_toolkit.formatted_text import FormattedText
 import pytest
 import redis
-from unittest.mock import MagicMock, patch
-from textwrap import dedent
-
-from prompt_toolkit.formatted_text import FormattedText
 
 from iredis.client import Client
-from iredis.config import config, load_config_files
+from iredis.commands import command2syntax
 from iredis.completers import IRedisCompleter
+from iredis.config import config, load_config_files
 from iredis.entry import Rainbow, prompt_message
 from iredis.exceptions import NotSupport
-from iredis.commands import command2syntax
+
 from ..helpers import formatted_text_rematch
 
 
@@ -40,7 +42,7 @@ if os.environ["REDIS_VERSION"] == "7":
     ],
 )
 def test_send_command(_input, command_name, expect_args):
-    client = Client("127.0.0.1", "6379", None)
+    client = Client("127.0.0.1", 6379, None)
     client.execute = MagicMock()
     next(client.send_command(_input, None))
     args, _ = client.execute.call_args
