@@ -1,4 +1,6 @@
 import os
+
+from packaging.version import parse as version_parse
 import pytest
 
 
@@ -9,7 +11,7 @@ def test_wrong_select_db_index(cli):
     cli.sendline("select 128")
     cli.expect(["DB index is out of range", "127.0.0.1:6379[1]>"])
 
-    if int(os.environ["REDIS_VERSION"]) > 5:
+    if version_parse(os.environ["REDIS_VERSION"]) > version_parse("5"):
         text = "value is not an integer or out of range"
     else:
         text = "invalid DB index"
@@ -42,14 +44,14 @@ def test_enter_key_binding(clean_redis, cli):
     cli.expect(r"hello")
 
 
-@pytest.mark.skipif("int(os.environ['REDIS_VERSION']) < 6")
+@pytest.mark.skipif("version_parse(os.environ['REDIS_VERSION']) < version_parse('6')")
 def test_auth_hidden_password_with_username(clean_redis, cli):
     cli.send("auth  default hello-world")
     cli.expect("default")
     cli.expect(r"\*{11}")
 
 
-@pytest.mark.skipif("int(os.environ['REDIS_VERSION']) > 5")
+@pytest.mark.skipif("version_parse(os.environ['REDIS_VERSION']) > version_parse('5')")
 def test_auth_hidden_password(clean_redis, cli):
     cli.send("auth hello-world")
     cli.expect("auth")

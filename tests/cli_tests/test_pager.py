@@ -1,10 +1,12 @@
 # noqa: F541
-import os
-import sys
-import pexpect
-import pathlib
 from contextlib import contextmanager
+import os
+import pathlib
+import sys
 from textwrap import dedent
+from packaging.version import parse as version_parse
+
+import pexpect
 
 
 TEST_IREDISRC = "/tmp/.iredisrc.test"
@@ -21,6 +23,10 @@ env_pager_numbers = "{0} {1} {2}".format(
     os.path.join(pathlib.Path(__file__).parent, "wrappager.py"),
     TEST_PAGER_BOUNDARY_NUMBER,
 )
+
+long_list_type = "quicklist"
+if version_parse(os.environ["REDIS_VERSION"]) >= version_parse("7"):
+    long_list_type = "listpack"
 
 
 @contextmanager
@@ -52,11 +58,6 @@ def test_using_pager_works_for_help():
         child.expect(TEST_PAGER_BOUNDARY)
         child.expect("Set the string value of a key")
         child.expect(TEST_PAGER_BOUNDARY)
-
-
-long_list_type = "quicklist"
-if os.environ["REDIS_VERSION"] == "7":
-    long_list_type = "listpack"
 
 
 def test_pager_works_for_peek(clean_redis):

@@ -1,18 +1,20 @@
 import os
 import re
+from textwrap import dedent
+from unittest.mock import MagicMock, patch
+
+from packaging.version import parse as version_parse
+from prompt_toolkit.formatted_text import FormattedText
 import pytest
 import redis
-from unittest.mock import MagicMock, patch
-from textwrap import dedent
-
-from prompt_toolkit.formatted_text import FormattedText
 
 from iredis.client import Client
-from iredis.config import config, load_config_files
+from iredis.commands import command2syntax
 from iredis.completers import IRedisCompleter
+from iredis.config import config, load_config_files
 from iredis.entry import Rainbow, prompt_message
 from iredis.exceptions import NotSupport
-from iredis.commands import command2syntax
+
 from ..helpers import formatted_text_rematch
 
 
@@ -24,7 +26,7 @@ def completer():
 zset_type = "ziplist"
 hash_type = "hashtable"
 list_type = "quicklist"
-if os.environ["REDIS_VERSION"] == "7":
+if version_parse(os.environ["REDIS_VERSION"]) >= version_parse("7"):
     zset_type = "listpack"
     hash_type = "listpack"
     list_type = "listpack"
@@ -40,7 +42,7 @@ if os.environ["REDIS_VERSION"] == "7":
     ],
 )
 def test_send_command(_input, command_name, expect_args):
-    client = Client("127.0.0.1", "6379", None)
+    client = Client("127.0.0.1", 6379, None)
     client.execute = MagicMock()
     next(client.send_command(_input, None))
     args, _ = client.execute.call_args
@@ -180,7 +182,7 @@ def test_not_retry_on_authentication_error(iredis_client, config):
 
 
 @pytest.mark.skipif(
-    "int(os.environ['REDIS_VERSION']) != 6",
+    "version_parse(os.environ['REDIS_VERSION']) != version_parse('6')",
     reason="""
 in redis7, it will not work if you:
 1. connect redis without password
@@ -213,7 +215,7 @@ def test_auto_select_db_and_auth_for_reconnect_only_6(iredis_client, config):
     )
 
 
-@pytest.mark.skipif("int(os.environ['REDIS_VERSION']) > 5")
+@pytest.mark.skipif("version_parse(os.environ['REDIS_VERSION']) > version_parse('5')")
 def test_auto_select_db_and_auth_for_reconnect_only_5(iredis_client, config):
     config.retry_times = 2
     config.raw = True
@@ -554,23 +556,29 @@ def test_version_parse_for_auth(iredis_client):
     "info, version",
     [
         (
-            "# Server\r\nredis_version:df--128-NOTFOUND\r\n"
-            "redis_mode:standalone\r\narch_bits:64",
+            (
+                "# Server\r\nredis_version:df--128-NOTFOUND\r\n"
+                "redis_mode:standalone\r\narch_bits:64"
+            ),
             "df--128-NOTFOUND",
         ),
         (
-            "# Server\r\nredis_version:6.2.5\r\n"
-            "redis_git_sha1:00000000\r\n"
-            "redis_git_dirty:0\r\n"
-            "redis_build_id:915e5480613bc9b6\r\n"
-            "redis_mode:standalone ",
+            (
+                "# Server\r\nredis_version:6.2.5\r\n"
+                "redis_git_sha1:00000000\r\n"
+                "redis_git_dirty:0\r\n"
+                "redis_build_id:915e5480613bc9b6\r\n"
+                "redis_mode:standalone "
+            ),
             "6.2.5",
         ),
         (
-            "# Server\r\nredis_version:5.0.14.1\r\n"
-            "redis_git_sha1:00000000\r\nredis_git_dirty:0\r\n"
-            "redis_build_id:915e5480613bc9b6\r\n"
-            "redis_mode:standalone ",
+            (
+                "# Server\r\nredis_version:5.0.14.1\r\n"
+                "redis_git_sha1:00000000\r\nredis_git_dirty:0\r\n"
+                "redis_build_id:915e5480613bc9b6\r\n"
+                "redis_mode:standalone "
+            ),
             "5.0.14.1",
         ),
     ],
@@ -580,9 +588,10 @@ def test_version_path(info, version):
         mock_config.no_info = True
         mock_config.pager = "less"
         mock_config.version = "5.0.0"
+        mock_config.decode = "utf-8"
         with patch("iredis.client.Client.execute") as mock_execute:
             mock_execute.return_value = info
-            client = Client("127.0.0.1", "6379", None)
+            client = Client("127.0.0.1", 6379)
             client.get_server_info()
             assert mock_config.version == version
 
