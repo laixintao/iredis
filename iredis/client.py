@@ -95,6 +95,7 @@ class Client:
         try:
             self.connection.connect()
         except Exception as e:
+            logger.exception("Can not create connection to server")
             print(str(e), file=sys.stderr)
             sys.exit(1)
         if not config.no_info:

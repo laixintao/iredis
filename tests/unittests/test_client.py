@@ -580,6 +580,7 @@ def test_version_path(info, version):
         mock_config.no_info = True
         mock_config.pager = "less"
         mock_config.version = "5.0.0"
+        mock_config.decode = "utf-8"
         with patch("iredis.client.Client.execute") as mock_execute:
             mock_execute.return_value = info
             client = Client("127.0.0.1", 6379)
