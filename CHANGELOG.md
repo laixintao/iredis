@@ -1,5 +1,9 @@
 ## UPCOMING
 
+## 1.14
+
+- Dependency: upgrade redis-py to 5 (thanks to [chayim])
+
 ## 1.13.2
 
 - Dependency: upgrade markdown render mistune to v3
@@ -316,3 +320,4 @@
 [tssujt]: https://github.com/tssujt
 [aymericbeaumet]: https://github.com/aymericbeaumet
 [torrefatto]: https://github.com/torrefatto
+[chayim]: https://github.com/chayim
