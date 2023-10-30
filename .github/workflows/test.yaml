@@ -50,7 +50,7 @@ jobs:
         run: |
           . venv/bin/activate
           pip install pendulum==3.0.0b1
-        if: matrix.python-version == '3.12'
+        if: matrix.python == '3.12'
 
       - name: Poetry install
         run: |
