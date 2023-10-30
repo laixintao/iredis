@@ -26,7 +26,7 @@ def completer():
 zset_type = "ziplist"
 hash_type = "hashtable"
 list_type = "quicklist"
-if os.environ["REDIS_VERSION"] == "7":
+if version_parse(os.environ["REDIS_VERSION"]) >= version_parse("7"):
     zset_type = "listpack"
     hash_type = "listpack"
     list_type = "listpack"
@@ -182,7 +182,7 @@ def test_not_retry_on_authentication_error(iredis_client, config):
 
 
 @pytest.mark.skipif(
-    "int(os.environ['REDIS_VERSION']) != 6",
+    "version_parse(os.environ['REDIS_VERSION']) != version_parse('6')",
     reason="""
 in redis7, it will not work if you:
 1. connect redis without password
@@ -202,7 +202,8 @@ def test_auto_select_db_and_auth_for_reconnect_only_6(iredis_client, config):
     assert (
         b"ERROR AUTH <password> called without any "
         b"password configured for the default user. "
-        b"Are you sure your configuration is correct?" in resp
+        b"Are you sure your configuration is correct?"
+        in resp
     )
     assert iredis_client.connection.password is None
 
@@ -513,15 +514,13 @@ def test_reissue_command_on_redis_cluster(iredis_client, clean_redis):
 def test_reissue_command_on_redis_cluster_with_password_in_dsn(
     iredis_client, clean_redis
 ):
-    config_content = dedent(
-        """
+    config_content = dedent("""
         [main]
         log_location = /tmp/iredis1.log
         no_info=True
         [alias_dsn]
         cluster-7003=redis://foo:bar@127.0.0.1:7003
-        """
-    )
+        """)
     with open("/tmp/iredisrc", "w+") as etc_config:
         etc_config.write(config_content)
 
@@ -556,23 +555,29 @@ def test_version_parse_for_auth(iredis_client):
     "info, version",
     [
         (
-            "# Server\r\nredis_version:df--128-NOTFOUND\r\n"
-            "redis_mode:standalone\r\narch_bits:64",
+            (
+                "# Server\r\nredis_version:df--128-NOTFOUND\r\n"
+                "redis_mode:standalone\r\narch_bits:64"
+            ),
             "df--128-NOTFOUND",
         ),
         (
-            "# Server\r\nredis_version:6.2.5\r\n"
-            "redis_git_sha1:00000000\r\n"
-            "redis_git_dirty:0\r\n"
-            "redis_build_id:915e5480613bc9b6\r\n"
-            "redis_mode:standalone ",
+            (
+                "# Server\r\nredis_version:6.2.5\r\n"
+                "redis_git_sha1:00000000\r\n"
+                "redis_git_dirty:0\r\n"
+                "redis_build_id:915e5480613bc9b6\r\n"
+                "redis_mode:standalone "
+            ),
             "6.2.5",
         ),
         (
-            "# Server\r\nredis_version:5.0.14.1\r\n"
-            "redis_git_sha1:00000000\r\nredis_git_dirty:0\r\n"
-            "redis_build_id:915e5480613bc9b6\r\n"
-            "redis_mode:standalone ",
+            (
+                "# Server\r\nredis_version:5.0.14.1\r\n"
+                "redis_git_sha1:00000000\r\nredis_git_dirty:0\r\n"
+                "redis_build_id:915e5480613bc9b6\r\n"
+                "redis_mode:standalone "
+            ),
             "5.0.14.1",
         ),
     ],
