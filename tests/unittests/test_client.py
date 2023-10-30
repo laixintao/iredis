@@ -582,7 +582,7 @@ def test_version_path(info, version):
         mock_config.version = "5.0.0"
         with patch("iredis.client.Client.execute") as mock_execute:
             mock_execute.return_value = info
-            client = Client("127.0.0.1", "6379", None)
+            client = Client("127.0.0.1", 6379)
             client.get_server_info()
             assert mock_config.version == version
 
