@@ -1,4 +1,4 @@
-from packaging.version import parse as version_parse
+from packaging.version import parse as version_parse  # noqa: E401
 import pytest
 
 

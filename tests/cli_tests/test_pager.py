@@ -60,8 +60,6 @@ def test_using_pager_works_for_help():
         child.expect(TEST_PAGER_BOUNDARY)
 
 
-
-
 def test_pager_works_for_peek(clean_redis):
     for index in range(100):
         clean_redis.lpush("long-list", f"value-{index}")
