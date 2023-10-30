@@ -38,12 +38,20 @@ jobs:
           key:
             poetryenv-${{ matrix.os }}-${{ matrix.python }}-${{
             hashFiles('poetry.lock') }}
+
       - name: Install Dependencies
         run: |
           python3 -m venv venv
           . venv/bin/activate
           pip install -U pip setuptools
           pip install poetry
+
+      - name: Install beta version of pendulum
+        run: pip install pendulum==3.0.0b1
+        if: matrix.python-version == '3.12'
+
+      - name: Poetry install
+        run: |
           poetry install
           python -c "import sys; print(sys.version)"
           pip list
