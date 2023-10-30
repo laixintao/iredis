@@ -11,7 +11,7 @@ def test_wrong_select_db_index(cli):
     cli.sendline("select 128")
     cli.expect(["DB index is out of range", "127.0.0.1:6379[1]>"])
 
-    if int(os.environ["REDIS_VERSION"]) > 5:
+    if version_parse(os.environ["REDIS_VERSION"]) > version_parse("5"):
         text = "value is not an integer or out of range"
     else:
         text = "invalid DB index"
