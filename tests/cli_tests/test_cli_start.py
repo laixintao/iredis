@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from packaging.version import parse as version_parse  # noqa: E401
+from packaging.version import parse as version_parse  # noqa: F401
 import pexpect
 import pytest
 
