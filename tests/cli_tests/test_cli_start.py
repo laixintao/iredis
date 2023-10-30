@@ -1,6 +1,8 @@
+from textwrap import dedent
+
+from packaging.version import parse as version_parse
 import pexpect
 import pytest
-from textwrap import dedent
 
 
 def test_start_on_connection_error():
@@ -29,14 +31,14 @@ def test_short_help_option(config):
     c.close()
 
 
-@pytest.mark.skipif("int(os.environ['REDIS_VERSION']) != 5")
+@pytest.mark.skipif("version_parse(os.environ['REDIS_VERSION']) != version_parse('5')")
 def test_server_version_in_starting_on5():
     c = pexpect.spawn("iredis", timeout=2)
     c.expect("redis-server  5")
     c.close()
 
 
-@pytest.mark.skipif("int(os.environ['REDIS_VERSION']) != 6")
+@pytest.mark.skipif("version_parse(os.environ['REDIS_VERSION']) != version_parse('6')")
 def test_server_version_in_starting_on6():
     c = pexpect.spawn("iredis", timeout=2)
     c.expect("redis-server  6")
@@ -66,13 +68,11 @@ def test_connection_using_url_from_env(clean_redis, monkeypatch):
 # https://github.community/t5/GitHub-Actions/Job-service-command/td-p/33901#
 # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idservices
 def test_connect_via_socket(fake_redis_socket):
-    config_content = dedent(
-        """
+    config_content = dedent("""
         [main]
         log_location = /tmp/iredis1.log
         no_info=True
-        """
-    )
+        """)
     with open("/tmp/iredisrc", "w+") as etc_config:
         etc_config.write(config_content)
 
