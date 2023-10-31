@@ -10,7 +10,8 @@
 ## 1.13.2
 
 - Dependency: upgrade markdown render mistune to v3
-- Dependency: deprecated importlib_resources, use Python build in `importlib.resources` now
+- Dependency: deprecated importlib_resources, use Python build in
+  `importlib.resources` now
 - Dependency: upgrade redis-py to 4.5
 - Doc: update homepage link to iredis.xbin.io
 - Bugfix: Fix restore command caused by string literal escape
@@ -22,9 +23,10 @@
 
 ### 1.12.2
 
-- Feature: IRedis now honors the `ssl_cert_reqs` strategy, either specifying it via
-  command line (`--verify-ssl=<none|optional|required>`) or as an url parameter (`ssl_cert_reqs`)
-  when the connection is secured via tls (`rediss://`). (authored by [torrefatto])
+- Feature: IRedis now honors the `ssl_cert_reqs` strategy, either specifying it
+  via command line (`--verify-ssl=<none|optional|required>`) or as an url
+  parameter (`ssl_cert_reqs`) when the connection is secured via tls
+  (`rediss://`). (authored by [torrefatto])
 
 ### 1.12.1
 
@@ -32,7 +34,8 @@
 - Bugfix: all tests pass on redis:7 now.
 - Feature: IRedis now accept `username` for auth, redis server version under 6
   will ignore `username`.
-- Feature: IRedis support prompt now, you can customize prompt string. (thanks to [aymericbeaumet])
+- Feature: IRedis support prompt now, you can customize prompt string. (thanks
+  to [aymericbeaumet])
 
 ## 1.12
 

@@ -76,6 +76,10 @@ prompt =
 # History file location
 history_location = ~/.iredis_history
 
+# if set to True, will display version information on startup
+# can set to False to disable it.
+greetings = True
+
 [alias_dsn]
 # example_dsn = redis://[[username]:[password]]@localhost:6379/0
 # example_dsn = rediss://[[username]:[password]]@localhost:6379/0
