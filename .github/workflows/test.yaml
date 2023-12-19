@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ["ubuntu-20.04"]
-        python: ["3.7", "3.8", "3.9", "3.10", "3.11.1"]
+        python: ["3.8", "3.9", "3.10", "3.11.1"]
         redis: [5, 6, 7, 7.2]
     runs-on: ${{ matrix.os }}
 
@@ -65,7 +65,7 @@ jobs:
           skip: ./docs/assets/demo.svg,./iredis/data/commands.json,./iredis/data/commands/*,./tests/unittests/*
       - uses: actions/setup-python@v4
         with:
-          python-version: 3.7
+          python-version: 3.8
           architecture: "x64"
       - name: Cache venv
         uses: actions/cache@v2
