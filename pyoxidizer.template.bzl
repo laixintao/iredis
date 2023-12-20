@@ -76,7 +76,7 @@ def make_exe(dist):
 
     # Controls the `add_include` attribute of `PythonModuleSource` not in
     # the standard library.
-    # policy.include_non_distribution_sources = True
+    policy.include_non_distribution_sources = True
 
     # Toggle whether files associated with tests are included.
     policy.include_test = False
