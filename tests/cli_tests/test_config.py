@@ -19,7 +19,7 @@ def test_log_location_config():
 
     log = Path("/tmp/iredis1.log")
     assert log.exists()
-    with open(log, "r") as logfile:
+    with open(log) as logfile:
         content = logfile.read()
 
     assert len(content) > 100

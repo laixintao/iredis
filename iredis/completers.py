@@ -139,8 +139,7 @@ class TimestampCompleter(Completer):
         )
 
         # here we yield bigger timestamp first.
-        for completion in sorted(completions, key=lambda a: a.text):
-            yield completion
+        yield from sorted(completions, key=lambda a: a.text)
 
 
 class IRedisCompleter(Completer):
@@ -290,7 +289,7 @@ class IRedisCompleter(Completer):
         self.key_completer.touch_words(ensure_str(items))
 
     def __repr__(self) -> str:
-        return "DynamicCompleter(%r -> %r)" % (
+        return "DynamicCompleter({!r} -> {!r})".format(
             self.get_completer,
             self.current_completer,
         )

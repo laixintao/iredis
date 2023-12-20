@@ -10,7 +10,7 @@ def test_history_not_log_auth(cli):
     cli.sendline("set foo bar")
     cli.expect("OK")
 
-    with open(os.path.expanduser("~/.iredis_history"), "r") as history_file:
+    with open(os.path.expanduser("~/.iredis_history")) as history_file:
         content = history_file.read()
 
     assert "set foo bar" in content
@@ -36,7 +36,7 @@ def test_history_create_and_writing_with_config():
     log = Path("/tmp/iredis_history.txt")
     assert log.exists()
 
-    with open(log, "r") as logfile:
+    with open(log) as logfile:
         content = logfile.read()
 
     assert "set hello world" in content
