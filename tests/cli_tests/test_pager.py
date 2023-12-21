@@ -13,12 +13,12 @@ TEST_IREDISRC = "/tmp/.iredisrc.test"
 TEST_PAGER_BOUNDARY = "---boundary---"
 TEST_PAGER_BOUNDARY_NUMBER = "---88938347271---"
 
-env_pager = "{0} {1} {2}".format(
+env_pager = "{} {} {}".format(
     sys.executable,
     os.path.join(pathlib.Path(__file__).parent, "wrappager.py"),
     TEST_PAGER_BOUNDARY,
 )
-env_pager_numbers = "{0} {1} {2}".format(
+env_pager_numbers = "{} {} {}".format(
     sys.executable,
     os.path.join(pathlib.Path(__file__).parent, "wrappager.py"),
     TEST_PAGER_BOUNDARY_NUMBER,

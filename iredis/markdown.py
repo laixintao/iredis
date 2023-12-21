@@ -39,7 +39,7 @@ class TerminalRender(mistune.HTMLRenderer):
         tag = "ul"
         if ordered:
             tag = "ol"
-        return "<%s>%s</%s>\n" % (tag, body, tag)
+        return "<{}>{}</{}>\n".format(tag, body, tag)
 
     def list_item(self, text, *args):
         """Rendering list item snippet. Like ``<li>``."""
@@ -62,5 +62,5 @@ def replace_to_markdown_title(original):
 def render(text):
     replaced = replace_to_markdown_title(text)
     html_text = markdown_render(replaced)
-    logger.debug("[Document] {} ...".format(html_text)[:20])
+    logger.debug(f"[Document] {html_text} ..."[:20])
     return to_formatted_text(HTML(html_text))

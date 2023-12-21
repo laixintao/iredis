@@ -53,7 +53,7 @@ def judge_command():
             return
 
         variables = m.variables()
-        print("Found variables: {}".format(variables))
+        print(f"Found variables: {variables}")
         for expect_token, expect_value in expect.items():
             all_variables = variables.getall(expect_token)
             if len(all_variables) > 1:
