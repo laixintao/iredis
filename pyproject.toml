@@ -19,7 +19,7 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
-    # "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Database",
     "License :: OSI Approved :: MIT License",
     "Intended Audience :: Developers",
@@ -36,7 +36,7 @@ Pygments = "^2"
 mistune = "^3.0"
 configobj = "^5.0"
 click = "^8.0"
-pendulum = "^2.1.0"
+pendulum = "^3.0.0"
 # wcwidth 0.2.x uses pkg_resources which is not supported by PyOxidizer
 wcwidth = "0.1.9"
 packaging = "^23.0"
