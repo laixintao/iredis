@@ -76,7 +76,7 @@ def make_exe(dist):
 
     # Controls the `add_include` attribute of `PythonModuleSource` not in
     # the standard library.
-    # policy.include_non_distribution_sources = True
+    policy.include_non_distribution_sources = True
 
     # Toggle whether files associated with tests are included.
     policy.include_test = False
@@ -225,7 +225,7 @@ def make_exe(dist):
     # collected files inside Python wheels. `add_python_resources()` adds these
     # objects to the binary, with a load location as defined by the packaging
     # policy's resource location attributes.
-    #exe.add_python_resources(exe.pip_download(["pyflakes==2.2.0"]))
+    exe.add_python_resources(exe.pip_install(["--no-binary", ":all:", "pendulum"]))
 
     # Invoke `pip install` with our Python distribution to install a single package.
     # `pip_install()` returns objects representing installed files.
@@ -339,5 +339,5 @@ resolve_targets()
 # Everything below this is typically managed by PyOxidizer and doesn't need
 # to be updated by people.
 
-PYOXIDIZER_VERSION = "0.14.1"
+PYOXIDIZER_VERSION = "0.23.0"
 PYOXIDIZER_COMMIT = "UNKNOWN"
