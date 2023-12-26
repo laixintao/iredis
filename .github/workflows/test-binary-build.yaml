@@ -11,8 +11,6 @@ jobs:
     name: Test Build Executable Binary. You can download from Artifact after building.
     runs-on: ubuntu-latest
 
-    environment:
-      PENDULUM_EXTENSIONS: "0"
 
     # FIXME
     # help test shouldn't depends on this to run
@@ -59,6 +57,7 @@ jobs:
 
       - name: Executable Build
         run: |
+          export PENDULUM_EXTENSIONS=0
           # pyoxidizer doesn't know the wheel path, and it doesn't support passing env vars
           export WHEEL_PATH=`ls ./dist/iredis*.whl`
           envsubst '$WHEEL_PATH' < pyoxidizer.template.bzl > pyoxidizer.bzl
@@ -70,7 +69,6 @@ jobs:
 
       - name: Test Executable
         run: |
-          echo $PENDULUM_EXTENSIONS
           ./build/x86*/release/install/iredis -h
           ./build/x86*/release/install/iredis help GET
 
