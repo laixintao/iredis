@@ -339,5 +339,5 @@ resolve_targets()
 # Everything below this is typically managed by PyOxidizer and doesn't need
 # to be updated by people.
 
-PYOXIDIZER_VERSION = "0.14.1"
+PYOXIDIZER_VERSION = "0.23.0"
 PYOXIDIZER_COMMIT = "UNKNOWN"
