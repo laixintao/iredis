@@ -225,7 +225,7 @@ def make_exe(dist):
     # collected files inside Python wheels. `add_python_resources()` adds these
     # objects to the binary, with a load location as defined by the packaging
     # policy's resource location attributes.
-    exe.add_python_resources(exe.pip_download(["--no-binary", ":all:", "pendulum"]))
+    exe.add_python_resources(exe.pip_install(["--no-binary", ":all:", "pendulum"]))
 
     # Invoke `pip install` with our Python distribution to install a single package.
     # `pip_install()` returns objects representing installed files.
