@@ -11,6 +11,9 @@ jobs:
     name: Test Build Executable Binary. You can download from Artifact after building.
     runs-on: ubuntu-latest
 
+    environment:
+      PENDULUM_EXTENSIONS: "0"
+
     # FIXME
     # help test shouldn't depends on this to run
     services:
@@ -67,6 +70,7 @@ jobs:
 
       - name: Test Executable
         run: |
+          echo $PENDULUM_EXTENSIONS
           ./build/x86*/release/install/iredis -h
           ./build/x86*/release/install/iredis help GET
 
