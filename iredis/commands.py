@@ -120,7 +120,7 @@ def split_command_args(command):
         # `command` with `args` is ('in') which is an invalid case.
         normalized_input_command = " ".join(command.split()).upper()
         if (
-            re.search("\s", command)
+            re.search(r"\s", command)
             and command_name.startswith(normalized_input_command)
             and command_name != normalized_input_command
         ):
