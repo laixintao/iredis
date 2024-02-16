@@ -4,6 +4,7 @@ This module will be auto loaded to callbacks.
 
 func(redis-response) -> formatted result(str)
 """
+
 import logging
 import time
 from packaging.version import parse as version_parse
