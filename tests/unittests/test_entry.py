@@ -175,6 +175,19 @@ def test_command_shell_options_higher_priority():
             ),
         ),
         (
+            "redis://username:pass@word@localhost:12345/2",
+            DSN(
+                scheme="redis",
+                host="localhost",
+                port=12345,
+                path=None,
+                db=2,
+                username="username",
+                password="pass@word",
+                verify_ssl=None,
+            ),
+        ),
+        (
             "redis://username@localhost:12345",
             DSN(
                 scheme="redis",
