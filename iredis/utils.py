@@ -39,10 +39,11 @@ def literal_bytes(b):
     return b
 
 
-def _valid_token(words):
-    token = "".join(words).strip()
-    if token:
-        yield token
+def nappend(word, c, pre_back_slash):
+    if pre_back_slash and c == "n":  # \n
+        word[-1] = "\n"
+    else:
+        word.append(c)
 
 
 def strip_quote_args(s):
@@ -69,7 +70,7 @@ def strip_quote_args(s):
                     # previous char is \ , merge with current "
                     word[-1] = char
             else:
-                word.append(char)
+                nappend(word, char, pre_back_slash)
         # not in quote
         else:
             # separator
@@ -81,7 +82,7 @@ def strip_quote_args(s):
             elif char in ["'", '"']:
                 in_quote = char
             else:
-                word.append(char)
+                nappend(word, char, pre_back_slash)
         if char == "\\" and not pre_back_slash:
             pre_back_slash = True
         else:

@@ -55,6 +55,7 @@ def test_timer():
         (r'""', [""]),  # set foo "" is a legal command
         (r"\\", ["\\\\"]),  # backslash are legal
         ("\\hello\\", ["\\hello\\"]),  # backslash are legal
+        ('foo "bar\\n1"', ["foo", "bar\n1"]),
     ],
 )
 def test_stripe_quote_escape_in_quote(test_input, expected):

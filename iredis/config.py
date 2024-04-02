@@ -88,13 +88,13 @@ def read_config_file(f):
         config = ConfigObj(f, interpolation=False, encoding="utf8")
     except ConfigObjError as e:
         logger.error(
-            "Unable to parse line {0} of config file " "'{1}'.".format(e.line_number, f)
+            "Unable to parse line {} of config file " "'{}'.".format(e.line_number, f)
         )
         logger.error("Using successfully parsed config values.")
         return e.config
-    except (IOError, OSError) as e:
+    except OSError as e:
         logger.error(
-            "You don't have permission to read " "config file '{0}'.".format(e.filename)
+            "You don't have permission to read " "config file '{}'.".format(e.filename)
         )
         return None
 

@@ -1,5 +1,10 @@
 ## UPCOMING
 
+### 1.14.1
+
+- Bugfix: fix argument parsing, `"foo\nbar"` will be parsed to `foo` and `\` 
+  and `n` and `bar`, the `\` and `n` should be one character `\n` instead.
+
 ## 1.14
 
 - Dependency: upgrade redis-py to 5 (thanks to [chayim])
