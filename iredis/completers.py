@@ -1,6 +1,6 @@
 import logging
 from typing import Iterable
-from datetime import datetime
+from datetime import datetime, timezone
 
 from dateutil.relativedelta import relativedelta
 from prompt_toolkit.completion import (
@@ -123,7 +123,7 @@ class TimestampCompleter(Completer):
     def _completion_formatted_time(self, document: Document) -> Iterable[Completion]:
         text = document.text
         try:
-            dt = datetime.fromisoformat(text)
+            dt = datetime.fromisoformat(text).replace(tzinfo=timezone.utc)
         except Exception:
             return
         yield Completion(

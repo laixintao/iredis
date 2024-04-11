@@ -347,7 +347,7 @@ def test_timestamp_completer_datetime_format_time_completion():
             text="1581033600000",
             start_position=-10,
             display=FormattedText([("", "1581033600000")]),
-            display_meta="2020-02-07T00:00:00+00:00",
+            display_meta="2020-02-07 00:00:00+00:00",
         )
     ]
 
