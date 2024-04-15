@@ -1,7 +1,8 @@
 import logging
 from typing import Iterable
+from datetime import datetime, timezone
 
-import pendulum
+from dateutil.relativedelta import relativedelta
 from prompt_toolkit.completion import (
     CompleteEvent,
     Completer,
@@ -102,19 +103,19 @@ class TimestampCompleter(Completer):
         if not text.isnumeric():
             return
         current = int(text)
-        now = pendulum.now()
+        now = datetime.now()
         for unit, minimum in self.when_lower_than.items():
             if current <= minimum:
                 if self.future_time:
-                    dt = now.add(**{f"{unit}s": current})
+                    dt = now + relativedelta(**{f"{unit}s": current})
                     offset_text = "later"
                 else:
-                    dt = now.subtract(**{f"{unit}s": current})
+                    dt = now - relativedelta(**{f"{unit}s": current})
                     offset_text = "ago"
 
-                meta = f"{text} {unit}{'s' if current > 1 else ''} {offset_text} ({dt.format('YYYY-MM-DD HH:mm:ss')})"
+                meta = f"{text} {unit}{'s' if current > 1 else ''} {offset_text} ({dt.strftime('%Y-%m-%d %H:%M:%S')})"
                 yield Completion(
-                    str(dt.int_timestamp * self.factor),
+                    str(int(dt.timestamp()) * self.factor),
                     start_position=-len(document.text_before_cursor),
                     display_meta=meta,
                 )
@@ -122,11 +123,11 @@ class TimestampCompleter(Completer):
     def _completion_formatted_time(self, document: Document) -> Iterable[Completion]:
         text = document.text
         try:
-            dt = pendulum.parse(text)
+            dt = datetime.fromisoformat(text).replace(tzinfo=timezone.utc)
         except Exception:
             return
         yield Completion(
-            str(dt.int_timestamp * self.factor),
+            str(int(dt.timestamp()) * self.factor),
             start_position=-len(document.text_before_cursor),
             display_meta=str(dt),
         )

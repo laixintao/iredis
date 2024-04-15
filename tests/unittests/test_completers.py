@@ -1,6 +1,6 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
-import pendulum
+from freezegun import freeze_time
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.completion import Completion
 
@@ -180,9 +180,8 @@ def test_group_completer():
     ]
 
 
-@patch("iredis.completers.pendulum.now")
-def test_timestamp_completer_humanize_time_completion(fake_now):
-    fake_now.return_value = pendulum.from_timestamp(1578487013)
+@freeze_time("2020-01-08 12:36:53")
+def test_timestamp_completer_humanize_time_completion():
     c = TimestampCompleter(is_milliseconds=True, future_time=False)
 
     fake_document = MagicMock()
@@ -260,9 +259,8 @@ def test_timestamp_completer_humanize_time_completion(fake_now):
     ]
 
 
-@patch("iredis.completers.pendulum.now")
-def test_timestamp_completer_humanize_time_completion_seconds(fake_now):
-    fake_now.return_value = pendulum.from_timestamp(1578487013)
+@freeze_time("2020-01-08 12:36:53")
+def test_timestamp_completer_humanize_time_completion_seconds():
     c = TimestampCompleter(is_milliseconds=False, future_time=False)
 
     fake_document = MagicMock()
@@ -297,9 +295,8 @@ def test_timestamp_completer_humanize_time_completion_seconds(fake_now):
     ]
 
 
-@patch("iredis.completers.pendulum.now")
-def test_timestamp_completer_humanize_time_completion_seconds_future_time(fake_now):
-    fake_now.return_value = pendulum.from_timestamp(1578487013)
+@freeze_time("2020-01-08 12:36:53")
+def test_timestamp_completer_humanize_time_completion_seconds_future_time():
     c = TimestampCompleter(is_milliseconds=False, future_time=True)
 
     fake_document = MagicMock()
@@ -350,7 +347,7 @@ def test_timestamp_completer_datetime_format_time_completion():
             text="1581033600000",
             start_position=-10,
             display=FormattedText([("", "1581033600000")]),
-            display_meta="2020-02-07T00:00:00+00:00",
+            display_meta="2020-02-07 00:00:00+00:00",
         )
     ]
 
