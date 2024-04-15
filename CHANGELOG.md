@@ -1,5 +1,11 @@
 ## UPCOMING
 
+## 1.15
+
+- Dependency: remove pendulum, add `python-dateutil` (thanks to [deronnax])
+- Dependency: Supports Python 3.12 Now! (thanks to [deronnax])
+
+
 ### 1.14.1
 
 - Bugfix: fix argument parsing, `"foo\nbar"` will be parsed to `foo` and `\` 
@@ -332,3 +338,4 @@
 [aymericbeaumet]: https://github.com/aymericbeaumet
 [torrefatto]: https://github.com/torrefatto
 [chayim]: https://github.com/chayim
+[deronnax]: https://github.com/deronnax
