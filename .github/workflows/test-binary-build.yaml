@@ -21,13 +21,13 @@ jobs:
         options: --entrypoint redis-server
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: 3.8
           architecture: 'x64'
       - name: Cache venv
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: venv
           # Look to see if there is a cache hit for the corresponding requirements file
@@ -71,7 +71,7 @@ jobs:
           ./build/x86*/release/install/iredis help GET
 
       - name: Upload Release Asset to Github Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: iredis-${{github.sha}}.tar.gz
           path: ./build/iredis.tar.gz

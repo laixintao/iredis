@@ -231,7 +231,7 @@ stream,XACK,command_key_group_ids,render_int
 stream,XADD,command_xadd,render_bulk_string
 stream,XCLAIM,command_xclaim,render_list
 stream,XDEL,command_key_ids,render_int
-stream,XGROUP,command_xgroup,render_string_or_int
+stream,XGROUP,command_xgroup,render_list_or_int_or_string
 stream,XINFO,command_xinfo,render_list
 stream,XLEN,command_key,render_int
 stream,XPENDING,command_xpending,render_list

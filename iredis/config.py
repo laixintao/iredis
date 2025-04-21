@@ -102,8 +102,6 @@ def read_config_file(f):
 
 
 def load_config_files(iredisrc):
-    global config
-
     with path(project_data, "iredisrc") as p:
         config_obj = ConfigObj(str(p))
 

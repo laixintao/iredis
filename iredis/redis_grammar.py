@@ -531,7 +531,8 @@ GRAMMAR = {
             (\s+ {STREAM_CREATE} \s+ {KEY} \s+ {GROUP} \s+ {STREAM_ID})|
             (\s+ {STREAM_SETID} \s+ {KEY} \s+ {GROUP} \s+ {STREAM_ID})|
             (\s+ {STREAM_DESTROY} \s+ {KEY} \s+ {GROUP})|
-            (\s+ {STREAM_DELCONSUMER} \s+ {KEY} \s+ {GROUP} \s+ {CONSUMER})
+            (\s+ {STREAM_DELCONSUMER} \s+ {KEY} \s+ {GROUP} \s+ {CONSUMER})|
+            (\s+ {HELP})
         )
         \s*""",
     "command_key_group_ids": rf"""

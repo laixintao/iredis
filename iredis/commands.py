@@ -111,8 +111,6 @@ def split_command_args(command):
 
     :param command: redis command string, with args
     """
-    global all_commands
-
     command = command.strip()
     for command_name in all_commands:
         # for command that is partially input, like `command in`, we should

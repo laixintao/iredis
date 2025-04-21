@@ -150,6 +150,14 @@ class OutputRender:
         return OutputRender.render_bulk_string(text)
 
     @staticmethod
+    def render_list_or_int_or_string(text):
+        if isinstance(text, list):
+            return OutputRender.render_list(text)
+        if isinstance(text, int):
+            return OutputRender.render_int(text)
+        return OutputRender.render_bulk_string(text)
+
+    @staticmethod
     def render_string_or_int(text):
         if isinstance(text, int):
             return OutputRender.render_int(text)
