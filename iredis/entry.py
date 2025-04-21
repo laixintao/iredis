@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 
 class SkipAuthFileHistory(FileHistory):
-    """Exactlly like FileHistory, but won't save `AUTH` command into history
+    """Exactly like FileHistory, but won't save `AUTH` command into history
     file."""
 
     def append_string(self, string: str) -> None:
@@ -142,19 +142,19 @@ class Rainbow:
 
     def __init__(self):
         self.current = -1
-        self.forword = 1
+        self.forward = 1
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        self.current += self.forword
+        self.current += self.forward
         if 0 <= self.current < len(self.color):
             # not to the end
             return self.color[self.current]
         else:
-            self.forword = -self.forword
-            self.current += 2 * self.forword
+            self.forward = -self.forward
+            self.current += 2 * self.forward
             return self.color[self.current]
 
 
