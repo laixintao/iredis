@@ -1,5 +1,9 @@
 ## UPCOMING
 
+### 1.15.1
+
+- Bugfix: fix `xgroup help` command output.
+
 ## 1.15
 
 - Dependency: remove pendulum, add `python-dateutil` (thanks to [deronnax])
