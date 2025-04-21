@@ -26,7 +26,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
           architecture: "x64"
@@ -63,7 +63,7 @@ jobs:
         with:
           ignore_words_list: fo,ists,oll,optin,ot,smove,tre,whe,EXAT,exat
           skip: ./docs/assets/demo.svg,./iredis/data/commands.json,./iredis/data/commands/*,./tests/unittests/*
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: 3.8
           architecture: "x64"
