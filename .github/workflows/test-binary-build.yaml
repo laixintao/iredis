@@ -21,7 +21,7 @@ jobs:
         options: --entrypoint redis-server
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v1
         with:
           python-version: 3.8
@@ -71,7 +71,7 @@ jobs:
           ./build/x86*/release/install/iredis help GET
 
       - name: Upload Release Asset to Github Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: iredis-${{github.sha}}.tar.gz
           path: ./build/iredis.tar.gz
