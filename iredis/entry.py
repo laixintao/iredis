@@ -265,6 +265,7 @@ VERIFY_SSL_HELP = """Set the TLS certificate verification strategy"""
 @click.option(
     "--iredisrc",
     default="~/.iredisrc",
+    envvar="IREDIS_CONFIG",
     help="Config file for iredis, default is ~/.iredisrc.",
 )
 @click.option("--decode", default=None, help=DECODE_HELP)
