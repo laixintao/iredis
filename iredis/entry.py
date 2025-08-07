@@ -266,7 +266,7 @@ VERIFY_SSL_HELP = """Set the TLS certificate verification strategy"""
     "--iredisrc",
     default="~/.iredisrc",
     envvar="IREDIS_CONFIG",
-    help="Config file for iredis, default is ~/.iredisrc.",
+    help="Config file for iredis, default is ~/.iredisrc. You can also set config path via environment variable `IREDIS_CONFIG`.",
 )
 @click.option("--decode", default=None, help=DECODE_HELP)
 @click.option("--client_name", help="Assign a name to the current connection.")
