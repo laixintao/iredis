@@ -1,5 +1,10 @@
 ## UPCOMING
 
+### 1.15.2
+
+- Feature: config file (`iredisrc`)'s path now can be set by environment
+  variable using `IREDIS_CONFIG`.
+
 ### 1.15.1
 
 - Bugfix: fix `xgroup help` command output.
@@ -9,10 +14,9 @@
 - Dependency: remove pendulum, add `python-dateutil` (thanks to [deronnax])
 - Dependency: Supports Python 3.12 Now! (thanks to [deronnax])
 
-
 ### 1.14.1
 
-- Bugfix: fix argument parsing, `"foo\nbar"` will be parsed to `foo` and `\` 
+- Bugfix: fix argument parsing, `"foo\nbar"` will be parsed to `foo` and `\`
   and `n` and `bar`, the `\` and `n` should be one character `\n` instead.
 
 ## 1.14
