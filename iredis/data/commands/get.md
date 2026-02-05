@@ -14,3 +14,7 @@ GET nonexisting
 SET mykey "Hello"
 GET mykey
 ```
+
+### Code examples
+
+{{< clients-example set_and_get />}}

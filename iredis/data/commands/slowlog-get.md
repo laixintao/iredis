@@ -6,7 +6,7 @@ The execution time does not include I/O operations like talking with the client,
 A new entry is added to the slow log whenever a command exceeds the execution time threshold defined by the `slowlog-log-slower-than` configuration directive.
 The maximum number of entries in the slow log is governed by the `slowlog-max-len` configuration directive.
 
-By default the command returns all of the entries in the log. The optional `count` argument limits the number of returned entries, so the command returns at most up to `count` entries.
+By default the command returns latest ten entries in the log. The optional `count` argument limits the number of returned entries, so the command returns at most up to `count` entries, the special number -1 means return all entries.
 
 Each entry from the slow log is comprised of the following six values:
 
@@ -21,6 +21,6 @@ The entry's unique ID can be used in order to avoid processing slow log entries 
 The ID is never reset in the course of the Redis server execution, only a server
 restart will reset it.
 
-@reply
+@return
 
 @array-reply: a list of slow log entries.

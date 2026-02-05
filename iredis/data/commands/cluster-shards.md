@@ -14,7 +14,7 @@ The command returns an array of shards, with each shard containing two fields, '
 
 The 'slots' field is a list of slot ranges served by this shard, stored as pair of integers representing the inclusive start and end slots of the ranges.
 For example, if a node owns the slots 1, 2, 3, 5, 7, 8 and 9, the slots ranges would be stored as [1-3], [5-5], [7-9].
-The slots field would therefor be represented by the following list of integers.
+The slots field would therefore be represented by the following list of integers.
 
 ```
 1) 1) "slots"
@@ -45,6 +45,10 @@ The endpoint, along with the port, defines the location that clients should use 
 A NULL value for the endpoint indicates the node has an unknown endpoint and the client should connect to the same endpoint it used to send the `CLUSTER SHARDS` command but with the port returned from the command.
 This unknown endpoint configuration is useful when the Redis nodes are behind a load balancer that Redis doesn't know the endpoint of.
 Which endpoint is set is determined by the `cluster-preferred-endpoint-type` config.
+An empty string `""` is another abnormal value of the endpoint field, as well as for the ip field, which is returned if the node doesn't know its own IP address.
+This can happen in a cluster that consists of only one node or the node has not yet been joined with the rest of the cluster.
+The value `?` is displayed if the node is incorrectly configured to use announced hostnames but no hostname is configured using `cluster-announce-hostname`.
+Clients may treat the empty string in the same way as NULL, that is the same endpoint it used to send the current command to, while `"?"` should be treated as an unknown node, not necessarily the same node as the one serving the current command.
 
 @return
 
@@ -55,99 +59,99 @@ Which endpoint is set is determined by the `cluster-preferred-endpoint-type` con
 ```
 > CLUSTER SHARDS
 1) 1) "slots"
-   2) 1) (integer) 10923
-      2) (integer) 11110
-      3) (integer) 11113
-      4) (integer) 16111
-      5) (integer) 16113
-      6) (integer) 16383
+   2) 1) (integer) 0
+      2) (integer) 5460
    3) "nodes"
    4) 1)  1) "id"
-          2) "71f058078c142a73b94767a4e78e9033d195dfb4"
+          2) "e10b7051d6bf2d5febd39a2be297bbaea6084111"
           3) "port"
-          4) (integer) 6381
+          4) (integer) 30001
           5) "ip"
           6) "127.0.0.1"
-          7) "role"
-          8) "primary"
-          9) "replication-offset"
-         10) (integer) 1500
-         11) "health"
-         12) "online"
+          7) "endpoint"
+          8) "127.0.0.1"
+          9) "role"
+         10) "master"
+         11) "replication-offset"
+         12) (integer) 72156
+         13) "health"
+         14) "online"
       2)  1) "id"
-          2) "1461967c62eab0e821ed54f2c98e594fccfd8736"
+          2) "1901f5962d865341e81c85f9f596b1e7160c35ce"
           3) "port"
-          4) (integer) 7381
+          4) (integer) 30006
           5) "ip"
           6) "127.0.0.1"
-          7) "role"
-          8) "replica"
-          9) "replication-offset"
-         10) (integer) 700
-         11) "health"
-         12) "fail"
+          7) "endpoint"
+          8) "127.0.0.1"
+          9) "role"
+         10) "replica"
+         11) "replication-offset"
+         12) (integer) 72156
+         13) "health"
+         14) "online"
 2) 1) "slots"
+   2) 1) (integer) 10923
+      2) (integer) 16383
+   3) "nodes"
+   4) 1)  1) "id"
+          2) "fd20502fe1b32fc32c15b69b0a9537551f162f1f"
+          3) "port"
+          4) (integer) 30003
+          5) "ip"
+          6) "127.0.0.1"
+          7) "endpoint"
+          8) "127.0.0.1"
+          9) "role"
+         10) "master"
+         11) "replication-offset"
+         12) (integer) 72156
+         13) "health"
+         14) "online"
+      2)  1) "id"
+          2) "6daa25c08025a0c7e4cc0d1ab255949ce6cee902"
+          3) "port"
+          4) (integer) 30005
+          5) "ip"
+          6) "127.0.0.1"
+          7) "endpoint"
+          8) "127.0.0.1"
+          9) "role"
+         10) "replica"
+         11) "replication-offset"
+         12) (integer) 72156
+         13) "health"
+         14) "online"
+3) 1) "slots"
    2) 1) (integer) 5461
       2) (integer) 10922
    3) "nodes"
    4) 1)  1) "id"
-          2) "9215e30cd4a71070088778080565de6ef75fd459"
+          2) "a4a3f445ead085eb3eb9ee7d8c644ec4481ec9be"
           3) "port"
-          4) (integer) 6380
+          4) (integer) 30002
           5) "ip"
           6) "127.0.0.1"
-          7) "role"
-          8) "primary"
-          9) "replication-offset"
-         10) (integer) 1200
-         11) "health"
-         12) "online"
-      2)  1) "id"
-          2) "877fa59da72cb902d0563d3d8def3437fc3a0196"
-          3) "port"
-          4) (integer) 7380
-          5) "ip"
-          6) "127.0.0.1"
-          7) "role"
-          8) "replica"
-          9) "replication-offset"
-         10) (integer) 1100
-         11) "health"
-         12) "loading"
-3) 1) "slots"
-   2) 1) (integer) 0
-      2) (integer) 5460
-      3) (integer) 11111
-      4) (integer) 11112
-      3) (integer) 16112
-      4) (integer) 16112
-   3) "nodes"
-   4) 1)  1) "id"
-          2) "b7e9acc0def782aabe6b596f67f06c73c2ffff93"
-          3) "port"
-          4) (integer) 7379
-          5) "ip"
-          6) "127.0.0.1"
-          7) "hostname"
-          8) "example.com"
+          7) "endpoint"
+          8) "127.0.0.1"
           9) "role"
-         10) "replica"
+         10) "master"
          11) "replication-offset"
-         12) "primary"
+         12) (integer) 72156
          13) "health"
          14) "online"
       2)  1) "id"
-          2) "e2acf1a97c055fd09dcc2c0dcc62b19a6905dbc8"
+          2) "da6d5847aa019e9b9d2a8aa24a75f856fd3456cc"
           3) "port"
-          4) (integer) 6379
+          4) (integer) 30004
           5) "ip"
           6) "127.0.0.1"
-          7) "hostname"
-          8) "example.com"
+          7) "endpoint"
+          8) "127.0.0.1"
           9) "role"
          10) "replica"
          11) "replication-offset"
-         12) (integer) 0
+         12) (integer) 72156
          13) "health"
-         14) "loading"
+         14) "online"
 ```
