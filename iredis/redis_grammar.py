@@ -481,10 +481,20 @@ GRAMMAR = {
         \s+ {KEY} \s+ {MIN} \s+ {MAX} (\s+ {WITHSCORES})?
         (\s+ {LIMIT} \s+ {OFFSET} \s+ {COUNT})? \s*""",
     "command_cursor_match_pattern_count_type": rf"""
-        \s+ {CURSOR} (\s+ {MATCH} \s+ {PATTERN})?
-        (\s+ {COUNT_CONST} \s+ {COUNT})? (\s+ {TYPE_CONST} \s+ {TYPE})? \s*""",
+        \s+ {CURSOR}
+        (
+            (\s+ {MATCH} \s+ {PATTERN})|
+            (\s+ {COUNT_CONST} \s+ {COUNT})|
+            (\s+ {TYPE_CONST} \s+ {TYPE})
+        )*
+        \s*""",
     "command_key_cursor_match_pattern_count": rf"""\s+ {KEY}
-        \s+ {CURSOR} (\s+ {MATCH} \s+ {PATTERN})? (\s+ {COUNT_CONST} \s+ {COUNT})? \s*""",
+        \s+ {CURSOR}
+        (
+            (\s+ {MATCH} \s+ {PATTERN})|
+            (\s+ {COUNT_CONST} \s+ {COUNT})
+        )*
+        \s*""",
     "command_key_fields": rf"\s+ {KEY} \s+ {FIELDS} \s*",
     "command_key_field": rf"\s+ {KEY} \s+ {FIELD} \s*",
     "command_key_field_delta": rf"\s+ {KEY} \s+ {FIELD} \s+ {DELTA} \s*",
