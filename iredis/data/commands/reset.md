@@ -17,6 +17,8 @@ following:
   appropriate.
 * Deauthenticates the connection, requiring a call `AUTH` to reauthenticate when
   authentication is enabled.
+* Turns off `NO-EVICT` mode.
+* Turns off `NO-TOUCH` mode.
 
 @return
 

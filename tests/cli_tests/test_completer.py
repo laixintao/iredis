@@ -1,15 +1,18 @@
 from packaging.version import parse as version_parse  # noqa: F401
 import pytest
+import time
 
 
 def test_integer_type_completer(cli):
     cli.expect("127.0.0.1")
     cli.send("BITFIELD meykey GET ")
+    time.sleep(0.3)  # Wait for completion menu to appear
     cli.expect(["i64", "u63", "u62"])
     cli.sendline("u4 #0")
     cli.expect("127.0.0.1")
 
     cli.send("BITFIELD meykey GET ")
+    time.sleep(0.3)
     cli.expect(["u4", "i64", "u63", "u62"])
 
 
@@ -18,16 +21,20 @@ def test_command_completion_when_a_command_is_another_command_substring(
 ):
     cli.expect("127.0.0.1")
     cli.send("set")
+    time.sleep(0.3)
     cli.expect(["set", "setnx", "setex", "setbit", "setrange"])
 
     cli.send("n")
+    time.sleep(0.3)
     cli.expect("setnx")
     cli.send("x")
+    time.sleep(0.3)
     cli.expect("setnx")
     cli.sendline("foo bar")
     cli.expect(["1", "127.0.0.1"])
 
     cli.send("setnx")
+    time.sleep(0.3)
     cli.expect("foo")
 
 
@@ -35,6 +42,7 @@ def test_command_completion_when_space_command(cli, clean_redis):
     cli.expect("127.0.0.1")
 
     cli.send("command in")
+    time.sleep(0.3)
     cli.expect("command info")
 
 
@@ -48,5 +56,6 @@ def test_username_completer(cli, iredis_client):
     cli.expect("foo1")
 
     cli.send("acl deluser ")
+    time.sleep(0.3)
     cli.expect("foo1")
     cli.expect("bar2")

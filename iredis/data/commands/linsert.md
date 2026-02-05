@@ -8,8 +8,7 @@ An error is returned when `key` exists but does not hold a list value.
 
 @return
 
-@integer-reply: the length of the list after the insert operation, or `-1` when
-the value `pivot` was not found.
+@integer-reply: the list length after a successful insert operation, `0` if the `key` doesn't exist, and `-1` when the `pivot` wasn't found.
 
 @examples
 

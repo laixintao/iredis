@@ -58,5 +58,5 @@ bitmaps][hbgc212fermurb]" for an interesting use cases.
 Care should be taken when running it against long input strings.
 
 For real-time metrics and statistics involving large inputs a good approach is
-to use a replica (with read-only option disabled) where the bit-wise
+to use a replica (with replica-read-only option enabled) where the bit-wise
 operations are performed to avoid blocking the master instance.

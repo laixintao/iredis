@@ -15,6 +15,6 @@ The information returned about the active shard channels are at the shard level 
 ```
 > PUBSUB SHARDCHANNELS
 1) "orders"
-PUBSUB SHARDCHANNELS o*
+> PUBSUB SHARDCHANNELS o*
 1) "orders"
 ```

@@ -14,7 +14,7 @@ from iredis.exceptions import InvalidArguments
 from iredis.config import Config, config as global_config
 
 
-TIMEOUT = 2
+TIMEOUT = 5
 HISTORY_FILE = ".iredis_history"
 
 
@@ -100,10 +100,16 @@ def cli():
     )
     f.write(config_content)
     f.close()
-    env = os.environ
+    env = os.environ.copy()
     env["PROMPT_TOOLKIT_NO_CPR"] = "1"
+    env["TERM"] = "xterm-256color"
 
-    child = pexpect.spawn(f"iredis -n 15 --iredisrc {f.name}", timeout=TIMEOUT, env=env)
+    child = pexpect.spawn(
+        f"iredis -n 15 --iredisrc {f.name}",
+        timeout=TIMEOUT,
+        env=env,
+        dimensions=(40, 120),
+    )
     child.logfile_read = open("cli_test.log", "ab")
     child.expect(["https://github.com/laixintao/iredis/issues", "127.0.0.1"])
     yield child

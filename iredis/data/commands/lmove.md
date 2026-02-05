@@ -64,7 +64,7 @@ all the elements of an N-elements list, one after the other, in O(N) without
 transferring the full list from the server to the client using a single `LRANGE`
 operation.
 
-The above pattern works even if the following two conditions:
+The above pattern works even in the following conditions:
 
 * There are multiple clients rotating the list: they'll fetch different
   elements, until all the elements of the list are visited, and the process

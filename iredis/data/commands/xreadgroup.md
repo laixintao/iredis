@@ -116,14 +116,14 @@ Example:
 "1-0"
 > XGROUP CREATE mystream mygroup 0
 OK
-> XREADGROUP GROUP mygroup myconsumer STREAMS STREAMS mystream >
+> XREADGROUP GROUP mygroup myconsumer STREAMS mystream >
 1) 1) "mystream"
    2) 1) 1) "1-0"
          2) 1) "myfield"
             2) "mydata"
 > XDEL mystream 1-0
 (integer) 1
-> XREADGROUP GROUP mygroup myconsumer STREAMS STREAMS mystream 0
+> XREADGROUP GROUP mygroup myconsumer STREAMS mystream 0
 1) 1) "mystream"
    2) 1) 1) "1-0"
          2) (nil)

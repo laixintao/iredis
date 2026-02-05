@@ -107,6 +107,42 @@ def test_scan(judge_command):
             "type": "string",
         },
     )
+    # Test different parameter orders (Redis allows any order)
+    judge_command(
+        "SCAN 0 COUNT 15 MATCH task*",
+        {
+            "command": "SCAN",
+            "cursor": "0",
+            "count_const": "COUNT",
+            "count": "15",
+            "match": "MATCH",
+            "pattern": "task*",
+        },
+    )
+    judge_command(
+        "SCAN 0 TYPE string MATCH task*",
+        {
+            "command": "SCAN",
+            "cursor": "0",
+            "type_const": "TYPE",
+            "type": "string",
+            "match": "MATCH",
+            "pattern": "task*",
+        },
+    )
+    judge_command(
+        "SCAN 0 TYPE string COUNT 15 MATCH task*",
+        {
+            "command": "SCAN",
+            "cursor": "0",
+            "type_const": "TYPE",
+            "type": "string",
+            "count_const": "COUNT",
+            "count": "15",
+            "match": "MATCH",
+            "pattern": "task*",
+        },
+    )
 
 
 def test_migrate(judge_command):

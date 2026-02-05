@@ -42,15 +42,13 @@ packaging = "^23.0"
 redis = "^5.0.0"
 python-dateutil = "^2.8.2"
 
-[tool.poetry.dev-dependencies]
-pytest = "^7.2"
-pexpect = "^4.7"
-
 [tool.poetry.scripts]
 iredis = 'iredis.entry:main'
 
 [tool.poetry.group.dev.dependencies]
 freezegun = "^1.4.0"
+pytest = "^7.2"
+pexpect = "^4.7"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

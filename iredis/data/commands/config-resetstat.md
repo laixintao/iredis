@@ -1,15 +1,13 @@
-Resets the statistics reported by Redis using the `INFO` command.
+Resets the statistics reported by Redis using the `INFO` and `LATENCY HISTOGRAM` commands.
 
-These are the counters that are reset:
+The following is a non-exhaustive list of values that are reset:
 
-* Keyspace hits
-* Keyspace misses
-* Number of commands processed
-* Number of connections received
+* Keyspace hits and misses
 * Number of expired keys
-* Number of rejected connections
-* Latest fork(2) time
-* The `aof_delayed_fsync` counter
+* Command and error statistics
+* Connections received, rejected and evicted
+* Persistence statistics
+* Active defragmentation statistics
 
 @return
 

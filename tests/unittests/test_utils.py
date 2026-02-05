@@ -5,7 +5,11 @@ from unittest.mock import patch
 
 from iredis.utils import timer, strip_quote_args
 from iredis.commands import split_command_args, split_unknown_args
-from iredis.utils import command_syntax
+from iredis.utils import (
+    command_syntax,
+    parse_argument_to_formatted_text,
+    compose_command_syntax,
+)
 from iredis.style import STYLE
 from iredis.exceptions import InvalidArguments, AmbiguousCommand
 from iredis.commands import commands_summary
@@ -121,3 +125,132 @@ def test_split_unknown_commands(raw, command, args):
     parsed_command, parsed_args = split_unknown_args(raw)
     assert command == parsed_command
     assert args == parsed_args
+
+
+class TestParseArgumentToFormattedText:
+    """Tests for parse_argument_to_formatted_text function."""
+
+    def test_simple_argument_without_token(self):
+        """Test argument without token."""
+        result = parse_argument_to_formatted_text("cursor", "integer", False)
+        assert len(result) == 1
+        assert result[0][1] == " cursor"
+
+    def test_optional_argument_without_token(self):
+        """Test optional argument without token."""
+        result = parse_argument_to_formatted_text("key", "key", True)
+        assert len(result) == 1
+        assert result[0][1] == " [key]"
+
+    def test_argument_with_token(self):
+        """Test argument with token (like MATCH pattern)."""
+        result = parse_argument_to_formatted_text(
+            "pattern", "pattern", False, token="MATCH"
+        )
+        assert len(result) == 1
+        assert result[0][1] == " MATCH pattern"
+
+    def test_optional_argument_with_token(self):
+        """Test optional argument with token (like [MATCH pattern])."""
+        result = parse_argument_to_formatted_text(
+            "pattern", "pattern", True, token="MATCH"
+        )
+        assert len(result) == 1
+        assert result[0][1] == " [MATCH pattern]"
+
+    def test_multiple_tokens(self):
+        """Test multiple arguments with different tokens."""
+        result1 = parse_argument_to_formatted_text(
+            "pattern", "pattern", True, token="MATCH"
+        )
+        result2 = parse_argument_to_formatted_text(
+            "count", "integer", True, token="COUNT"
+        )
+        result3 = parse_argument_to_formatted_text("type", "string", True, token="TYPE")
+
+        assert result1[0][1] == " [MATCH pattern]"
+        assert result2[0][1] == " [COUNT count]"
+        assert result3[0][1] == " [TYPE type]"
+
+
+class TestComposeCommandSyntax:
+    """Tests for compose_command_syntax function."""
+
+    def test_scan_command_syntax(self):
+        """Test SCAN command shows correct syntax with tokens."""
+        scan_info = {
+            "arguments": [
+                {"name": "cursor", "type": "integer"},
+                {
+                    "name": "pattern",
+                    "type": "pattern",
+                    "token": "MATCH",
+                    "optional": True,
+                },
+                {
+                    "name": "count",
+                    "type": "integer",
+                    "token": "COUNT",
+                    "optional": True,
+                },
+                {"name": "type", "type": "string", "token": "TYPE", "optional": True},
+            ]
+        }
+        result = compose_command_syntax(scan_info)
+        text = "".join([t[1] for t in result])
+
+        assert "cursor" in text
+        assert "[MATCH pattern]" in text
+        assert "[COUNT count]" in text
+        assert "[TYPE type]" in text
+
+    def test_hscan_command_syntax(self):
+        """Test HSCAN command shows correct syntax with tokens."""
+        hscan_info = {
+            "arguments": [
+                {"name": "key", "type": "key"},
+                {"name": "cursor", "type": "integer"},
+                {
+                    "name": "pattern",
+                    "type": "pattern",
+                    "token": "MATCH",
+                    "optional": True,
+                },
+                {
+                    "name": "count",
+                    "type": "integer",
+                    "token": "COUNT",
+                    "optional": True,
+                },
+            ]
+        }
+        result = compose_command_syntax(hscan_info)
+        text = "".join([t[1] for t in result])
+
+        assert "key" in text
+        assert "cursor" in text
+        assert "[MATCH pattern]" in text
+        assert "[COUNT count]" in text
+
+    def test_command_without_tokens(self):
+        """Test command without any tokens."""
+        get_info = {
+            "arguments": [
+                {"name": "key", "type": "key"},
+            ]
+        }
+        result = compose_command_syntax(get_info)
+        text = "".join([t[1] for t in result])
+
+        assert "key" in text
+        assert "MATCH" not in text
+
+    def test_real_scan_command_from_commands_summary(self):
+        """Test real SCAN command from commands_summary."""
+        scan_info = commands_summary["SCAN"]
+        result = compose_command_syntax(scan_info)
+        text = "".join([t[1] for t in result])
+
+        assert "[MATCH pattern]" in text
+        assert "[COUNT count]" in text
+        assert "[TYPE type]" in text

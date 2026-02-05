@@ -11,7 +11,7 @@ The `SET` command supports a set of options that modify its behavior:
 * `EXAT` *timestamp-seconds* -- Set the specified Unix time at which the key will expire, in seconds.
 * `PXAT` *timestamp-milliseconds* -- Set the specified Unix time at which the key will expire, in milliseconds.
 * `NX` -- Only set the key if it does not already exist.
-* `XX` -- Only set the key if it already exist.
+* `XX` -- Only set the key if it already exists.
 * `KEEPTTL` -- Retain the time to live associated with the key.
 * `!GET` -- Return the old string stored at key, or nil if key did not exist. An error is returned and `SET` aborted if the value stored at key is not a string.
 
@@ -37,6 +37,10 @@ GET mykey
 
 SET anotherkey "will expire in a minute" EX 60
 ```
+
+### Code examples
+
+{{< clients-example set_and_get />}}
 
 ## Patterns
 

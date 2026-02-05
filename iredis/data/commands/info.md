@@ -12,10 +12,10 @@ The optional parameter can be used to select a specific section of information:
 *   `cpu`: CPU consumption statistics
 *   `commandstats`: Redis command statistics
 *   `latencystats`: Redis command latency percentile distribution statistics
+*   `sentinel`: Redis Sentinel section (only applicable to Sentinel instances)
 *   `cluster`: Redis Cluster section
 *   `modules`: Modules section
 *   `keyspace`: Database related statistics
-*   `modules`: Module related sections
 *   `errorstats`: Redis error statistics
 
 It can also take the following values:
@@ -91,6 +91,8 @@ Here is the meaning of all fields in the **clients** section:
      `BRPOP`, `BRPOPLPUSH`, `BLMOVE`, `BZPOPMIN`, `BZPOPMAX`)
 *   `tracking_clients`: Number of clients being tracked (`CLIENT TRACKING`)
 *   `clients_in_timeout_table`: Number of clients in the clients timeout table
+*   `total_blocking_keys`: Number of blocking keys. Added in Redis 7.2.
+*   `total_blocking_keys_on_nokey`: Number of blocking keys that one or more clients that would like to be unblocked when the key is deleted. Added in Redis 7.2.
 
 Here is the meaning of all fields in the **memory** section:
 
@@ -194,7 +196,7 @@ Here is the meaning of all fields in the **persistence** section:
      if any
 *   `rdb_last_cow_size`: The size in bytes of copy-on-write memory during
      the last RDB save operation
-*   `rdb_last_load_keys_expired`: Number volatile keys deleted during the last RDB loading. Added in Redis 7.0.
+*   `rdb_last_load_keys_expired`: Number of volatile keys deleted during the last RDB loading. Added in Redis 7.0.
 *   `rdb_last_load_keys_loaded`: Number of keys loaded during the last RDB loading. Added in Redis 7.0.
 *   `aof_enabled`: Flag indicating AOF logging is activated
 *   `aof_rewrite_in_progress`: Flag indicating a AOF rewrite operation is
@@ -264,7 +266,7 @@ Here is the meaning of all fields in the **stats** section:
 *   `expired_keys`: Total number of key expiration events
 *   `expired_stale_perc`: The percentage of keys probably expired
 *   `expired_time_cap_reached_count`: The count of times that active expiry cycles have stopped early
-*   `expire_cycle_cpu_milliseconds`: The cumulative amount of time spend on active expiry cycles
+*   `expire_cycle_cpu_milliseconds`: The cumulative amount of time spent on active expiry cycles
 *   `evicted_keys`: Number of evicted keys due to `maxmemory` limit
 *   `evicted_clients`: Number of evicted clients due to `maxmemory-clients` limit. Added in Redis 7.0.
 *   `total_eviction_exceeded_time`:  Total time `used_memory` was greater than `maxmemory` since server startup, in milliseconds
@@ -305,6 +307,17 @@ Here is the meaning of all fields in the **stats** section:
 *   `total_writes_processed`: Total number of write events processed
 *   `io_threaded_reads_processed`: Number of read events processed by the main and I/O threads
 *   `io_threaded_writes_processed`: Number of write events processed by the main and I/O threads
+*   `stat_reply_buffer_shrinks`: Total number of output buffer shrinks
+*   `stat_reply_buffer_expands`: Total number of output buffer expands
+*   `eventloop_cycles`: Total number of eventloop cycles
+*   `eventloop_duration_sum`: Total time spent in the eventloop in microseconds (including I/O and command processing)
+*   `eventloop_duration_cmd_sum`: Total time spent on executing commands in microseconds
+*   `instantaneous_eventloop_cycles_per_sec`: Number of eventloop cycles per second
+*   `instantaneous_eventloop_duration_usec`: Average time spent in a single eventloop cycle in microseconds
+*   `acl_access_denied_auth`: Number of authentication failures
+*   `acl_access_denied_cmd`: Number of commands rejected because of access denied to the command
+*   `acl_access_denied_key`: Number of commands rejected because of access denied to a key
+*   `acl_access_denied_channel`: Number of commands rejected because of access denied to a channel 
 
 Here is the meaning of all fields in the **replication** section:
 
@@ -405,6 +418,15 @@ For each error type, the following line is added:
 
 *   `errorstat_XXX`: `count=XXX`
 
+The **sentinel** section is only available in Redis Sentinel instances. It consists of the following fields:
+
+*   `sentinel_masters`: Number of Redis masters monitored by this Sentinel instance
+*   `sentinel_tilt`: A value of 1 means this sentinel is in TILT mode
+*   `sentinel_tilt_since_seconds`: Duration in seconds of current TILT, or -1 if not TILTed. Added in Redis 7.0.0
+*   `sentinel_running_scripts`: The number of scripts this Sentinel is currently executing
+*   `sentinel_scripts_queue_length`: The length of the queue of user scripts that are pending execution
+*   `sentinel_simulate_failure_flags`: Flags for the `SENTINEL SIMULATE-FAILURE` command
+    
 The **cluster** section currently only contains a unique field:
 
 *   `cluster_enabled`: Indicate Redis cluster is enabled
@@ -418,6 +440,14 @@ The statistics are the number of keys, and the number of keys with an expiration
 For each database, the following line is added:
 
 *   `dbXXX`: `keys=XXX,expires=XXX`
+
+The **debug** section contains experimental metrics, which might change or get removed in future versions.
+It won't be included when `INFO` or `INFO ALL` are called, and it is returned only when `INFO DEBUG` is used.
+
+*   `eventloop_duration_aof_sum`: Total time spent on flushing AOF in eventloop in microseconds
+*   `eventloop_duration_cron_sum`: Total time consumption of cron in microseconds (including serverCron and beforeSleep, but excluding IO and AOF flushing)
+*   `eventloop_duration_max`: The maximal time spent in a single eventloop cycle in microseconds
+*   `eventloop_cmd_per_cycle_max`: The maximal number of commands processed in a single eventloop cycle
 
 [hcgcpgp]: http://code.google.com/p/google-perftools/
 

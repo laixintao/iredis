@@ -1,12 +1,12 @@
-This command returns the list of all consumers groups of the stream stored at `<key>`.
+This command returns the list of all consumer groups of the stream stored at `<key>`.
 
 By default, only the following information is provided for each of the groups:
 
 * **name**: the consumer group's name
 * **consumers**: the number of consumers in the group
 * **pending**: the length of the group's pending entries list (PEL), which are messages that were delivered but are yet to be acknowledged
-* **last-delivered-id**: the ID of the last entry delivered the group's consumers
-* **entries-read**: the logical "read counter" of the last entry delivered to group's consumers
+* **last-delivered-id**: the ID of the last entry delivered to the group's consumers
+* **entries-read**: the logical "read counter" of the last entry delivered to the group's consumers
 * **lag**: the number of entries in the stream that are still waiting to be delivered to the group's consumers, or a NULL when that number can't be determined.
 
 ### Consumer group lag
@@ -22,7 +22,7 @@ The lag is the difference between these two.
 
 The stream's counter (the `entries_added` field of the `XINFO STREAM` command) is incremented by one with every `XADD` and counts all of the entries added to the stream during its lifetime.
 
-The consumer group's counter, `entries_read`, is the logical counter of entries that the group had read.
+The consumer group's counter, `entries_read`, is the logical counter of entries the group had read.
 It is important to note that this counter is only a heuristic rather than an accurate counter, and therefore the use of the term "logical".
 The counter attempts to reflect the number of entries that the group **should have read** to get to its current `last-delivered-id`.
 The `entries_read` counter is accurate only in a perfect world, where a consumer group starts at the stream's first entry and processes all of its entries (i.e., no entries deleted before processing).
@@ -39,7 +39,7 @@ However, the lag is only temporarily unavailable.
 It is restored automatically during regular operation as consumers keep processing messages.
 Once the consumer group delivers the last message in the stream to its members, it will be set with the correct logical read counter, and tracking its lag can be resumed.
 
-@reply
+@return
 
 @array-reply: a list of consumer groups.
 
