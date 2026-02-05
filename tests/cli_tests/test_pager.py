@@ -2,7 +2,6 @@
 from contextlib import contextmanager
 import os
 import pathlib
-import sys
 from textwrap import dedent
 from packaging.version import parse as version_parse
 
@@ -13,16 +12,11 @@ TEST_IREDISRC = "/tmp/.iredisrc.test"
 TEST_PAGER_BOUNDARY = "---boundary---"
 TEST_PAGER_BOUNDARY_NUMBER = "---88938347271---"
 
-env_pager = "{} {} {}".format(
-    sys.executable,
-    os.path.join(pathlib.Path(__file__).parent, "wrappager.py"),
-    TEST_PAGER_BOUNDARY,
-)
-env_pager_numbers = "{} {} {}".format(
-    sys.executable,
-    os.path.join(pathlib.Path(__file__).parent, "wrappager.py"),
-    TEST_PAGER_BOUNDARY_NUMBER,
-)
+# Use shell scripts as pager instead of python command with arguments
+# because click.echo_via_pager uses shutil.which() which doesn't work
+# with commands that have arguments
+env_pager = os.path.join(pathlib.Path(__file__).parent, "pager_boundary.sh")
+env_pager_numbers = os.path.join(pathlib.Path(__file__).parent, "pager_boundary_number.sh")
 
 long_list_type = "quicklist"
 if version_parse(os.environ["REDIS_VERSION"]) >= version_parse("7"):
@@ -56,7 +50,7 @@ def test_using_pager_works_for_help():
     with pager_enabled_cli() as child:
         child.sendline("help set")
         child.expect(TEST_PAGER_BOUNDARY)
-        child.expect("Set the string value of a key")
+        child.expect("Sets the string value of a key")
         child.expect(TEST_PAGER_BOUNDARY)
 
 
