@@ -1,5 +1,7 @@
 ## UPCOMING
 
+- Bugfix: the bottom bar syntax do not show `token` like `MATCH`, `COUNT`, `TYPE`.
+
 ### 1.15.2
 
 - Feature: config file (`iredisrc`)'s path now can be set by environment
