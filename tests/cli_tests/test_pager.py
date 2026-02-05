@@ -16,7 +16,9 @@ TEST_PAGER_BOUNDARY_NUMBER = "---88938347271---"
 # because click.echo_via_pager uses shutil.which() which doesn't work
 # with commands that have arguments
 env_pager = os.path.join(pathlib.Path(__file__).parent, "pager_boundary.sh")
-env_pager_numbers = os.path.join(pathlib.Path(__file__).parent, "pager_boundary_number.sh")
+env_pager_numbers = os.path.join(
+    pathlib.Path(__file__).parent, "pager_boundary_number.sh"
+)
 
 long_list_type = "quicklist"
 if version_parse(os.environ["REDIS_VERSION"]) >= version_parse("7"):
