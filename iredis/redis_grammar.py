@@ -200,6 +200,7 @@ LONGITUDE = rf"(?P<longitude>{_FLOAT})"
 LATITUDE = rf"(?P<latitude>{_FLOAT})"
 CURSOR = rf"(?P<cursor>{NUM})"
 PARAMETER = rf"(?P<parameter>{VALID_TOKEN})"
+PARAMETERS = rf"(?P<parameters>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 DOUBLE_LUA = r'(?P<double_lua>[^"]*)'
 SINGLE_LUA = r"(?P<single_lua>[^']*)"
 INTTYPE = r"(?P<inttype>(i|u)\d+)"
@@ -409,6 +410,7 @@ GRAMMAR = {
     "command_key_value": rf"\s+ {KEY} \s+ {VALUE} \s*",
     "command_parameter_value": rf"\s+ {PARAMETER} \s+ {VALUE} \s*",
     "command_parameter": rf"\s+ {PARAMETER} \s+ {VALUE} \s*",
+    "command_parameters": rf"\s+ {PARAMETERS} \s*",
     "command_value": rf"\s+ {VALUE} \s*",
     "command_key_second": rf"\s+ {KEY} \s+ {SECOND} \s*",
     "command_key_timestamp": rf"\s+ {KEY} \s+ {TIMESTAMP} \s*",
