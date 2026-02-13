@@ -1,6 +1,7 @@
 ## UPCOMING
 
 - Bugfix: the bottom bar syntax do not show `token` like `MATCH`, `COUNT`, `TYPE`.
+- Bugfix: replace the `open_text` API with `files()`.
 
 ### 1.15.2
 
