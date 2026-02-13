@@ -36,7 +36,7 @@ configobj = "^5.0"
 click = "^8.0"
 # wcwidth 0.2.x uses pkg_resources which is not supported by PyOxidizer
 wcwidth = "0.1.9"
-packaging = "^23.0"
+packaging = "^24.2"
 redis = "^5.0.0"
 python-dateutil = "^2.8.2"
 
