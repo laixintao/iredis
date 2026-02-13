@@ -90,6 +90,37 @@ def test_set(judge_command):
             "keepttl": "KEEPTTL",
         },
     )
+    # GET option (since 6.2.0, redis-doc)
+    judge_command(
+        "SET abc bar GET",
+        {
+            "command": "SET",
+            "key": "abc",
+            "value": "bar",
+            "get": "GET",
+        },
+    )
+    # EXAT / PXAT options (since 6.2.0, redis-doc)
+    judge_command(
+        "SET abc bar EXAT 1234567890",
+        {
+            "command": "SET",
+            "key": "abc",
+            "value": "bar",
+            "exat_const": "EXAT",
+            "timestamp": "1234567890",
+        },
+    )
+    judge_command(
+        "SET abc bar PXAT 1234567890123",
+        {
+            "command": "SET",
+            "key": "abc",
+            "value": "bar",
+            "pxat_const": "PXAT",
+            "timestampms": "1234567890123",
+        },
+    )
 
 
 def test_append(judge_command):

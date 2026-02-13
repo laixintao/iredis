@@ -429,7 +429,10 @@ GRAMMAR = {
         \s+ {KEY} \s+ {VALUE}
         (
             (\s+ {EXPIRATION} \s+ {MILLISECOND})|
+            (\s+ {EXAT_CONST} \s+ {TIMESTAMP})|
+            (\s+ {PXAT_CONST} \s+ {TIMESTAMPMS})|
             (\s+ {CONDITION})|
+            (\s+ {GET})|
             (\s+ {KEEPTTL})
         )*
         \s*""",
