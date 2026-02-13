@@ -7,7 +7,7 @@
 <p align="center">
 <a href="https://github.com/laixintao/iredis/actions"><img src="https://github.com/laixintao/iredis/actions/workflows/test.yaml/badge.svg?branch=master" alt="Github Action"></a>
 <a href="https://badge.fury.io/py/iredis"><img src="https://badge.fury.io/py/iredis.svg" alt="PyPI version"></a>
-<img src="https://badgen.net/badge/python/3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11" alt="Python version">
+<img src="https://badgen.net/badge/python/3.10%20%7C%203.11%20%7C%203.12" alt="Python version">
 <a href="https://pepy.tech/project/iredis"><img src="https://pepy.tech/badge/iredis" alt="Download stats"></a>
 </p>
 
@@ -109,13 +109,19 @@ It is especially useful when you don't have a python interpreter(E.g. the
 have Python installed.):
 
 ```
-wget  https://github.com/laixintao/iredis/releases/latest/download/iredis.tar.gz \
+wget  https://github.com/laixintao/iredis/releases/download/v1.15.2/iredis.tar.gz \
  && tar -xzf iredis.tar.gz \
  && ./iredis
 ```
 
 (Check the [release page](https://github.com/laixintao/iredis/releases) if you
 want to download an old version of IRedis.)
+
+Please note that the single binary build only support until IRedis v1.15.2, all
+versions before IRedis v1.15.2 has the single binary build that you can download
+directly. After v1.15.2, as the PyOxidizer [is no longer maintained](
+https://gregoryszorc.com/blog/2024/03/17/my-shifting-open-source-priorities/),
+IRedis doesn't do the single binary build either.
 
 ## Usage
 

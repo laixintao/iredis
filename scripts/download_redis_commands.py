@@ -4,6 +4,7 @@
 Download all Reids commands from https://redis.io/commands.
 Output to csv format.
 """
+
 import sys
 import csv
 

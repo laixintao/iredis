@@ -1,8 +1,11 @@
 ## UPCOMING
 
 - Bugfix: the bottom bar syntax do not show `token` like `MATCH`, `COUNT`, `TYPE`.
+- Bugfix: replace the `open_text` API with `files()`.
+- Dependency: Add support for Python 3.13, drop support for Python 3.8 and 3.9.
 - Bugfix: `CONFIG GET` auto-completion grammar now matches commands.json (accepts one or
   more parameters instead of parameter+value).
+- Deprecate: Do not provide the single standalone build using `Pyoxidizer` from this version.
 
 ### 1.15.2
 
