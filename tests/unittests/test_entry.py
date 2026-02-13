@@ -75,12 +75,10 @@ def test_command_shell_options_higher_priority():
     from iredis.config import config
     from textwrap import dedent
 
-    config_content = dedent(
-        """
+    config_content = dedent("""
         [main]
         shell = False
-        """
-    )
+        """)
     with open("/tmp/iredisrc", "w+") as etc_config:
         etc_config.write(config_content)
 

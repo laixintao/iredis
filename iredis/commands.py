@@ -9,7 +9,6 @@ from .utils import timer, strip_quote_args
 from .exceptions import InvalidArguments, AmbiguousCommand
 from . import data as project_data
 
-
 logger = logging.getLogger(__name__)
 
 

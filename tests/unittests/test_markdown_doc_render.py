@@ -12,7 +12,6 @@ from iredis.commands import commands_summary
 from iredis.data import commands as commands_data
 from iredis.markdown import render
 
-
 doc_files = []
 for command, info in commands_summary.items():
     command_docs_name = "-".join(command.split()).lower()
