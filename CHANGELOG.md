@@ -2,6 +2,7 @@
 
 - Bugfix: the bottom bar syntax do not show `token` like `MATCH`, `COUNT`, `TYPE`.
 - Bugfix: replace the `open_text` API with `files()`.
+- Dependency: Add support for Python 3.13, drop support for Python 3.8 and 3.9.
 
 ### 1.15.2
 
