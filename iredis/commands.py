@@ -3,7 +3,7 @@ import csv
 import json
 import logging
 import functools
-from importlib.resources import read_text, open_text
+from importlib.resources import files
 
 from .utils import timer, strip_quote_args
 from .exceptions import InvalidArguments, AmbiguousCommand
@@ -14,7 +14,9 @@ logger = logging.getLogger(__name__)
 
 
 def _load_command_summary():
-    commands_summary = json.loads(read_text(project_data, "commands.json"))
+    commands_summary = json.loads(
+        files(project_data).joinpath("commands.json").read_text(encoding="utf-8")
+    )
     return commands_summary
 
 
@@ -29,7 +31,9 @@ def _load_command():
     command2callback = {}
     command2syntax = {}
     groups = {}
-    with open_text(project_data, "command_syntax.csv") as command_syntax:
+    with files(project_data).joinpath("command_syntax.csv").open(
+        "r", encoding="utf-8"
+    ) as command_syntax:
         csvreader = csv.reader(command_syntax)
         for line in csvreader:
             if first_line:
@@ -49,7 +53,9 @@ def _load_dangerous():
     """
     first_line = True
     dangerous_command = {}
-    with open_text(project_data, "dangerous_commands.csv") as dangerous_file:
+    with files(project_data).joinpath("dangerous_commands.csv").open(
+        "r", encoding="utf-8"
+    ) as dangerous_file:
         csvreader = csv.reader(dangerous_file)
         for line in csvreader:
             if first_line:
