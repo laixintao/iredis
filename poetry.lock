@@ -360,17 +360,17 @@ files = [
 
 [[package]]
 name = "wcwidth"
-version = "0.1.9"
-description = "Measures number of Terminal column cells of wide-character codes"
+version = "0.6.0"
+description = "Measures the displayed width of unicode strings in a terminal"
 optional = false
-python-versions = "*"
+python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "wcwidth-0.1.9-py2.py3-none-any.whl", hash = "sha256:cafe2186b3c009a04067022ce1dcd79cb38d8d65ee4f4791b8888d6599d1bbe1"},
-    {file = "wcwidth-0.1.9.tar.gz", hash = "sha256:ee73862862a156bf77ff92b09034fc4825dd3af9cf81bc5b360668d425f3c5f1"},
+    {file = "wcwidth-0.6.0-py3-none-any.whl", hash = "sha256:1a3a1e510b553315f8e146c54764f4fb6264ffad731b3d78088cdb1478ffbdad"},
+    {file = "wcwidth-0.6.0.tar.gz", hash = "sha256:cdc4e4262d6ef9a1a57e018384cbeb1208d8abbc64176027e2c2455c81313159"},
 ]
 
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "b3d4345b3f02745da580fd360afbaae7963e26983467e2a9dde226c59f319b50"
+content-hash = "702df2711e477a7f95f3e222cceee7745f43da7a6afe6798efdee9ae49c42fd0"
