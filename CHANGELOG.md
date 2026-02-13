@@ -1,6 +1,8 @@
 ## UPCOMING
 
 - Bugfix: the bottom bar syntax do not show `token` like `MATCH`, `COUNT`, `TYPE`.
+- Bugfix: `CONFIG GET` auto-completion grammar now matches commands.json (accepts one or
+  more parameters instead of parameter+value).
 
 ### 1.15.2
 

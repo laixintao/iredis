@@ -57,6 +57,23 @@ def test_configset(judge_command):
     )
 
 
+def test_config_get(judge_command):
+    """CONFIG GET accepts one or more parameters (per commands.json), not parameter+value."""
+    judge_command(
+        "CONFIG GET maxmemory",
+        {"command": "CONFIG GET", "parameters": "maxmemory"},
+    )
+    judge_command(
+        "CONFIG GET maxmemory timeout",
+        {"command": "CONFIG GET", "parameters": "maxmemory timeout"},
+    )
+    judge_command(
+        "config get *max-*-entries*",
+        {"command": "config get", "parameters": "*max-*-entries*"},
+    )
+    judge_command("CONFIG GET", None)
+
+
 def test_shutdown(judge_command):
     judge_command("shutdown save", {"command": "shutdown", "shutdown": "save"})
     judge_command("shutdown NOSAVE", {"command": "shutdown", "shutdown": "NOSAVE"})
