@@ -109,13 +109,19 @@ It is especially useful when you don't have a python interpreter(E.g. the
 have Python installed.):
 
 ```
-wget  https://github.com/laixintao/iredis/releases/latest/download/iredis.tar.gz \
+wget  https://github.com/laixintao/iredis/releases/download/v1.15.2/iredis.tar.gz \
  && tar -xzf iredis.tar.gz \
  && ./iredis
 ```
 
 (Check the [release page](https://github.com/laixintao/iredis/releases) if you
 want to download an old version of IRedis.)
+
+Please note that the single binary build only support until IRedis v1.15.2, all
+versions before IRedis v1.15.2 has the single binary build that you can download
+directly. After v1.15.2, as the PyOxidizer [is no longer maintained](
+https://gregoryszorc.com/blog/2024/03/17/my-shifting-open-source-priorities/),
+IRedis doesn't do the single binary build either.
 
 ## Usage
 
