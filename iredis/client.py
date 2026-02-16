@@ -8,7 +8,7 @@ import sys
 import codecs
 import logging
 from subprocess import run
-from importlib.resources import read_text
+from importlib.resources import files
 from packaging.version import parse as version_parse
 
 import redis
@@ -581,7 +581,9 @@ class Client:
         command_docs_name = "-".join(args).lower()
         command_summary_name = " ".join(args).upper()
         try:
-            doc = read_text(commands_data, f"{command_docs_name}.md")
+            doc = files(commands_data).joinpath(f"{command_docs_name}.md").read_text(
+                encoding="utf-8"
+            )
         except FileNotFoundError:
             raise NotRedisCommand(
                 f"{command_summary_name} is not a valid Redis command."

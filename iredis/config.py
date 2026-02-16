@@ -1,4 +1,4 @@
-from importlib.resources import path
+from importlib.resources import as_file, files
 import os
 import logging
 
@@ -102,7 +102,7 @@ def read_config_file(f):
 
 
 def load_config_files(iredisrc):
-    with path(project_data, "iredisrc") as p:
+    with as_file(files(project_data).joinpath("iredisrc")) as p:
         config_obj = ConfigObj(str(p))
 
     for _file in [system_config_file, iredisrc, pwd_config_file]:

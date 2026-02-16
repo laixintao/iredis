@@ -6,7 +6,7 @@ https://github.com/antirez/redis-doc/commit/02b3d1a345093c1794fd86273e9d516fffd3
 """
 
 import pytest
-from importlib.resources import read_text
+from importlib.resources import files
 
 from iredis.commands import commands_summary
 from iredis.data import commands as commands_data
@@ -23,5 +23,5 @@ for command, info in commands_summary.items():
 @pytest.mark.parametrize("filename", doc_files)
 def test_markdown_render(filename):
     print(filename)
-    doc = read_text(commands_data, filename)
+    doc = files(commands_data).joinpath(filename).read_text(encoding="utf-8")
     render(doc)
