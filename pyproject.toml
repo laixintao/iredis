@@ -34,8 +34,9 @@ Pygments = "^2"
 mistune = "^3.0"
 configobj = "^5.0"
 click = "^8.0"
+
+redis = ">=5.0.0,<8.0.0"
 packaging = "^24.2"
-redis = "^5.0.0"
 python-dateutil = "^2.8.2"
 
 [tool.poetry.scripts]
