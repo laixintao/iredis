@@ -107,3 +107,4 @@ venv.bak/
 # IDE
 .vscode
 .idea/
+.cursor

@@ -1,4 +1,5 @@
 import os
+import time
 
 from packaging.version import parse as version_parse
 import pytest
@@ -33,8 +34,10 @@ def test_set_command_with_shash(clean_redis, cli):
 
 def test_enter_key_binding(clean_redis, cli):
     cli.send("set")
+    time.sleep(0.3)  # Wait for completion menu
     cli.expect("set")
     cli.send("\033[B")  # down
+    time.sleep(0.2)
     cli.sendline()  # enter
 
     cli.sendline(" a 'hello'")
@@ -47,6 +50,7 @@ def test_enter_key_binding(clean_redis, cli):
 @pytest.mark.skipif("version_parse(os.environ['REDIS_VERSION']) < version_parse('6')")
 def test_auth_hidden_password_with_username(clean_redis, cli):
     cli.send("auth  default hello-world")
+    time.sleep(0.3)  # Wait for display update
     cli.expect("default")
     cli.expect(r"\*{11}")
 

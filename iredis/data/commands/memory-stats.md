@@ -33,10 +33,10 @@ values. The following metrics are reported:
      minus `startup.allocated`) and `keys.count` 
 *   `dataset.bytes`: The size in bytes of the dataset, i.e. `overhead.total`
      subtracted from `total.allocated` (see `INFO`'s `used_memory_dataset`)
-*   `dataset.percentage`: The percentage of `dataset.bytes` out of the net
+*   `dataset.percentage`: The percentage of `dataset.bytes` out of the total
      memory usage
-*   `peak.percentage`: The percentage of `peak.allocated` out of
-     `total.allocated`
+*   `peak.percentage`: The percentage of `total.allocated` out of
+     `peak.allocated`
 *   `fragmentation`: See `INFO`'s `mem_fragmentation_ratio`
 
 @return

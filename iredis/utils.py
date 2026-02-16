@@ -99,15 +99,22 @@ type_convert = {"posix time": "time"}
 
 
 def parse_argument_to_formatted_text(
-    name, _type, is_option, style_class="bottom-toolbar"
+    name, _type, is_option, token=None, style_class="bottom-toolbar"
 ):
     result = []
     if isinstance(name, str):
         _type = type_convert.get(_type, _type)
-        if is_option:
-            result.append((f"class:{style_class}.{_type}", f" [{name}]"))
+        if token:
+            # Format: [TOKEN name] or TOKEN name
+            if is_option:
+                result.append((f"class:{style_class}.{_type}", f" [{token} {name}]"))
+            else:
+                result.append((f"class:{style_class}.{_type}", f" {token} {name}"))
         else:
-            result.append((f"class:{style_class}.{_type}", f" {name}"))
+            if is_option:
+                result.append((f"class:{style_class}.{_type}", f" [{name}]"))
+            else:
+                result.append((f"class:{style_class}.{_type}", f" {name}"))
     elif isinstance(name, list):
         for inner_name, inner_type in zip(name, _type):
             inner_type = type_convert.get(inner_type, inner_type)
@@ -138,6 +145,7 @@ def compose_command_syntax(command_info, style_class="bottom-toolbar"):
                             argument["name"],
                             argument["type"],
                             argument.get("optional"),
+                            token=argument.get("token"),
                             style_class=style_class,
                         )
                     )
@@ -153,6 +161,7 @@ def compose_command_syntax(command_info, style_class="bottom-toolbar"):
                         argument["name"],
                         argument["type"],
                         argument.get("optional"),
+                        token=argument.get("token"),
                         style_class=style_class,
                     )
                 )

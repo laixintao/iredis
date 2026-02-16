@@ -7,7 +7,7 @@ when the connection is in this mode, Redis is able to reply with more semantical
 replies: for instance, `HGETALL` will return a *map type*, so a client library
 implementation no longer requires to know in advance to translate the array into
 a hash before returning it to the caller. For a full coverage of RESP3, please
-[check this repository](https://github.com/antirez/resp3).
+check the [RESP3 specification](https://github.com/redis/redis-specifications/blob/master/protocol/RESP3.md).
 
 In Redis 6 connections start in RESP2 mode, so clients implementing RESP2 do
 not need to updated or changed. There are no short term plans to drop support for

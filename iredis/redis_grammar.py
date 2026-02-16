@@ -6,6 +6,7 @@ regex.
 command_nodex: x means node?
 command_keys: ends with s means there can be multiple <key>
 """
+
 import logging
 from functools import lru_cache
 
@@ -200,6 +201,7 @@ LONGITUDE = rf"(?P<longitude>{_FLOAT})"
 LATITUDE = rf"(?P<latitude>{_FLOAT})"
 CURSOR = rf"(?P<cursor>{NUM})"
 PARAMETER = rf"(?P<parameter>{VALID_TOKEN})"
+PARAMETERS = rf"(?P<parameters>{VALID_TOKEN}(\s+{VALID_TOKEN})*)"
 DOUBLE_LUA = r'(?P<double_lua>[^"]*)'
 SINGLE_LUA = r"(?P<single_lua>[^']*)"
 INTTYPE = r"(?P<inttype>(i|u)\d+)"
@@ -409,6 +411,7 @@ GRAMMAR = {
     "command_key_value": rf"\s+ {KEY} \s+ {VALUE} \s*",
     "command_parameter_value": rf"\s+ {PARAMETER} \s+ {VALUE} \s*",
     "command_parameter": rf"\s+ {PARAMETER} \s+ {VALUE} \s*",
+    "command_parameters": rf"\s+ {PARAMETERS} \s*",
     "command_value": rf"\s+ {VALUE} \s*",
     "command_key_second": rf"\s+ {KEY} \s+ {SECOND} \s*",
     "command_key_timestamp": rf"\s+ {KEY} \s+ {TIMESTAMP} \s*",
@@ -429,7 +432,10 @@ GRAMMAR = {
         \s+ {KEY} \s+ {VALUE}
         (
             (\s+ {EXPIRATION} \s+ {MILLISECOND})|
+            (\s+ {EXAT_CONST} \s+ {TIMESTAMP})|
+            (\s+ {PXAT_CONST} \s+ {TIMESTAMPMS})|
             (\s+ {CONDITION})|
+            (\s+ {GET})|
             (\s+ {KEEPTTL})
         )*
         \s*""",
@@ -481,10 +487,20 @@ GRAMMAR = {
         \s+ {KEY} \s+ {MIN} \s+ {MAX} (\s+ {WITHSCORES})?
         (\s+ {LIMIT} \s+ {OFFSET} \s+ {COUNT})? \s*""",
     "command_cursor_match_pattern_count_type": rf"""
-        \s+ {CURSOR} (\s+ {MATCH} \s+ {PATTERN})?
-        (\s+ {COUNT_CONST} \s+ {COUNT})? (\s+ {TYPE_CONST} \s+ {TYPE})? \s*""",
+        \s+ {CURSOR}
+        (
+            (\s+ {MATCH} \s+ {PATTERN})|
+            (\s+ {COUNT_CONST} \s+ {COUNT})|
+            (\s+ {TYPE_CONST} \s+ {TYPE})
+        )*
+        \s*""",
     "command_key_cursor_match_pattern_count": rf"""\s+ {KEY}
-        \s+ {CURSOR} (\s+ {MATCH} \s+ {PATTERN})? (\s+ {COUNT_CONST} \s+ {COUNT})? \s*""",
+        \s+ {CURSOR}
+        (
+            (\s+ {MATCH} \s+ {PATTERN})|
+            (\s+ {COUNT_CONST} \s+ {COUNT})
+        )*
+        \s*""",
     "command_key_fields": rf"\s+ {KEY} \s+ {FIELDS} \s*",
     "command_key_field": rf"\s+ {KEY} \s+ {FIELD} \s*",
     "command_key_field_delta": rf"\s+ {KEY} \s+ {FIELD} \s+ {DELTA} \s*",

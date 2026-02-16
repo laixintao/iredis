@@ -12,6 +12,10 @@ The preferred endpoint, along with the port, defines the location that clients s
 A NULL value for the endpoint indicates the node has an unknown endpoint and the client should connect to the same endpoint it used to send the `CLUSTER SLOTS` command but with the port returned from the command.
 This unknown endpoint configuration is useful when the Redis nodes are behind a load balancer that Redis doesn't know the endpoint of.
 Which endpoint is set as preferred is determined by the `cluster-preferred-endpoint-type` config.
+An empty string `""` is another abnormal value of the endpoint field, as well as for the ip field, which is returned if the node doesn't know its own IP address.
+This can happen in a cluster that consists of only one node or the node has not yet been joined with the rest of the cluster.
+The value `?` is displayed if the node is incorrectly configured to use announced hostnames but no hostname is configured using `cluster-announce-hostname`.
+Clients may treat the empty string in the same way as NULL, that is the same endpoint it used to send the current command to, while `"?"` should be treated as an unknown node, not necessarily the same node as the one serving the current command.
 
 Additional networking metadata is provided as a map on the fourth argument for each node. 
 The following networking metadata may be returned:

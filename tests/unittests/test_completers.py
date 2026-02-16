@@ -52,7 +52,7 @@ def test_newbie_mode_complete_with_meta_dict():
             [
                 (
                     "",
-                    "Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a member",  # noqa
+                    "Queries a geospatial index for members within a distance from a coordinate, optionally stores the result.",  # noqa
                 )
             ]
         ),
@@ -60,7 +60,7 @@ def test_newbie_mode_complete_with_meta_dict():
             [
                 (
                     "",
-                    "Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point",  # noqa
+                    "Queries a geospatial index for members within a distance from a member, optionally stores the result.",  # noqa
                 )
             ]
         ),
@@ -78,7 +78,7 @@ def test_newbie_mode_complete_with_meta_dict_command_is_lowercase():
             [
                 (
                     "",
-                    "Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a member",  # noqa
+                    "Queries a geospatial index for members within a distance from a coordinate, optionally stores the result.",  # noqa
                 )
             ]
         ),
@@ -86,7 +86,7 @@ def test_newbie_mode_complete_with_meta_dict_command_is_lowercase():
             [
                 (
                     "",
-                    "Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point",  # noqa
+                    "Queries a geospatial index for members within a distance from a member, optionally stores the result.",  # noqa
                 )
             ]
         ),

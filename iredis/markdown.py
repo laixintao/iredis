@@ -9,7 +9,6 @@ import mistune
 import re
 from prompt_toolkit.formatted_text import to_formatted_text, HTML
 
-
 logger = logging.getLogger(__name__)
 
 

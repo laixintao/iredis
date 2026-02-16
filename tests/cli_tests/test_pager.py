@@ -2,26 +2,21 @@
 from contextlib import contextmanager
 import os
 import pathlib
-import sys
 from textwrap import dedent
 from packaging.version import parse as version_parse
 
 import pexpect
 
-
 TEST_IREDISRC = "/tmp/.iredisrc.test"
 TEST_PAGER_BOUNDARY = "---boundary---"
 TEST_PAGER_BOUNDARY_NUMBER = "---88938347271---"
 
-env_pager = "{} {} {}".format(
-    sys.executable,
-    os.path.join(pathlib.Path(__file__).parent, "wrappager.py"),
-    TEST_PAGER_BOUNDARY,
-)
-env_pager_numbers = "{} {} {}".format(
-    sys.executable,
-    os.path.join(pathlib.Path(__file__).parent, "wrappager.py"),
-    TEST_PAGER_BOUNDARY_NUMBER,
+# Use shell scripts as pager instead of python command with arguments
+# because click.echo_via_pager uses shutil.which() which doesn't work
+# with commands that have arguments
+env_pager = os.path.join(pathlib.Path(__file__).parent, "pager_boundary.sh")
+env_pager_numbers = os.path.join(
+    pathlib.Path(__file__).parent, "pager_boundary_number.sh"
 )
 
 long_list_type = "quicklist"
@@ -56,7 +51,7 @@ def test_using_pager_works_for_help():
     with pager_enabled_cli() as child:
         child.sendline("help set")
         child.expect(TEST_PAGER_BOUNDARY)
-        child.expect("Set the string value of a key")
+        child.expect("Sets the string value of a key")
         child.expect(TEST_PAGER_BOUNDARY)
 
 
@@ -72,13 +67,11 @@ def test_pager_works_for_peek(clean_redis):
 
 
 def test_using_pager_from_config(clean_redis):
-    config_content = dedent(
-        f"""
+    config_content = dedent(f"""
         [main]
         log_location = /tmp/iredis1.log
         pager = {env_pager_numbers}
-        """
-    )
+        """)
 
     with open(TEST_IREDISRC, "w+") as test_iredisrc:
         test_iredisrc.write(config_content)
@@ -96,13 +89,11 @@ def test_using_pager_from_config(clean_redis):
 
 
 def test_using_pager_from_config_when_env_config_both_set(clean_redis):
-    config_content = dedent(
-        f"""
+    config_content = dedent(f"""
         [main]
         log_location = /tmp/iredis1.log
         pager = {env_pager_numbers}
-        """
-    )
+        """)
 
     with open(TEST_IREDISRC, "w+") as test_iredisrc:
         test_iredisrc.write(config_content)

@@ -29,7 +29,7 @@ are already assigned:
 This command only works in cluster mode and is useful in the following
 Redis Cluster operations:
 
-1. To create a new cluster ADDSLOTS is used in order to initially setup master nodes splitting the available hash slots among them.
+1. To create a new `cluster ADDSLOTS` is used in order to initially setup master nodes splitting the available hash slots among them.
 2. In order to fix a broken cluster where certain slots are unassigned.
 
 ## Information about slots propagation and warnings
