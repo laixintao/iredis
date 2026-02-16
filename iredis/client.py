@@ -581,8 +581,10 @@ class Client:
         command_docs_name = "-".join(args).lower()
         command_summary_name = " ".join(args).upper()
         try:
-            doc = files(commands_data).joinpath(f"{command_docs_name}.md").read_text(
-                encoding="utf-8"
+            doc = (
+                files(commands_data)
+                .joinpath(f"{command_docs_name}.md")
+                .read_text(encoding="utf-8")
             )
         except FileNotFoundError:
             raise NotRedisCommand(
