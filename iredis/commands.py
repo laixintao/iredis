@@ -30,9 +30,11 @@ def _load_command():
     command2callback = {}
     command2syntax = {}
     groups = {}
-    with files(project_data).joinpath("command_syntax.csv").open(
-        "r", encoding="utf-8"
-    ) as command_syntax:
+    with (
+        files(project_data)
+        .joinpath("command_syntax.csv")
+        .open("r", encoding="utf-8") as command_syntax
+    ):
         csvreader = csv.reader(command_syntax)
         for line in csvreader:
             if first_line:
@@ -52,9 +54,11 @@ def _load_dangerous():
     """
     first_line = True
     dangerous_command = {}
-    with files(project_data).joinpath("dangerous_commands.csv").open(
-        "r", encoding="utf-8"
-    ) as dangerous_file:
+    with (
+        files(project_data)
+        .joinpath("dangerous_commands.csv")
+        .open("r", encoding="utf-8") as dangerous_file
+    ):
         csvreader = csv.reader(dangerous_file)
         for line in csvreader:
             if first_line:

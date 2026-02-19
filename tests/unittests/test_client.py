@@ -26,7 +26,7 @@ def completer():
 zset_type = "ziplist"
 hash_type = "hashtable"
 list_type = "quicklist"
-if version_parse(os.environ["REDIS_VERSION"]) >= version_parse("7"):
+if version_parse(os.environ.get("REDIS_VERSION", "0")) >= version_parse("7"):
     zset_type = "listpack"
     hash_type = "listpack"
     list_type = "listpack"
@@ -182,7 +182,7 @@ def test_not_retry_on_authentication_error(iredis_client, config):
 
 
 @pytest.mark.skipif(
-    "version_parse(os.environ['REDIS_VERSION']) != version_parse('6')",
+    "version_parse(os.environ.get('REDIS_VERSION', '0')) != version_parse('6')",
     reason="""
 in redis7, it will not work if you:
 1. connect redis without password
@@ -215,7 +215,9 @@ def test_auto_select_db_and_auth_for_reconnect_only_6(iredis_client, config):
     )
 
 
-@pytest.mark.skipif("version_parse(os.environ['REDIS_VERSION']) > version_parse('5')")
+@pytest.mark.skipif(
+    "version_parse(os.environ.get('REDIS_VERSION', '0')) > version_parse('5')"
+)
 def test_auto_select_db_and_auth_for_reconnect_only_5(iredis_client, config):
     config.retry_times = 2
     config.raw = True

@@ -316,6 +316,20 @@ poetry install
 
 **Be careful running testcases locally, it may flush you db!!!**
 
+### Code style
+
+Code is formatted with [black](https://github.com/psf/black). After modifying code, run:
+
+```bash
+black .
+```
+
+We recommend installing [pre-commit](https://pre-commit.com/) so black and flake8 run automatically on each `git commit`:
+
+```bash
+poetry run pre-commit install
+```
+
 ### Development Logs
 
 This is a command-line tool, so we don't write logs to stdout.
