@@ -34,8 +34,15 @@ def test_newbie_mode_complete_without_meta_dict():
     fake_document.text_before_cursor = fake_document.text = "GEOR"
     completer = IRedisCompleter(hint=False)
     completions = list(completer.get_completions(fake_document, None))
-    assert [word.text for word in completions] == ["GEORADIUS", "GEORADIUSBYMEMBER"]
+    assert [word.text for word in completions] == [
+        "GEORADIUS",
+        "GEORADIUS_RO",
+        "GEORADIUSBYMEMBER",
+        "GEORADIUSBYMEMBER_RO",
+    ]
     assert [word.display_meta for word in completions] == [
+        FormattedText([("", "")]),
+        FormattedText([("", "")]),
         FormattedText([("", "")]),
         FormattedText([("", "")]),
     ]
@@ -64,6 +71,22 @@ def test_newbie_mode_complete_with_meta_dict():
                 )
             ]
         ),
+        FormattedText(
+            [
+                (
+                    "",
+                    "Returns members from a geospatial index that are within a distance from a coordinate.",  # noqa
+                )
+            ]
+        ),
+        FormattedText(
+            [
+                (
+                    "",
+                    "Returns members from a geospatial index that are within a distance from a member.",  # noqa
+                )
+            ]
+        ),
     ]
 
 
@@ -87,6 +110,22 @@ def test_newbie_mode_complete_with_meta_dict_command_is_lowercase():
                 (
                     "",
                     "Queries a geospatial index for members within a distance from a member, optionally stores the result.",  # noqa
+                )
+            ]
+        ),
+        FormattedText(
+            [
+                (
+                    "",
+                    "Returns members from a geospatial index that are within a distance from a coordinate.",  # noqa
+                )
+            ]
+        ),
+        FormattedText(
+            [
+                (
+                    "",
+                    "Returns members from a geospatial index that are within a distance from a member.",  # noqa
                 )
             ]
         ),
@@ -386,8 +425,10 @@ def test_completion_casing():
         "getrange",
         "geosearch",
         "georadius",
+        "georadius_ro",
         "geosearchstore",
         "georadiusbymember",
+        "georadiusbymember_ro",
     ]
 
     c = IRedisCompleter(completion_casing="auto")
