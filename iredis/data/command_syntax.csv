@@ -43,6 +43,8 @@ connection,CLIENT UNPAUSE,command,render_simple_string
 connection,CLIENT REPLY,command_switch,render_simple_string
 connection,CLIENT SETNAME,command_value,render_simple_string
 connection,CLIENT UNBLOCK,command_clientid_errorx,render_int
+connection,CLIENT NO-EVICT,command_on_off,render_simple_string
+connection,CLIENT NO-TOUCH,command_on_off,render_simple_string
 generic,COPY,command_copy,render_int
 generic,DEL,command_keys,render_int
 generic,DUMP,command_key,render_bulk_string
@@ -53,7 +55,7 @@ generic,EXPIRETIME,command_key,render_int
 generic,KEYS,command_pattern,command_keys
 generic,MIGRATE,command_migrate,render_simple_string
 generic,MOVE,command_key_index,render_int
-generic,OBJECT,command_object_key,render_string_or_int
+generic,OBJECT,command_any,render_string_or_int
 generic,PERSIST,command_key,render_int
 generic,PEXPIRE,command_key_millisecond,render_int
 generic,PEXPIREAT,command_key_timestampms,render_int
@@ -97,6 +99,7 @@ hyperloglog,PFADD,command_key_values,render_int
 hyperloglog,PFCOUNT,command_keys,render_int
 hyperloglog,PFMERGE,command_newkey_keys,render_simple_string
 list,BLMOVE,command_key_key_lr_lr_timeout, render_bulk_string
+list,LMOVE,command_key_key_lr_lr,render_bulk_string
 list,BLPOP,command_keys_timeout,render_list_or_string
 list,BRPOP,command_keys_timeout,render_list_or_string
 list,BRPOPLPUSH,command_key_newkey_timeout,render_bulk_string
@@ -118,16 +121,16 @@ list,RPUSHX,command_key_values,render_int
 pubsub,PSUBSCRIBE,command_channels,render_subscribe
 pubsub,PUBLISH,command_channel_message,render_int
 pubsub,PUBSUB,command_pubsubcmd_channelsx,render_list_or_string
-pubsub,PUNSUBSCRIBE,command_channels,render_subscribe
+pubsub,PUNSUBSCRIBE,command_channelsx,render_subscribe
 pubsub,SUBSCRIBE,command_channels,render_subscribe
-pubsub,UNSUBSCRIBE,command_channels,render_subscribe
+pubsub,UNSUBSCRIBE,command_channelsx,render_subscribe
 scripting,EVAL,command_lua_any,render_list_or_string
 scripting,EVAL_RO,command_lua_any,render_list_or_string
 scripting,EVALSHA,command_any,render_list_or_string
 scripting,EVALSHA_RO,command_any,render_list_or_string
 scripting,SCRIPT DEBUG,command_scriptdebug,render_simple_string
 scripting,SCRIPT EXISTS,command_any,render_list
-scripting,SCRIPT FLUSH,command,render_simple_string
+scripting,SCRIPT FLUSH,command_asyncx,render_simple_string
 scripting,SCRIPT KILL,command,render_simple_string
 scripting,SCRIPT LOAD,command_lua_any,render_bulk_string_decode
 server,ACL CAT,command_categorynamex,render_list
@@ -151,6 +154,7 @@ server,COMMAND COUNT,command,render_int
 server,COMMAND GETKEYS,command_any,render_list
 server,COMMAND INFO,command_parametersx,render_list
 server,COMMAND LIST,command_parametersx,render_list
+server,COMMAND DOCS,command_parametersx,render_list
 server,CONFIG GET,command_parameters,render_nested_pair
 server,CONFIG RESETSTAT,command,render_simple_string
 server,CONFIG REWRITE,command,render_simple_string
@@ -175,7 +179,7 @@ server,MEMORY HELP,command,render_help
 server,MEMORY MALLOC-STATS,command,render_bulk_string_decode
 server,MEMORY PURGE,command,render_simple_string
 server,MEMORY STATS,command,render_nested_pair
-server,MEMORY USAGE,command_key_samples_count,render_int
+server,MEMORY USAGE,command_key_samples_count_x,render_int
 server,MODULE LIST,command,render_list
 server,MODULE LOAD,command_any,render_simple_string
 server,MODULE UNLOAD,command_any,render_simple_string
@@ -206,6 +210,7 @@ set,SUNION,command_keys,render_list
 set,SUNIONSTORE,command_destination_keys,render_int
 sorted_set,BZPOPMAX,command_keys_timeout,render_list_or_string
 sorted_set,BZPOPMIN,command_keys_timeout,render_list_or_string
+sorted_set,ZDIFF,command_any,render_list
 sorted_set,ZADD,command_key_condition_changed_incr_score_members,render_string_or_int
 sorted_set,ZCARD,command_key,render_int
 sorted_set,ZCOUNT,command_key_min_max,render_int
@@ -274,6 +279,79 @@ transactions,EXEC,command,render_list_or_string
 transactions,MULTI,command,render_simple_string
 transactions,UNWATCH,command,render_simple_string
 transactions,WATCH,command_keys,render_simple_string
+cluster,ASKING,command_any,render_simple_string
+bitmap,BITFIELD_RO,command_any,render_simple_string
+list,BLMPOP,command_any,render_simple_string
+sorted_set,BZMPOP,command_any,render_simple_string
+connection,CLIENT HELP,command_parametersx,render_list
+connection,CLIENT SETINFO,command_any,render_list
+cluster,CLUSTER ADDSLOTSRANGE,command_any,render_simple_string
+cluster,CLUSTER DELSLOTSRANGE,command_any,render_simple_string
+cluster,CLUSTER HELP,command_parametersx,render_list
+cluster,CLUSTER LINKS,command_any,render_simple_string
+cluster,CLUSTER MYSHARDID,command_any,render_simple_string
+cluster,CLUSTER SHARDS,command_any,render_simple_string
+server,COMMAND GETKEYSANDFLAGS,command_any,render_list
+server,COMMAND HELP,command_parametersx,render_list
+server,CONFIG HELP,command_parametersx,render_list
+scripting,FCALL,command_any,render_simple_string
+scripting,FCALL_RO,command_any,render_simple_string
+scripting,FUNCTION DELETE,command_any,render_simple_string
+scripting,FUNCTION DUMP,command_any,render_simple_string
+scripting,FUNCTION FLUSH,command_any,render_simple_string
+scripting,FUNCTION HELP,command_parametersx,render_list
+scripting,FUNCTION KILL,command_any,render_simple_string
+scripting,FUNCTION LIST,command_parametersx,render_list
+scripting,FUNCTION LOAD,command_any,render_simple_string
+scripting,FUNCTION RESTORE,command_any,render_simple_string
+scripting,FUNCTION STATS,command_any,render_list
+geo,GEORADIUSBYMEMBER_RO,command_any,render_list
+geo,GEORADIUS_RO,command_any,render_list
+server,LATENCY HISTOGRAM,command_any,render_simple_string
+string,LCS,command_any,render_list_or_string
+list,LMPOP,command_any,render_simple_string
+server,MODULE HELP,command_parametersx,render_list
+server,MODULE LOADEX,command_any,render_simple_string
+generic,OBJECT ENCODING,command_any,render_simple_string
+generic,OBJECT FREQ,command_any,render_simple_string
+generic,OBJECT HELP,command_parametersx,render_list
+generic,OBJECT IDLETIME,command_any,render_simple_string
+generic,OBJECT REFCOUNT,command_any,render_simple_string
+generic,PEXPIRETIME,command_key,render_int
+hyperloglog,PFDEBUG,command_any,render_simple_string
+hyperloglog,PFSELFTEST,command_any,render_simple_string
+pubsub,PUBSUB CHANNELS,command_parametersx,render_list
+pubsub,PUBSUB HELP,command_parametersx,render_list
+pubsub,PUBSUB NUMPAT,command_parametersx,render_simple_string
+pubsub,PUBSUB NUMSUB,command_parametersx,render_list
+pubsub,PUBSUB SHARDCHANNELS,command_any,render_simple_string
+pubsub,PUBSUB SHARDNUMSUB,command_any,render_simple_string
+server,REPLCONF,command_any,render_simple_string
+connection,RESET,command_any,render_simple_string
+server,RESTORE-ASKING,command_any,render_simple_string
+scripting,SCRIPT HELP,command_parametersx,render_list
+set,SINTERCARD,command_any,render_int
+server,SLOWLOG GET,command_any,render_list
+server,SLOWLOG HELP,command_parametersx,render_list
+server,SLOWLOG LEN,command_any,render_int
+server,SLOWLOG RESET,command_any,render_simple_string
+set,SMISMEMBER,command_any,render_list
+generic,SORT_RO,command_any,render_list_or_string
+pubsub,SPUBLISH,command_any,render_int
+pubsub,SSUBSCRIBE,command_any,render_subscribe
+string,SUBSTR,command_any,render_bulk_string
+pubsub,SUNSUBSCRIBE,command_any,render_subscribe
+generic,WAITAOF,command_any,render_int
+stream,XAUTOCLAIM,command_any,render_list
+stream,XSETID,command_any,render_simple_string
+sorted_set,ZDIFFSTORE,command_any,render_int
+sorted_set,ZINTER,command_any,render_list
+sorted_set,ZINTERCARD,command_any,render_int
+sorted_set,ZMPOP,command_any,render_list
+sorted_set,ZMSCORE,command_any,render_list
+sorted_set,ZRANDMEMBER,command_any,render_list_or_string
+sorted_set,ZRANGESTORE,command_any,render_int
+sorted_set,ZUNION,command_any,render_list
 iredis,HELP,command_command,
 iredis,PEEK,command_key,
 iredis,CLEAR,command,

@@ -146,6 +146,26 @@ def test_lpos(judge_command):
     )
 
 
+def test_lmove(judge_command):
+    """LMOVE (since 6.2) source dest LEFT|RIGHT LEFT|RIGHT (per commands.json)."""
+    judge_command(
+        "LMOVE src dest LEFT RIGHT",
+        {
+            "command": "LMOVE",
+            "key": ["src", "dest"],
+            "lr_const": ["LEFT", "RIGHT"],
+        },
+    )
+    judge_command(
+        "LMOVE mylist other RIGHT LEFT",
+        {
+            "command": "LMOVE",
+            "key": ["mylist", "other"],
+            "lr_const": ["RIGHT", "LEFT"],
+        },
+    )
+
+
 def test_blmove(judge_command):
     judge_command(
         "blmove list1 list2 left right 1.2",

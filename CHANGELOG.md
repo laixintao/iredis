@@ -17,6 +17,31 @@
 - Bugfix: `COMMAND LIST` added to command syntax (since Redis 7.0, optional FILTERBY).
 - Bugfix: `RPUSHX` auto-completion grammar now matches commands.json (multiple elements
   since Redis 4.0).
+- Bugfix: `SCRIPT FLUSH` grammar now matches commands.json (optional ASYNC|SYNC since 6.2).
+- Bugfix: `CLIENT NO-EVICT` and `CLIENT NO-TOUCH` added to command syntax (since 7.0/7.2, ON|OFF).
+- Bugfix: `MEMORY USAGE` grammar now matches commands.json (optional SAMPLES count).
+- Bugfix: `OBJECT` grammar now matches commands.json (OBJECT HELP with no key, or subcommand key).
+- Bugfix: `PUNSUBSCRIBE`/`UNSUBSCRIBE` grammar now matches commands.json (0 or more channels/patterns).
+- Bugfix: `LMOVE` added to command syntax (since 6.2, source dest LEFT|RIGHT LEFT|RIGHT).
+- Bugfix: `COMMAND DOCS` added to command syntax (since 7.0, 0 or more command names).
+- Bugfix: `ZDIFF` added to command syntax (since 6.2).
+- Bugfix: 73 commands added or aligned in command_syntax.csv to match commands.json
+  (ASKING, BLMPOP, BZMPOP, CLIENT HELP, CLIENT SETINFO,
+  CLUSTER ADDSLOTSRANGE/HELP/LINKS/SHARDS, COMMAND GETKEYSANDFLAGS/HELP, CONFIG HELP,
+  FCALL, FCALL_RO, FUNCTION DELETE/DUMP/FLUSH/HELP/KILL/LIST/LOAD/RESTORE/STATS,
+  GEORADIUS_RO, GEORADIUSBYMEMBER_RO, LCS, LMPOP, MODULE HELP/LOADEX,
+  OBJECT ENCODING/FREQ/HELP/IDLETIME/REFCOUNT, PEXPIRETIME, PFDEBUG, PFSELFTEST,
+  PUBSUB CHANNELS/HELP/NUMPAT/NUMSUB/SHARDCHANNELS/SHARDNUMSUB, REPLCONF, RESET,
+  RESTORE-ASKING, SCRIPT HELP, SINTERCARD, SLOWLOG GET/HELP/LEN/RESET, SMISMEMBER,
+  SORT_RO, SPUBLISH, SSUBSCRIBE, SUBSTR, SUNSUBSCRIBE, WAITAOF, XAUTOCLAIM, XSETID,
+  ZDIFFSTORE, ZINTER, ZINTERCARD, ZMPOP, ZMSCORE, ZRANDMEMBER, ZRANGESTORE, ZUNION).
+  Container-only entries (CONFIG, MEMORY, FUNCTION, CLUSTER, COMMAND, CLIENT, ACL,
+  DEBUG, LATENCY, MODULE, SCRIPT) are not in command_syntax.csv because they
+  require a subcommand and must not be offered as standalone completions.
+  XGROUP/XINFO subcommand rows are not added so existing command_xgroup
+  / command_xinfo grammar and tests remain valid. HELP-style subcommands use
+  command_parametersx for 0+ arguments. All commands from commands.json are now
+  present in command_syntax.csv.
 - Deprecate: Do not provide the single standalone build using `Pyoxidizer` from this version.
 
 ### 1.15.2

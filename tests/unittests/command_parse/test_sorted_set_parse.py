@@ -1,6 +1,18 @@
 import pytest
 
 
+def test_zdiff(judge_command):
+    """ZDIFF (since 6.2) numkeys key [key ...] [WITHSCORES] (per commands.json)."""
+    judge_command(
+        "ZDIFF 2 zset1 zset2",
+        {"command": "ZDIFF", "any": "2 zset1 zset2"},
+    )
+    judge_command(
+        "ZDIFF 3 k1 k2 k3 WITHSCORES",
+        {"command": "ZDIFF", "any": "3 k1 k2 k3 WITHSCORES"},
+    )
+
+
 def test_zcount(judge_command):
     judge_command(
         "zcount foo -10 0",

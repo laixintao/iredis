@@ -47,6 +47,18 @@ def test_swapdb(judge_command):
     judge_command("swapdb 1", None)
 
 
+def test_client_no_evict_no_touch(judge_command):
+    """CLIENT NO-EVICT / CLIENT NO-TOUCH (since 7.0/7.2) accept ON|OFF (per commands.json)."""
+    judge_command("CLIENT NO-EVICT ON", {"command": "CLIENT NO-EVICT", "on_off": "ON"})
+    judge_command(
+        "CLIENT NO-EVICT OFF", {"command": "CLIENT NO-EVICT", "on_off": "OFF"}
+    )
+    judge_command("CLIENT NO-TOUCH ON", {"command": "CLIENT NO-TOUCH", "on_off": "ON"})
+    judge_command(
+        "CLIENT NO-TOUCH off", {"command": "CLIENT NO-TOUCH", "on_off": "off"}
+    )
+
+
 def test_client_caching(judge_command):
     judge_command("CLIENT CACHING YES", {"command": "CLIENT CACHING", "yes": "YES"})
     judge_command("CLIENT CACHING   NO", {"command": "CLIENT CACHING", "yes": "NO"})
