@@ -9,7 +9,20 @@ def test_subscribe(judge_command):
 
 
 def test_pubsub(judge_command):
+    """PUBSUB CHANNELS/NUMSUB/NUMPAT accept 0 or more channels (per commands.json)."""
+    judge_command(
+        "PUBSUB CHANNELS",
+        {"command": "PUBSUB", "pubsubcmd": "CHANNELS"},
+    )
+    judge_command(
+        "PUBSUB NUMSUB",
+        {"command": "PUBSUB", "pubsubcmd": "NUMSUB"},
+    )
     judge_command(
         "PUBSUB NUMSUB foo bar",
         {"command": "PUBSUB", "pubsubcmd": "NUMSUB", "channel": "bar"},
+    )
+    judge_command(
+        "PUBSUB CHANNELS mypattern",
+        {"command": "PUBSUB", "pubsubcmd": "CHANNELS", "channel": "mypattern"},
     )

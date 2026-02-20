@@ -68,11 +68,13 @@ def test_connection_using_url_from_env(clean_redis, monkeypatch):
 # https://github.community/t5/GitHub-Actions/Job-service-command/td-p/33901#
 # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idservices
 def test_connect_via_socket(fake_redis_socket):
-    config_content = dedent("""
+    config_content = dedent(
+        """
         [main]
         log_location = /tmp/iredis1.log
         no_info=True
-        """)
+        """
+    )
     with open("/tmp/iredisrc", "w+") as etc_config:
         etc_config.write(config_content)
 

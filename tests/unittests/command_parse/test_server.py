@@ -47,6 +47,7 @@ def test_client_list(judge_command):
 
 
 def test_configset(judge_command):
+    """CONFIG SET accepts one or more parameter-value pairs (per commands.json since 7.0)."""
     judge_command(
         "config set foo bar",
         {"command": "config set", "parameter": "foo", "value": "bar"},
@@ -54,6 +55,59 @@ def test_configset(judge_command):
     judge_command(
         "config set requirepass ''",
         {"command": "config set", "parameter": "requirepass", "value": "''"},
+    )
+    # Multiple parameter-value pairs (Redis 7.0+); grammar accepts all, parser captures last
+    judge_command(
+        "config set maxmemory 256mb timeout 3000",
+        {"command": "config set", "parameter": "timeout", "value": "3000"},
+    )
+
+
+def test_command_info(judge_command):
+    """COMMAND INFO accepts 0 or more command names (per commands.json, 7.0+ allows no arg)."""
+    judge_command("COMMAND INFO", {"command": "COMMAND INFO"})
+
+
+def test_command_list(judge_command):
+    """COMMAND LIST (since 7.0) accepts optional FILTERBY (per commands.json)."""
+    judge_command("COMMAND LIST", {"command": "COMMAND LIST"})
+    judge_command(
+        "COMMAND LIST FILTERBY MODULE mymod",
+        {"command": "COMMAND LIST", "parameters": "FILTERBY MODULE mymod"},
+    )
+    judge_command(
+        "COMMAND INFO get set",
+        {"command": "COMMAND INFO", "parameters": "get set"},
+    )
+    judge_command(
+        "command info GET",
+        {"command": "command info", "parameters": "GET"},
+    )
+
+
+def test_acl_dryrun(judge_command):
+    """ACL DRYRUN username command [arg ...] (per commands.json)."""
+    judge_command(
+        "ACL DRYRUN alice SET foo bar",
+        {
+            "command": "ACL DRYRUN",
+            "username": "alice",
+            "parameter": "SET",
+            "parameters": "foo bar",
+        },
+    )
+    judge_command(
+        "ACL DRYRUN bob GET mykey",
+        {
+            "command": "ACL DRYRUN",
+            "username": "bob",
+            "parameter": "GET",
+            "parameters": "mykey",
+        },
+    )
+    judge_command(
+        "ACL DRYRUN alice SET",
+        {"command": "ACL DRYRUN", "username": "alice", "parameter": "SET"},
     )
 
 
