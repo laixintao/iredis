@@ -75,6 +75,29 @@ def test_command_list(judge_command):
         "COMMAND LIST FILTERBY MODULE mymod",
         {"command": "COMMAND LIST", "parameters": "FILTERBY MODULE mymod"},
     )
+
+
+def test_command_docs(judge_command):
+    """COMMAND DOCS (since 7.0) accepts 0 or more command names (per commands.json)."""
+    judge_command("COMMAND DOCS", {"command": "COMMAND DOCS"})
+    judge_command(
+        "COMMAND DOCS GET SET",
+        {"command": "COMMAND DOCS", "parameters": "GET SET"},
+    )
+
+
+def test_memory_usage(judge_command):
+    """MEMORY USAGE key [SAMPLES count] (per commands.json)."""
+    judge_command("MEMORY USAGE mykey", {"command": "MEMORY USAGE", "key": "mykey"})
+    judge_command(
+        "MEMORY USAGE mykey SAMPLES 5",
+        {
+            "command": "MEMORY USAGE",
+            "key": "mykey",
+            "samples": "SAMPLES",
+            "count": "5",
+        },
+    )
     judge_command(
         "COMMAND INFO get set",
         {"command": "COMMAND INFO", "parameters": "get set"},

@@ -193,9 +193,15 @@ def test_migrate(judge_command):
 
 
 def test_object(judge_command):
+    """OBJECT HELP (no args) and OBJECT ENCODING/REFCOUNT key (per commands.json)."""
+    judge_command("OBJECT HELP", {"command": "OBJECT HELP"})
+    judge_command(
+        "object encoding mylist",
+        {"command": "object encoding", "any": "mylist"},
+    )
     judge_command(
         "object refcount mylist",
-        {"command": "object", "object": "refcount", "key": "mylist"},
+        {"command": "object refcount", "any": "mylist"},
     )
 
 

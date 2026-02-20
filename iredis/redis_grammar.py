@@ -386,10 +386,12 @@ GRAMMAR = {
     "command_slot_count": rf"\s+ {SLOT} \s+ {COUNT} \s*",
     "command_key_samples_count": rf"""
         \s+ {KEY} \s+ {SAMPLES} \s+ {COUNT} \s*""",
+    "command_key_samples_count_x": rf"\s+ {KEY} (\s+ {SAMPLES} \s+ {COUNT})? \s*",
     "command": r"\s*",
     "command_ip_port": rf"\s+ {IP} \s+ {PORT} \s*",
     "command_epoch": rf"\s+ {EPOCH} \s*",
     "command_yes": rf"\s+ {YES} \s*",
+    "command_on_off": rf"\s+ {ON_OFF} \s*",
     "command_sectionx": rf"(\s+ {SECTION})? \s*",
     "command_asyncx": rf"(\s+ {ASYNC})? \s*",
     "command_slot_slotsubcmd_nodex": rf"""
@@ -537,6 +539,7 @@ GRAMMAR = {
     "command_pubsubcmd_channelsx": rf"\s+ {PUBSUBCMD} (\s+ {CHANNEL})* \s*",
     "command_channel_message": rf"\s+ {CHANNEL} \s+ {MESSAGE} \s*",
     "command_channels": rf"(\s+ {CHANNEL})+ \s*",
+    "command_channelsx": rf"(\s+ {CHANNEL})* \s*",
     "command_lua_any": rf"""(\s+"{DOUBLE_LUA}")? (\s+'{SINGLE_LUA}')? \s+ {ANY} \s*""",
     "command_scriptdebug": rf"\s+ {SCRIPTDEBUG} \s*",
     "command_shutdown": rf"\s+ {SHUTDOWN} \s*",
@@ -665,6 +668,9 @@ GRAMMAR = {
         \s+ {KEY} \s+ {KEY}
         \s+ {LR_CONST} \s+ {LR_CONST}
         \s+ {TIMEOUT} \s*""",
+    "command_key_key_lr_lr": rf"""
+        \s+ {KEY} \s+ {KEY}
+        \s+ {LR_CONST} \s+ {LR_CONST} \s*""",
     "command_copy": rf"""
         \s+ {KEY} \s+ {KEY}
         (\s+ {DB_CONST} \s+ {INDEX})?
