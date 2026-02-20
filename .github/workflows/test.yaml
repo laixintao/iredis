@@ -76,7 +76,7 @@ jobs:
         run: |
           python -m venv venv
           . venv/bin/activate
-          pip install -U pip flake8 black
+          pip install -U pip flake8==7.1.1 black==24.10.0
       - name: Flake8 test
         run: |
           . venv/bin/activate

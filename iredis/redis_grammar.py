@@ -410,8 +410,10 @@ GRAMMAR = {
     "command_keys": rf"\s+ {KEYS} \s*",
     "command_key_value": rf"\s+ {KEY} \s+ {VALUE} \s*",
     "command_parameter_value": rf"\s+ {PARAMETER} \s+ {VALUE} \s*",
+    "command_parameter_values": rf"(\s+ {PARAMETER} \s+ {VALUE})+ \s*",
     "command_parameter": rf"\s+ {PARAMETER} \s+ {VALUE} \s*",
     "command_parameters": rf"\s+ {PARAMETERS} \s*",
+    "command_parametersx": rf"(\s+ {PARAMETERS})? \s*",
     "command_value": rf"\s+ {VALUE} \s*",
     "command_key_second": rf"\s+ {KEY} \s+ {SECOND} \s*",
     "command_key_timestamp": rf"\s+ {KEY} \s+ {TIMESTAMP} \s*",
@@ -532,6 +534,7 @@ GRAMMAR = {
     "command_restore": rf"""\s+ {KEY}
         \s+ {TIMEOUT} \s+ {VALUE} (\s+ {SUBRESTORE} \s+ {SECOND})? \s*""",
     "command_pubsubcmd_channels": rf"\s+ {PUBSUBCMD} (\s+ {CHANNEL})+ \s*",
+    "command_pubsubcmd_channelsx": rf"\s+ {PUBSUBCMD} (\s+ {CHANNEL})* \s*",
     "command_channel_message": rf"\s+ {CHANNEL} \s+ {MESSAGE} \s*",
     "command_channels": rf"(\s+ {CHANNEL})+ \s*",
     "command_lua_any": rf"""(\s+"{DOUBLE_LUA}")? (\s+'{SINGLE_LUA}')? \s+ {ANY} \s*""",
@@ -635,6 +638,7 @@ GRAMMAR = {
     "command_username": rf"\s+ {USERNAME} \s*",
     "command_count_or_resetx": rf"( (\s+ {COUNT}) | (\s+ {RESET_CONST}) )? \s*",
     "command_username_rules": rf"\s+ {USERNAME} (\s+ {RULE})* \s*",
+    "command_username_parameter_parametersx": rf"\s+ {USERNAME} \s+ {PARAMETER} (\s+ {PARAMETERS})? \s*",
     "command_count": rf"(\s+ {COUNT})? \s*",
     "command_stralgo": rf"""
         (

@@ -104,20 +104,20 @@ list,LINDEX,command_key_position,render_bulk_string
 list,LINSERT,command_key_positionchoice_pivot_value,render_int
 list,LLEN,command_key,render_int
 list,LPOS,command_lpos,render_list_or_string
-list,LPOP,command_key,render_list_or_string
+list,LPOP,command_key_count_x,render_list_or_string
 list,LPUSH,command_key_values,render_int
 list,LPUSHX,command_key_values,render_int
 list,LRANGE,command_key_start_end,render_list
 list,LREM,command_key_position_value,render_int
 list,LSET,command_key_position_value,render_simple_string
 list,LTRIM,command_key_start_end,render_simple_string
-list,RPOP,command_key,render_list_or_string
+list,RPOP,command_key_count_x,render_list_or_string
 list,RPOPLPUSH,command_key_newkey,render_bulk_string
 list,RPUSH,command_key_values,render_int
-list,RPUSHX,command_key_value,render_int
+list,RPUSHX,command_key_values,render_int
 pubsub,PSUBSCRIBE,command_channels,render_subscribe
 pubsub,PUBLISH,command_channel_message,render_int
-pubsub,PUBSUB,command_pubsubcmd_channels,render_list_or_string
+pubsub,PUBSUB,command_pubsubcmd_channelsx,render_list_or_string
 pubsub,PUNSUBSCRIBE,command_channels,render_subscribe
 pubsub,SUBSCRIBE,command_channels,render_subscribe
 pubsub,UNSUBSCRIBE,command_channels,render_subscribe
@@ -132,6 +132,7 @@ scripting,SCRIPT KILL,command,render_simple_string
 scripting,SCRIPT LOAD,command_lua_any,render_bulk_string_decode
 server,ACL CAT,command_categorynamex,render_list
 server,ACL DELUSER,command_usernames,render_int
+server,ACL DRYRUN,command_username_parameter_parametersx,render_simple_string
 server,ACL GENPASS,command_countx,render_bulk_string
 server,ACL GETUSER,command_username,render_list
 server,ACL HELP,command,render_help
@@ -148,11 +149,12 @@ server,BGSAVE,command_schedulex,render_simple_string
 server,COMMAND,command,render_list
 server,COMMAND COUNT,command,render_int
 server,COMMAND GETKEYS,command_any,render_list
-server,COMMAND INFO,command_commandname,render_list
+server,COMMAND INFO,command_parametersx,render_list
+server,COMMAND LIST,command_parametersx,render_list
 server,CONFIG GET,command_parameters,render_nested_pair
 server,CONFIG RESETSTAT,command,render_simple_string
 server,CONFIG REWRITE,command,render_simple_string
-server,CONFIG SET,command_parameter_value,render_simple_string
+server,CONFIG SET,command_parameter_values,render_simple_string
 server,DBSIZE,command,render_int
 server,DEBUG OBJECT,command_key,render_simple_string
 server,DEBUG SEGFAULT,command,render_simple_string

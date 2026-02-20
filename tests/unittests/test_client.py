@@ -515,13 +515,15 @@ def test_reissue_command_on_redis_cluster(iredis_client, clean_redis):
 def test_reissue_command_on_redis_cluster_with_password_in_dsn(
     iredis_client, clean_redis
 ):
-    config_content = dedent("""
+    config_content = dedent(
+        """
         [main]
         log_location = /tmp/iredis1.log
         no_info=True
         [alias_dsn]
         cluster-7003=redis://foo:bar@127.0.0.1:7003
-        """)
+        """
+    )
     with open("/tmp/iredisrc", "w+") as etc_config:
         etc_config.write(config_content)
 

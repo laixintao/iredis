@@ -18,10 +18,12 @@ def test_history_not_log_auth(cli):
 
 
 def test_history_create_and_writing_with_config():
-    config_content = dedent("""
+    config_content = dedent(
+        """
         [main]
         history_location = /tmp/iredis_history.txt
-        """)
+        """
+    )
     with open("/tmp/iredisrc", "w+") as etc_config:
         etc_config.write(config_content)
 

@@ -5,6 +5,18 @@
 - Dependency: Add support for Python 3.13, drop support for Python 3.8 and 3.9.
 - Bugfix: `CONFIG GET` auto-completion grammar now matches commands.json (accepts one or
   more parameters instead of parameter+value).
+- Bugfix: `CONFIG SET` auto-completion grammar now matches commands.json (accepts one or
+  more parameter-value pairs since Redis 7.0).
+- Bugfix: `COMMAND INFO` auto-completion grammar now matches commands.json (accepts 0 or
+  more command names; Redis 7.0+ allows no argument).
+- Bugfix: `ACL DRYRUN` added to command syntax and grammar (username, command, optional args).
+- Bugfix: `LPOP`/`RPOP` auto-completion grammar now matches commands.json (optional count
+  since Redis 6.2).
+- Bugfix: `PUBSUB` (CHANNELS/NUMSUB/NUMPAT) grammar now matches commands.json (0 or more
+  channels/pattern).
+- Bugfix: `COMMAND LIST` added to command syntax (since Redis 7.0, optional FILTERBY).
+- Bugfix: `RPUSHX` auto-completion grammar now matches commands.json (multiple elements
+  since Redis 4.0).
 - Deprecate: Do not provide the single standalone build using `Pyoxidizer` from this version.
 
 ### 1.15.2

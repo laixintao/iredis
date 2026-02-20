@@ -1,3 +1,29 @@
+def test_lpop_rpop(judge_command):
+    """LPOP/RPOP accept key and optional count (per commands.json since 6.2)."""
+    judge_command("LPOP mylist", {"command": "LPOP", "key": "mylist"})
+    judge_command(
+        "LPOP mylist 3",
+        {"command": "LPOP", "key": "mylist", "count": "3"},
+    )
+    judge_command("RPOP mylist", {"command": "RPOP", "key": "mylist"})
+    judge_command(
+        "RPOP mylist 2",
+        {"command": "RPOP", "key": "mylist", "count": "2"},
+    )
+
+
+def test_rpushx(judge_command):
+    """RPUSHX accepts key and one or more elements (per commands.json since 4.0)."""
+    judge_command(
+        "RPUSHX mylist a",
+        {"command": "RPUSHX", "key": "mylist", "values": "a"},
+    )
+    judge_command(
+        "RPUSHX mylist a b c",
+        {"command": "RPUSHX", "key": "mylist", "values": "a b c"},
+    )
+
+
 def test_rpush(judge_command):
     judge_command(
         "RPUSH list1 foo bar hello world",
