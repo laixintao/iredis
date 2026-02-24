@@ -332,6 +332,9 @@ class Client:
         ip, port = ip_port.split(":")
         port = int(port)
 
+        if f"{ip}:{port}" in config.natmap:
+            ip, port = config.natmap[f"{ip}:{port}"]
+
         print(response, file=sys.stderr)
 
         connection = self.create_connection(
