@@ -305,3 +305,16 @@ def test_is_too_tall_for_bytes():
     byte_text = b"".join([b"key\n" for index in range(21)])
     assert is_too_tall(byte_text, 20)
     assert not is_too_tall(byte_text, 23)
+
+
+def test_natmap_parsed_into_config():
+    from iredis.config import config
+
+    gather_args.main(
+        ["iredis", "--natmap", "node1.example.com:6379:127.0.0.1:6371,node2.example.com:6379:127.0.0.1:6372"],
+        standalone_mode=False,
+    )
+    assert config.natmap == {
+        "node1.example.com:6379": ("127.0.0.1", 6371),
+        "node2.example.com:6379": ("127.0.0.1", 6372),
+    }
