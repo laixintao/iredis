@@ -48,6 +48,7 @@ class Config:
         self.history_location = None
         self.completion_casing = None
         self.alias_dsn = None
+        self.natmap = {}
 
         # ===bad code===
         # below are not configs, it's global state, it's wrong to write this
