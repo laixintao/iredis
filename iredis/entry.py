@@ -381,7 +381,10 @@ def gather_args(
         for entry in natmap.split(","):
             parts = entry.strip().split(":")
             remote_host, remote_port, local_host, local_port = parts
-            config.natmap[f"{remote_host}:{remote_port}"] = (local_host, int(local_port))
+            config.natmap[f"{remote_host}:{remote_port}"] = (
+                local_host,
+                int(local_port),
+            )
 
     return ctx
 

@@ -311,7 +311,11 @@ def test_natmap_parsed_into_config():
     from iredis.config import config
 
     gather_args.main(
-        ["iredis", "--natmap", "node1.example.com:6379:127.0.0.1:6371,node2.example.com:6379:127.0.0.1:6372"],
+        [
+            "iredis",
+            "--natmap",
+            "node1.example.com:6379:127.0.0.1:6371,node2.example.com:6379:127.0.0.1:6372",
+        ],
         standalone_mode=False,
     )
     assert config.natmap == {
