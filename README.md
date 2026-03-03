@@ -41,6 +41,9 @@ like `KEYS *` (see
 - Support connection via URL, `iredis --url redis://example.com:6379/1`.
 - Support cluster, IRedis will auto reissue command for `MOVED` response in
   cluster mode.
+- Support NAT mapping for Redis clusters  `--natmap
+  remoteHost:remotePort:localHost:localPort` (comma-separated for multiple
+  nodes).
 - Store server configuration: `iredis -d prod-redis` (see [dsn](#using-dsn) for
   more).
 - `peek` command to check the key's type then automatically call

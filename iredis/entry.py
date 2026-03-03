@@ -297,6 +297,15 @@ VERIFY_SSL_HELP = """Set the TLS certificate verification strategy"""
         " {port}, {username}, {client_addr}, {client_id})."
     ),
 )
+@click.option(
+    "--natmap",
+    default=None,
+    help=(
+        "NAT map for Redis cluster behind SSH tunnels. "
+        "Format: remoteHost:remotePort:localHost:localPort "
+        "(comma-separated for multiple nodes)."
+    ),
+)
 @click.version_option()
 @click.argument("cmd", nargs=-1)
 def gather_args(
@@ -321,6 +330,7 @@ def gather_args(
     greetings,
     verify_ssl,
     prompt,
+    natmap,
 ):
     """
     IRedis: Interactive Redis
@@ -366,6 +376,15 @@ def gather_args(
         config.verify_ssl = verify_ssl
     if greetings is not None:
         config.greetings = greetings
+
+    if natmap is not None:
+        for entry in natmap.split(","):
+            parts = entry.strip().split(":")
+            remote_host, remote_port, local_host, local_port = parts
+            config.natmap[f"{remote_host}:{remote_port}"] = (
+                local_host,
+                int(local_port),
+            )
 
     return ctx
 

@@ -542,6 +542,22 @@ def test_reissue_command_on_redis_cluster_with_password_in_dsn(
         assert call_args[0].password == "bar"
 
 
+def test_reissue_command_on_redis_cluster_with_natmap(iredis_client, clean_redis):
+    config.natmap = {"192.168.1.1:6379": ("127.0.0.1", 6371)}
+
+    mock_execute_by_connection = iredis_client.execute_by_connection = MagicMock()
+    with patch("redis.connection.Connection.connect"):
+        iredis_client.reissue_with_redirect(
+            "MOVED 12182 192.168.1.1:6379", "set", "foo", "bar"
+        )
+
+        call_args = mock_execute_by_connection.call_args[0]
+        assert call_args[0].host == "127.0.0.1"
+        assert call_args[0].port == 6371
+
+    config.natmap = {}
+
+
 def test_version_parse_for_auth(iredis_client):
     """
     fix: https://github.com/laixintao/iredis/issues/418
