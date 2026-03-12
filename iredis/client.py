@@ -18,6 +18,7 @@ from redis.connection import Connection, SSLConnection, UnixDomainSocketConnecti
 from redis.exceptions import (
     AuthenticationError,
     ConnectionError,
+    MovedError,
     TimeoutError,
     ResponseError,
 )
@@ -298,6 +299,10 @@ class Client:
             except redis.exceptions.ExecAbortError:
                 config.transaction = False
                 raise
+            except MovedError as e:
+                return self.reissue_with_redirect(
+                    f"MOVED {str(e)}", command_name, *args, **options
+                )
             except ResponseError as e:
                 response_message = str(e)
                 if response_message.startswith("MOVED"):

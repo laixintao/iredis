@@ -495,10 +495,28 @@ def test_mem_not_called_when_cant_get_server_version(
     assert result[0][1] == ("", "string (embstr), ttl: -1")
 
 
-def test_reissue_command_on_redis_cluster(iredis_client, clean_redis):
+def test_reissue_command_on_redis_cluster_on_old_redispy(iredis_client, clean_redis):
+    # In redis<6, MOVED errors caused ResponseError instead of MovedError to be raised
     mock_response = iredis_client.connection = MagicMock()
     mock_response.read_response.side_effect = redis.exceptions.ResponseError(
         "MOVED 12182 127.0.0.1:7002"
+    )
+    iredis_client.reissue_with_redirect = MagicMock()
+    iredis_client.execute("set", "foo", "bar")
+    assert iredis_client.reissue_with_redirect.call_args == (
+        (
+            "MOVED 12182 127.0.0.1:7002",
+            "set",
+            "foo",
+            "bar",
+        ),
+    )
+
+
+def test_reissue_command_on_redis_cluster(iredis_client, clean_redis):
+    mock_response = iredis_client.connection = MagicMock()
+    mock_response.read_response.side_effect = redis.exceptions.MovedError(
+        "12182 127.0.0.1:7002"
     )
     iredis_client.reissue_with_redirect = MagicMock()
     iredis_client.execute("set", "foo", "bar")
