@@ -158,7 +158,8 @@ class Client:
             }
 
             # if username is set without setting paswword, password will be ignored
-            if password:
+            # But empty password will be properly handled
+            if password is not None:
                 connection_kwargs["username"] = username
 
             if scheme == "rediss":
