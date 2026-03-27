@@ -44,6 +44,17 @@
   present in command_syntax.csv.
 - Deprecate: Do not provide the single standalone build using `Pyoxidizer` from this version.
 
+### 1.16.1
+
+- Feature: add `--natmap` for Redis Cluster deployments whose nodes advertise
+  private addresses, such as clusters accessed through SSH tunnels or other
+  NAT/port-forwarding setups.
+- Bugfix: handle redis-py's `MovedError` so cluster `MOVED` redirects are
+  reissued correctly.
+- Dependency: add Python 3.13 classifier support.
+- Test: add coverage for `MOVED` redirect handling and `--natmap` parsing.
+- CI: refresh GitHub Actions cache setup.
+
 ### 1.15.2
 
 - Feature: config file (`iredisrc`)'s path now can be set by environment
