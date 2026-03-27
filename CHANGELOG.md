@@ -48,11 +48,14 @@
 
 - Feature: add `--natmap` for Redis Cluster deployments whose nodes advertise
   private addresses, such as clusters accessed through SSH tunnels or other
-  NAT/port-forwarding setups.
+  NAT/port-forwarding setups. (thanks to [h3nnn4n])
 - Bugfix: handle redis-py's `MovedError` so cluster `MOVED` redirects are
-  reissued correctly.
+  reissued correctly. (thanks to [rafaelclp])
+- Bugfix: properly handle empty passwords when connecting with authentication.
+  (thanks to [giom-l])
 - Dependency: add Python 3.13 classifier support.
 - Test: add coverage for `MOVED` redirect handling and `--natmap` parsing.
+- Doc: document `--natmap` with a Redis Cluster/NAT example.
 - CI: refresh GitHub Actions cache setup.
 
 ### 1.15.2
@@ -402,3 +405,6 @@
 [torrefatto]: https://github.com/torrefatto
 [chayim]: https://github.com/chayim
 [deronnax]: https://github.com/deronnax
+[h3nnn4n]: https://github.com/h3nnn4n
+[rafaelclp]: https://github.com/rafaelclp
+[giom-l]: https://github.com/giom-l
