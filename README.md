@@ -222,6 +222,52 @@ staging=redis://username:password@staging-redis.example.com:6379/1
 Put this in your `iredisrc` then connect via `iredis -d staging` or
 `iredis -d dev`.
 
+### Using `--natmap` with Redis Cluster
+
+Use `--natmap` when you can connect to a Redis Cluster through local forwarded
+ports, but the cluster nodes still advertise different remote or private
+addresses in `MOVED` replies. This usually happens when the cluster is behind
+SSH tunnels, Docker port publishing, Kubernetes port-forwarding, or another NAT
+layer.
+
+`--natmap` tells IRedis how to translate the address announced by Redis into
+the address that is actually reachable from your machine.
+
+Format:
+
+```shell
+iredis --natmap remoteHost:remotePort:localHost:localPort
+```
+
+Use a comma-separated list when more than one cluster node needs translation.
+
+Example: suppose the cluster replies with node addresses on a private network:
+
+```text
+10.0.0.11:6379
+10.0.0.12:6379
+10.0.0.13:6379
+```
+
+but you access those nodes locally through SSH tunnels:
+
+```text
+127.0.0.1:7001
+127.0.0.1:7002
+127.0.0.1:7003
+```
+
+then start IRedis like this:
+
+```shell
+iredis -h 127.0.0.1 -p 7001 \
+  --natmap 10.0.0.11:6379:127.0.0.1:7001,10.0.0.12:6379:127.0.0.1:7002,10.0.0.13:6379:127.0.0.1:7003
+```
+
+Now when a command hits the wrong node and Redis returns `MOVED 12182
+10.0.0.12:6379`, IRedis will reconnect to `127.0.0.1:7002` and reissue the
+command automatically.
+
 ### Change The Default Prompt
 
 You can change the prompt str, the default prompt is:
