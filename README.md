@@ -56,7 +56,7 @@ like `KEYS *` (see
 - <kbd>Ctrl</kbd> + <kbd>R</kbd> to open **reverse-i-search** to search through
   your command history.
 - Auto suggestions. (Like [fish shell](http://fishshell.com/).)
-- Support `--encode=utf-8`, to decode Redis' bytes responses.
+- Support `--decode=utf-8`, to decode Redis' bytes responses.
 - Command hint on bottom, include command syntax, supported redis version, and
   time complexity.
 - Official docs with built-in `HELP` command, try `HELP SET`!
