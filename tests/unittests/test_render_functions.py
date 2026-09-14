@@ -86,6 +86,11 @@ def test_render_list_with_empty_list_raw():
     assert out == b""
 
 
+def test_render_list_with_nil():
+    out = renders.OutputRender.render_list(None)
+    assert out == FormattedText([("class:type", "(nil)")])
+
+
 def test_render_list_with_empty_list():
     raw = []
     out = renders.OutputRender.render_list(raw)
