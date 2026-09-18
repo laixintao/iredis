@@ -43,6 +43,8 @@
   command_parametersx for 0+ arguments. All commands from commands.json are now
   present in command_syntax.csv.
 - Deprecate: Do not provide the single standalone build using `Pyoxidizer` from this version.
+- Bugfix: `XREAD`, `XREADGROUP` and `ZMPOP` show `(nil)` instead of an error
+  when redis returns a nil reply.
 
 ### 1.16.1
 

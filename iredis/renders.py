@@ -132,6 +132,8 @@ class OutputRender:
         Render callback for redis Array Reply
         Note: Cloud be null in it.
         """
+        if text is None:
+            return NIL
         str_items = []
         for item in text:
             if item is None:

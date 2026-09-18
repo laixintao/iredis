@@ -62,6 +62,11 @@ def test_auth_hidden_password(clean_redis, cli):
     cli.expect(r"\*{11}")
 
 
+def test_xread_return_nil(clean_redis, cli):
+    cli.sendline("xread block 100 streams mystream $")
+    cli.expect(r"\(nil\)")
+
+
 def test_hello_command_is_not_supported(cli):
     cli.sendline("hello 3")
     cli.expect("IRedis currently not support RESP3")
