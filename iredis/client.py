@@ -9,7 +9,7 @@ import codecs
 import logging
 from subprocess import run
 from importlib.resources import files
-from packaging.version import parse as version_parse
+from packaging.version import InvalidVersion, parse as version_parse
 
 import redis
 from prompt_toolkit.shortcuts import clear
@@ -745,7 +745,13 @@ class Client:
 
         # use `memory usage` to get memory, this command available from redis4.0
         mem = ""
-        if config.version and version_parse(config.version) >= version_parse("4.0.0"):
+        try:
+            supports_memory_usage = version_parse(
+                config.version or ""
+            ) >= version_parse("4.0.0")
+        except InvalidVersion:
+            supports_memory_usage = False
+        if supports_memory_usage:
             memory_usage_value = str(self.execute("memory usage", key))
             mem = f"  mem: {memory_usage_value} bytes"
 

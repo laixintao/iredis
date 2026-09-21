@@ -7,7 +7,6 @@ func(redis-response) -> formatted result(str)
 
 import logging
 import time
-from packaging.version import parse as version_parse
 
 from prompt_toolkit.formatted_text import FormattedText
 
@@ -270,9 +269,16 @@ class OutputRender:
 
     @staticmethod
     def render_slowlog(raw):
-        fields = ["Slow log id", "Start at", "Running time(μs)", "Command"]
-        if version_parse(config.version) > version_parse("4.0"):
-            fields.extend(["Client IP and port", "Client name"])
+        # Older servers omit the client fields; zip below uses the fields present
+        # in each reply, even when INFO is unavailable.
+        fields = [
+            "Slow log id",
+            "Start at",
+            "Running time(μs)",
+            "Command",
+            "Client IP and port",
+            "Client name",
+        ]
 
         rendered = []
         text = ensure_str(raw)
