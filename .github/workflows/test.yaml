@@ -45,7 +45,7 @@ jobs:
           allow-prereleases: ${{ matrix.experimental || false }}
           architecture: "x64"
       - name: Cache deps
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.cache/pypoetry
@@ -79,7 +79,7 @@ jobs:
           done
   lint:
     name: flake8 & black
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v7
@@ -89,7 +89,7 @@ jobs:
           python-version: "3.14"
 
       - name: Cache pip
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/pip
           key: lint-${{ runner.os }}-3.14-${{ hashFiles('pyproject.toml', '.pre-commit-config.yaml') }}

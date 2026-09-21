@@ -8,7 +8,7 @@ on:
 jobs:
   release-pypi:
     name: release-pypi
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     # FIXME
     # help test shouldn't depends on this to run
@@ -30,7 +30,7 @@ jobs:
           python-version: "3.14"
           architecture: 'x64'
       - name: Cache venv
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: venv
           # Look to see if there is a cache hit for the corresponding requirements file
