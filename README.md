@@ -135,6 +135,16 @@ Once you install IRedis, you will know how to use it. Just remember, IRedis
 supports similar options like redis-cli, like `-h` for redis-server's host and
 `-p` for port.
 
+Pass a command to execute it once, including from scripts with redirected stdin:
+
+```sh
+iredis PING </dev/null
+```
+
+When no command is given, IRedis reads commands from piped stdin (for example,
+`echo PING | iredis`) or starts an interactive session when stdin is a terminal.
+An explicit command takes precedence over piped input.
+
 ```
 $ iredis --help
 
