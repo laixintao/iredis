@@ -500,19 +500,19 @@ def main():
     # redis client
     client = create_client(ctx.params)
 
-    if not sys.stdin.isatty():
-        for line in sys.stdin.readlines():
-            logger.debug(f"[Command stdin] {line}")
-            for answer in client.send_command(line, None):
-                write_result(answer)
-        return
-
-    # no interactive mode, directly run a command
+    # Explicit commands take precedence over redirected or piped stdin.
     if ctx.params["cmd"]:
         answers = client.send_command(" ".join(ctx.params["cmd"]), None)
         for answer in answers:
             write_result(answer)
         logger.warning("[OVER] command executed, exit...")
+        return
+
+    if not sys.stdin.isatty():
+        for line in sys.stdin.readlines():
+            logger.debug(f"[Command stdin] {line}")
+            for answer in client.send_command(line, None):
+                write_result(answer)
         return
 
     # prompt session
