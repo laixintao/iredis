@@ -247,7 +247,12 @@ VERIFY_SSL_HELP = """Set the TLS certificate verification strategy"""
 @click.option(
     "-s", "--socket", default=None, help="Server socket (overrides hostname and port)."
 )
-@click.option("-n", help="Database number.(overwrites dsn/url's db number)", default=0)
+@click.option(
+    "-n",
+    help="Database number.(overwrites dsn/url's db number)",
+    default=None,
+    type=int,
+)
 @click.option(
     "-u",
     "--username",
@@ -436,7 +441,7 @@ def create_client(params):
         dsn_from_url = parse_url(params["url"])
     if dsn_from_url:
         # db from command lint options should be high priority
-        db = db if db else dsn_from_url.db
+        db = dsn_from_url.db if db is None else db
         verify_ssl = verify_ssl or dsn_from_url.verify_ssl
         return Client(
             host=dsn_from_url.host,
@@ -450,6 +455,8 @@ def create_client(params):
             prompt=prompt,
             verify_ssl=verify_ssl,
         )
+    if db is None:
+        db = 0
     if params["socket"]:
         return Client(
             scheme="unix",
