@@ -56,8 +56,8 @@ jobs:
           pip install dist/*.whl
 
           iredis -h
-          iredis help GET
-          test "$(iredis --raw PING)" = PONG
+          echo 'HELP GET' | iredis --raw | grep -F 'Get the value of'
+          test "$(echo PING | iredis --raw)" = PONG
 
       - name: Upload to Pypi
         env:

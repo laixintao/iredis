@@ -1,5 +1,4 @@
 import pytest
-import tempfile
 from unittest.mock import patch
 from prompt_toolkit.formatted_text import FormattedText
 
@@ -267,9 +266,8 @@ def test_parse_url(url, dsn):
         ("AUTH hello world", False),
     ],
 )
-def test_history(command, record):
-    f = tempfile.TemporaryFile("w+")
-    history = SkipAuthFileHistory(f.name)
+def test_history(command, record, tmp_path):
+    history = SkipAuthFileHistory(tmp_path / "history")
     assert history._loaded_strings == []
     history.append_string(command)
     assert (command in history._loaded_strings) is record

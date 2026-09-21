@@ -74,8 +74,8 @@ jobs:
             python -m venv "$venv"
             "$venv/bin/python" -m pip install "$artifact"
             "$venv/bin/iredis" -h
-            "$venv/bin/iredis" help GET
-            test "$("$venv/bin/iredis" --raw PING)" = PONG
+            echo 'HELP GET' | "$venv/bin/iredis" --raw | grep -F 'Get the value of'
+            test "$(echo PING | "$venv/bin/iredis" --raw)" = PONG
           done
   lint:
     name: flake8 & black
