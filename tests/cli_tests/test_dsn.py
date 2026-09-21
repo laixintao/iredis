@@ -6,12 +6,10 @@ import pytest
 
 
 def test_using_dsn():
-    config_content = dedent(
-        """
+    config_content = dedent("""
         [alias_dsn]
         local = redis://localhost:6379/15
-        """
-    )
+        """)
     with open("/tmp/iredisrc", "w+") as etc_config:
         etc_config.write(config_content)
 
@@ -37,12 +35,10 @@ def test_using_dsn():
     not os.path.exists("/tmp/redis/redis.sock"), reason="unix socket is not found"
 )
 def test_using_dsn_unix():
-    config_content = dedent(
-        """
+    config_content = dedent("""
         [alias_dsn]
         unix = unix:///tmp/redis/redis.sock?db=3
-        """
-    )
+        """)
     with open("/tmp/iredisrc", "w+") as etc_config:
         etc_config.write(config_content)
 

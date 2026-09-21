@@ -7,7 +7,7 @@
 <p align="center">
 <a href="https://github.com/laixintao/iredis/actions"><img src="https://github.com/laixintao/iredis/actions/workflows/test.yaml/badge.svg?branch=master" alt="Github Action"></a>
 <a href="https://badge.fury.io/py/iredis"><img src="https://badge.fury.io/py/iredis.svg" alt="PyPI version"></a>
-<img src="https://badgen.net/badge/python/3.10%20%7C%203.11%20%7C%203.12" alt="Python version">
+<img src="https://badgen.net/badge/python/3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13%20%7C%203.14" alt="Python version">
 <a href="https://pepy.tech/project/iredis"><img src="https://pepy.tech/badge/iredis" alt="Download stats"></a>
 </p>
 
@@ -70,6 +70,9 @@ like `KEYS *` (see
 - For full features, please see: [iredis.xbin.io](https://www.iredis.xbin.io)
 
 ## Install
+
+IRedis supports Python 3.10–3.14. CI also tests Python 3.15 prereleases in an
+experimental job; prerelease failures do not block changes.
 
 ### Pip
 
@@ -364,6 +367,13 @@ poetry install
 ```
 
 **Be careful running testcases locally, it may flush you db!!!**
+
+With a dedicated Redis server listening on `localhost:6379`, run the full suite
+(including interactive CLI tests) with the matching Redis version:
+
+```bash
+REDIS_VERSION=7.2 poetry run pytest
+```
 
 ### Code style
 

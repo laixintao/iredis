@@ -2,7 +2,9 @@
 
 - Bugfix: the bottom bar syntax do not show `token` like `MATCH`, `COUNT`, `TYPE`.
 - Bugfix: replace the `open_text` API with `files()`.
-- Dependency: Add support for Python 3.13, drop support for Python 3.8 and 3.9.
+- Dependency: Support Python 3.10–3.14, drop support for Python 3.8 and 3.9.
+- CI: Run the full test suite on every supported Python version, smoke-test wheel
+  and source distributions, and add experimental Python 3.15 prerelease coverage.
 - Bugfix: `CONFIG GET` auto-completion grammar now matches commands.json (accepts one or
   more parameters instead of parameter+value).
 - Bugfix: `CONFIG SET` auto-completion grammar now matches commands.json (accepts one or
