@@ -4,12 +4,10 @@ from pathlib import Path
 
 
 def test_log_location_config():
-    config_content = dedent(
-        """
+    config_content = dedent("""
         [main]
         log_location = /tmp/iredis1.log
-        """
-    )
+        """)
     with open("/tmp/iredisrc", "w+") as etc_config:
         etc_config.write(config_content)
 
@@ -26,12 +24,10 @@ def test_log_location_config():
 
 
 def test_load_prompt_from_config(iredis_client, clean_redis):
-    config_content = dedent(
-        """
+    config_content = dedent("""
         [main]
         prompt = {host}abc{port}xx{db}
-        """
-    )
+        """)
     with open("/tmp/iredisrc", "w+") as etc_config:
         etc_config.write(config_content)
 
@@ -42,12 +38,10 @@ def test_load_prompt_from_config(iredis_client, clean_redis):
 
 
 def test_prompt_cli_overwrite_config(iredis_client, clean_redis):
-    config_content = dedent(
-        """
+    config_content = dedent("""
         [main]
         prompt = {host}abc{port}xx{db}
-        """
-    )
+        """)
     with open("/tmp/iredisrc", "w+") as etc_config:
         etc_config.write(config_content)
 

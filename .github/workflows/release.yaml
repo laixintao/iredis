@@ -17,26 +17,31 @@ jobs:
         image: redis:5
         ports:
           - 6379:6379
-        options: --entrypoint redis-server
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
-          python-version: 3.12
+          python-version: "3.14"
           architecture: 'x64'
       - name: Cache venv
         uses: actions/cache@v4
         with:
           path: venv
           # Look to see if there is a cache hit for the corresponding requirements file
-          key: ubuntu-latest-poetryenv-${{ hashFiles('poetry.lock') }}
+          key: release-${{ runner.os }}-3.14-poetry-2.4.1-${{ hashFiles('poetry.lock') }}
       - name: Install Dependencies
         run: |
           python3 -m venv venv
           . venv/bin/activate
           pip install -U pip
-          pip install poetry
+          pip install poetry==2.4.1
+          poetry check --lock
           poetry install
           python -c "import sys; print(sys.version)"
           pip list
@@ -52,10 +57,11 @@ jobs:
 
           iredis -h
           iredis help GET
+          test "$(iredis --raw PING)" = PONG
 
       - name: Upload to Pypi
         env:
           PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
           . venv/bin/activate
-          poetry publish --username __token__ --password ${PASSWORD}
+          poetry publish --username __token__ --password "$PASSWORD"

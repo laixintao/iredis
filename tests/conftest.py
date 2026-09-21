@@ -90,13 +90,11 @@ def config():
 def cli():
     """Open iredis subprocess to test"""
     f = tempfile.TemporaryFile("w")
-    config_content = dedent(
-        """
+    config_content = dedent("""
         [main]
         log_location =
         warning = True
-        """
-    )
+        """)
     f.write(config_content)
     f.close()
     env = os.environ.copy()
@@ -119,13 +117,11 @@ def cli():
 def raw_cli():
     """Open iredis subprocess to test"""
     TEST_IREDISRC = "/tmp/.iredisrc.test"
-    config_content = dedent(
-        """
+    config_content = dedent("""
         [main]
         log_location =
         warning = True
-        """
-    )
+        """)
 
     with open(TEST_IREDISRC, "w+") as test_iredisrc:
         test_iredisrc.write(config_content)
@@ -142,13 +138,11 @@ def raw_cli():
 @pytest.fixture(scope="function")
 def cli_without_warning():
     f = tempfile.TemporaryFile("w")
-    config_content = dedent(
-        """
+    config_content = dedent("""
         [main]
         log_location = /tmp/iredis1.log
         warning = False
-        """
-    )
+        """)
     f.write(config_content)
     f.close()
 
