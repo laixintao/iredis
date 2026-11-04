@@ -1,5 +1,17 @@
 ## UPCOMING
 
+- Bugfix: `PEEK` and `SLOWLOG GET` work when the Redis server version is unknown
+  or `INFO` is unavailable. Slowlog client details are rendered from the reply,
+  including on Redis 4.0.0. ([#528](https://github.com/laixintao/iredis/pull/528))
+- Bugfix: Explicit command-line commands take precedence over redirected or
+  piped stdin. Commands such as `iredis PING </dev/null` now execute correctly;
+  stdin remains a command source when no explicit command is given.
+  ([#529](https://github.com/laixintao/iredis/pull/529))
+- Bugfix: `-n 0` correctly overrides the database specified in a URL or DSN,
+  including connections configured through `IREDIS_URL` or `IREDIS_DSN`.
+  ([#530](https://github.com/laixintao/iredis/pull/530))
+- Doc: Correct the README's response decoding option to `--decode`.
+  ([#525](https://github.com/laixintao/iredis/pull/525))
 - Bugfix: the bottom bar syntax do not show `token` like `MATCH`, `COUNT`, `TYPE`.
 - Bugfix: replace the `open_text` API with `files()`.
 - Dependency: Support Python 3.10–3.14, drop support for Python 3.8 and 3.9.
