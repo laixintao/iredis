@@ -57,6 +57,7 @@ like `KEYS *` (see
   your command history.
 - Auto suggestions. (Like [fish shell](http://fishshell.com/).)
 - Support `--decode=utf-8`, to decode Redis' bytes responses.
+- Raw replies that cannot be decoded are written unchanged, without paging.
 - Command hint on bottom, include command syntax, supported redis version, and
   time complexity.
 - Official docs with built-in `HELP` command, try `HELP SET`!

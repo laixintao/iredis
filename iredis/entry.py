@@ -104,13 +104,15 @@ def write_result(text, max_height=None):
             text = convert_formatted_text_to_bytes(text)
             os.environ["LESS"] = "-SRX"
         # click.echo_via_pager only accepts str
-        if config.decode:
-            text = text.decode(config.decode)
+        try:
+            pager_text = text.decode(config.decode or "utf-8")
+        except UnicodeDecodeError:
+            # A text pager cannot preserve an arbitrary binary Redis reply.
+            pass
         else:
-            text = text.decode()
-        # TODO current pager doesn't support colors
-        click.echo_via_pager(text)
-        return
+            # TODO current pager doesn't support colors
+            click.echo_via_pager(pager_text)
+            return
 
     if isinstance(text, bytes):
         sys.stdout.buffer.write(text)
