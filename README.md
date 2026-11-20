@@ -221,6 +221,18 @@ Options:
 
 ```
 
+### Manual authentication and reconnecting
+
+After a successful `AUTH username password`, IRedis keeps those credentials
+for reconnects, connection rebuilds and cluster redirects. Per-node DSN
+credentials still take precedence for redirects. A successful
+password-only `AUTH password` switches back to the default user. Rejected or
+queued `AUTH` commands do not replace the stored credentials. This also applies
+when the command's output is piped to a shell command.
+
+Authentication changes queued inside `MULTI` are not tracked after `EXEC`.
+Issue `AUTH` outside a transaction when it should update reconnection credentials.
+
 ### Using DSN
 
 IRedis support storing server configuration in config file. Here is a DSN
