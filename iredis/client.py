@@ -484,6 +484,7 @@ class Client:
                 return
 
             redis_resp = self.execute(command_name, *args)
+            self.after_hook(raw_command, command_name, args, completer, redis_resp)
             # if shell_command and enable shell, do not render, just run in shell pipe and show the
             # subcommand's stdout/stderr
             if shell_command and config.shell:
@@ -492,7 +493,6 @@ class Client:
                 run(shell_command, input=stdin, shell=True)
                 return
 
-            self.after_hook(raw_command, command_name, args, completer, redis_resp)
             yield self.render_response(redis_resp, command_name)
 
             # FIXME generator response do not support pipeline
@@ -523,19 +523,24 @@ class Client:
     def after_hook(self, command, command_name, args, completer, response):
         # === After hook ===
         # SELECT db on AUTH
-        if command_name.upper() == "AUTH":
+        if command_name.upper() == "AUTH" and response in (b"OK", "OK"):
+            if len(args) == 1:
+                username, password = None, args[0]
+            else:
+                username, password = args
+            # Keep both reconnection paths in sync with the accepted identity.
+            self.username = self.connection.username = username
+            self.password = self.connection.password = password
             if self.db:
                 select_result = self.execute("SELECT", self.db)
                 if nativestr(select_result) != "OK":
                     raise ConnectionError("Invalid Database")
-            # When the connection is TimeoutError or ConnectionError, reconnect the connection will use it
-            self.connection.password = args[0]
-        elif command_name.upper() == "SELECT":
+        elif command_name.upper() == "SELECT" and response in (b"OK", "OK"):
             logger.debug("[After hook] Command is SELECT, change self.db.")
             self.db = int(args[0])
             # When the connection is TimeoutError or ConnectionError, reconnect the connection will use it
             self.connection.db = self.db
-        elif command_name.upper() == "MULTI":
+        elif command_name.upper() == "MULTI" and response in (b"OK", "OK"):
             logger.debug("[After hook] Command is MULTI, start transaction.")
             config.transaction = True
 
