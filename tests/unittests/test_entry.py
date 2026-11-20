@@ -318,3 +318,47 @@ def test_natmap_parsed_into_config():
         "node1.example.com:6379": ("127.0.0.1", 6371),
         "node2.example.com:6379": ("127.0.0.1", 6372),
     }
+
+
+@pytest.mark.parametrize("decode", ["", "utf-8"])
+def test_binary_result_bypasses_text_pager(config, capsysbinary, decode):
+    config.raw = True
+    config.enable_pager = True
+    config.decode = decode
+    payload = b"\xff\n" * 4
+    with patch("iredis.entry.click.echo_via_pager") as pager:
+        write_result(payload, max_height=1)
+    assert capsysbinary.readouterr().out == payload + b"\n"
+    pager.assert_not_called()
+
+
+@pytest.mark.parametrize("decode", ["", "utf-8", "latin-1"])
+def test_decodable_result_uses_text_pager(config, capsysbinary, decode):
+    config.raw = True
+    config.enable_pager = True
+    config.decode = decode
+    text = "caf\xe9\n" * 4
+    payload = text.encode(decode or "utf-8")
+    with patch("iredis.entry.click.echo_via_pager") as pager:
+        write_result(payload, max_height=1)
+    pager.assert_called_once_with(text)
+    assert capsysbinary.readouterr().out == b""
+
+
+def test_binary_result_still_bypasses_pager_below_height(config, capsysbinary):
+    config.raw = True
+    config.enable_pager = True
+    config.decode = ""
+    payload = b"\xff\n"
+    with patch("iredis.entry.click.echo_via_pager") as pager:
+        write_result(payload, max_height=10)
+    assert capsysbinary.readouterr().out == payload + b"\n"
+    pager.assert_not_called()
+
+
+def test_pager_invalid_codec_is_not_silently_ignored(config):
+    config.raw = True
+    config.enable_pager = True
+    config.decode = "not-a-codec"
+    with pytest.raises(LookupError):
+        write_result(b"one\ntwo\n", max_height=1)
